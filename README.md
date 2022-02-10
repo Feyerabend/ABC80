@@ -3,7 +3,7 @@ A recreated program/code from paper trail.
 Originally coded for the ABC80 from 1981,
 inspired by Atari 2600 Combat #24.
 
-U. Kristian Lidberg did the main code and I (to a small degree) contributed. We were at the time in
+U. Kristian Lidberg did the main code in BASIC and I (to a small degree) contributed. We were at the time in
 the gymnasium (Brännkyrka gymnasium, Stockholm, Sweden), in 1981. As you might recognize, it is not very
 consistent and flawed. We were alternating by the keyboard under some pressure to complete this
 (including nights), so there are naturally a lot of those flaws. I guess at maximum we might have
