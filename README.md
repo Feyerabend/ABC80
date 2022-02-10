@@ -1,6 +1,6 @@
 # ABC80 AIRFIGHT 1981
 A recreated program/code from paper trail.
-Originally coded for the ABC80 from 1981,
+Originally coded for the ABC80 in 1981,
 inspired by Atari 2600 Combat #24.
 
 U. Kristian Lidberg did the main code in BASIC and I (to a small degree) contributed. We were at the time in
