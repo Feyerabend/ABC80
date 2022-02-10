@@ -1,0 +1,285 @@
+1 ; CHR¤(12);
+2 FOR T=1 TO 800 : NEXT T
+3 FOR G%=0% to 19% : ; CUR(G%,0%);CHR¤(23%); : NEXT G%
+4 FOR U%=1% TO 11%
+5 ON U% RESTORE 12,13,14,15,16,17,18,19,20,21,22
+6 IF U%=7% THEN FOR T=1 TO 2000 : NEXT T
+7 READ R5%,K5%
+8 READ A5¤
+9 ; CUR(R5%,K5%);A5¤;
+10 NEXT U%
+11 REM ****** STORA BOKSTÄVER ******
+12 DATA 0,10,'É&DJ#IH#)H#IH#I'
+13 DATA 1,10,'J#KJ#IJ ÉH#IJ J'
+14 DATA 2,10,'" ""#! #! #! #!'
+15 DATA 3,1,'J#IJ#IJ##H#)J##J0J"K#J##J#IÉ&DJ#I'
+16 DATA 4,1,'J#!J+1J#!É#IJ#!J"N J J#!J+1J#KJ+1 !'
+17 DATA 5,1,'"  " ""## #!"##" " " "##" "" "" " !'
+18 DATA 9,7,'É&D K!J#IJ## K!H#)J J"K#'
+19 DATA 10,7,'J#K J J+1J#! J J LJ#K J'
+20 DATA 11,7,'" " #!" ""   #! ##" " "'
+21 DATA 12,4,'ÉPPÉPPÉPPÉPPÉPPÉPPÉPPÉPPÉPP'
+22 DATA 13,4,'(,,(,,(,,(,,(,,(,,(,,(,,(,,(,,'
+23 OUT 6,0 : OUT 6,135
+24 ; CUR(20,29);'                    ';
+25 FOR T=1 TO 600 : NEXT T
+26 ; CUR(22,10);'SVARA MED (JA/NEJ)';
+27 ; CUR(23,6);'TRYCK DÄREFTER "RETURN"!';
+28 ; CUR(20,8);'HAR NI SPELAT FÖRUT ';
+29 INPUT Ä¤ : IF Ä¤='' THEN 23 ELSE Ä¤=LEFT¤(Ä¤,1%);
+30 IF Ä¤<>'N' AND Ä¤<>'J' THEN 23
+31 ; CHR¤(12);
+32 ; CUR(0,0);'VAR VÄNLIGA VÄLJ RESPEKTIVE JOYSTICK!'
+33 ; CUR(5,8);'SLÅ IN DITT RESPEKTIVE'
+34 ; CUR(7,8);'DIN MOTSPELARES NAMN ';
+35 ; CUR(10,5);'TRYCK DÄREFTER PÅ "RETURN" KNAPPEN '
+36 ; CUR(15,2);'(BRUN JOYSTICK): ';
+37 INPUTLINE B¤(2)
+38 ; CUR(17,2);'(GRÅ JOYSTICK): ';
+39 INPUTLINE B¤(1)
+40 ; CHR¤(12);
+41 FOR T=1 TO 300 : NEXT T
+42 RESTORE 50
+43 READ A0¤
+44 FOR J%=1% TO LEN(A0¤)
+45 A1¤=MID¤(A0¤,J%,1%)
+46 ; CUR(1%,J%+9%)A1¤;
+47 FOR T=1 TO 100 : NEXT T
+48 NEXT J%
+49 OUT 6,0 : OUT 6,135
+50 DATA 'DETTA ÄR AIRFIGHT'
+51 ; CUR(3%,2%)STRING¤(36%,42%)
+52 FOR I1%=1% TO 3%
+53 IF Ä¤='J' THEN I1%=3%
+54 ON I1% RESTORE 76,83,92
+55 READ I0%,I3%
+56 FOR I%=1% TO I0%
+57 READ A2¤
+58 IF I1%<>3% ; CUR(I%*2%+I3%,7%);A2¤ : GOTO 60
+59 ; CUR(I%*2%+I3%,4%)A2¤
+60 FOR T=1 TO 1000 : NEXT T : NEXT I%
+61 IF I1%<>3% THEN ; CUR(23,11);'TRYCK "RETURN"!  ';
+62 IF I1%<>3% THEN GET Ä¤
+63 FOR T=1 TO 400 : NEXT T
+64 OUT 6,0 : OUT 6,157
+65 IF I1%=3% THEN ; CUR(11,19); : GET Ö¤
+66 ; CHR¤(12); : NEXT I1%
+67 REM *** VAL AV TID/PO[NG-BEG. ***
+68 IF ö¤='P' OR ö¤='P' THEN D1%=10% : D%=100% : D3%=1% : T5%=0% : T6%=0% : GOTO 100
+69 IF ö¤='T' OR ö¤='T' THEN D1%=-1% : D%=0% : D3%=-1% : T5%=2% : T6%=0% : GOTO 100
+70 ; CUR(20,11);'SVARA MED'
+71 POKE 32357,208,175,212
+72 OUT 6,0 : OUT 6,131
+73 FOR T=1 TO 1000 : NEXT T
+74 OUT 6,0
+75 I1%=3% : GOTO 54
+76 DATA 6,7
+77 DATA 'DETTA SPEL STYRS MED TVÅ '
+78 DATA '       JOYSTICKS : '
+79 DATA 'EN GRÅ     OCH    EN BRUN'
+80 DATA ''
+81 DATA 'DET GÄLLER ATT SKJUTA NER'
+82 DATA '        VARANDRA .'
+83 DATA 9,3
+84 DATA ' FÖR ATT SKJUTA TRYCKER NI'
+85 DATA 'PÅ DEN RÖDA KNAPPEN PÅ EDRA'
+86 DATA '        JOYSTICKS.'
+87 DATA '', 'MED SPAKEN PÅ EDRA DOSOR'
+88 DATA 'KAN NI STYRA PLANEN TILL ATT'
+89 DATA 'SVÄNGA ÅT HÖGER RESP. VÄNSTER.'
+90 DATA '   SPAKEN KAN EJ FÖRAS I'
+91 DATA '   VERTIKAL RIKTNING !!!'
+92 DATA 7,3
+93 DATA 'VILL NI HA POÄNG BEGRÄNSING (10P)'
+94 DATA '          ELLER'
+95 DATA 'TIDS-BEGRÄNSNING (2 MIN.)?'
+96 DATA 'SVARA MED : '
+97 DATA ''
+98 DATA 'P   FÖR      POÄNGBEGRÄNSNING'
+99 DATA 'T   FÖR      TIDSBEGRÄNSNING'
+100 RESTORE 113
+101 FOR T=1 TO 500 : NEXT T
+102 ; CUR(12%,5%);CHR¤(23);'(-                  HM';
+103 ; CUR(23,0);CHR¤(151);'GRÅ =';CHR¤(135);' 0    TID 0. 00  'CHR¤(151);'BRUN B='CHR¤(135);' 0';
+104 FOR T=1 TO 1000 : NEXT T
+105 ; CUR(8,10);'*** S-T-A-R-T ***'
+106 FOR T=1 TO 1500 : NEXT T
+107 ; CUR(8,10);'                       ';
+108 OUT 6,0 : OUT 6,131
+109 POKE (65008),255
+110 P%(1%)=0% : P%(2%)=0%
+111 FOR G%=0% TO 22% : ; CUR(G%,0%);CHR¤(23%); : NEXT G%
+112 REM *** DATA FÖR FLYGPLAN ***
+113 DATA ' =',ÉF,(<,BD,(5,B&,(-,'"F'
+114 DATA B=,ÉF,*>,JT,(W,"J'",HM,'"O'
+115 FOR U1%=1% TO 2%
+116 FOR U%=1% TO 8% : READ P¤(U1%,U%) : NEXT U%
+117 NEXT U1%
+118 F%(2%)=7% : H%(2%)=12% : L%(2%)=26%
+119 F%(1%)=7% : H%(1%)=12% : L%(1%)=6%
+120 FOR U%=1% TO 2%
+121 R1%(U%)=12% : K1%(U%)=5%
+122 H1%(U%)=H%(U%) : L1%(U%)=L%(U%)
+123 Z%(U%)=0%
+124 NEXT U%
+125 ; CUR(23,0);CHR¤(151);'GRÅ =';CHR¤(135);P%(1)' ';CUR(23,24);CHR¤(151);'BRUN B='CHR¤(135);P%(2);' ';
+126 ; CUR(23,13);'TID'T5%' . 'T6%' ';
+127 REM *****************************
+128 REM ******* MAIN-PROGRAM ********
+129 REM *****************************
+130 FOR N%=1% TO 2%
+131 ON F%(N%) GOTO 132,133,134,135,136,137,138,139
+132 L%(N%)=L%(N%)+1% : GOTO 140
+133 L%(N%)=L%(N%)+1% : H%(N%)=H%(N%)+1% : GOTO 140
+134 H%(N%)=H%(N%)+1% : GOTO 140
+135 L%(N%)=L%(N%)-1% : H%(N%)=H%(N%)+1% : GOTO 140
+136 L%(N%)=L%(N%)-1% : GOTO 140
+137 L%(N%)=L%(N%)-1% : H%(N%)=H%(N%)-1% : GOTO 140
+138 H%(N%)=H%(N%)-1% : GOTO 140
+139 L%(N%)=L%(N%)+1% : H%(N%)=H%(N%)-1% : GOTO 140
+140 IF H%(N%)<0% THEN H%(N%)=22%
+141 IF H%(N%)>22% THEN H%(N%)=0%
+142 IF L%(N%)<1% THEN L%(N%)=37%
+143 IF L%(N%)>37% THEN L%(N%) =1%
+144 ; CUR(H1%(N%),L1%(N%);'  '; 
+145 ; CUR(H%(N%),L%(N%));P¤(N%,F%(N%));
+146 OUT 58%,N%*8%
+147 B%=INP(58%) AND 7%
+148 IF B%(N%)=(B% AND 3%) THEN 154
+149 IF NOT B% AND 1% THEN F%(N%)=F%(N%)-1%
+150 IF NOT B% AND 2% THEN F%(N%)=F%(N%)+1%
+151 IF F%(N%)<1% THEN F%(N%)=8%
+152 IF F%(N%)>8% THEN F%(N%)=1%
+153 V%(N%)=3%
+154 B%(N%)=(B% AND 3%)
+155 IF Z%(N%)=1% THEN 177
+156 FOR T=1 TO 50 : NEXT T
+157 IF NOT B% AND 4% THEN Z%(N%)=1% : GOTO 173
+158 IF NOT B% AND 1% THEN V%(N%)=V%(N%)-1%
+159 IF NOT B% AND 2% THEN V%(N%)=V%(N%)+1%
+160 IF V%(N%)<1% THEN V%(N%)=3% : F%(N%)=F%(N%)-1%
+161 IF V%(N%)>5% THEN V%(N%)=3% : F%(N%)=F%(N%)+1%
+162 IF F%(N%)<1% THEN F%(N%)=8%
+163 IF F%(N%)>8% THEN F%(N%)=1%
+164 H1%(N%)=H%(N%) : L1%(N%)=L%(N%)
+165 NEXT N%
+166 IF PEEK(&%008)<207% THEN T6%=T6%+D3% : POKE (65008),255 ELSE GOTO 130
+167 IF T6%<0% THEN T6%=59% : T5%=T5%-1%
+168 IF T6%>59% THEN T6%=0% : T5%=T5%+1%
+169 ; CUR(23,13);'TID'T5%'.'T6%' ';
+170 IF T5%=0% AND T6%=0% THEN 223
+171 GOTO 130
+172 REM ***** END OF MAINPROG. *****
+173 Q%(N%)=F%(N%)
+174 K%(N%)=L%(N%)
+175 R%(N%)=H%(N%)
+176 OUT 6,0 : OUT 6,153+N%*2%
+177 ; CUR(R1%(N%),K1%(N%));' ';
+178 REM ****************************
+179 REM ********* SKJUTA! **********
+180 REM ****************************
+181 FOR C%=1% TO 3%
+182 ON Q%(N%) GOTO 183,184,185,186,187,188,189,190
+183 K%(N%)=K%(N%)+1% : GOTO 191
+184 K%(N%)=K%(N%)+1% : R%(N%)=R%(N%)+1% : GOTO 191
+185 R%(N%)=R%(N%)+1% : GOTO 191
+186 K%(N%)=K%(N%)-1% : R%(N%)=R%(N%)+1% : GOTO 191
+187 K%(N%)=K%(N%)-1% : GOTO 191
+188 K%(N%)=K%(N%)-1% : R%(N%)=R%(N%)-1% : GOTO 191
+189 R%(N%)=R%(N%)-1% : GOTO 191
+190 K%(N%)=K%(N%)+1% : R%(N%)=R%(N%)-1% : GOTO 191 
+191 IF R%(N%)<0% OR R%(N%)>22% THEN Z%(N%)=0% : GOTO 200
+192 IF K%(N%)<1% OR K%(N%)>37% THEN Z%(N%)=0% : GOTO 200
+193 IF N%=1% THEN U%=2% ELSE U%=1%
+194 IF R%(N%)=H%(U%) AND K%(N%)=L%(U%) THEN 202
+195 IF R%(N%)=H%(U%) AND K%(N%)=L%(U%)+1% THEN 202
+196 NEXT C%
+197 ; CUR(R%(N%),K%(N%));'(';
+198 R1%(N%)=R%(N%) : K1%(N%)=K%(N%)
+199 GOTO 158
+200 ; CUR(R1%(N%),K1%(N%));' ';
+201 GOTO 158
+202 IF R%(N%)=H%(N%) AND K%(N%)=L%(N%) THEN 196
+203 OUT 6,0 : OUT 6.9
+204 ; CUR(R1%(N%),K1%(N%));' ';
+205 ; CUR(R1%(U%),K1%(U%));' ';
+206 P%(N%)=P%(N%)+1%
+207 ; CUR(H%(U%),L%(U%)-1%);'F  !D';
+208 ; CUR(23,0);CHR¤(151);'GRÅ =';CHR¤(135);'P%(1)' ';CUR(23,24);CHR¤(151);'BRUN B='CHR¤(135);P%(2);
+209 ; CUR(23,13);'TID'T5%'.'T6%' ';
+210 FOR T=1 TO 700 : NEXT T
+211 ; CUR(H%(U%),L%(U%)-1%);'       ';
+212 FOR T%=1% TO 400 : NEXT T%
+213 OUT 6,0 : OUT 6,137
+214 FOR T=1 TO 2000 : NEXT T
+215 IF P%(N%)=D1% THEN 230
+216 ; CHR¤(12);
+217 ; CUR(23,0);CHR¤(151);'GRÅ =';CHR¤(135);'P%(1)' ';CUR(23,24);CHR¤(151);'BRUN B='CHR¤(135);P%(2);
+218 ; CUR(23,13);'TID'T5%'.'T6%' ';
+219 FOR T=1 TO 1000 : NEXT T
+220 FOR G%=0% TO 22% : ; CUR(G%,0%);CHR¤(23%); : NEXT G%
+221 GOTO 118
+222 ; CHR¤(12);
+223 OUT 6,0 : OUT 6,199
+224 ; CUR(11,8)CHR¤(3);'*******************'
+225 ; CUR(12,8)CHR¤(3);'*   TIDEN  SLUT   *'
+226 ; CUR(13,8)CHR¤(3);'*******************'
+227 FOR T=1 TO 1000 : NEXT T : OUT 6,0
+228 OUT 6,135
+229 FOR T=1 TO 2500 :NEXT T
+230 ; CHR¤(12);
+231 FOR T=1 TO 800 : NEXT T
+232 IF P%(1%)<P%(2%) THEN W2%=2% ELSE W%=1%
+233 IF P%(1%)=P%(2%) THEN W%=0%
+234 ; CUR(4,12);'VINNARE BLEV...';
+235 FOR G%=10% TO 18% : ; CUR(G%,0%);CHR¤(23%); : NEXT G%
+236 ; CUR(13,12);'(S,P       P,S¤'
+237 ; CUR(14,12);'"(C¤#,P P,#(3¤!'
+238 ; CUR(15,17);'_____'
+239 ; CUR(16,17);'_____';
+240 FOR T=1 TO 1800 : NEXT T
+241 IF W%=0% THEN 250
+242 GOSUB 263
+243 ; CUR(6,16);B¤(W%);
+244 ; CUR(13,4+8*W%);'             ' : ; CUR(4,4+8*W%);'             ';
+245 G%=8%+6%*W%
+246 ; CUR(10%,G%);'ÉDDD¤' : ; CUR(11,G%);'(9991' : ; CUR(12,G%);'"&&&¤';
+247 IF W%=1% THEN K%=37% ELSE K%=40%
+248 FOR R3%=31% TO 44% : SETDOT R3%,K% : NEXT R3%
+249 GOTO 255
+250 FOR T=1 TO 500 : NEXT T
+251 ; CUR(7,10);'HEMSK OTUR DET BLEV'
+252 ; CUR(9,10);'O-A-V-G-J-O-R-T !!!'
+253 ; CUR(20,35);'             ';
+254 FOR T=1 TO 1000 : NEXT T
+255 ; CUR(21,7);'SVARA MED (JA/NEJ)!'
+256 ; CUR(20,7);'SKALL VI SPELA EN GÅNG TILL  '; : INPUT Ä¤
+257 IF Ä¤='' THEN ; CHR¤(7); : GOTO 253
+258 Ä¤=LEFT¤(Ä¤,1)
+259 IF Ä¤<>'J' AND Ä¤<>'N' THEN ; CHR¤(7); : GOTO 253
+260 ; CHR¤(12); : FOR T=1 TO 500 : NEXT T
+261 IF Ä¤='J' THEN 40
+262 GOTO 275
+263 RESTORE 274
+264 FOR U%=1% TO 6%
+265 READ A0%,A1% : A1%=A1%+10%
+266 FOR I%=1% TO A0%
+267 OUT 6%,121%
+268 FOR J%=1% TO A1% : NEXT J%
+269 OUT 6%,0% : NEXIT I%
+270 FOR T=1 TO 10 : NEXT T
+271 NEXT U%
+272 RETURN
+273 REM **** DATA FÖR "TRUDELUTT" ****
+274 DATA 20,45,20,45,40,45,50,32,60,23,130,13
+275 ; CHR¤(12);
+276 ; CUR(2,13);'INTE DET.'
+277 ; CUR(4,3);'HOPPAS ATT NI I ALLA FALL HAFT'
+278 ; CUR(5,13);'ROLIGT!!!'
+279 ; CUR(6,0);CHR¤(23);STRING¤(39,44);
+280 FOR T=1 TO 3000 : NEXT T
+281 ; CUR(12,8);'LÄMNA NU ÖVER TILL NÄSTA'
+282 ; CUR(13,8);'SPELARE I KÖN!!!!'
+283 FOR T=1 TO 4000 : NEXT T
+284 GOTO 1
+285 REM AIR-FIGHT DONE IN 1981 BY KRISTIAN LIDBERG & SET LONNERT
