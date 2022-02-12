@@ -1,9 +1,9 @@
+![Reimagined AIR-FIGHT](reimagined-air-fight-javascript.gif)
+
 # ABC80 AIR-FIGHT 1981
 A recreated program/code from paper trail.
 Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80) in 1981,
 inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
-
-![Reimagined AIR-FIGHT](reimagined-air-fight-javascript.gif)
 
 U. Kristian Lidberg did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a small degree) contributed. We were at the time in
@@ -28,3 +28,6 @@ There might be spelling mistakes, as I have not tried to run this code at all.
 
 It has finally been put here as a remeberance of Kristian, as he disappeared without trace in the mid 80'ties,
 never to return.
+
+# ABC80 MUSIC
+Most simple sample we could come up with that made it to the presenation.
