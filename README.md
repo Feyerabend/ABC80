@@ -1,4 +1,4 @@
-# ABC80 AIRFIGHT 1981
+# ABC80 AIR-FIGHT 1981
 A recreated program/code from paper trail.
 Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80) in 1981,
 inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
