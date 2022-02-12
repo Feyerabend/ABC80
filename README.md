@@ -5,7 +5,8 @@ inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) [Combat #
 
 U. Kristian Lidberg did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a small degree) contributed. We were at the time in
-the gymnasium (Brännkyrka gymnasium, Stockholm, Sweden), in 1981. As you might recognize, it is not very
+the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnkyrka_gymnasium),
+Stockholm, Sweden), in 1981. As you might recognize, it is not very
 consistent and flawed. We were alternating by the keyboard under some pressure to complete this
 (including nights), so there are naturally a lot of those flaws. I guess at maximum we might have
 done this in a few weeks, or more probably in some days.
