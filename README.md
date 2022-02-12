@@ -29,5 +29,5 @@ There might be spelling mistakes, as I have not tried to run this code at all.
 It has finally been put here as a remeberance of Kristian, as he disappeared without trace in the mid 80'ties,
 never to return.
 
-# ABC80 MUSIC
+# ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presenation.
