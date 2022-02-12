@@ -1,7 +1,7 @@
 # ABC80 AIRFIGHT 1981
 A recreated program/code from paper trail.
 Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80) in 1981,
-inspired by [Atari 2600](https://en.wikipedia.org/wiki/Atari_2600) [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
 U. Kristian Lidberg did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a small degree) contributed. We were at the time in
