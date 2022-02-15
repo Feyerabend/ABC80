@@ -20,6 +20,7 @@ at the back, were tailormade by us.
 We built them from small hotel soap containers, where the inside had cables, switches and diodes.
 They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
 The keyboard was no alternative because the keyboard roll-over was to limited.
+
 ![V-24 on ABC80](v24-small.jpeg)
 
 It has never been published, until now, partly because we were probably afraid of possible
