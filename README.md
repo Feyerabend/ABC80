@@ -19,7 +19,7 @@ It also depends on two "joysticks" which were connected to the V24-port [RS232](
 at the back, were tailormade by us.
 We built them from small hotel soap containers, where the inside had cables, switches and diodes.
 They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
-The keyboard was no alternative because the keyboard roll-over was to limited.
+The keyboard was no alternative because the keyboard roll-over was too limited.
 
 ![V-24 on ABC80](v24-small.jpeg)
 
@@ -32,4 +32,4 @@ It has finally been put here as a remeberance of Kristian, as he disappeared wit
 never to return.
 
 # ABC80 MUSIC 1981
-Most simple sample we could come up with that made it to the presenation.
+Most simple sample we could come up with that made it to the presentation.
