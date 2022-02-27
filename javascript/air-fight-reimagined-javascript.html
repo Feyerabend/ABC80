@@ -1,0 +1,414 @@
+<canvas id="canv" width="400" height="360" style="border:1px solid #ccc;" />
+
+<script>
+
+// set a dot at screen
+function setd(ctx, x, y) {
+   ctx.fillStyle = "#ffffff";
+   dot(ctx, x, y);
+}
+
+// clear a dot at screen
+function cleard(ctx, x, y) {
+   ctx.fillStyle = "#000000";
+   dot(ctx, x, y);
+}
+
+// set or celar at dot at screen
+function dot(ctx, x, y) {
+   ctx.fillRect(x * 5, y * 5, 5, 5);
+}
+
+// aeroplanes
+first = new Array(8);
+first[0] = [
+  0, 1, 0,
+  1, 1, 1,
+  0, 0, 0
+];
+first[1] = [
+  1, 0, 1,
+  0, 1, 0,
+  1, 0, 0
+];
+first[2] = [
+  0, 1, 0,
+  1, 1, 0,
+  0, 1, 0];
+first[3] = [
+  1, 0, 0,
+  0, 1, 0,
+  1, 0, 1
+];
+first[4] = [
+  0, 0, 0,
+  1, 1, 1,
+  0, 1, 0
+];
+first[5] = [
+  0, 0, 1,
+  0, 1, 0,
+  1, 0, 1
+];
+first[6] = [
+  0, 1, 0,
+  0, 1, 1,
+  0, 1, 0
+];
+first[7] = [
+  1, 0, 1,
+  0, 1, 0,
+  0, 0, 1
+];
+second = new Array(8);
+second[0] = [
+  0, 1, 0,
+  1, 1, 1,
+  1, 0, 1
+];
+second[1] = [
+  1, 1, 1,
+  1, 1, 0,
+  1, 0, 0
+];
+second[2] = [
+  0, 1, 1,
+  1, 1, 0,
+  0, 1, 1
+];
+second[3] = [
+  1, 0, 0,
+  1, 1, 0,
+  1, 1, 1
+];
+second[4] = [
+  1, 0, 1,
+  1, 1, 1,
+  0, 1, 0
+];
+second[5] = [
+  0, 0, 1,
+  0, 1, 1,
+  1, 1, 1
+];
+second[6] = [
+  1, 1, 0,
+  0, 1, 1,
+  1, 1, 0
+];
+second[7] = [
+  1, 1, 1,
+  0, 1, 1,
+  0, 0, 1
+];
+// array of arrays
+aeroplanes = [first, second];
+
+// proj
+proj = [
+  1, 1, 1, 1, 1,
+  1, 0, 0, 0, 1,
+  1, 0, 0, 0, 1,
+  1, 0, 0, 0, 1,
+  1, 1, 1, 1, 1
+];
+
+// clear away the plane
+function clear_aeroplane(ctx, x, y, angle) {
+   plane(ctx, x, y, angle, false);
+}
+
+// draw the plane
+function draw_aeroplane(ctx, x, y, angle) {
+   plane(ctx, x, y, angle, true);
+}
+
+// routine for draing or clearing an aeroplane
+function plane(ctx, x, y, angle, drawflag) {
+   angle.forEach(function(item, index, array) {
+      row = (index % 3);
+      column = Math.floor(index / 3);
+
+      if (item == 1)
+         if (drawflag)
+            setd(ctx, row + x, column + y);
+         else
+            cleard(ctx, row + x, column + y);
+   });
+}
+
+function shot(n) {
+
+   // calculate direction if shot in previous direction
+   switch(f[n]) {
+      case 0:
+         q[n] -= w;
+         break;
+      case 1:
+         q[n] -= w;
+         p[n] -= w;
+         break;
+      case 2:
+         p[n] -= w;
+         break;
+      case 3:
+         p[n] -= w;
+         q[n] += w;
+         break;
+      case 4:
+         q[n] += w;
+         break;
+      case 5:
+         q[n] += w;
+         p[n] += w;
+         break;
+      case 6:
+         p[n] += w;
+         break;
+      case 7:
+         p[n] += w;
+         q[n] -= w;
+         break;
+   }
+
+   // wrap around screen (or limits for the shot)
+   if (q[n] < MINY) q[n] = MAXY;
+   if (q[n] > MAXY) q[n] = MINY;
+   if (p[n] > MAXX) p[n] = MINX;
+   if (p[n] < MINX) p[n] = MAXX;
+
+   // clear previous dot and draw a new a step ahead
+   cleard(ctx, p1[n], q1[n]);
+   setd(ctx, p[n], q[n]);
+
+   // store the old position
+   p1[n] = p[n];
+   q1[n] = q[n];
+
+
+
+
+
+
+}
+
+
+
+// general init
+var c = document.getElementById("canv");
+var ctx = c.getContext("2d");
+ctx.fillStyle = "#000000";
+ctx.fillRect(0, 0, 400, 360);
+
+// check for limits
+MAXY = 72;
+MAXX = 80;
+MINY = 0;
+MINX = 0;
+
+// init angle with start values
+u = []; u1 = [];
+u[0] = 2; u[1] = 6;
+u1[0] = u[0]; u1[1] = u[1];
+v = []; v[0] = 3; v[1] = 3;
+
+old_aeroplane = [];
+
+// init x/y with start values
+x = []; x1 = [];
+y = []; y1 = [];
+x[0] = 40;
+x[1] = 8;
+x1[0] = x[0];
+x1[1] = x[1];
+y[0] = 27;
+y[1] = 47;
+y1[0] = y[0];
+y1[1] = y[1];
+
+// step for planes
+k = 1;
+
+
+// -----
+p = []; q = [];
+p[0] = q[0] = 0;
+p[1] = q[1] = 0;
+p1 = []; q1 = [];
+p1[0] = q1[0] = 0;
+p1[1] = q1[1] = 0;
+
+// step for shots
+w = 3;
+// shot is on its way
+z = [];
+z[0] = z[1] = 0;
+// direction of shot
+f = [];
+f[0] = f[1] = 0;
+// -----
+
+
+// start with one aeroplane (one is 0 and the other is 1)
+n = 1;
+
+// ... game loop
+function main() {
+
+   // change aeroplane
+   if (n == 0) { n = 1; } else { n = 0; }
+
+   // rotate aeroplane by keys
+   // right
+   if (n == 0) {
+      if (keys[39]) v[0] -= 1;
+      if (keys[37]) v[0] += 1;
+   // left
+   } else {
+      if (keys[83]) v[1] -= 1;
+      if (keys[65]) v[1] += 1;
+   }
+
+   // gearing
+   if (v[n] < 1) {
+      v[n] = 3;
+      u[n] -= 1;
+   }
+   if (v[n] > 5) {
+      v[n] = 3;
+      u[n] += 1;
+   }
+
+   // rotate aeroplane around "axis"
+   if (u[n] > 7) u[n] = 0;
+   if (u[n] < 0) u[n] = 7;
+
+   // calculate direction in x/y-plane
+   switch(u[n]) {
+      case 0:
+         y[n] -= k;
+         break;
+      case 1:
+         y[n] -= k;
+         x[n] -= k;
+         break;
+      case 2:
+         x[n] -= k;
+         break;
+      case 3:
+         x[n] -= k;
+         y[n] += k;
+         break;
+      case 4:
+         y[n] += k;
+         break;
+      case 5:
+         y[n] += k;
+         x[n] += k;
+         break;
+      case 6:
+         x[n] += k;
+         break;
+      case 7:
+         x[n] += k;
+         y[n] -= k;
+         break;
+   }
+
+   // check for screen limits and adjust
+   if (y[n] < MINY) y[n] = MAXY;
+   if (y[n] > MAXY) y[n] = MINY;
+   if (x[n] > MAXX) x[n] = MINX;
+   if (x[n] < MINX) x[n] = MAXX;
+
+   // old_aeroplane = aeroplanes[n][u1[n]];
+   aeroplane = aeroplanes[n][u[n]];
+
+   if (typeof old_aeroplane[n] != 'undefined')
+      clear_aeroplane(ctx, x1[n], y1[n], old_aeroplane[n]);
+   draw_aeroplane(ctx, x[n], y[n], aeroplane);
+
+   // save old position and angle
+   u1[n] = u[n];
+   x1[n] = x[n];
+   y1[n] = y[n];
+
+   old_aeroplane[n] = aeroplane;
+
+   // trigger a shot
+   if (keys[32] && !z[0]) {
+      z[0] = 15;
+      f[0] = u[0];
+      q[0] = y[0]+1;
+      p[0] = x[0]+1;
+   }
+   // trigger another shot
+   if (keys[87] && !z[1]) {
+      z[1] = 15;
+      f[1] = u[1];
+      q[1] = y[1]+1;
+      p[1] = x[1]+1;
+   }
+
+   // if a shot is on its way
+   if (z[n]) {
+
+      // check for "collision", a hit?
+      if (n == 0) m = 1; else m = 0;
+
+      // temp
+      i1 = q[n]; i2 = p[n];
+      j1 = y[m]; j2 = x[m];
+
+      // flag for a hit
+      b = (
+         (i1 === j1-1) && (i2 === j2-1) ||
+         (i1 === j1-1) && (i2 === j2) ||
+         (i1 === j1-1) && (i2 === j2+1) ||
+
+         (i1 === j1) && (i2 === j2-1) ||
+         (i1 === j1) && (i2 === j2) ||
+         (i1 === j1) && (i2 === j2+1) ||
+
+         (i1 === j1+1) && (i2 === j2-1) ||
+         (i1 === j1+1) && (i2 === j2) ||
+         (i1 === j1+1) && (i2 === j2+1)
+      );
+
+      // test the flag
+      if (b) {
+
+         // we have a hit
+         z[n] = 0;
+         draw_aeroplane(ctx, j2-2, j1-2, proj);
+         exit();
+
+      } else {
+
+         // draw shot
+         shot(n);
+
+         // count down for the range of the shot
+         z[n] -= 1;
+      }
+
+      // get rid of last dot
+      if (z[n] < 1)
+         cleard(ctx, p[n], q[n]);
+   }
+
+   // looping ...
+   requestAnimationFrame(main);
+}
+
+// init keys
+keys = [];
+keys[37] = keys[39] = keys[32] = 0;
+keys[65] = keys[83] = keys[87] = 0;
+// event controlled
+document.onkeydown = function(e) { keys[e.keyCode] = true }
+document.onkeyup = function(e) { keys[e.keyCode] = false }
+
+main();
+
+</script>
