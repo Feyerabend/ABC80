@@ -1,4 +1,4 @@
-![Reimagined AIR-FIGHT](reimagined-air-fight-javascript.gif)
+![Reimagined AIR-FIGHT](img/reimagined-air-fight-javascript.gif)
 
 # ABC80 AIR-FIGHT 1981
 A recreated program/code from paper trail.
@@ -15,21 +15,31 @@ done this in a few weeks, or more probably in some days. I also did a poster, wh
 of two fighting aeroplanes.
 
 It was really only once ever used, during an afternoon when parents visited the school.
-It also depends on two "joysticks" which were connected to the V24-port [RS232](https://en.wikipedia.org/wiki/RS-232)
+It also depends on two "joysticks" which were connected to the V24-port
+[RS232](https://en.wikipedia.org/wiki/RS-232)
 at the back, were tailormade by us.
 We built them from small hotel soap containers, where the inside had cables, switches and diodes.
 They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
 The keyboard was no alternative because the keyboard roll-over was too limited.
 
-![V-24 on ABC80](v24-small.jpeg)
+![V-24 on ABC80](img/v24-small.jpeg)
 
 It has never been published, until now, partly because we were probably afraid of possible
 copyright infringment at the time. That's why it's also called "AIR-FIGHT" rather than "Combat (#24)".
 
 There might be spelling mistakes, as I have not tried to run this code at all.
 
-It has finally been put here as a remeberance of Kristian, as he disappeared without trace in the mid 80'ties,
-never to return.
+It has finally been put here as a remeberance of Kristian, as he disappeared without trace in the mid 80'ties, never to return.
+
+#### JAVASCRIPT
+
+A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
+
+#### ATARI 2600/VCS
+
+A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for MOS 6205 (6507) Atari 3600/VCS. It might be that it has to be heavily reimplemented and changed due to the
+particularities of this machine. It illustrates my interpretation of the meaning of "code" and "coding".
+It has only been tested at the site: https://8bitworkshop.com on the emulator for Atari 2600.
 
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
