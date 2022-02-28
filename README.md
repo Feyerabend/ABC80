@@ -6,7 +6,7 @@ Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80) (Advanced
 inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
 **U. Kristian Lidberg** did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
-and I (to a small degree) contributed. We were at the time in
+and I (to a very small degree) contributed. We were at the time in
 the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnkyrka_gymnasium),
 Stockholm, Sweden), in 1981. As you might recognize, it is not very
 consistent and flawed. We were alternating by the keyboard under some pressure to complete this
@@ -31,15 +31,16 @@ There might be spelling mistakes, as I have not tried to run this code at all.
 
 It has finally been put here as a remeberance of Kristian, as he disappeared without trace in the mid 80'ties, never to return.
 
-#### JAVASCRIPT
-
+### JAVASCRIPT
 A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
+I. e. testing your ideas in code, program.
 
-#### ATARI 2600/VCS
-
-A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for MOS 6205 (6507) Atari 3600/VCS. It might be that it has to be heavily reimplemented and changed due to the
+### ATARI 2600/VCS
+A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for
+[MOS 6502](https://en.wikipedia.org/wiki/MOS_Technology_6502) (6507) Atari 2600/VCS.
+It might be that it has to be heavily reimplemented and changed due to the
 particularities of this machine. It illustrates my interpretation of the meaning of "code" and "coding".
-It has only been tested at the site: https://8bitworkshop.com on the emulator for Atari 2600.
+It has only been tested at the site https://8bitworkshop.com (Steven Hugg) on the emulator for Atari 2600.
 
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
