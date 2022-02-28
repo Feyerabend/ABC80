@@ -22,6 +22,12 @@ We built them from small hotel soap containers, where the inside had cables, swi
 They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
 The keyboard was no alternative because the keyboard roll-over was too limited.
 
+Historical reflections over Combat can be found in:
+Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009.
+Hugg, Steven, *Making Games for the Atari 2600: An 8bitworkshop Book*, (2016), CreateSpace Independent Publishing Platform, 2018. 
+An article can be found at at: http://gamestudies.org/0601/articles/montfort which considers it in detail.
+
+
 ![V-24 on ABC80](img/v24-small.jpeg)
 
 It has never been published, until now, partly because we were probably afraid of possible
