@@ -25,8 +25,6 @@ The keyboard was no alternative because the keyboard roll-over was too limited.
 Historical reflections over Combat can be found in:
 Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009.
 An article (excerpt) can be found at at: http://gamestudies.org/0601/articles/montfort which considers *Combat* in detail.
-Hugg, Steven, *Making Games for the Atari 2600: An 8bitworkshop Book* (2016), CreateSpace Independent Publishing Platform, 2018.
-
 
 ![V-24 on ABC80](img/v24-small.jpeg)
 
@@ -52,6 +50,8 @@ It has only been tested at the site https://8bitworkshop.com (by Steven Hugg) on
 for Atari 2600.
 
 ![Aeroplane on Atari 2600/VCS](img/partial-airfight-atari-vcs.gif)
+
+A good reference is: Hugg, Steven, *Making Games for the Atari 2600: An 8bitworkshop Book* (2016), CreateSpace Independent Publishing Platform, 2018.
 
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
