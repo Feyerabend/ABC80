@@ -33,7 +33,7 @@ It has finally been put here as a remeberance of Kristian, as he disappeared wit
 
 ### JAVASCRIPT
 A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
-I. e. testing your ideas in code, as a program.
+I. e. testing your ideas as "code".
 
 ### ATARI 2600/VCS
 A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for
