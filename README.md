@@ -33,7 +33,7 @@ It has finally been put here as a remeberance of Kristian, as he disappeared wit
 
 ### JAVASCRIPT
 A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
-I. e. testing your ideas in code, as a program.
+I. e. testing your ideas as "code".
 
 ### ATARI 2600/VCS
 A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for
@@ -43,6 +43,8 @@ particularities of this machine, if fully implemented.
 It also illustrates my interpretation of the meaning of "code" and "coding".
 It has only been tested at the site https://8bitworkshop.com (by Steven Hugg) on the emulator
 for Atari 2600.
+
+![Aeroplane on Atari 2600/VCS](img/partial-airfight-atari-vcs.gif)
 
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
