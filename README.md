@@ -17,10 +17,10 @@ of two fighting aeroplanes.
 It was really only once ever used, during an afternoon when parents visited the school.
 It also depends on two "joysticks" which were connected to the V24-port
 [RS232](https://en.wikipedia.org/wiki/RS-232)
-at the back, were tailormade by us.
+at the back, were tailor-made by us.
 We built them from small hotel soap containers, where the inside had cables, switches and diodes.
 They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
-The keyboard was no alternative because the keyboard roll-over was too limited.
+The keyboard was no alternative because the keyboard roll-over was too limiting.
 
 Historical reflections over Combat can be found in:
 Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009.
@@ -28,13 +28,13 @@ An article (excerpt) can be found at at: http://gamestudies.org/0601/articles/mo
 
 ![V-24 on ABC80](img/v24-small.jpeg)
 
-AIR-FIGHT has never been published, until **now**, partly because we were probably afraid of possible
-copyright infringment at the time. That's why it's also called "AIR-FIGHT" rather than "Combat (#24)"
+AIR-FIGHT has never been published, **until now**, partly because we were probably afraid of possible
+copyright infringement at the time. That's why it's also called "AIR-FIGHT" rather than "Combat (#24)"
 or something to that effect.
 
 There might be *spelling mistakes*, as I have not tried to run this code at all.
 
-It has finally been put here as a remeberance of *Kristian*, as he disappeared without trace in the mid 80'ties, never to return.
+It has finally been put here as a remembrance of *Kristian*, as he disappeared without trace in the mid 80'ties, never to return.
 
 ### JAVASCRIPT
 A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
