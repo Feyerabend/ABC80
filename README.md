@@ -11,8 +11,8 @@ the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnk
 Stockholm, Sweden), in 1981. As you might recognize, it is not very
 consistent and flawed. We were alternating by the keyboard under some pressure to complete this
 (including nights), so there are naturally a lot of those flaws. I guess at maximum we might have
-done this in a few weeks, or more probably in some days. I also did a poster, which was an illustration
-of two fighting aeroplanes.
+done this in a few weeks, or more probably in some days. (I also did a poster, which was an illustration
+of two fighting aeroplanes.)
 
 It was really only once ever used, during an afternoon when parents visited the school.
 It also depends on two "joysticks" which were connected to the V24-port
@@ -20,7 +20,9 @@ It also depends on two "joysticks" which were connected to the V24-port
 at the back, were tailor-made by us.
 We built them from small hotel soap containers, where the inside had cables, switches and diodes.
 They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
-The keyboard was no alternative because the keyboard roll-over was too limiting.
+The keyboard was really no alternative to my recollection because the keyboard roll-over was too
+limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per second, somehow
+interrupt routine might have impacted this?) or was it that joysticks were much too fun?
 
 Historical reflections over Combat can be found in:
 Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009.
