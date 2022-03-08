@@ -55,3 +55,10 @@ A good reference is: Hugg, Steven, *Making Games for the Atari 2600: An 8bitwork
 
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
+
+## Reference
+
+- Hugg, Steven, Making Games for the Atari 2600: An 8bitworkshop Book, CreateSpace Independent Publishing Platform, 2016
+- Montfort, Nick & Bogost, Ian, Racing the beam: the Atari Video computer system, MIT Press, Cambridge, Mass., 2009
+- Wolf, Mark J. P. (red.), The video game explosion: a history from Pong to Playstation and beyond, Greenwood Press, Westport, Conn., 2008
+
