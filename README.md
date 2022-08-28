@@ -77,12 +77,13 @@ not really suitable for the time. The terminal faded and the personal computer
 became the established configuration. This wasn't clear at the time, but
 eventually in the late 80'ties and start of the 90'ties the direction was set.
 
-In the chart below you can see how the sales were internally and proportionally
+In the chart below[^2] you can see how the sales were internally and proportionally
 of ABC80, successor ABC800 and the rest of computers was during late 70'ties
 until circa 1983. The national products were dominant.
 
-In total (1978-1985) the sales were 33,000 ABC80. But then Apple II were
-at 4.8 million and Commodore 64 somewhere 12-17 million.
+In total (1978-1985) the sales of ABC80 were 33,000. But then Apple II were
+at 4.8 million, and Commodore 64 somewhere 12-17 million. They were obviously
+not on the same planet.
 
 ![Timeline of proportional sales of computers in Sweden](assets/images/ABC80-timeline.png)
 
