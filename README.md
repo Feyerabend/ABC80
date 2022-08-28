@@ -6,13 +6,17 @@ Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1]
 (Advanced Basic Computer for the 80-ties, approx.) in 1981,
 inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+But we will return to this later below.
+This computer, ABC80, was a Swedish computer quite new at the time
+(to market in 1978), and bought by the school for class room education
+in circa early 1979.
 
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 
 ## Some historical context
 
-Timeline of some microcomputers during the years 1975-1984, year of
-introduction and computer:
+Let's have a look at a timeline of some microcomputers during the years
+1975-1984, with year of introduction and computer respectively:
 
 - 1975
   - MITS Altair 8800
@@ -118,7 +122,7 @@ as COMPIS. But that is another story...*
 
 ## The code
 
-*U. Kristian Lidberg* did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
+*U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a very small degree) contributed. We were at the time in
 the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnkyrka_gymnasium),
 Stockholm, Sweden), in 1981. As you might recognize, it is not very
