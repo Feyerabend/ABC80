@@ -59,12 +59,13 @@ Let's have a look at a timeline of some microcomputers during the years
   - IBM PCjr
 ...
 
-One observation is that the field of bith innovation and diversity is wide spread
+One observation is that the field of both innovation and diversity is wide spread
 during these years. Each system had its own dependencies, its own configuration,
 its own programming language. Yes, there were de facto standards such as Centronics
 parallel connections, RS-232, CP/M or the older S-100 bus. But they did not kill
-the other systems. Rather, they cooperated. Sometimes poorly. But that was to change.
-With such climbing diversity, standards felt was needed even more.
+the other systems. Rather, they cooperated. Sometimes poorly. Maybe too much.
+But that was to change. With such a climbing diversity, standards felt was needed
+even more.
 
 IBM PC was introduced in 1983 in Sweden, two years after the introduction in USA.
 But the homebrew computer ABC80 and its successor ABC800, had strong sales in the
@@ -82,8 +83,8 @@ that could run CP/M, not unusual at this time to expand systems for CP/M
 with the intension of generalizing the computer. Even IBM PC had from the
 start three systems to chose from: UCSD Pascal (p-code), CP/M-86, and
 IBM/Microsoft DOS. In the 80'ties came UNIX and C as the standard to be.
-They said. But it wasn't. Hardware and software for these systems
-were expensive. Too expensive. They were multiuser, but the old time for sharing was
+They said. But it wasn't. Hardware and software for these systems were
+expensive. Too expensive. They were multiuser, but the old time for sharing was
 not really suitable for the time. The terminal faded and the personal computer
 became the established configuration. This wasn't clear at the time, but
 eventually in the late 80'ties and start of the 90'ties the direction was set.
