@@ -156,7 +156,6 @@ RightTurn
         bne ZeroTurn	; no recognized input from joystick
         jmp RightDirection
 
-
 			; SUBROUTINE
 NewTurn                 ; the steering started and we initilize
 			; we got a new start of a turn
@@ -165,7 +164,6 @@ NewTurn                 ; the steering started and we initilize
         lda SWCHA
         sta Steering	; load the current status from joystick
         rts
-
 
 			; SUBROUTINES LEF AND RIGHT
                         ; change direction accoring to steering (and delay)
@@ -204,7 +202,6 @@ ZeroTurn
         sta Counter	; counter
         sta Steering	; and steering
 	rts
-
 
 			; SUBROUTINE
 CheckDirection		; check for which direction is taken (0-7)
@@ -292,7 +289,6 @@ EndDirections
 	rts
 
 
-
 			; SUBROUTINE
 CheckXYPosLimits	; check for min and max of XPos and YPos,
 			; flip, if on boundary
@@ -325,7 +321,6 @@ NotMINX
 
 EndCheck
 	rts
-
 
 
 				; graphics data of aeroplane
