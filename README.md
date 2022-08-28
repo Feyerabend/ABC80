@@ -59,19 +59,30 @@ Let's have a look at a timeline of some microcomputers during the years
   - IBM PCjr
 ...
 
+One observation is that the field of bith innovation and diversity is wide spread
+during these years. Each system had its own dependencies, its own configuration,
+its own programming language. Yes, there were de facto standards such as Centronics
+parallel connections, RS-232, CP/M or the older S-100 bus. But they did not kill
+the other systems. Rather, they cooperated. Sometimes poorly. But that was to change.
+With such climbing diversity, standards felt was needed even more.
+
 IBM PC was introduced in 1983 in Sweden, two years after the introduction in USA.
 But the homebrew computer ABC80 and its successor ABC800, had strong sales in the
 late 70-ties until the mid-80'ties in Sweden, when it was gradually replaced by
-foremost IBM PC and clones. But the success of the PC was not immediate.
+foremost IBM PC and clones. But even the success of the PC was not immediate.
 The IBM PC XT, later AT as well as Microsoft DOS made it harder to keep the
 competition at a profitable level. The constant increased flow of new hardware
-as well as software, internal fighting over contracts of who had the right to
-sell what and when among retailers, made sales even harder.
+as well as software (translated software), internal fighting over contracts
+of who had the right to sell what and when among retailers of ABC-computers,
+made sales even harder.
 
 In the late 70'ties CP/M was the system to keep track of. Also in Sweden.
-But it was getting old. Even IBM PC had from the start three systems to chose from:
-UCSD Pascal, CP/M, and IBM/Microsoft DOS. In the 80'ties came UNIX and C as the
-standard to be. They said. But it wasn't. Hardware and software for these systems
+But it was starting to get old. There were cards and software for ABC80
+that could run CP/M, not unusual at this time to expand systems for CP/M
+with the intension of generalizing the computer. Even IBM PC had from the
+start three systems to chose from: UCSD Pascal (p-code), CP/M-86, and
+IBM/Microsoft DOS. In the 80'ties came UNIX and C as the standard to be.
+They said. But it wasn't. Hardware and software for these systems
 were expensive. Too expensive. They were multiuser, but the old time for sharing was
 not really suitable for the time. The terminal faded and the personal computer
 became the established configuration. This wasn't clear at the time, but
@@ -105,7 +116,8 @@ Specifications ABC80:
 * 16K RAM (could be expanded to 32K)
 * 16K ROM with BASIC semicompilator/interpreter and e.g. drivers for a tape recorder.
 * Monitor B/W included
-* 78x72 dots (Videotex/Prestel)
+* 78 x 72 dots (Videotex/Prestel)
+* 24 rows x 40 columns character screen
 * Swedish keyboard (sold in some other countries also, Hungary e.g.)
 * Sound (actually decent chip, but not fully used)
 * Expansion slot (4680 bus)
