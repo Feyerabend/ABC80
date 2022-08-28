@@ -24,7 +24,7 @@ Small timeline of some microcomputers 1975-1984
 **	Radio Shack TRS-80
 **	Atari VCS (2600)
 * 1978
-**	ABC80
+**	**ABC80**
 * 1979
 **	Atari 400
 **	Atari 800
@@ -50,7 +50,7 @@ Small timeline of some microcomputers 1975-1984
 **	IBM PCjr
 ...
 
-==U. Kristian Lidberg== did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
+*U. Kristian Lidberg* did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a very small degree) contributed. We were at the time in
 the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnkyrka_gymnasium),
 Stockholm, Sweden), in 1981. As you might recognize, it is not very
