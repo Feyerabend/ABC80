@@ -7,8 +7,9 @@ Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80)
 inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
-Small timeline of some microcomputers 1975-1984
+Small timeline of some microcomputers 1975-1984, year of introduction:
 
+..
 * 1975
 **	MITS Altair 8800
 **	IMSAI 8080
@@ -19,7 +20,7 @@ Small timeline of some microcomputers 1975-1984
 **	Rockwell AIM 65
 * 1977
 **	RCA COSMAC VIP
-**	Apple II (Sweden 1978)
+**	Apple II (in Sweden 1978)
 **	Commodore PET
 **	Radio Shack TRS-80
 **	Atari VCS (2600)
@@ -36,7 +37,7 @@ Small timeline of some microcomputers 1975-1984
 **	Sinclair ZX81
 **	Osborne 1
 **	TI-99/4A
-**	IBM PC (Sweden 1983)
+**	IBM PC (in Sweden 1983)
 **	Acorn BBC Micro
 * 1982
 **	Victor 9000
