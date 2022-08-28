@@ -61,8 +61,8 @@ late 70-ties until the mid-80'ties in Sweden, when it was gradually replaced by
 foremost IBM PC and clones. But the success of the PC was not immediate.
 The IBM PC XT, later AT as well as Microsoft DOS made it harder to keep the
 competition at a profitable level. The constant increased flow of new hardware
-as well as software didn't make it easy to keep up. Internal fighting over contracts
-of who had the right to sell what and when among retailers, made sales even harder.
+as well as software, internal fighting over contracts of who had the right to
+sell what and when among retailers, made sales even harder.
 
 In the late 70'ties CP/M was the system to keep track of. Also in Sweden.
 But it was getting old. Even IBM PC had from the start three systems to chose from:
@@ -70,10 +70,15 @@ UCSD Pascal, CP/M, and IBM/Microsoft DOS. In the 80'ties came UNIX and C as the
 standard to be. They said. But it wasn't. Hardware and software for these systems
 were expensive. Too expensive. They were multiuser, but the old time for sharing was
 not really suitable for the time. The terminal faded and the personal computer
-became the established configuration. 
+became the established configuration. This wasn't clear at the time, but
+eventually in the late 80'ties and start of the 90'ties the direction was set.
 
-In the chart below you can see how the sales were internally and proportinally
-of ABC80, successor ABC800 and the rest was during late 70'ties until circa 1983.
+In the chart below you can see how the sales were internally and proportionally
+of ABC80, successor ABC800 and the rest of computers was during late 70'ties
+until circa 1983. The national products were dominant.
+
+In total (1978-1985) the sales were 33,000 ABC80. But then Apple II were
+at 4.8 million and Commodore 64 somewhere 12-17 million.
 
 ![Timeline of proportional sales of computers in Sweden](assets/images/ABC80-timeline.png)
 
@@ -85,6 +90,30 @@ The cost of computers were quite high at this time, but also shrinking heavily.
 * 1978 ABC80 sold for approx. 6,000 SEK, which is today ca $2,500 USD, not far from the PET.
 * 1983 Commodore 64 sold for $595 which is today ca $1,700 USD.
 
+The ABC80 was a collaboration between DIAB Industries behind the technology,
+Scandia Metric with its roots in industry, and Luxor which made radios and
+television sets.
+
+Specifications ABC80:
+* Zilog Z80, 3 MHz
+* 16K RAM (could be expanded to 32K)
+* 16K ROM with BASIC semicompilator/interpreter and e.g. drivers for a tape recorder.
+* Monitor B/W included
+* 78x72 dots (Videotex/Prestel)
+* Swedish keyboard (sold in some other countries also, Hungary e.g.)
+* Sound (actually decent chip, but not fully used)
+* Expansion slot (4680 bus)
+
+*Conclusion: ABC80 had industrial strength, was very solid with software in ROM,
+fast and reliable (one or two bugs maybe, later corrected). Expansion was key to
+the construction and essential, as it was basically designed for industry and primarily
+not games or business. The later generalization with ABC800 made it easier for expansion
+in those latter fields. It had color, better graphics, better BASIC and more variations.*
+
+*On the other hand segments which could also have gained from the success
+of ABC80, such as schools, graphic, gaming and sound technology etc. were left behind.
+Instead schools were completely misled by investing in failed projects like this
+as COMPIS. But that is another story...*
 
 
 ## The code
