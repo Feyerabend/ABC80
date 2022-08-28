@@ -115,9 +115,9 @@ not games or business. The later generalization with ABC800 made it easier for e
 in those latter fields. It had color, better graphics, better BASIC and more variations.*
 
 *On the other hand segments which could also have gained from the success
-of ABC80, such as schools, graphic, gaming and sound technology etc. were left behind.
-Instead schools were completely misled by investing in failed projects like this
-as COMPIS. But that is another story...*
+of ABC80, such as schools, graphic, gaming or sound technology etc. were left behind.
+Instead schools were completely misled by investing in failed projects such as "COMPIS".
+But that is another story...*
 
 
 ## The code
