@@ -2,10 +2,12 @@
 
 # ABC80 AIR-FIGHT 1981
 A recreated program/code from paper trail.
-Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80)
+Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1]
 (Advanced Basic Computer for the 80-ties, approx.) in 1981,
 inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+
+[^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 
 Small timeline of some microcomputers 1975-1984, year of introduction:
 
