@@ -91,13 +91,14 @@ not on the same planet.
 Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 212.
 
 The cost of computers were quite high at this time, but also shrinking heavily.
-* 1977 Commodore PET sold for $595 which is today ca $2,850 USD.
-* 1978 ABC80 sold for approx. 6,000 SEK, which is today ca $2,500 USD, not far from the PET.
-* 1983 Commodore 64 sold for $595 which is today ca $1,700 USD.
+* 1977 Commodore PET sold for $595 which is today (2022) ca $2,850 USD.
+* 1978 ABC80 sold for approx. 6,000 SEK, which is today (2022) ca $2,500 USD, not far from the PET.
+* 1983 Commodore 64 sold for $595 which is today (2022) ca $1,700 USD.
 
 The ABC80 was a collaboration between DIAB Industries behind the technology,
 Scandia Metric with its roots in industry, and Luxor which made radios and
-television sets.
+television sets. There were retailers that was also behind the large, but
+local (national), success.
 
 Specifications ABC80:
 * Zilog Z80, 3 MHz
@@ -109,7 +110,7 @@ Specifications ABC80:
 * Sound (actually decent chip, but not fully used)
 * Expansion slot (4680 bus)
 
-*Conclusion: ABC80 had industrial strength, was very solid with software in ROM,
+*My conclusion: ABC80 had industrial strength, was very solid with software in ROM,
 fast and reliable (one or two bugs maybe, later corrected). Expansion was key to
 the construction and essential, as it was basically designed for industry and primarily
 not games or business. The later generalization with ABC800 made it easier for expansion
