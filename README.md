@@ -11,45 +11,45 @@ inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 
 Small timeline of some microcomputers 1975-1984, year of introduction:
 
-* 1975
-**	MITS Altair 8800
-**	IMSAI 8080
-* 1976
-**	MOS KIM-1
-**	Sol-20
-**	Apple I
-**	Rockwell AIM 65
-* 1977
-**	RCA COSMAC VIP
-**	Apple II (in Sweden 1978)
-**	Commodore PET
-**	Radio Shack TRS-80
-**	Atari VCS (2600)
-* 1978
-**	**ABC80**
-* 1979
-**	Atari 400
-**	Atari 800
-* 1980
-**	TRS-80 Pocket Computer
-**	Sinclair ZX80
-* 1981
-**	Commodore VIC-20
-**	Sinclair ZX81
-**	Osborne 1
-**	TI-99/4A
-**	IBM PC (in Sweden 1983)
-**	Acorn BBC Micro
-* 1982
-**	Victor 9000
-**	Sinclair ZX-Spectrum
-**	Commodore 64
-* 1983
-**	Jupiter Ace
-**	Apple Lisa
-* 1984
-**	Apple Macintosh
-**	IBM PCjr
+- 1975
+  - MITS Altair 8800
+  - IMSAI 8080
+- 1976
+  - MOS KIM-1
+  - Sol-20
+  - Apple I
+  - Rockwell AIM 65
+- 1977
+  - RCA COSMAC VIP
+  - Apple II (in Sweden 1978)
+  - Commodore PET
+  - Radio Shack TRS-80
+  - Atari VCS (2600)
+- 1978
+  - **ABC80**
+- 1979
+  - Atari 400
+  - Atari 800
+- 1980
+  - TRS-80 Pocket Computer
+  - Sinclair ZX80
+- 1981
+  - Commodore VIC-20
+  - Sinclair ZX81
+  - Osborne 1
+  - TI-99/4A
+  - IBM PC (in Sweden 1983)
+  - Acorn BBC Micro
+- 1982
+  - Victor 9000
+  - Sinclair ZX-Spectrum
+  - Commodore 64
+- 1983
+  - Jupiter Ace
+  - Apple Lisa
+- 1984
+  - Apple Macintosh
+  - IBM PCjr
 ...
 
 *U. Kristian Lidberg* did the main code in [BASIC](https://en.wikipedia.org/wiki/BASIC)
