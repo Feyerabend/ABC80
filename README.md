@@ -9,7 +9,6 @@ inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 
 Small timeline of some microcomputers 1975-1984, year of introduction:
 
-..
 * 1975
 **	MITS Altair 8800
 **	IMSAI 8080
