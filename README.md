@@ -212,6 +212,8 @@ It also depends on two "joysticks" which were connected to the V24-port
 [RS232](https://en.wikipedia.org/wiki/RS-232) at the back, were tailor-made by us.
 So it did not have much of an afterlife.
 
+![Me and illustration of AIR-FIGHT joystick](assets/images/airfight-joystick.jpeg)
+
 We built the yousticks out of small hotel soap containers, where the inside had cables,
 switches and diodes. (No pull up or pull down resistors, from which I can remember.)
 The joysticks were in the same spirit as Atari made them: simple switches, and for each a "fire button".
