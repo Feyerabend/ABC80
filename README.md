@@ -147,7 +147,7 @@ with more variations.*
 *On the other hand segments which could also have gained from the success
 of ABC80, such as schools, those dependent on the graphic, gaming or sound
 technology etc. were left behind. Instead schools were completely misled by investing in
-failed projects such as "COMPIS". But that is quite another story...*
+failed projects such as "COMPIS"[^3]. But that is quite another story...*
 
 In general the horizontal field of innovation and diversity came to be replaced by a
 vertical strata. The highly incompatible plethora of machines in spirit of the 70s,
@@ -158,14 +158,16 @@ that copied and cloned each others ideas.
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
-these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^3],
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^4],
 the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin[^4], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
+or Jef Raskin[^5], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
 Cat), the ideas evaporated soon in this narrow environment.
 
-[^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
+[^3]: See https://en.wikipedia.org/wiki/Compis.
 
-[^4]: See https://en.wikipedia.org/wiki/Jef_Raskin.
+[^4]: See https://en.wikipedia.org/wiki/Ted_Nelson.
+
+[^5]: See https://en.wikipedia.org/wiki/Jef_Raskin.
 
 Or look at the inevitable history and legacy that still influences our modern computers, such
 as architectures and processors that can still run old code almost dating back to the origin in
@@ -236,13 +238,10 @@ for Atari 2600.
 
 ![Aeroplane on Atari 2600/VCS](assets/images/partial-airfight-atari-vcs.gif)
 
-A good reference is: Hugg, Steven, *Making Games for the Atari 2600: An 8bitworkshop Book* (2016),
-CreateSpace Independent Publishing Platform, 2018.
-
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
 
-## Reference
+## References
 
 - Andersson, Anders (red.), *ABC om BASIC*, (1979) 2. uppl., Didact, Linköping, 1980
 - Hugg, Steven, *Making Games for the Atari 2600: An 8bitworkshop Book*, CreateSpace Independent Publishing Platform, 2016
