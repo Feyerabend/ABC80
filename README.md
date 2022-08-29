@@ -123,16 +123,28 @@ Scandia Metric with its roots in industry, and Luxor which made radios and
 television sets. There were retailers that was also behind the large, but
 local (national), success.
 
-Specifications ABC80:
+Specifications of the ABC80:
 * Zilog Z80, 3 MHz
-* 16K RAM (could be expanded to 32K)
-* 16K ROM with BASIC semi compiler/interpreter and e.g. drivers for a tape recorder.
-* Monitor B/W included
-* 78 x 72 dots (Videotex/Prestel)
+* 16K RAM installed (could be expanded to 32K)
+* 16K ROM with BASIC semi compiler/interpreter and e.g. drivers for a tape recorder
+* Monitor B/W included (modified TV set from Luxor)
+* Graphics 78 x 72 dots (Videotex/Prestel: https://en.wikipedia.org/wiki/Videotex)
 * 24 rows x 40 columns character screen
-* Swedish keyboard (sold in some other countries also, Hungary e.g.)
-* Sound (actually decent chip, but not fully used)
-* Expansion slot (4680 bus)
+* Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably Hungarian keyboard)
+* Sound (actually a decent chip, but not fully used by the computer)
+* Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments, measurements, ...)
+
+Later on the ABC80 could be extended with 3rd party additions such as
+contemporary popular 80 column cards, CP/M, and local network, which
+expanded its lifetime in the start of the 80s. But the support wasn't
+coming from the source itself, and adding possibly conflicting hardware
+didn't make its life easier.
+
+DIAB[^3] had moved on to focusing its own crafted UNIX (DNIX[^4]) and
+other machines at this time.
+
+[^3]: See https://en.wikipedia.org/wiki/Dataindustrier_AB.
+[^4]: See https://en.wikipedia.org/wiki/DNIX.
 
 
 ## My conclusions
@@ -147,7 +159,7 @@ with more variations.*
 *On the other hand segments which could also have gained from the success
 of ABC80, such as schools, those dependent on the graphic, gaming or sound
 technology etc. were left behind. Instead schools were completely misled by investing in
-failed projects such as "COMPIS"[^3]. But that is quite another story...*
+failed projects such as "COMPIS"[^5]. But that is quite another story...*
 
 In general the horizontal field of innovation and diversity came to be replaced by a
 vertical strata. The highly incompatible plethora of machines in spirit of the 70s,
@@ -158,16 +170,16 @@ that copied and cloned each others ideas.
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
-these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^4],
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^6],
 the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin[^5], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
+or Jef Raskin[^7], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
 Cat), the ideas evaporated soon in this narrow environment.
 
-[^3]: See https://en.wikipedia.org/wiki/Compis.
+[^5]: See https://en.wikipedia.org/wiki/Compis.
 
-[^4]: See https://en.wikipedia.org/wiki/Ted_Nelson.
+[^6]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
-[^5]: See https://en.wikipedia.org/wiki/Jef_Raskin.
+[^7]: See https://en.wikipedia.org/wiki/Jef_Raskin.
 
 Or look at the inevitable history and legacy that still influences our modern computers, such
 as architectures and processors that can still run old code almost dating back to the origin in
