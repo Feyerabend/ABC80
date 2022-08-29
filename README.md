@@ -68,10 +68,10 @@ A year after the three amigos (triad): Commodore PET, Apple II and TRS-80 were
 released, ABC80 had some kind of the same flavour to it. These were machines that took
 the step to a compact all-in-one computer for the expanding hobby/home computer market.
 Previously there were mainly boards sold you could solder on the components yourself,
-add cards, peripherals, tape recorders, printers, disc units, screens etc. that
+add cards, peripherals, tape recorders, printers, disc drive units, screens etc. that
 required much more skill than plugging in a power cable. The machines had BASIC in ROM.
-When started there were instantly response from a prompt, ready for programming.
-Quite a difference from just a few years ago.
+When started there would respond instantly with a prompt, ready for programming.
+Quite a difference from just a few years earlier.
 
 Another observation is that the field of both innovation and diversity is widespread
 during these years. Each system had its own dependencies, its own configuration,
@@ -180,9 +180,9 @@ that copied and cloned each others ideas.
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
-these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^3],
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^3]
 the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin[^4], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
+or Jef Raskin,[^4] the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
 Cat), the ideas evaporated soon in this narrow environment.
 
 [^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
