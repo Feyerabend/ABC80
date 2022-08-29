@@ -134,7 +134,10 @@ Specifications ABC80:
 * Sound (actually decent chip, but not fully used)
 * Expansion slot (4680 bus)
 
-*My conclusion: ABC80 had industrial strength, was very solid with software in ROM,
+
+## My conclusions
+
+*ABC80 had industrial strength, was very solid with software in ROM,
 fast and reliable (one or two bugs maybe, later corrected). Expansion was key to
 the construction and essential, as it was basically designed for industry and primarily
 not for e.g. games or business. The later generalisation with ABC800 made it easier
