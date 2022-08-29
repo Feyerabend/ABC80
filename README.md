@@ -16,6 +16,7 @@ was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
 Thus must have been one of the earliest schools in Sweden to have computers.
 
+![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
 ## Some historical context
 
@@ -100,8 +101,8 @@ for CP/M with the intention of generalising the computer. Even IBM PC had from t
 start three systems to choose from: UCSD Pascal (p-code), CP/M-86, and
 IBM/Microsoft DOS. In the start of the 80s the prognosis was that UNIX and C was the
 standard to be. Many bet on Unix, a few bet on the PC. They said Unix was here to stay,
-but it wasn't. Hardware and software for these systems were
-expensive. Rally, too expensive. They were multiuser, endorsed by authorities,
+but it wasn't. Hardware and software for these systems were expensive.
+Truely, too expensive. They were multiuser, endorsed by many authorities,
 but the old time for sharing was not really suitable for the time.
 *The terminal faded and the personal computer became the established configuration.*
 This however wasn't clear at the time. Eventually in the late 80s and start of
@@ -111,9 +112,9 @@ In the chart below[^2] you can see how the sales were internally and proportiona
 of ABC80, successor ABC800 and the rest of computers was during late 70'ties
 until circa 1983. The national products were dominant.
 
-In total (1978-1985) the sales of ABC80 were 33,000. But then Apple II were
-at 4.8 million, and Commodore 64 somewhere 12-17 million. They were obviously
-not on the same planet.
+In total, from 1978-1985, the sales of ABC80 were 33,000 units. But then Apple II were
+at 4.8 million, and Commodore 64 somewhere around 12-17 million. They were obviously
+not playing on the same field.
 
 ![Timeline of proportional sales of computers in Sweden](assets/images/ABC80-timeline.png)
 
@@ -121,9 +122,9 @@ not on the same planet.
 Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 212.
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
-* 1977 Commodore PET sold for $595 which is today (2022) ca $2,850 USD.
-* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is today (2022) ca $2,900 USD, thus not far from the PET.
-* 1983 Commodore 64 sold for $595 which is today (2022) ca $1,700 USD.
+* 1977 Commodore PET sold for $595 which is in 2022 ca $2,850 USD.
+* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is today ca $2,900 USD, thus not far from the PET.
+* 1983 Commodore 64 sold for $595 which is today ca $1,700 USD.
 
 The ABC80 was a collaboration between [DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
 (DIAB Industries) behind the technology, [Scandia Metric AB](https://sv.wikipedia.org/wiki/Scandia_Metric)
