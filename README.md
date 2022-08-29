@@ -2,21 +2,23 @@
 
 # ABC80 AIR-FIGHT 1981
 A recreated program/code from paper trail.
-Originally coded for the [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1]
-(Advanced Basic Computer for the 80-ties, approx.) in 1981,
-inspired by [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
+Originally the program was coded for the Swedish home computer
+[ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
+abbreviation of "Advanced Basic Computer for the 80-ties, approx.) in 1981.
+Inspired by the contemporary [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
-But we will return to this later below.
-This computer, ABC80, was a Swedish computer quite new at the time
-(to market in 1978), and bought by the school for class room education
-in circa early 1979.
 
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 
+But we will return to this program later below. The computer, ABC80,
+was a Swedish computer quite new at the time which came to market in 1978.
+It was bought by the school for classroom education in circa early 1979.
+
+
 ## Some historical context
 
-Let's have a look at a timeline of some microcomputers during the years
-1975-1984, with year of introduction and computer respectively:
+Let's have a look at a timeline of some contemporary microcomputers introduced
+during the years 1975-1984, with year of introduction and computer respectively:
 
 - 1975
   - MITS Altair 8800
@@ -59,35 +61,42 @@ Let's have a look at a timeline of some microcomputers during the years
   - IBM PCjr
 ...
 
-One observation is that the field of both innovation and diversity is wide spread
-during these years. Each system had its own dependencies, its own configuration,
-its own programming language. Yes, there were de facto standards such as Centronics
-parallel connections, RS-232, CP/M or the older S-100 bus. But they did not kill
-the other systems. Rather, they cooperated. Sometimes poorly. Maybe too much.
-But that was to change. With such a climbing diversity, standards felt was needed
-even more.
+A year after the three amigos: Commodore PET, Apple II and TRS-80 were released,
+ABC80 had some of the same flavour. These were machines that took the step to
+a compact all-in-one computer for the expanding hobby/home computer market.
+Previously there were mainly boards you could solder yourself, add cards,
+peripherals, screens etc. that requires much more skill than plugging in a
+power cable. The machines had BASIC in ROM. When started there were
+instantly response from a prompt, ready for programming. Quite a difference
+from just a few years before.
 
-IBM PC was introduced in 1983 in Sweden, two years after the introduction in USA.
+Another observation is that the field of both innovation and diversity is widespread
+during these years. Each system had its own dependencies, its own configuration,
+its own programming language. Yes, there were standards and de facto standards
+such as Centronics parallel port, some wiring of RS-232, IB 8 inch floppy disc,
+CP/M or even the older S-100 bus. But they did not kill the other systems. Rather, they cooperated. But poorly. Maybe too much. But that was to change. With such climbing diversity, standards were needed even more.
+
+IBM PC was introduced in 1983 in Sweden, two years after the introduction in the USA.
 But the homebrew computer ABC80 and its successor ABC800, had strong sales in the
-late 70-ties until the mid-80'ties in Sweden, when it was gradually replaced by
-foremost IBM PC and clones. But even the success of the PC was not immediate.
-The IBM PC XT, later AT as well as Microsoft DOS made it harder to keep the
+late 70s until the mid-80s in Sweden, when it was gradually replaced by
+foremost IBM PC and its clones. But even the success of the PC was not immediate.
+The IBM PC XT, later AT, as well as Microsoft DOS made it harder to keep the
 competition at a profitable level. The constant increased flow of new hardware
 as well as software (translated software), internal fighting over contracts
 of who had the right to sell what and when among retailers of ABC-computers,
 made sales even harder.
 
-In the late 70'ties CP/M was the system to keep track of. Also in Sweden.
+In the late 70s CP/M was the system to keep track of. Also in Sweden.
 But it was starting to get old. There were cards and software for ABC80
-that could run CP/M, not unusual at this time to expand systems for CP/M
-with the intension of generalizing the computer. Even IBM PC had from the
-start three systems to chose from: UCSD Pascal (p-code), CP/M-86, and
-IBM/Microsoft DOS. In the 80'ties came UNIX and C as the standard to be.
-They said. But it wasn't. Hardware and software for these systems were
+that could run CP/M, not unusual at this time to expand contemporary systems
+for CP/M with the intention of generalising the computer. Even IBM PC had from the
+start three systems to choose from: UCSD Pascal (p-code), CP/M-86, and
+IBM/Microsoft DOS. In the 80s the prognosis was that UNIX and C was the
+standard to be. They said, but it wasn't. Hardware and software for these systems were
 expensive. Too expensive. They were multiuser, but the old time for sharing was
 not really suitable for the time. The terminal faded and the personal computer
-became the established configuration. This wasn't clear at the time, but
-eventually in the late 80'ties and start of the 90'ties the direction was set.
+became the established configuration. This wasn't clear at the time.
+Eventually in the late 80s and start of the 90s the direction was set.
 
 In the chart below[^2] you can see how the sales were internally and proportionally
 of ABC80, successor ABC800 and the rest of computers was during late 70'ties
@@ -102,7 +111,7 @@ not on the same planet.
 [^2]: Diagram reproduced from: Sjöström, Roland, Positionering under strategisk osäkerhet:
 Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 212.
 
-The cost of computers were quite high at this time, but also shrinking heavily.
+The cost of computers was quite high at this time, but also shrinking rapidly.
 * 1977 Commodore PET sold for $595 which is today (2022) ca $2,850 USD.
 * 1978 ABC80 sold for approx. 6,000 SEK, which is today (2022) ca $2,500 USD, not far from the PET.
 * 1983 Commodore 64 sold for $595 which is today (2022) ca $1,700 USD.
@@ -115,7 +124,7 @@ local (national), success.
 Specifications ABC80:
 * Zilog Z80, 3 MHz
 * 16K RAM (could be expanded to 32K)
-* 16K ROM with BASIC semicompilator/interpreter and e.g. drivers for a tape recorder.
+* 16K ROM with BASIC semi compiler/interpreter and e.g. drivers for a tape recorder.
 * Monitor B/W included
 * 78 x 72 dots (Videotex/Prestel)
 * 24 rows x 40 columns character screen
@@ -126,13 +135,19 @@ Specifications ABC80:
 *My conclusion: ABC80 had industrial strength, was very solid with software in ROM,
 fast and reliable (one or two bugs maybe, later corrected). Expansion was key to
 the construction and essential, as it was basically designed for industry and primarily
-not games or business. The later generalization with ABC800 made it easier for expansion
-in those latter fields. It had color, better graphics, better BASIC and more variations.*
+not for e.g. games or business. The later generalisation with ABC800 made it easier
+for expansion in those latter fields. It had colour, better graphics, better BASIC and came
+with more variations.*
 
 *On the other hand segments which could also have gained from the success
-of ABC80, such as schools, graphic, gaming or sound technology etc. were left behind.
-Instead schools were completely misled by investing in failed projects such as "COMPIS".
-But that is another story...*
+of ABC80, such as schools, those dependent on the graphic, gaming or sound
+technology etc. were left behind. Instead schools were completely misled by investing in
+failed projects such as "COMPIS". But that is quite another story...*
+
+In general the horizontal field of innovation and diversity came to be replaced by a vertical
+strata. The highly incompatible plethora of machines in spirit of the 70s, was replaced by a
+single item hardware where competition was in speed, internal memory expansion,
+external storage and programs that copied and cloned each other in ideas.
 
 
 ## The code
@@ -140,21 +155,23 @@ But that is another story...*
 *U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a very small degree) contributed. We were at the time in
 the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnkyrka_gymnasium),
-Stockholm, Sweden), in 1981. As you might recognize, it is not very
-consistent and flawed. We were alternating by the keyboard under some pressure to complete
-this (including nights), so there are naturally a lot of those flaws. I guess at maximum we
-might have done this in a week, or more probably in some days. (I also did a poster, which
-was an illustration of two fighting aeroplanes.)
+Stockholm, Sweden), in 1981. As you might recognize, it is not very consistent program
+and flawed. We were alternating by the keyboard under some pressure to complete
+this (including nights), so there are naturally a lot of those flaws as consequence.
+I guess at maximum we might have done this in a week, or more probably in some days.
+(I also did a poster, which was an illustration of two fighting aeroplanes.)
 
-It was really only once ever used, during an afternoon when parents visited the school.
+*It was really only once ever used, during an afternoon when parents visited the school.*
 It also depends on two "joysticks" which were connected to the V24-port
-[RS232](https://en.wikipedia.org/wiki/RS-232)
-at the back, were tailor-made by us.
-We built them from small hotel soap containers, where the inside had cables, switches and diodes.
-They were in the same spirit as Atari made them: simple switches, and for each a "fire button".
-The keyboard was really no alternative to my recollection because the keyboard roll-over was too
+[RS232](https://en.wikipedia.org/wiki/RS-232) at the back, were tailor-made by us.
+So it did not have much of an afterlife.
+
+We built the yousticks out of small hotel soap containers, where the inside had cables,
+switches and diodes. (No pull up or pull down resistors, from which I can remember.)
+The joysticks were in the same spirit as Atari made them: simple switches, and for each a "fire button".
+The keyboard was really no alternative, to my recollection, because the keyboard roll-over was too
 limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per second, somehow
-interrupt routine might have impacted this?) or was it that joysticks were much too fun?
+interruption routine might have impacted this?) or was it that joysticks were much too fun?
 
 Historical reflections over Combat can be found in:
 Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press,
@@ -170,7 +187,7 @@ or something to that effect.
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
 It has finally been put here as a remembrance of *Kristian*, as he disappeared without trace in the
-mid 80'ties, never to return.
+mid 80s, never to return.
 
 ### contrib/JAVASCRIPT
 A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
