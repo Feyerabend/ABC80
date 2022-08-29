@@ -4,15 +4,17 @@
 A recreated program/code from paper trail.
 Originally the program was coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
-abbreviation of "Advanced Basic Computer for the 80s, approx.) in 1981.
-Inspired by the contemporary [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
-[Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+abbreviation for "Advanced Basic Computer for the 80s", (approx.) in 1981.
+Inspired by the contemporary game console
+[Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
+game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 
-But we will return to this program later below. The computer, ABC80,
+But we will return to this program later. The computer, ABC80,
 was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
+Thus must have been one of the earliest schools in Sweden to have computers.
 
 
 ## Some historical context
@@ -43,6 +45,7 @@ during the years 1975-1984, with year of introduction and computer respectively:
   - TRS-80 Pocket Computer
   - Sinclair ZX80
 - 1981
+  - *ABC800*
   - Commodore VIC-20
   - Sinclair ZX81
   - Osborne 1
@@ -61,26 +64,28 @@ during the years 1975-1984, with year of introduction and computer respectively:
   - IBM PCjr
 ...
 
-A year after the three amigos: Commodore PET, Apple II and TRS-80 were released,
-ABC80 had some of the same flavour. These were machines that took the step to
-a compact all-in-one computer for the expanding hobby/home computer market.
-Previously there were mainly boards you could solder yourself, add cards,
-peripherals, screens etc. that requires much more skill than plugging in a
-power cable. The machines had BASIC in ROM. When started there were
-instantly response from a prompt, ready for programming. Quite a difference
-from just a few years before.
+A year after the three amigos (triad): Commodore PET, Apple II and TRS-80 were
+released, ABC80 had some kind of the same flavour to it. These were machines that took
+the step to a compact all-in-one computer for the expanding hobby/home computer market.
+Previously there were mainly boards sold you could solder on the components yourself,
+add cards, peripherals, tape recorders, printers, disc units, screens etc. that
+required much more skill than plugging in a power cable. The machines had BASIC in ROM.
+When started there were instantly response from a prompt, ready for programming.
+Quite a difference from just a few years ago.
 
 Another observation is that the field of both innovation and diversity is widespread
 during these years. Each system had its own dependencies, its own configuration,
 its own programming language. Yes, there were standards and de facto standards
-such as Centronics parallel port, some wiring of RS-232, IBM 8" inch floppy disc,
+such as Centronics parallel port, some wiring of RS-232, the IBM 8" floppy disc,
 CP/M or even the older S-100 bus. But they did not kill the other systems.
-Rather, they cooperated. But poorly. Maybe too much. But that was to change.
-With such climbing diversity, standards were needed even more.
+Rather, they cooperated. But poorly. Maybe too poor were the connections.
+But that was about to change. With such climbing staggering diversity,
+the equilibrium of standards were needed even more.
 
 IBM PC was introduced in 1983 in Sweden, two years after the introduction in the USA.
-But the homebrew computer ABC80 and its successor ABC800, had strong sales in the
-late 70s until the mid-80s in Sweden, when it was gradually replaced by
+But the nationally homebrew computer ABC80 and its successor
+[ABC800](https://en.wikipedia.org/wiki/ABC_800), had strong sales in the
+late 70s until the mid-80s inside of Sweden, when it was gradually replaced by
 foremost IBM PC and its clones. But even the success of the PC was not immediate.
 The IBM PC XT, later AT, as well as Microsoft DOS made it harder to keep the
 competition at a profitable level. The constant increased flow of new hardware
@@ -93,12 +98,14 @@ But it was starting to get old. There were cards and software for ABC80
 that could run CP/M, not unusual at this time to expand contemporary systems
 for CP/M with the intention of generalising the computer. Even IBM PC had from the
 start three systems to choose from: UCSD Pascal (p-code), CP/M-86, and
-IBM/Microsoft DOS. In the 80s the prognosis was that UNIX and C was the
-standard to be. They said, but it wasn't. Hardware and software for these systems were
-expensive. Too expensive. They were multiuser, but the old time for sharing was
-not really suitable for the time. The terminal faded and the personal computer
-became the established configuration. This wasn't clear at the time.
-Eventually in the late 80s and start of the 90s the direction was set.
+IBM/Microsoft DOS. In the start of the 80s the prognosis was that UNIX and C was the
+standard to be. Many bet on Unix, a few bet on the PC. They said Unix was here to stay,
+but it wasn't. Hardware and software for these systems were
+expensive. Rally, too expensive. They were multiuser, endorsed by authorities,
+but the old time for sharing was not really suitable for the time.
+*The terminal faded and the personal computer became the established configuration.*
+This however wasn't clear at the time. Eventually in the late 80s and start of
+the 90s the fog dissipated and direction was set.
 
 In the chart below[^2] you can see how the sales were internally and proportionally
 of ABC80, successor ABC800 and the rest of computers was during late 70'ties
@@ -115,37 +122,38 @@ Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 21
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
 * 1977 Commodore PET sold for $595 which is today (2022) ca $2,850 USD.
-* 1978 ABC80 sold for approx. 6,000 SEK, which is today (2022) ca $2,500 USD, thus not far from the PET.
+* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is today (2022) ca $2,900 USD, thus not far from the PET.
 * 1983 Commodore 64 sold for $595 which is today (2022) ca $1,700 USD.
 
-The ABC80 was a collaboration between DIAB Industrier (DIAB Industries)
-behind the technology, Scandia Metric with its roots in industry, and
-Luxor AB which made radios and television sets. There were retailers that
+The ABC80 was a collaboration between [DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
+(DIAB Industries) behind the technology, [Scandia Metric AB](https://sv.wikipedia.org/wiki/Scandia_Metric)
+with its roots in industry, and [Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB)
+which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
 
 Specifications of the ABC80:
 * Zilog Z80, 3 MHz
 * 16K RAM installed (could be expanded to 32K)
-* 16K ROM with BASIC semi compiler/interpreter and e.g. drivers for a tape recorder
+* 16K ROM with BASIC semi compiler/interpreter and e.g. driver for a tape recorder
 * Monitor B/W included (modified TV set from Luxor)
-* Graphics 78 x 72 dots (Videotex/Prestel: https://en.wikipedia.org/wiki/Videotex)
+* Graphics 78 x 72 dots (near the "standards" of Teletext /[Videotex](https://en.wikipedia.org/wiki/Videotex) /Prestel Plus ... )
 * 24 rows x 40 columns character screen
 * Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably Hungarian keyboard)
 * Sound (actually a decent chip, but not fully used by the computer)
 * Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments, measurements, ...)
 
+I don't remember, but maybe the tape recorder was included at times.
+Disc drives were bith from 3rd party and from the manufacturer.
 Later on the ABC80 could be extended with 3rd party additions such as
 contemporary popular 80 column cards, CP/M, and local network, which
 expanded its lifetime in the start of the 80s. But the support wasn't
 coming from the source itself, and adding possibly conflicting hardware
 didn't make its life easier.
 
-DIAB[^3] had moved on to focusing its own crafted UNIX: DNIX,[^4] and
-other machines at this time, with little time for something they wasn't
-that interested in.
-
-[^3]: See https://en.wikipedia.org/wiki/Dataindustrier_AB.
-[^4]: See https://en.wikipedia.org/wiki/DNIX.
+DIAB had moved on, betting on Unix, focusing its own crafted
+[DNIX](https://en.wikipedia.org/wiki/DNIX), and had other machines
+at this time, with little time for something they really wasn't that
+interested in.
 
 
 ## My conclusions
@@ -160,7 +168,8 @@ with more variations.*
 *On the other hand segments which could also have gained from the success
 of ABC80, such as schools, those dependent on the graphic, gaming or sound
 technology etc. were left behind. Instead schools were completely misled by investing in
-failed projects such as "COMPIS"[^5]. But that is quite another story...*
+failed projects such as "[COMPIS](https://en.wikipedia.org/wiki/Compis)".
+But that is quite another story...*
 
 In general the horizontal field of innovation and diversity came to be replaced by a
 vertical strata. The highly incompatible plethora of machines in spirit of the 70s,
@@ -171,16 +180,14 @@ that copied and cloned each others ideas.
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
-these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^6],
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^3],
 the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin[^7], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
+or Jef Raskin[^4], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
 Cat), the ideas evaporated soon in this narrow environment.
 
-[^5]: See https://en.wikipedia.org/wiki/Compis.
+[^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
-[^6]: See https://en.wikipedia.org/wiki/Ted_Nelson.
-
-[^7]: See https://en.wikipedia.org/wiki/Jef_Raskin.
+[^4]: See https://en.wikipedia.org/wiki/Jef_Raskin.
 
 Or look at the inevitable history and legacy that still influences our modern computers, such
 as architectures and processors that can still run old code almost dating back to the origin in
@@ -191,7 +198,6 @@ as software can rely on older code, systems, libraries etc. You do not necessari
 the wheel everyother year.
 
 Well, back to the code …
-
 
 
 
