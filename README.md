@@ -133,10 +133,10 @@ not playing on the same field.
 Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 212.
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
-* 1977 Commodore PET sold for $595 which is in 2022 ca $2,850 USD.
-* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is today ca $2,900 USD,
+* 1977 Commodore PET sold for $595 which is in 2022 today ca $2,850 USD.
+* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is in 2022 today ca $2,900 USD,
  thus not far from the PET.
-* 1983 Commodore 64 sold for $595 which is today ca $1,700 USD.
+* 1983 Commodore 64 sold for $595 which is in 2022 today ca $1,700 USD.
 
 The ABC80 was a collaboration between
 [DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
