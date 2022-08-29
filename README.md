@@ -4,7 +4,7 @@
 A recreated program/code from paper trail.
 Originally the program was coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
-abbreviation of "Advanced Basic Computer for the 80-ties, approx.) in 1981.
+abbreviation of "Advanced Basic Computer for the 80s, approx.) in 1981.
 Inspired by the contemporary [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
@@ -73,8 +73,10 @@ from just a few years before.
 Another observation is that the field of both innovation and diversity is widespread
 during these years. Each system had its own dependencies, its own configuration,
 its own programming language. Yes, there were standards and de facto standards
-such as Centronics parallel port, some wiring of RS-232, IB 8 inch floppy disc,
-CP/M or even the older S-100 bus. But they did not kill the other systems. Rather, they cooperated. But poorly. Maybe too much. But that was to change. With such climbing diversity, standards were needed even more.
+such as Centronics parallel port, some wiring of RS-232, IBM 8" inch floppy disc,
+CP/M or even the older S-100 bus. But they did not kill the other systems.
+Rather, they cooperated. But poorly. Maybe too much. But that was to change.
+With such climbing diversity, standards were needed even more.
 
 IBM PC was introduced in 1983 in Sweden, two years after the introduction in the USA.
 But the homebrew computer ABC80 and its successor ABC800, had strong sales in the
@@ -146,8 +148,14 @@ failed projects such as "COMPIS". But that is quite another story...*
 
 In general the horizontal field of innovation and diversity came to be replaced by a vertical
 strata. The highly incompatible plethora of machines in spirit of the 70s, was replaced by a
-single item hardware where competition was in speed, internal memory expansion,
+single item hardware during the 80s where new competition was in speed, internal memory expansion,
 external storage and programs that copied and cloned each other in ideas.
+
+There were new flaws such as incompatiblity between programs and data, sometimes intentionally.
+Or the inevitable history and legacy that still influences modern computers, such as
+architectures and processors that can run old code almost dating back to the origin in
+Intel 8088, or rather the 8086. This somewhat stifle hardware development as well as benefit
+software development, as it can rely on older code (systems, libraries etc).
 
 
 ## The code
