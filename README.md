@@ -265,7 +265,7 @@ __There might be *spelling mistakes*, as I have not tried to run this code at al
 It has finally been put here as a remembrance of *Kristian*, as he disappeared without
 trace in the mid 80s, never to return.
 
-#### Some principles or ideas behind the code
+#### Start
 
 * First there is an introduction of how to play. As a user you might have to answer
 some questions:
