@@ -74,11 +74,12 @@ during the years 1975-1984, with year of introduction and computer respectively:
 A year after the three amigos (triad): Commodore PET, Apple II and TRS-80 were
 released, ABC80 had some kind of the same flavour to it. These were machines that took
 the step to a compact all-in-one computer for the expanding hobby/home computer market.
-Previously there were mainly boards sold you could solder on the components yourself,
-add cards, peripherals, tape recorders, printers, disc drive units, screens etc. that
-required much more skill than plugging in a power cable. The new generation of machines
-had burnt in BASIC in ROM. When started there would respond instantly with a prompt,
-ready for programming. Quite a difference from just a few years earlier.
+Previously there were mainly boards sold, kit computers, you could solder on the
+components yourself, add cards, peripherals, tape recorders, printers, disc drive units,
+screens etc. that required much more skill than plugging in a power cable. The new
+generation of machines had burnt in BASIC in ROM. When started there would respond
+instantly with a prompt, ready for programming. Quite a difference from just a few
+years earlier.
 
 Another observation is that the field of both innovation and diversity is widespread
 during these "early" years. Each system had its own dependencies, its own configuration,
