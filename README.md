@@ -196,7 +196,7 @@ Well, back to the code …
 
 
 
-## The code
+## The code and additional hardware
 
 *U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a very small degree) contributed. We were at the time in
