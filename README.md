@@ -149,19 +149,32 @@ of ABC80, such as schools, those dependent on the graphic, gaming or sound
 technology etc. were left behind. Instead schools were completely misled by investing in
 failed projects such as "COMPIS". But that is quite another story...*
 
-In general the horizontal field of innovation and diversity came to be replaced by a vertical
-strata. The highly incompatible plethora of machines in spirit of the 70s, was replaced by a
-single item hardware during the 80s where new competition was in speed, internal memory
-expansion, external storage and programs that copied and cloned each other in ideas.
-Data, though, was still hard to convert between programs.
+In general the horizontal field of innovation and diversity came to be replaced by a
+vertical strata. The highly incompatible plethora of machines in spirit of the 70s,
+was replaced by a single item hardware during the 80s where new competition was in speed,
+speed, and more speed, but also internal memory expansion, external storage and programs
+that copied and cloned each others ideas.
 
-There were new flaws such as incompatibility between programs and data, sometimes
-intentionally to keep customers addicted to one branch of program development
-(e.g. word processing). Or the inevitable history and legacy that still influences our
-modern computers, such as architectures and processors that can still run old code
-almost dating back to the origin in Intel 8088, or rather the 8086. This somewhat stifled 
-hardware development over the years, as well as benefitted software development,
-as it can rely on older code (systems, libraries etc). Well, back to the code …
+Data, though, was still hard to convert between programs. There were new flaws such
+as incompatibility between programs and data, sometimes intentionally to keep customers
+addicted to one branch of program development (e.g. word processing). Not only were there
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,
+the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
+or Jef Raskin, the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
+Cat), the ideas evaporated soon in this narrow environment.
+
+Or look at the inevitable history and legacy that still influences our modern computers, such
+as architectures and processors that can still run old code almost dating back to the origin in
+Intel 8088, or rather the 8086 instructions. This somewhat stifled hardware development for
+many many years, or rather: it took it in a special direction of just getting faster
+with historical constraints. But nonetheless it benefitted software development,
+as software can rely on older code, systems, libraries etc. You do not have to invent
+the wheel everyother year.
+
+Well, back to the code …
+
+
+
 
 
 ## The code
