@@ -158,17 +158,21 @@ that copied and cloned each others ideas.
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
-these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson[^3],
 the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin, the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
+or Jef Raskin[^4], the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
 Cat), the ideas evaporated soon in this narrow environment.
+
+[^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
+
+[^4]: See https://en.wikipedia.org/wiki/Jef_Raskin.
 
 Or look at the inevitable history and legacy that still influences our modern computers, such
 as architectures and processors that can still run old code almost dating back to the origin in
 Intel 8088, or rather the 8086 instructions. This somewhat stifled hardware development for
 many many years, or rather: it took it in a special direction of just getting faster
 with historical constraints. But nonetheless it benefitted software development,
-as software can rely on older code, systems, libraries etc. You do not have to invent
+as software can rely on older code, systems, libraries etc. You do not necessarily have to invent
 the wheel everyother year.
 
 Well, back to the code …
