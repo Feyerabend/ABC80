@@ -1,11 +1,12 @@
 ![Reimagined AIR-FIGHT](assets/images/reimagined-air-fight-javascript.gif)
 
+
 # ABC80 AIR-FIGHT 1981
 A recreated program/code from paper trail.
 Originally the program was coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
-abbreviation for "Advanced Basic Computer for the 80s", (approx.) in 1981.
-Inspired by the contemporary game console
+abbreviation for "Advanced Basic Computer for the 80s", (approx. transl.) 
+n 1981. Inspired by the contemporary game console
 [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
@@ -16,9 +17,12 @@ was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
 Thus must have been one of the earliest schools in Sweden to have computers.
 
-![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons](assets/images/478px-ABC80.jpg)
+![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
+ via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
-(Picture: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons.)
+(Photo: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
+ via Wikimedia Commons.)
+
 
 ## Some historical context
 
@@ -125,12 +129,16 @@ Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 21
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
 * 1977 Commodore PET sold for $595 which is in 2022 ca $2,850 USD.
-* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is today ca $2,900 USD, thus not far from the PET.
+* 1978 ABC80 (no VAT) sold for approx. 6,900 SEK, which is today ca $2,900 USD,
+ thus not far from the PET.
 * 1983 Commodore 64 sold for $595 which is today ca $1,700 USD.
 
-The ABC80 was a collaboration between [DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
-(DIAB Industries) behind the technology, [Scandia Metric AB](https://sv.wikipedia.org/wiki/Scandia_Metric)
-with its roots in industry, and [Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB)
+The ABC80 was a collaboration between
+[DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
+(DIAB Industries) behind the technology,
+[Scandia Metric AB](https://sv.wikipedia.org/wiki/Scandia_Metric)
+with its roots in industry, and
+[Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB)
 which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
 
@@ -139,11 +147,14 @@ Specifications of the ABC80:
 * 16K RAM installed (could be expanded to 32K)
 * 16K ROM with BASIC semi compiler/interpreter and e.g. driver for a tape recorder
 * Monitor B/W included (modified TV set from Luxor)
-* Graphics 78 x 72 dots (near the "standards" of Teletext /[Videotex](https://en.wikipedia.org/wiki/Videotex) /Prestel Plus ... )
+* Graphics 78 x 72 dots (near the "standards" of Teletext
+ /[Videotex](https://en.wikipedia.org/wiki/Videotex) /Prestel Plus ... )
 * 24 rows x 40 columns character screen
-* Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably Hungarian keyboard)
+* Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably
+ Hungarian keyboard)
 * Sound (actually a decent chip, but not fully used by the computer)
-* Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments, measurements, ...)
+* Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments,
+ measurements, ...)
 
 I don't remember, but maybe the tape recorder was included at times.
 Disc drives were sold both from 3rd party, and from the manufacturer DIAB.
@@ -165,13 +176,13 @@ interested in.
 fast and reliable (one or two bugs maybe, later corrected). Expansion was key to
 the construction and essential, as it was basically designed for industry and primarily
 not for e.g. games or business. The later generalisation with ABC800 made it easier
-for expansion in those latter fields. It had colour, better graphics, better BASIC and came
-with more variations.*
+for expansion in those latter fields. It had colour, better graphics, better BASIC
+and came with more variations.*
 
 *On the other hand segments which could also have gained from the success
 of ABC80, such as schools, those dependent on the graphic, gaming or sound
-technology etc. were left behind. Instead schools were completely misled by investing in
-failed projects such as "[COMPIS](https://en.wikipedia.org/wiki/Compis)".
+technology etc. were left behind. Instead schools were completely misled by
+investing in failed projects such as "[COMPIS](https://en.wikipedia.org/wiki/Compis)".
 But that is quite another story...*
 
 In general the horizontal field of innovation and diversity came to be replaced by a
@@ -185,23 +196,23 @@ as incompatibility between programs and data, sometimes intentionally to keep cu
 addicted to one branch of program development (e.g. word processing). Not only were there
 these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^3]
 the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin,[^4] the guy behind Macintosh, with his ideas of speed up typing (eventually the Canon
-Cat), the ideas evaporated soon in this narrow environment.
+or Jef Raskin,[^4] the guy behind Macintosh, with his ideas of speed up typing
+(eventually the [Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas
+evaporated soon in this narrow environment.
 
 [^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
 [^4]: See https://en.wikipedia.org/wiki/Jef_Raskin.
 
-Or look at the inevitable history and legacy that still influences our modern computers, such
-as architectures and processors that can still run old code almost dating back to the origin in
-Intel 8088, or rather the 8086 instructions. This somewhat stifled hardware development for
-many many years, or rather: it took it in a special direction of just getting faster
-with historical constraints. But nonetheless it benefitted software development,
-as software can rely on older code, systems, libraries etc. You do not necessarily have to invent
-the wheel everyother year.
+Or look at the inevitable history and legacy that still influences our modern computers,
+such as architectures and processors that can still run old code almost dating back to
+the origin in Intel 8088, or rather the 8086 instructions. This somewhat stifled hardware
+development for many many years, or rather: it took it in a special direction of just getting
+faster with historical constraints. But nonetheless it benefitted software development,
+as software can rely on older code, systems, libraries etc. You do not necessarily have
+to invent the wheel everyother year.
 
 Well, back to the code …
-
 
 
 ## The code and additional hardware
@@ -224,10 +235,11 @@ So it did not have much of an afterlife.
 
 We built the yousticks out of small hotel soap containers, where the inside had cables,
 switches and diodes. (No pull up or pull down resistors, from which I can remember.)
-The joysticks were in the same spirit as Atari made them: simple switches, and for each a "fire button".
-The keyboard was really no alternative, to my recollection, because the keyboard roll-over was too
-limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per second, somehow
-interruption routine might have impacted this?) or was it that joysticks were much too fun?
+The joysticks were in the same spirit as Atari made them: simple switches, and for each a
+"fire button". The keyboard was really no alternative, to my recollection, because the keyboard
+roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per
+second, somehow interruption routine might have impacted this?) or was it that joysticks were
+much too fun?
 
 Historical reflections over Combat can be found in:
 Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press,
@@ -236,18 +248,20 @@ which explains *Combat* in detail.
 
 ![V-24 on ABC80](assets/images/v24-small.jpeg)
 
-AIR-FIGHT has never been published, **until now**, partly because we were probably afraid of possible
-copyright infringement at the time. That's why it's also called "AIR-FIGHT" rather than "Combat (#24)"
-or something to that effect.
+AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
+of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
+rather than "Combat (#24)" or something to that effect.
 
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
-It has finally been put here as a remembrance of *Kristian*, as he disappeared without trace in the
-mid 80s, never to return.
+It has finally been put here as a remembrance of *Kristian*, as he disappeared without
+trace in the mid 80s, never to return.
+
 
 ### contrib/JAVASCRIPT
 A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
 I. e. testing your ideas as "code".
+
 
 ### contrib/ATARI 2600/VCS
 A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for
@@ -261,8 +275,10 @@ for Atari 2600.
 
 ![Aeroplane on Atari 2600/VCS](assets/images/partial-airfight-atari-vcs.gif)
 
+
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
+
 
 ## References
 
