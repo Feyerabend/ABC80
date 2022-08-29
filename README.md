@@ -200,10 +200,12 @@ Data, though, was still hard to convert between programs. There were new flaws s
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
 these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^3]
-the guy behind hypertext, had his chance of changing electronic writing (Xanadu),
-or Jef Raskin,[^4] the guy behind Macintosh, with his ideas of speed up typing
+the guy behind hypertext, had his chance of changing electronic writing
+([Xanadu](https://en.wikipedia.org/wiki/Project_Xanadu)), or Jef Raskin,[^4]
+the guy behind Macintosh, with his ideas of speed up typing
 (eventually the [Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas
-evaporated soon in this narrow environment.
+evaporated soon in this narrow environment. What we now still have in implemented ideas
+is not far from what we already had 40-50 years ago.
 
 [^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
