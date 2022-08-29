@@ -6,7 +6,7 @@ A recreated program/code from paper trail.
 Originally the program was coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
 abbreviation for "Advanced Basic Computer for the 80s", (approx. transl.) 
-n 1981. Inspired by the contemporary game console
+in 1981. Inspired by the contemporary game console
 [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
@@ -76,15 +76,15 @@ released, ABC80 had some kind of the same flavour to it. These were machines tha
 the step to a compact all-in-one computer for the expanding hobby/home computer market.
 Previously there were mainly boards sold you could solder on the components yourself,
 add cards, peripherals, tape recorders, printers, disc drive units, screens etc. that
-required much more skill than plugging in a power cable. The machines had BASIC in ROM.
-When started there would respond instantly with a prompt, ready for programming.
-Quite a difference from just a few years earlier.
+required much more skill than plugging in a power cable. The new generation of machines
+had burnt in BASIC in ROM. When started there would respond instantly with a prompt,
+ready for programming. Quite a difference from just a few years earlier.
 
 Another observation is that the field of both innovation and diversity is widespread
-during these years. Each system had its own dependencies, its own configuration,
+during these "early" years. Each system had its own dependencies, its own configuration,
 its own programming language. Yes, there were standards and de facto standards
 such as Centronics parallel port, some wiring of RS-232, the IBM 8" floppy disc,
-CP/M or even the older S-100 bus. But they did not kill the other systems.
+CP/M or even some tracking the older S-100 bus. But they did not kill the other systems.
 Rather, they cooperated. But poorly. Maybe too poor were the connections.
 But that was about to change. With such climbing staggering diversity,
 the equilibrium of standards were needed even more.
@@ -93,23 +93,28 @@ IBM PC was introduced in 1983 in Sweden, two years after the introduction in the
 But the nationally homebrew computer ABC80 and its successor
 [ABC800](https://en.wikipedia.org/wiki/ABC_800), had strong sales in the
 late 70s until the mid-80s inside of Sweden, when it was gradually replaced by
-foremost IBM PC and its clones. But even the success of the PC was not immediate.
-The IBM PC XT, later AT, as well as Microsoft DOS made it harder to keep the
-competition at a profitable level. The constant increased flow of new hardware
-as well as software (translated software), internal fighting over contracts
-of who had the right to sell what and when among retailers of ABC-computers,
-made sales even harder.
+foremost IBM PC and its clones. But even if there was success of the PC,
+it was not immediate. The IBM PC XT, later AT, as well as Microsoft DOS
+made it harder to keep the competition at a profitable level for other competing
+computers. The constant increased flow of new hardware as well as software
+(translated software), internal fighting over contracts of who had the right
+to sell what and when among retailers of ABC-computers, made sales even harder.
 
 In the late 70s CP/M was the system to keep track of. Also in Sweden.
-But it was starting to get old. There were cards and software for ABC80
-that could run CP/M, not unusual at this time to expand contemporary systems
-for CP/M with the intention of generalising the computer. Even IBM PC had from the
-start three systems to choose from: UCSD Pascal (p-code), CP/M-86, and
-IBM/Microsoft DOS. In the start of the 80s the prognosis was that UNIX and C was the
-standard to be. Many bet on Unix, a few bet on the PC. They said Unix was here to stay,
-but it wasn't. Hardware and software for these systems were expensive.
-Truely, too expensive. They were multiuser, endorsed by many authorities,
-but the old time for sharing was not really suitable for the time.
+But it was starting to get old. It was uncertain if this was the right choice.
+There were cards and software for ABC80 that could run CP/M, not unusual at this
+time to expand contemporary systems for CP/M with the intention of generalising
+the computer. If you already had a computer why not expanding it to a system
+with well supplied software. Even IBM PC had from the start three systems to
+choose from: UCSD Pascal (p-code), CP/M-86, and IBM/Microsoft DOS.
+In the start of the 80s the prognosis was that UNIX and C was the
+standard to be. Many bet on Unix, a few bet on the PC because it was IBM behind.
+Even Microsoft wasn't sure about its DOS project. They also went with Xenix,
+a Unix variant. Some were more sure on their opinions, they said Unix was here
+to stay, but as we learned: it wasn't. Hardware and software for these often
+larger systems were expensive. Truely, too expensive. They were however multiuser,
+endorsed by many authorities, better systems overall, but the old way of sharing
+was not really suitable for these times.
 *The terminal faded and the personal computer became the established configuration.*
 This however wasn't clear at the time. Eventually in the late 80s and start of
 the 90s the fog dissipated and direction was set.
