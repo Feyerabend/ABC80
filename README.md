@@ -146,12 +146,12 @@ Specifications of the ABC80:
 * Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments, measurements, ...)
 
 I don't remember, but maybe the tape recorder was included at times.
-Disc drives were bith from 3rd party and from the manufacturer.
-Later on the ABC80 could be extended with 3rd party additions such as
+Disc drives were sold both from 3rd party, and from the manufacturer DIAB.
+Later on the ABC80 could be extended with other 3rd party additions such as
 contemporary popular 80 column cards, CP/M, and local network, which
 expanded its lifetime in the start of the 80s. But the support wasn't
-coming from the source itself, and adding possibly conflicting hardware
-didn't make its life easier.
+coming from the source itself that time, and adding possibly conflicting
+hardware didn't make its life easier.
 
 DIAB had moved on, betting on Unix, focusing its own crafted
 [DNIX](https://en.wikipedia.org/wiki/DNIX), and had other machines
@@ -201,7 +201,6 @@ as software can rely on older code, systems, libraries etc. You do not necessari
 the wheel everyother year.
 
 Well, back to the code …
-
 
 
 
