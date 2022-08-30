@@ -265,43 +265,55 @@ __There might be *spelling mistakes*, as I have not tried to run this code at al
 It has finally been put here as a remembrance of *Kristian*, as he disappeared without
 trace in the mid 80s, never to return.
 
-#### Start
 
-* First there is an introduction of how to play. As a user you might have to answer
-some questions:
+### So what about the code?
+
+* First there is an introduction of how to play. As a user you might also have to answer
+some questions
   1. Have you played before? If you have, we could skip some more info and choises.
   2. Please enter your name and the name of your oppent.
   3. Choose your joysticks.
   4. Choose if you want the game to terminate when time is out, or when the highest
 score has been reached.
 * The main of the game then runs, and ends with a musical score and the winner is annonced!
-* Please turn over to (premuably) the next player in line!
+* Play again? No? Please turn over to (premuably) the next player in line!
+
 
 #### So what happends in the game itself?
+
 1. As there are two players, an index of the two are kept in a game loop:
-first we chose one, and then the other player. And all the calculations are done each at
-a time.
-2. Thus a player has been chosen, so we increase the direction in which the
+first we chose one, and then the other player. Each in turn. And all the calculations
+are done each round for each player. The variables are stored and fetched for each
+player during its turn.
+
+2. Assume a player has been chosen, so we increase the direction in which the
 plane is flying (if we start then the variable has already been set) by a single move.
-It can move in 8 directions, let's use geographical terms: N, NW, W, SW, S, SE, E, NE.
+As in an animated movie, one move is made one step for each frame. The motor is always
+running. The plane can move in 8 directions, let's use some geographical terms:
+N, NW, W, SW, S, SE, E, NE. So we can e.g. move one step in the N, north direction. 
 If we hit a boundary of the screen, up, down, left or right, then we roll over so that
 we can appear on the right if the plane took a turn outside screen limits to the left,
-for instance.
+and so on.
+
 3. So now we have the coordinates to paint the plane on the screen. But first
 we erase the previous painting, which have temporarily been stored from earlier
 passing in the loop (or if we start a fresh, some initialization which doesn't effect
-the game or painting).
+the game or painting). If we constantly paint like this frame by frame it would seem
+that the plane is moving across the screen.
+
 4. We poll the input of the current joystick we are interested in, and check for a
-desired lef or right turn. As we really can't "turn on a dime" (rotate around an "axis"),
+desired left or right turn. As we really can't "turn on a dime" (rotate around an "axis"),
 we delay the rotation by increasing a temporary variable that slows the turn, as we
 have to wait some game cycles to the increment is adequate, then we adjust the variables
-for the actual turning.
+for the actual turning, reset the temporary variable and start over.
+
 5. If there is a shot, then a subroutine is called. The shot has to go strait and not
 turn, so it has its own variables to keep track of. The routine is very much the
 same as for the plane when it comes to limits of the screen, and moving the shots.
 But we can also check for a opponent hit here. If the coordinates coincides, then
-the hit registers and we count up the score. As this was done with characters rather
-than dots, for speed, ..
+the hit registers, the plane blows up, and we count up a score. As this was done
+with characters rather than dots, for speed, ..
+
 6. Eventually the game ends, but may start over depending of answered questions.
 
 
