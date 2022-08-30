@@ -249,11 +249,6 @@ roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.
 second, somehow interruption routine might have impacted this?) or was it that joysticks were
 much too fun?
 
-Historical reflections over Combat can be found in:
-Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press,
-Cambridge, Mass., 2009. An article (excerpt) can be found at at: http://gamestudies.org/0601/articles/montfort
-which explains *Combat* in detail.
-
 ![V-24 on ABC80](assets/images/v24-small.jpeg)
 
 AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
@@ -316,11 +311,19 @@ with characters rather than dots, for speed, ..
 
 6. Eventually the game ends, but may start over depending of answered questions.
 
+## Some observations
+
+...
+
+Historical reflections over Combat can be found in Montfort & Bogost,
+*Racing the beam* see below in references. An article (excerpt) can be
+found at at: http://gamestudies.org/0601/articles/montfort which explains
+*Combat* in detail.
 
 
 ### contrib/JAVASCRIPT
-A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping" in programming.
-I. e. testing your ideas as "code".
+A simple reimagination of the game in JavaScript. It illustrates a kind of "prototyping"
+in programming. I. e. testing your ideas as "code".
 
 
 ### contrib/ATARI 2600/VCS
