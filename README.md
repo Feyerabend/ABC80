@@ -351,12 +351,12 @@ was done in assembly/machine code. There was too little space and too many
 oddities to the hardware to even consider compiling code.
 
 Here is a representation of the 128K of RAM available:
-´´´
+```
 0123456789 0123456789 0123456789 0123456789
 0123456789 0123456789 0123456789 0123456789
 0123456789 0123456789 0123456789 0123456789
 01234567
-´´´
+```
 
 ...
 
