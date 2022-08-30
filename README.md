@@ -244,7 +244,8 @@ So it did not have much of an afterlife.
 We built the yousticks out of small hotel soap containers, where the inside had cables,
 switches and diodes. (No pull up or pull down resistors, from which I can remember.)
 The joysticks were in the same spirit as Atari made them: simple switches, and for each a
-"fire button". The keyboard was really no alternative, to my recollection, because the keyboard
+"fire button". Our fire button may have had a problem with "bouncing".
+The keyboard was really no alternative, to my recollection, because the keyboard
 roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per
 second, somehow interruption routine might have impacted this?) or was it that joysticks were
 much too fun?
@@ -306,12 +307,58 @@ for the actual turning, reset the temporary variable and start over.
 turn, so it has its own variables to keep track of. The routine is very much the
 same as for the plane when it comes to limits of the screen, and moving the shots.
 But we can also check for a opponent hit here. If the coordinates coincides, then
-the hit registers, the plane blows up, and we count up a score. As this was done
-with characters rather than dots, for speed, ..
+the hit registers, the plane blows up, and we count up a score. For speed we used
+characters rather than putting out dots on the screen. Also collision detection
+was naturally done through the position of characters.
 
 6. Eventually the game ends, but may start over depending of answered questions.
 
 ## Some observations
+
+Programs are often considered as being synonymous with code. Or coding as
+synonymous with programming. Algorithms are also considered sometimes as programs.
+Seldom though are algorithms identified as code, but it happens. So maybe there
+are some intuitive abstractions here, even if the concepts are fussy and floating.
+
+One distinction I've found to be useful is between "coding" and "programming".
+*Coding can be seen as when only focus is on the code itself.* Refactoring
+often can be looked at in this way. You look at the code, see as it could be
+written in other ways, but not really consider exactly all of the connections
+for what the code is doing to other parts. E.g. refactor from a recursive
+function to an iterative. But as soon as you are considering any ideas outside
+of the immediate code into the mental abstraction and conception of *programs*,
+you are into *programming*. This is no absolute distinction, but more of a
+guideline navigating the concepts in development. As a coder/programmer
+you oscillate betweeen "*programming*" and "*coding*".
+
+In the example of early development in software for the 
+[Atari VCS](https://en.wikipedia.org/wiki/Atari_2600), video computer
+system, later called Atari 2600, programming was more of a *time based experience*.
+You have to keep track of scanlines, and when clocks made their ticks, the
+CPU clock, counting how time was left at the edge where the ray turned to
+start at another line, vertical and horizontal blanking, etc.
+Then 128K of RAM was the space to navigate within. But not even that,
+some bytes were already spoken for by the system for some I/O,
+buttons pressed, joysticks moved, etc. The finalised code would at the
+introduction of the machine starts at 4K of memory in a cartridge.
+
+This is what I would label as a highly coupled *coding experience*. Debugging
+was sometimes done with oscilloscope (if they could afford it) or other
+analog equipment, rather than some debugging software. If something was wrong,
+you could see that is was wrong by looking at the flickering screen, but you
+could not tell what went wrong for the most of the time. Of course programming
+was done in assembly/machine code. There was too little space and too many
+oddities to the hardware to even consider compiling code.
+
+Here is a representation of the 128K of RAM available:
+´´´
+0123456789 0123456789 0123456789 0123456789
+0123456789 0123456789 0123456789 0123456789
+0123456789 0123456789 0123456789 0123456789
+01234567
+´´´
+
+...
 
 ...
 
