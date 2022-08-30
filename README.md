@@ -313,6 +313,7 @@ was naturally done through the position of characters.
 
 6. Eventually the game ends, but may start over depending of answered questions.
 
+
 ## Some observations
 
 Programs are often considered as being synonymous with code. Or coding as
