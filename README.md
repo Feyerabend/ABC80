@@ -20,8 +20,10 @@ Thus must have been one of the earliest schools in Sweden to have computers.
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
-(Photo: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
- via Wikimedia Commons.)
+Photo[^2].
+
+[^2]: Photo: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
+ via Wikimedia Commons.
 
 
 ## Some historical context
@@ -48,6 +50,7 @@ during the years 1975-1984, with year of introduction and computer respectively:
 - 1979
   - Atari 400
   - Atari 800
+  - TI-99/4
 - 1980
   - TRS-80 Pocket Computer
   - Sinclair ZX80
@@ -120,7 +123,7 @@ was not really suitable for these times.
 This however wasn't clear at the time. Eventually in the late 80s and start of
 the 90s the fog dissipated and direction was set.
 
-In the chart below[^2] you can see how the sales were internally and proportionally
+In the chart below[^3] you can see how the sales were internally and proportionally
 of ABC80, successor ABC800 and the rest of computers was during late 70'ties
 until circa 1983. The national products were dominant.
 
@@ -130,7 +133,7 @@ not playing on the same field.
 
 ![Timeline of proportional sales of computers in Sweden](assets/images/ABC80-timeline.png)
 
-[^2]: Diagram reproduced from: Sjöström, Roland, Positionering under strategisk osäkerhet:
+[^3]: Diagram reproduced from: Sjöström, Roland, Positionering under strategisk osäkerhet:
 Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 212.
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
@@ -200,17 +203,17 @@ that copied and cloned each others ideas.
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
 addicted to one branch of program development (e.g. word processing). Not only were there
-these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^3]
+these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^4]
 the guy behind hypertext, had his chance of changing electronic writing
-([Xanadu](https://en.wikipedia.org/wiki/Project_Xanadu)), or Jef Raskin,[^4]
+([Xanadu](https://en.wikipedia.org/wiki/Project_Xanadu)), or Jef Raskin,[^5]
 the guy behind Macintosh, with his ideas of speed up typing
 (eventually the [Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas
 evaporated soon in this narrow environment. What we now still have in implemented ideas
 is not far from what we already had 40-50 years ago.
 
-[^3]: See https://en.wikipedia.org/wiki/Ted_Nelson.
+[^4]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
-[^4]: See https://en.wikipedia.org/wiki/Jef_Raskin.
+[^5]: See https://en.wikipedia.org/wiki/Jef_Raskin.
 
 Or look at the inevitable history and legacy that still influences our modern computers,
 such as architectures and processors that can still run old code almost dating back to
@@ -264,7 +267,7 @@ trace in the mid 80s, never to return.
 
 ### So what about the code?
 
-* First there is an introduction of how to play. As a user you might also have to answer
+* First there is an introduction on how to play. As a user you might also have to answer
 some questions
   1. Have you played before? If you have, we could skip some more info and choises.
   2. Please enter your name and the name of your oppent.
@@ -338,7 +341,7 @@ system, later called Atari 2600, programming was more of a *time based experienc
 You have to keep track of scanlines, and when clocks made their ticks, the
 CPU clock, counting how time was left at the edge where the ray turned to
 start at another line, vertical and horizontal blanking, etc.
-Then 128K of RAM was the space to navigate within. But not even that,
+Then 128 byte of RAM was the space to navigate within. But not even that,
 some bytes were already spoken for by the system for some I/O,
 buttons pressed, joysticks moved, etc. The finalised code would at the
 introduction of the machine starts at 4K of memory in a cartridge.
@@ -347,7 +350,7 @@ This is what I would label as a highly coupled *coding experience*. Debugging
 was sometimes done with oscilloscope (if they could afford it) or other
 analog equipment, rather than some debugging software. If something was wrong,
 you could see that is was wrong by looking at the flickering screen, but you
-could not tell what went wrong for the most of the time. Of course programming
+could not tell what went wrong for most of the time. Of course programming
 was done in assembly/machine code. There was too little space and too many
 oddities to the hardware to even consider compiling code.
 
@@ -356,7 +359,7 @@ oddities to the hardware to even consider compiling code.
 
 ...
 
-Historical reflections over Combat can be found in Montfort & Bogost,
+Historical reflections on "Combat" can be found in Montfort & Bogost,
 *Racing the beam* see below in references. An article (excerpt) can be
 found at at: http://gamestudies.org/0601/articles/montfort which explains
 *Combat* in detail.
@@ -369,15 +372,15 @@ in programming. I. e. testing your ideas as "code".
 
 ### contrib/ATARI 2600/VCS
 A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for
-[MOS 6502](https://en.wikipedia.org/wiki/MOS_Technology_6502) (6507) Atari 2600/VCS.
+[MOS 6502](https://en.wikipedia.org/wiki/MOS_Technology_6502) (6507) Atari VCS/2600.
 It might be that it has to be heavily reimplemented and changed due to the
-particularities of this machine, if fully implemented. But it also easily extended as you
-push each value for each player (2), and switch every other loop iteration.
-It also illustrates my interpretation of the meaning of "code" and "coding".
-It has only been tested at the site https://8bitworkshop.com (by Steven Hugg) on the emulator
-for Atari 2600.
+particularities of this machine, if fully implemented. But it also easily
+extended as you push each value for each player (2), and switch every other
+loop iteration. It also illustrates my interpretation of the meaning of "code" and "coding".
+It has only been tested at the site https://8bitworkshop.com (by Steven Hugg)
+on the emulator for Atari VCS/2600.
 
-![Aeroplane on Atari 2600/VCS](assets/images/partial-airfight-atari-vcs.gif)
+![Aeroplane on Atari VCS/2600](assets/images/partial-airfight-atari-vcs.gif)
 
 
 # ABC80 MUSIC 1981
