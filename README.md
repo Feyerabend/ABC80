@@ -244,7 +244,7 @@ So it did not have much of an afterlife.
 
 ![Me and illustration of AIR-FIGHT joystick](assets/images/airfight-joystick.jpeg)
 
-We built the yousticks out of small hotel soap containers, where the inside had cables,
+We built the joysticks out of small hotel soap containers, where the inside had cables,
 switches and diodes. (No pull up or pull down resistors, from which I can remember.)
 The joysticks were in the same spirit as Atari made them: simple switches, and for each a
 "fire button". Our fire button may have had a problem with "bouncing".
@@ -315,6 +315,11 @@ characters rather than putting out dots on the screen. Also collision detection
 was naturally done through the position of characters.
 
 6. Eventually the game ends, but may start over depending of answered questions.
+
+
+#### About the ABC80 BASIC
+
+...
 
 
 ## Some observations
