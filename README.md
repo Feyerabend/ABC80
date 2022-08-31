@@ -355,10 +355,9 @@ could not tell what went wrong for most of the time. Of course programming
 was done in assembly/machine code. There was too little space and too many
 oddities to the hardware to even consider compiling code.
 
-
-...
-
-...
+A good introduction on the difficulties and obscurities of programming the
+Atari VCS/2600 can be seen in the Youtube video: https://www.youtube.com/watch?v=sJFnWZH5FXc.
+..
 
 Historical reflections on "Combat" can be found in Montfort & Bogost,
 *Racing the beam* see below in references. An article (excerpt) can be
