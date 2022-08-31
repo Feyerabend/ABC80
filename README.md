@@ -344,7 +344,8 @@ start at another line, vertical and horizontal blanking, etc.
 Then 128 byte of RAM was the space to navigate within. But not even that,
 some bytes were already spoken for by the system for some I/O,
 buttons pressed, joysticks moved, etc. The finalised code would at the
-introduction of the machine starts at 4K of memory in a cartridge.
+introduction of the machine started with 4K of memory in a cartridge.
+Later games had more memory.
 
 This is what I would label as a highly coupled *coding experience*. Debugging
 was sometimes done with oscilloscope (if they could afford it) or other
