@@ -20,7 +20,7 @@ Thus must have been one of the earliest schools in Sweden to have computers.
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
-Photo[^2].
+Modern captured photo of an ABC80.[^2]
 
 [^2]: Photo: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons.
