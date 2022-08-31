@@ -2,8 +2,8 @@
 
 
 # ABC80 AIR-FIGHT 1981
-A recreated program/code from paper trail.
-Originally the program was coded for the Swedish home computer
+A recreated program/code from paper trail. Originally the program was
+coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
 abbreviation for "Advanced Basic Computer for the 80s", (approx. transl.) 
 in 1981. Inspired by the contemporary game console
@@ -152,7 +152,7 @@ which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
 
 Specifications of the ABC80:
-* Zilog Z80, 3 MHz
+* Zilog Z80, 3 MHz (2.9952 MHz)
 * 16K RAM installed (could be expanded to 32K)
 * 16K ROM with BASIC semi compiler/interpreter and e.g. driver for a tape recorder
 * Monitor B/W included (modified TV set from Luxor)
@@ -161,7 +161,7 @@ Specifications of the ABC80:
 * 24 rows x 40 columns character screen
 * Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably
  Hungarian keyboard)
-* Sound (actually a decent chip, but not fully used by the computer)
+* Sound (actually a decent chip SN76477, but not fully used by the computer)
 * Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments,
  measurements, ...)
 
@@ -319,7 +319,48 @@ was naturally done through the position of characters.
 
 #### About the ABC80 BASIC
 
-...
+As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the 
+semi-compiled BASIC interpreter in ABC80 was quite fast for integer based
+programs, for the time. Games have the property of always required more of
+the computer that it can handle. But for our goals in this case, the BASIC
+was enough without having to resort to assembly.
+
+In general was in fact one of the main advantages of ABC80.
+That it was fast and reliable. And that was often enough for setting up
+e.g. measurement of temperatures relatively easy through a computer
+(which we also did back in the day).
+
+In this BASIC integers are denoted by a percent character '%'' after the
+variable name. Thus almost all the varible names have this sign after them.
+I don't remember if assigning a numeral constant, a number, to a variable 
+with the sign after it had any impact on speed. But the program as you can
+see is littered with them.
+
+There are some special deviations, as there were at the time, in this BASIC,
+compared to other contemporary variants. All had there own solutions.
+A semicolon ';' is used as a shorthand for "PRINT".
+The position of the cursor for characters can be done by "CUR(X, Y)".
+Printing the character 12 clears the screen, and positions the cursor
+at x=0, y=0, top left corner with '; CHR¤(12)'.
+There are some poking going on  such as 'POKE 32357,208,175,212' -- forgot
+all there was about that address.
+
+Often computers based on MOS 6502 processor, did memory mapping for I/O.
+But Z80 had its own separate ports for I/O which was used hare, and in
+the case for generating sound in ABC80 you could send out e.g.
+'OUT 6,9' to a port, wait a while and close with 'OUT 6,0'.
+That would generate some sound. You could also
+poll the V24 port for input of the joysticks and fire buttons, by first
+setting the right output at port 58 and then reading from it,
+depending on how the wiring was done. You could do some PEEK and POKE
+commands to lookup clocks and do some timing. Etc.
+
+Also can be noted that almost half of the code is actually sound,
+grahics, presentation, ending, sound, tunes, interactivity etc.
+That is, most code is not about the actual game logic. This is
+important from the standpoint of makes a game in this early era of video
+games, is not only the time for playing. It is about the whole experience, 
+as they say.
 
 
 ## Some observations
@@ -362,7 +403,6 @@ oddities to the hardware to even consider compiling code.
 
 A good introduction on the difficulties and obscurities of programming the
 Atari VCS/2600 can be seen in the Youtube video: https://www.youtube.com/watch?v=sJFnWZH5FXc.
-..
 
 Historical reflections on "Combat" can be found in Montfort & Bogost,
 *Racing the beam* see below in references. An article (excerpt) can be
