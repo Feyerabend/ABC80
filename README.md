@@ -330,7 +330,7 @@ That it was fast and reliable. And that was often enough for setting up
 e.g. measurement of temperatures relatively easy through a computer
 (which we also did back in the day).
 
-In this BASIC integers are denoted by a percent character '%'' after the
+In this BASIC integers are denoted by a percent character '%' after the
 variable name. Thus almost all the varible names have this sign after them.
 I don't remember if assigning a numeral constant, a number, to a variable 
 with the sign after it had any impact on speed. But the program as you can
@@ -338,15 +338,15 @@ see is littered with them.
 
 There are some special deviations, as there were at the time, in this BASIC,
 compared to other contemporary variants. All had there own solutions.
-A semicolon ';' is used as a shorthand for "PRINT".
-The position of the cursor for characters can be done by "CUR(X, Y)".
+A semicolon ';' is used as a shorthand for 'PRINT'.
+The position of the cursor for characters can be done by 'CUR(X, Y)'.
 Printing the character 12 clears the screen, and positions the cursor
 at x=0, y=0, top left corner with '; CHR¤(12)'.
-There are some poking going on  such as 'POKE 32357,208,175,212' -- forgot
+There are some poking going on such as 'POKE 32357,208,175,212' -- forgot
 all there was about that address.
 
 Often computers based on MOS 6502 processor, did memory mapping for I/O.
-But Z80 had its own separate ports for I/O which was used hare, and in
+But Z80 had its own separate ports for I/O which was used here, and in
 the case for generating sound in ABC80 you could send out e.g.
 'OUT 6,9' to a port, wait a while and close with 'OUT 6,0'.
 That would generate some sound. You could also
@@ -356,10 +356,10 @@ depending on how the wiring was done. You could do some PEEK and POKE
 commands to lookup clocks and do some timing. Etc.
 
 Also can be noted that almost half of the code is actually sound,
-grahics, presentation, ending, sound, tunes, interactivity etc.
-That is, most code is not about the actual game logic. This is
+grahics, presentation, ending, tunes, interactivity with questions/answers
+etc. That is, most of the code is not about the actual game logic. This is
 important from the standpoint of makes a game in this early era of video
-games, is not only the time for playing. It is about the whole experience, 
+games is not only the time playing. It is about the whole experience, 
 as they say.
 
 
