@@ -20,7 +20,7 @@ Thus must have been one of the earliest schools in Sweden to have computers.
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
-Modern captured photo of an ABC80.[^2]
+Modern captured photo of a ABC80 computer.[^2]
 
 [^2]: Photo: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons.
@@ -186,7 +186,7 @@ fast and reliable (one or two bugs maybe, later corrected). Expansion was key to
 the construction and essential, as it was basically designed for industry and primarily
 not for e.g. games or business. The later generalisation with ABC800 made it easier
 for expansion in those latter fields. It had colour, better graphics, better BASIC
-and came with more variations.*
+and came with more variations in configurations.*
 
 *On the other hand segments which could also have gained from the success
 of ABC80, such as schools, those dependent on the graphic, gaming or sound
@@ -358,8 +358,8 @@ commands to lookup clocks and do some timing. Etc.
 Also can be noted that almost half of the code is actually sound,
 grahics, presentation, ending, tunes, interactivity with questions/answers
 etc. That is, most of the code is not about the actual game logic. This is
-important from the standpoint of makes a game in this early era of video
-games is not only the time playing. It is about the whole experience, 
+important from the standpoint of what makes a game in this early era of video
+games is *not only the time playing*. It is about *the whole experience*, 
 as they say.
 
 
