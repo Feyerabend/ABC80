@@ -228,6 +228,8 @@ Well, back to the code …
 
 ## The code and additional hardware
 
+![ABC80 sketch](assets/images/abc80-split.jpg)
+
 *U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a very small degree) contributed. We were at the time in
 the gymnasium ([Brännkyrka gymnasium](https://sv.wikipedia.org/wiki/Br%C3%A4nnkyrka_gymnasium),
