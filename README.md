@@ -11,6 +11,7 @@ in 1981. Inspired by the contemporary game console
 game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
+Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 But we will return to this program later. The computer, ABC80,
 was a Swedish computer quite new at the time which came to market in 1978.
@@ -225,10 +226,9 @@ to invent the wheel everyother year.
 
 Well, back to the code …
 
+![ABC80 sketch](assets/images/abc80-split.jpg)
 
 ## The code and additional hardware
-
-![ABC80 sketch](assets/images/abc80-split.jpg)
 
 *U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
 and I (to a very small degree) contributed. We were at the time in
