@@ -179,6 +179,7 @@ DIAB had moved on, betting on Unix, focusing its own crafted
 at this time, with little time for something they really wasn't that
 interested in.
 
+![ABC80 exploded view](assets/images/abc80-split.jpg)
 
 ## My conclusions
 
@@ -225,8 +226,6 @@ as software can rely on older code, systems, libraries etc. You do not necessari
 to invent the wheel everyother year.
 
 Well, back to the code …
-
-![ABC80 sketch](assets/images/abc80-split.jpg)
 
 ## The code and additional hardware
 
