@@ -76,8 +76,9 @@ during the years 1975-1984, with year of introduction and computer respectively:
 ...
 
 A year after the three amigos (triad): Commodore PET, Apple II and TRS-80 were
-released, ABC80 had some kind of the same flavour to it. These were machines that took
-the step to a compact all-in-one computer for the expanding hobby/home computer market.
+released, ABC80 had some kind of the same flavour to it. These were machines that
+took the step to a compact all-in-one computer for the expanding hobby/home computer
+market.
 Previously there were mainly boards sold, kit computers, you could solder on the
 components yourself, add cards, peripherals, tape recorders, printers, disc drive units,
 screens etc. that required much more skill than plugging in a power cable. The new
@@ -163,7 +164,7 @@ Specifications of the ABC80:
 * Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably
  Hungarian keyboard)
 * Sound (actually a decent chip SN76477, but not fully used by the computer)
-* Expansion slot (the DIAB favoured 4680 bus, used often for miscellanous instruments,
+* Expansion slot (the DIAB favored 4680 bus, used often for miscellaneous instruments,
  measurements, ...)
 
 I don't remember, but maybe the tape recorder was included at times.
@@ -223,7 +224,7 @@ the origin in Intel 8088, or rather: the 8086 instructions. This somewhat stifle
 development for many many years, or rather: it took it in a special direction of just getting
 faster with historical constraints. But nonetheless it benefitted software development,
 as software can rely on older code, systems, libraries etc. You do not necessarily have
-to invent the wheel everyother year.
+to invent the wheel every other year.
 
 Well, back to the code …
 
@@ -328,8 +329,8 @@ was enough without having to resort to assembly.
 
 In general was in fact one of the main advantages of ABC80.
 That it was fast and reliable. And that was often enough for setting up
-e.g. measurement of temperatures relatively easy through a computer
-(which we also did back in the day).
+e.g. [measurement of temperatures](assets/pdf/temp.pdf) relatively easy
+through a computer (which we also did back in the day).
 
 In this BASIC integers are denoted by a percent character '%' after the
 variable name. Thus almost all the varible names have this sign after them.
