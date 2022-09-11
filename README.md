@@ -125,15 +125,17 @@ was not really suitable for these times.
 This however wasn't clear at the time. Eventually in the late 80s and start of
 the 90s the fog dissipated and direction was set.
 
-In the chart below[^3] you can see how the sales were internally and proportionally
-of ABC80, successor ABC800 and the rest of computers was during late 70'ties
-until circa 1983. The national products were dominant.
+In the chart below you can see how the sales were internationally of some home (or
+personal) computers were during late 70'ties until circa 1983 (when my interest in
+these types of computers waned, and "the fifth generation computers" came to light).
 
 ![Some sales numbers for home/personal computers](assets/images/sales-numbers.png)
 
 In total, from 1978-1985, the sales of ABC80 were 33,000 units. But then Apple II were
 at 4.8 million, and Commodore 64 somewhere around 12-17 million. They were obviously
-not playing on the same field.
+not playing on the same field. A diagram of sales of ABC80, and the successor ABC800,
+and the rest of computers inside Sweden, shows how much the national products were
+dominant for some time.[^3]
 
 ![Timeline of proportional sales of computers in Sweden](assets/images/ABC80-timeline.png)
 
