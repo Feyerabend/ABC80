@@ -75,7 +75,6 @@ during the years 1975-1984, with year of introduction and computer respectively:
   - IBM PCjr
 ...
 
-![Some sales numbers for home/personal computers](assets/images/sales-numbers.png)
 
 A year after the three amigos (triad): Commodore PET, Apple II and TRS-80 were
 released, ABC80 had some kind of the same flavour to it. These were machines that
@@ -129,6 +128,8 @@ the 90s the fog dissipated and direction was set.
 In the chart below[^3] you can see how the sales were internally and proportionally
 of ABC80, successor ABC800 and the rest of computers was during late 70'ties
 until circa 1983. The national products were dominant.
+
+![Some sales numbers for home/personal computers](assets/images/sales-numbers.png)
 
 In total, from 1978-1985, the sales of ABC80 were 33,000 units. But then Apple II were
 at 4.8 million, and Commodore 64 somewhere around 12-17 million. They were obviously
