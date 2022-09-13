@@ -127,7 +127,9 @@ the 90s the fog dissipated and direction was set.
 
 In the chart below you can see how the sales were internationally of some home (or
 personal) computers were during late 70'ties until circa 1983 (when my interest in
-these types of computers waned, and "the fifth generation computers" came to light).
+these types of computers waned, and
+"[the fifth generation computers](https://en.wikipedia.org/wiki/Fifth_Generation_Computer_Systems)"
+came to light).
 
 ![Some sales numbers for home/personal computers](assets/images/sales-numbers.png)
 
