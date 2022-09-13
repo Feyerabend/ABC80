@@ -436,6 +436,17 @@ on the emulator for Atari VCS/2600.
 ![Aeroplane on Atari VCS/2600](assets/images/partial-airfight-atari-vcs.gif)
 
 
+### contrib/Jupiter ACE
+A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, although
+I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
+There were only 5,000 made according to estimates. I did not have much money at this time,
+and it was actually my first own computer. It was interesting that it was a cheap
+computer, but not running BASIC. But it also had a horrible keyboard, like its cousin
+ZX80. Fast, but not really usable. Even for the time.
+
+![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
+
+
 # ABC80 MUSIC 1981
 Most simple sample we could come up with that made it to the presentation.
 
