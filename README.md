@@ -5,7 +5,7 @@
 A recreated program/code from paper trail. Originally the program was
 coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
-abbreviation for "Advanced Basic Computer for the 80s", (approx. transl.) 
+abbreviation for "Advanced Basic Computer for the 80s'', (approx. translation) 
 in 1981. Inspired by the contemporary game console
 [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
@@ -94,7 +94,7 @@ took the step to a compact all-in-one computer for the expanding hobby/home comp
 market. Previously there were mainly boards sold, kit computers, you could solder on the
 components yourself, add cards, peripherals, tape recorders, printers, disc drive units,
 screens etc. that required much more skill than plugging in a power cable. The new
-generation of machines had burnt in BASIC in ROM. When started there would respond
+generations of machines had burnt in BASIC in ROM. When started there would respond
 instantly with a prompt, ready for programming. Quite a difference from just a few
 years earlier.
 
@@ -135,7 +135,7 @@ endorsed by many authorities, better systems overall, but the old way of sharing
 was not really suitable for these times.
 *The terminal faded and the personal computer became the established configuration.*
 This however wasn't clear at the time. Eventually in the late 80s and start of
-the 90s the fog dissipated and direction was set.
+in the 90s the fog dissipated and direction was set.
 
 In the chart below you can see how the sales were internationally of some home (or
 personal) computers were during late 70'ties until circa 1983 (when my interest in
@@ -176,11 +176,11 @@ Specifications of the ABC80:
 * Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably
  Hungarian keyboard)
 * Sound (actually a decent chip SN76477, but not fully used by the computer)
-* Expansion slot (the DIAB favored 4680 bus, used often for miscellaneous instruments,
+* Expansion slot (the DIAB favoured 4680 bus, used often for miscellaneous instruments,
  measurements, ...)
 
 I don't remember, but maybe the tape recorder was included at times.
-Disc drives were sold both from 3rd party, and from the manufacturer DIAB.
+Disc drives were sold both from 3rd parties, and from the manufacturer DIAB.
 Later on the ABC80 could be extended with other 3rd party additions such as
 contemporary popular 80 column cards, CP/M, and local network, which
 expanded its lifetime in the start of the 80s. But the support wasn't
@@ -223,7 +223,7 @@ In general the horizontal field of innovation and diversity came to be replaced 
 vertical strata. The highly incompatible plethora of machines in spirit of the 70s,
 was replaced by a single item hardware during the 80s where new competition was in speed,
 speed, and more speed, but also internal memory expansion, external storage and programs
-that copied and cloned each others ideas.
+that copied and cloned each other's ideas.
 
 Data, though, was still hard to convert between programs. There were new flaws such
 as incompatibility between programs and data, sometimes intentionally to keep customers
@@ -285,24 +285,24 @@ joysticks were much too fun?
 
 * First there is an introduction on how to play. As a user you might also have to answer
 some questions
-  1. Have you played before? If you have, we could skip some more info and choises.
-  2. Please enter your name and the name of your oppent.
+  1. Have you played before? If you have, we could skip some more info and choices.
+  2. Please enter your name and the name of your opponent.
   3. Choose your joysticks.
   4. Choose if you want the game to terminate when time is out, or when the highest
 score has been reached.
-* The main of the game then runs, and ends with a musical score and the winner is annonced!
-* Play again? No? Please turn over to (premuably) the next player in line!
+* The main part of the game then runs, and ends with a musical score and the winner is announced!
+* Play again? No? Please turn over to (presumably) the next player in line!
 
 
-#### So what happends in the game itself?
+#### So what happens in the game itself?
 
 1. As there are two players, an index of the two are kept in a game loop:
-first we chose one, and then the other player. Each in turn. And all the calculations
+First we chose one, and then the other player. Each in turn. And all the calculations
 are done each round for each player. The variables are stored and fetched for each
 player during its turn.
 
 2. Assume a player has been chosen, so we increase the direction in which the
-plane is flying (if we start then the variable has already been set) by a single move.
+the plane is flying (if we start then the variable has already been set) by a single move.
 As in an animated movie, one move is made one step for each frame. The motor is always
 running. The plane can move in 8 directions, let's use some geographical terms:
 N, NW, W, SW, S, SE, E, NE. So we can e.g. move one step in the N, north direction. 
@@ -322,15 +322,15 @@ we delay the rotation by increasing a temporary variable that slows the turn, as
 have to wait some game cycles to the increment is adequate, then we adjust the variables
 for the actual turning, reset the temporary variable and start over.
 
-5. If there is a shot, then a subroutine is called. The shot has to go strait and not
+5. If there is a shot, then a subroutine is called. The shot has to go straight and not
 turn, so it has its own variables to keep track of. The routine is very much the
 same as for the plane when it comes to limits of the screen, and moving the shots.
-But we can also check for a opponent hit here. If the coordinates coincides, then
+But we can also check for an opponent hit here. If the coordinates coincides, then
 the hit registers, the plane blows up, and we count up a score. For speed we used
 characters rather than putting out dots on the screen. Also collision detection
 was naturally done through the position of characters.
 
-6. Eventually the game ends, but may start over depending of answered questions.
+6. Eventually the game ends, but may start over depending on answered questions.
 
 
 #### About the ABC80 BASIC
@@ -347,13 +347,13 @@ e.g. [measurement of temperatures](assets/pdf/temp.pdf) relatively easy
 through a computer (which we also did back in the day).
 
 In this BASIC integers are denoted by a percent character '%' after the
-variable name. Thus almost all the varible names have this sign after them.
-I don't remember if assigning a numeral constant, a number, to a variable 
+variable name. Thus almost all the variable names have this sign after them.
+I don't remember if assigning a numeric constant, a number, to a variable 
 with the sign after it had any impact on speed. But the program as you can
 see is littered with them.
 
 There are some special deviations, as there were at the time, in this BASIC,
-compared to other contemporary variants. All had there own solutions.
+compared to other contemporary variants. All had their own solutions.
 A semicolon ';' is used as a shorthand for 'PRINT'.
 The position of the cursor for characters can be done by 'CUR(X, Y)'.
 Printing the character 12 clears the screen, and positions the cursor
@@ -361,7 +361,7 @@ at x=0, y=0, top left corner with '; CHR¤(12)'.
 There are some poking going on such as 'POKE 32357,208,175,212' -- forgot
 all there was about that address.
 
-Often computers based on MOS 6502 processor, did memory mapping for I/O.
+Often computers based on MOS 6502 processor did memory mapping for I/O.
 But Z80 had its own separate ports for I/O which was used here, and in
 the case for generating sound in ABC80 you could send out e.g.
 'OUT 6,9' to a port, wait a while and close with 'OUT 6,0'.
@@ -372,7 +372,7 @@ depending on how the wiring was done. You could do some PEEK and POKE
 commands to lookup clocks and do some timing. Etc.
 
 Also can be noted that almost half of the code is actually sound,
-grahics, presentation, ending, tunes, interactivity with questions/answers
+graphics, presentation, ending, tunes, interactivity with questions/answers
 etc. That is, most of the code is not about the actual game logic. This is
 important from the standpoint of what makes a game in this early era of video
 games is *not only the time playing*. It is about *the whole experience*, 
@@ -383,7 +383,7 @@ as they say.
 
 The ABC80 was really the first school computer in general use for education.
 Yes, I had previous experience with a home built binary counter which my 
-math teacher showed me in the late 1970s, when I was about 15 or 16 years of
+maths teacher showed me in the late 1970s, when I was about 15 or 16 years of
 age. But it wasn't a computer.
 
 In the gymnasium, when you are about 16-18 years of age, we learned programming
@@ -410,7 +410,7 @@ function to an iterative. But as soon as you are considering any ideas outside
 of the immediate code into the mental abstraction and conception of *programs*,
 you are into *programming*. This is no absolute distinction, but more of a
 guideline navigating the concepts in development. As a coder/programmer
-you oscillate betweeen "*programming*" and "*coding*".
+you oscillate between "*programming*" and "*coding*".
 
 In the example of early development in software for the 
 [Atari VCS](https://en.wikipedia.org/wiki/Atari_2600), video computer
@@ -421,7 +421,7 @@ start at another line, vertical and horizontal blanking, etc.
 Then 128 byte of RAM was the space to navigate within. But not even that,
 some bytes were already spoken for by the system for some I/O,
 buttons pressed, joysticks moved, etc. The finalised code would at the
-introduction of the machine started with 4K of memory in a cartridge.
+the introduction of the machine started with 4K of memory in a cartridge.
 Later games had more memory.
 
 This is what I would label as a highly coupled *coding experience*. Debugging
@@ -463,7 +463,7 @@ on the emulator for Atari VCS/2600.
 A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, although
 I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
 There were only 5,000 made according to estimates. I did not have much money at this time,
-and it was actually my first own computer. It was interesting that it was a cheap
+and it was actually my first computer. It was interesting that it was a cheap
 computer, but not running BASIC. But it also had a horrible keyboard, like its cousin
 ZX80. Fast, but not really usable. Even for the time.
 
@@ -483,3 +483,5 @@ Most simple sample we could come up with that made it to the presentation.
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978
 - Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009
 - Wolf, Mark J. P. (red.), *The video game explosion: a history from Pong to Playstation and beyond*, Greenwood Press, Westport, Conn., 2008
+
+
