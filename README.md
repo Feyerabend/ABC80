@@ -13,6 +13,15 @@ game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
+AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
+of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
+rather than "Combat (#24)" or something to that effect.
+
+__There might be *spelling mistakes*, as I have not tried to run this code at all.__
+
+It has finally been put here as a remembrance of *U. Kristian Lidberg*,
+as he disappeared without trace in the mid 80s, never to return.
+
 But we will return to this program later. The computer, ABC80,
 was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
@@ -159,6 +168,9 @@ with its roots in industry, and
 which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
 
+
+## The computer ABC80
+
 Specifications of the ABC80:
 * Zilog Z80, 3 MHz (2.9952 MHz)
 * 16K RAM installed (could be expanded to 32K)
@@ -187,6 +199,7 @@ at this time, with little time for something they really wasn't that
 interested in.
 
 ![ABC80 exploded view](assets/images/abc80-split.jpg)
+
 
 ## My conclusions
 
@@ -234,6 +247,7 @@ to invent the wheel every other year.
 
 Well, back to the code …
 
+
 ## The code and additional hardware
 
 *U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
@@ -254,23 +268,14 @@ So it did not have much of an afterlife.
 
 We built the joysticks out of small hotel soap containers, where the inside had cables,
 switches and diodes. (No pull up or pull down resistors, from which I can remember.)
-The joysticks were in the same spirit as Atari made them: simple switches, and for each a
-"fire button". Our fire button may have had a problem with "bouncing".
+The joysticks were in the same spirit as Atari made them: simple switches, and for
+each a "fire button". Our fire button may have had a problem with "bouncing".
 The keyboard was really no alternative, to my recollection, because the keyboard
-roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per
-second, somehow interruption routine might have impacted this?) or was it that joysticks were
-much too fun?
+roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30
+hits per second, somehow interruption routine might have impacted this?) or was it that
+joysticks were much too fun?
 
 ![V-24 on ABC80](assets/images/v24-small.jpeg)
-
-AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
-of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
-rather than "Combat (#24)" or something to that effect.
-
-__There might be *spelling mistakes*, as I have not tried to run this code at all.__
-
-It has finally been put here as a remembrance of *Kristian*, as he disappeared without
-trace in the mid 80s, never to return.
 
 
 ### So what about the code?
@@ -371,6 +376,21 @@ games is *not only the time playing*. It is about *the whole experience*,
 as they say.
 
 
+### Learning
+
+The ABC80 was really the first school computer in general use for education.
+Yes, I had previous experience with a home built binary counter which my 
+math teacher showed me in the late 1970s, when I was about 15 or 16 years of
+age. But it wasn't a computer.
+
+In the gymnasium, when you are about 16-18 years of age, we learned programming
+by ourselves. We had no teachers. We taught each other. We were hungry for
+learning, even in some cases to the detriment of subjects we should learn, in school.
+When we understood code, we also invited others to learn. Thus, a small
+[course in BASIC](assets/pdf/course.pdf) with state support through a
+[study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.
+
+
 ## Some observations
 
 Programs are often considered as being synonymous with code. Or coding as
@@ -434,6 +454,17 @@ It has only been tested at the site https://8bitworkshop.com (by Steven Hugg)
 on the emulator for Atari VCS/2600.
 
 ![Aeroplane on Atari VCS/2600](assets/images/partial-airfight-atari-vcs.gif)
+
+
+### contrib/Jupiter ACE
+A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, although
+I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
+There were only 5,000 made according to estimates. I did not have much money at this time,
+and it was actually my first own computer. It was interesting that it was a cheap
+computer, but not running BASIC. But it also had a horrible keyboard, like its cousin
+ZX80. Fast, but not really usable. Even for the time.
+
+![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
 
 
 # ABC80 MUSIC 1981
