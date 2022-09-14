@@ -1,0 +1,90 @@
+0 variable x
+0 variable y
+0 variable x1
+0 variable y1
+0 variable dir
+0 variable delay
+0 variable seed
+0 variable key
+
+: x+ x @ 1+ x ! ;
+
+: x- x @ 1- x ! ;
+
+: y+ y @ 1+ y ! ;
+
+: y- y @ 1- y ! ;
+
+: delay+ delay @ 1+ delay ! ;
+
+: delay- delay @ 1- delay ! ;
+
+: dir+ dir @ 1+ dir ! ;
+
+: dir- dir @ 1- dir ! ;
+
+: leftcheck delay @ 0 < if 3 delay ! dir- then ;
+
+: rightcheck delay @ 5 > if 3 delay ! dir+ then ;
+
+: dirmax dir @ 0 < if 7 dir ! then ;
+
+: dirmin dir @ 7 > if 0 dir ! then ;
+
+: down dup 6 = if y- then ;
+
+: up dup 2 = if y+ then ;
+
+: left dup 4 = if x- then ;
+
+: right dup 0 = if x+ then ;
+
+: downleft dup 5 = if x- y- then ;
+
+: downright dup 7 = if x+ y- then ;
+
+: upleft dup 3 = if x- y+ then ;
+
+: upright dup 1 = if x+ y+ then ;
+
+: xmin x @ 0 < if 63 x ! then ;
+
+: xmax x @ 63 > if 0 x ! then ;
+
+: ymin y @ 0 < if 45 y ! then ;
+
+: ymax y @ 45 > if 0 y ! then ;
+
+: checklimits xmin xmax ymin ymax ;
+
+: godir dir @ down up left right downleft downright upleft upright drop ;
+
+: gear leftcheck rightcheck dirmax dirmin godir ;
+
+: leftturn key @ 1 = delay- ;
+
+: rightturn key @ 2 = delay+ ;
+
+: turn leftturn rightturn gear ;
+
+: seedon seed @ 75 u* 75 0 d+ over over u< - - 1- dup seed ! ;
+
+: rnd seedon u* swap drop ;
+
+: rand ?dup 0= if 15403 @ swap then seed ! ;
+
+: newpos 64 rnd dup x ! x1 ! 46 rnd dup y ! y1 ! ;
+
+: newdir 8 rnd dir ! ;
+
+: saveoldpos x @ x1 ! y @ y1 ! ;
+
+: clearolddot x1 @ y1 @ 0 plot ;
+
+: setdot x @ y @ 1 plot ;
+
+: cleardot x @ y @ 0 plot ;
+
+: all checklimits clearolddot setdot saveoldpos ;
+
+: demo 832 rand newpos newdir cls 500 0 do 50 rnd 50 + 0 do delay- turn all loop 50 rnd 50 + 0 do turn all loop 50 rnd 50 + 0 do delay+ turn all loop loop ;
