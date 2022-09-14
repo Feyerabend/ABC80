@@ -13,6 +13,15 @@ game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
+AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
+of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
+rather than "Combat (#24)" or something to that effect.
+
+__There might be *spelling mistakes*, as I have not tried to run this code at all.__
+
+It has finally been put here as a remembrance of *Kristian*, as he disappeared without
+trace in the mid 80s, never to return.
+
 But we will return to this program later. The computer, ABC80,
 was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
@@ -159,6 +168,8 @@ with its roots in industry, and
 which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
 
+## The computer ABC80
+
 Specifications of the ABC80:
 * Zilog Z80, 3 MHz (2.9952 MHz)
 * 16K RAM installed (could be expanded to 32K)
@@ -262,15 +273,6 @@ second, somehow interruption routine might have impacted this?) or was it that j
 much too fun?
 
 ![V-24 on ABC80](assets/images/v24-small.jpeg)
-
-AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
-of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
-rather than "Combat (#24)" or something to that effect.
-
-__There might be *spelling mistakes*, as I have not tried to run this code at all.__
-
-It has finally been put here as a remembrance of *Kristian*, as he disappeared without
-trace in the mid 80s, never to return.
 
 
 ### So what about the code?
