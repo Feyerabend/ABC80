@@ -159,15 +159,6 @@ The cost of computers was quite high at this time, but also shrinking rapidly.
  thus not far from the PET.
 * 1983 Commodore 64 sold for $595 which is in 2022 today ca $1,700 USD.
 
-The ABC80 was a collaboration between
-[DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
-(DIAB Industries) behind the technology,
-[Scandia Metric AB](https://sv.wikipedia.org/wiki/Scandia_Metric)
-with its roots in industry, and
-[Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB)
-which made radios and television sets. There were retailers that
-was also behind the large, but restricted to national and local, success.
-
 
 ## The computer ABC80
 
@@ -193,7 +184,16 @@ expanded its lifetime in the start of the 80s. But the support wasn't
 coming from the source itself that time, and adding possibly conflicting
 hardware didn't make its life easier.
 
-DIAB had moved on, betting on Unix, focusing its own crafted
+The ABC80 was a collaboration between
+[DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
+(DIAB Industries) behind the technology,
+[Scandia Metric AB](https://sv.wikipedia.org/wiki/Scandia_Metric)
+with its roots in industry, and
+[Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB)
+which made radios and television sets. There were retailers that
+was also behind the large, but restricted to national and local, success.
+
+In mid and late 80s DIAB had moved on, betting on Unix, focusing its own crafted
 [DNIX](https://en.wikipedia.org/wiki/DNIX), and had other machines
 at this time, with little time for something they really wasn't that
 interested in.
