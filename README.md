@@ -27,6 +27,8 @@ was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
 Thus must have been one of the earliest schools in Sweden to have computers.
 
+![Atari VCS/2600](assets/images/Atari-2600.jpg)
+
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
