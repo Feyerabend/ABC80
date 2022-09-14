@@ -168,6 +168,7 @@ with its roots in industry, and
 which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
 
+
 ## The computer ABC80
 
 Specifications of the ABC80:
@@ -198,6 +199,7 @@ at this time, with little time for something they really wasn't that
 interested in.
 
 ![ABC80 exploded view](assets/images/abc80-split.jpg)
+
 
 ## My conclusions
 
@@ -372,6 +374,21 @@ etc. That is, most of the code is not about the actual game logic. This is
 important from the standpoint of what makes a game in this early era of video
 games is *not only the time playing*. It is about *the whole experience*, 
 as they say.
+
+
+### Learning
+
+The ABC80 was really the first school computer in general use for education.
+Yes, I had previous experience with a home built binary counter which my 
+math teacher showed me in the late 1970s, when I was about 15 or 16 years of
+age. But it wasn't a computer.
+
+In the gymnasium, when you are about 16-18 years of age, we learned programming
+by ourselves. We had no teachers. We taught each other. We were hungry for
+learning, even in some cases to the detriment of subjects we should learn, in school.
+When we understood code, we also invited others to learn. Thus, a small
+[course in BASIC](assets/pdf/course.pdf) with state support through a
+[study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.
 
 
 ## Some observations
