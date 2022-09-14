@@ -19,8 +19,8 @@ rather than "Combat (#24)" or something to that effect.
 
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
-It has finally been put here as a remembrance of *Kristian*, as he disappeared without
-trace in the mid 80s, never to return.
+It has finally been put here as a remembrance of *U. Kristian Lidberg*,
+as he disappeared without trace in the mid 80s, never to return.
 
 But we will return to this program later. The computer, ABC80,
 was a Swedish computer quite new at the time which came to market in 1978.
@@ -245,6 +245,7 @@ to invent the wheel every other year.
 
 Well, back to the code …
 
+
 ## The code and additional hardware
 
 *U. Kristian Lidberg* did the main code for the ABC80 in [BASIC](https://en.wikipedia.org/wiki/BASIC)
@@ -265,12 +266,12 @@ So it did not have much of an afterlife.
 
 We built the joysticks out of small hotel soap containers, where the inside had cables,
 switches and diodes. (No pull up or pull down resistors, from which I can remember.)
-The joysticks were in the same spirit as Atari made them: simple switches, and for each a
-"fire button". Our fire button may have had a problem with "bouncing".
+The joysticks were in the same spirit as Atari made them: simple switches, and for
+each a "fire button". Our fire button may have had a problem with "bouncing".
 The keyboard was really no alternative, to my recollection, because the keyboard
-roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30 hits per
-second, somehow interruption routine might have impacted this?) or was it that joysticks were
-much too fun?
+roll-over was too limiting (even if it has "N-key roll-over" 2,5 ms scanning, i.e. 30
+hits per second, somehow interruption routine might have impacted this?) or was it that
+joysticks were much too fun?
 
 ![V-24 on ABC80](assets/images/v24-small.jpeg)
 
