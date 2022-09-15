@@ -29,6 +29,7 @@ was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
 Thus must have been one of the earliest schools in Sweden to have computers.
 
+Read an [anecdote](ATALE.md) from about 1981 giving some personal context.
 
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
@@ -231,10 +232,10 @@ addicted to one branch of program development e.g. word processing. Not only wer
 these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^4]
 the guy behind hypertext, had his chance of changing electronic writing
 ([Xanadu](https://en.wikipedia.org/wiki/Project_Xanadu)), or Jef Raskin,[^5]
-the guy behind Macintosh, with his ideas of speed up typing
-(eventually the [Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas
-evaporated soon in this narrow environment. What we now still have in implemented ideas
-is not far from what we already had 40-50 years ago.
+the guy behind Macintosh, with his ideas of speed up typing (eventually the
+[Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas evaporated soon
+in this narrow environment. What we now still have in implemented ideas is not far
+from what we already had 40-50 years ago.
 
 [^4]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
@@ -396,9 +397,9 @@ When we understood code, we also invited others to learn. Thus, a small
 
 ## Some observations
 
-Programs are often considered as being synonymous with code. Or coding as
-synonymous with programming. Algorithms are also considered sometimes as programs.
-Seldom though are algorithms identified as code, but it happens. So maybe there
+*Programs* are often considered as being synonymous with *code*. Or *coding* as
+synonymous with *programming*. *Algorithms* are also considered sometimes as *programs*.
+Seldom, though, are *algorithms* identified as *code*, but it happens. So maybe there
 are some intuitive abstractions here, even if the concepts are fussy and floating.
 
 One distinction I've found to be useful is between "coding" and "programming".
@@ -459,7 +460,7 @@ on the emulator for Atari VCS/2600.
 ![Aeroplane on Atari VCS/2600](assets/images/partial-airfight-atari-vcs.gif)
 
 
-### contrib/Jupiter ACE
+### contrib/JUPITER ACE
 A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, although
 I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
 There were only 5,000 made according to estimates. I did not have much money at this time,
