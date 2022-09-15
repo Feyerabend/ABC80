@@ -334,6 +334,8 @@ was naturally done through the position of characters.
 6. Eventually the game ends, but may start over depending on answered questions.
 
 
+![The classic book for BASIC](assets/images/basic.png)
+
 #### About the ABC80 BASIC
 
 As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the 
