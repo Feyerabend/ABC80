@@ -17,7 +17,8 @@ Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
 of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
-rather than "Combat (#24)" or something to that effect.
+rather than "Combat (#24)" or something to that effect. It has also only really been
+used **once**.
 
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
@@ -29,6 +30,7 @@ was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
 Thus must have been one of the earliest schools in Sweden to have computers.
 
+Read an [anecdote](ATALE.md) from about 1981 giving some personal context.
 
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
@@ -231,10 +233,10 @@ addicted to one branch of program development e.g. word processing. Not only wer
 these vendor lock-ins, but also the ideas of what word processing could be. If Ted Nelson,[^4]
 the guy behind hypertext, had his chance of changing electronic writing
 ([Xanadu](https://en.wikipedia.org/wiki/Project_Xanadu)), or Jef Raskin,[^5]
-the guy behind Macintosh, with his ideas of speed up typing
-(eventually the [Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas
-evaporated soon in this narrow environment. What we now still have in implemented ideas
-is not far from what we already had 40-50 years ago.
+the guy behind Macintosh, with his ideas of speed up typing (eventually the
+[Canon Cat](https://en.wikipedia.org/wiki/Canon_Cat)), the ideas evaporated soon
+in this narrow environment. What we now still have in implemented ideas is not far
+from what we already had 40-50 years ago.
 
 [^4]: See https://en.wikipedia.org/wiki/Ted_Nelson.
 
@@ -333,11 +335,13 @@ was naturally done through the position of characters.
 6. Eventually the game ends, but may start over depending on answered questions.
 
 
+![The classic book for BASIC](assets/images/basic.png)
+
 #### About the ABC80 BASIC
 
 As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the 
 semi-compiled BASIC interpreter in ABC80 was quite fast for integer based
-programs, for the time. Games have the property of always required more of
+programs, for the time. Games have the property of always require more of
 the computer that it can handle. But for our goals in this case, the BASIC
 was enough without having to resort to assembly.
 
@@ -354,22 +358,20 @@ see is littered with them.
 
 There are some special deviations, as there were at the time, in this BASIC,
 compared to other contemporary variants. All had their own solutions.
-A semicolon ';' is used as a shorthand for 'PRINT'.
-The position of the cursor for characters can be done by 'CUR(X, Y)'.
-Printing the character 12 clears the screen, and positions the cursor
-at x=0, y=0, top left corner with '; CHR¤(12)'.
-There are some poking going on such as 'POKE 32357,208,175,212' -- forgot
-all there was about that address.
+A semicolon ';' is used as a shorthand for 'PRINT'. The position of the
+cursor for characters can be done by 'CUR(X, Y)'. Printing the character
+12 clears the screen, and positions the cursor at x=0, y=0, top left
+corner with '; CHR¤(12)'. There are some poking going on such as
+'POKE 32357,208,175,212' -- forgot all there was about that address ...
 
 Often computers based on MOS 6502 processor did memory mapping for I/O.
 But Z80 had its own separate ports for I/O which was used here, and in
-the case for generating sound in ABC80 you could send out e.g.
-'OUT 6,9' to a port, wait a while and close with 'OUT 6,0'.
-That would generate some sound. You could also
-poll the V24 port for input of the joysticks and fire buttons, by first
-setting the right output at port 58 and then reading from it,
-depending on how the wiring was done. You could do some PEEK and POKE
-commands to lookup clocks and do some timing. Etc.
+the case for generating sound in ABC80 you could send out e.g. 'OUT 6,9'
+to a port, wait a while and close with 'OUT 6,0'. That would generate
+some sound. You could also poll the V24 port for input of the joysticks
+and fire buttons, by first setting the right output at port 58 and then
+reading from it, depending on how the wiring was done. You could do some
+PEEK and POKE commands to lookup clocks and do some timing. Etc.
 
 Also can be noted that almost half of the code is actually sound,
 graphics, presentation, ending, tunes, interactivity with questions/answers
@@ -396,9 +398,9 @@ When we understood code, we also invited others to learn. Thus, a small
 
 ## Some observations
 
-Programs are often considered as being synonymous with code. Or coding as
-synonymous with programming. Algorithms are also considered sometimes as programs.
-Seldom though are algorithms identified as code, but it happens. So maybe there
+*Programs* are often considered as being synonymous with *code*. Or *coding* as
+synonymous with *programming*. *Algorithms* are also considered sometimes as *programs*.
+Seldom, though, are *algorithms* identified as *code*, but it happens. So maybe there
 are some intuitive abstractions here, even if the concepts are fussy and floating.
 
 One distinction I've found to be useful is between "coding" and "programming".
@@ -459,7 +461,7 @@ on the emulator for Atari VCS/2600.
 ![Aeroplane on Atari VCS/2600](assets/images/partial-airfight-atari-vcs.gif)
 
 
-### contrib/Jupiter ACE
+### contrib/JUPITER ACE
 A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, although
 I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
 There were only 5,000 made according to estimates. I did not have much money at this time,
