@@ -15,10 +15,10 @@ Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 ![Atari VCS/2600](assets/images/Atari-2600.jpg)
 
-AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
-of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
-rather than "Combat (#24)" or something to that effect. It has also only really been
-used **once**.
+AIR-FIGHT has never been published, **until now**, partly because we were probably
+afraid of possible copyright infringement at the time. That's why it's also called
+"AIR-FIGHT" rather than "Combat (#24)" or something to that effect. It has also only
+really been used at *one* occation.
 
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
@@ -30,7 +30,8 @@ was a Swedish computer quite new at the time which came to market in 1978.
 It was bought by the school for classroom education in circa early 1979.
 Thus must have been one of the earliest schools in Sweden to have computers.
 
-Read an [anecdote](ATALE.md) from about 1981 giving some personal context.
+Read an [anecdote](ATALE.md) from about 1981 giving some personal context to
+the experience of ABC80.
 
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
  via Wikimedia Commons](assets/images/478px-ABC80.jpg)
