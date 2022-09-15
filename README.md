@@ -338,7 +338,7 @@ was naturally done through the position of characters.
 
 As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the 
 semi-compiled BASIC interpreter in ABC80 was quite fast for integer based
-programs, for the time. Games have the property of always required more of
+programs, for the time. Games have the property of always require more of
 the computer that it can handle. But for our goals in this case, the BASIC
 was enough without having to resort to assembly.
 
@@ -355,22 +355,20 @@ see is littered with them.
 
 There are some special deviations, as there were at the time, in this BASIC,
 compared to other contemporary variants. All had their own solutions.
-A semicolon ';' is used as a shorthand for 'PRINT'.
-The position of the cursor for characters can be done by 'CUR(X, Y)'.
-Printing the character 12 clears the screen, and positions the cursor
-at x=0, y=0, top left corner with '; CHR¤(12)'.
-There are some poking going on such as 'POKE 32357,208,175,212' -- forgot
-all there was about that address.
+A semicolon ';' is used as a shorthand for 'PRINT'. The position of the
+cursor for characters can be done by 'CUR(X, Y)'. Printing the character
+12 clears the screen, and positions the cursor at x=0, y=0, top left
+corner with '; CHR¤(12)'. There are some poking going on such as
+'POKE 32357,208,175,212' -- forgot all there was about that address ...
 
 Often computers based on MOS 6502 processor did memory mapping for I/O.
 But Z80 had its own separate ports for I/O which was used here, and in
-the case for generating sound in ABC80 you could send out e.g.
-'OUT 6,9' to a port, wait a while and close with 'OUT 6,0'.
-That would generate some sound. You could also
-poll the V24 port for input of the joysticks and fire buttons, by first
-setting the right output at port 58 and then reading from it,
-depending on how the wiring was done. You could do some PEEK and POKE
-commands to lookup clocks and do some timing. Etc.
+the case for generating sound in ABC80 you could send out e.g. 'OUT 6,9'
+to a port, wait a while and close with 'OUT 6,0'. That would generate
+some sound. You could also poll the V24 port for input of the joysticks
+and fire buttons, by first setting the right output at port 58 and then
+reading from it, depending on how the wiring was done. You could do some
+PEEK and POKE commands to lookup clocks and do some timing. Etc.
 
 Also can be noted that almost half of the code is actually sound,
 graphics, presentation, ending, tunes, interactivity with questions/answers
