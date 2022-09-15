@@ -17,7 +17,8 @@ Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 AIR-FIGHT has never been published, **until now**, partly because we were probably afraid
 of possible copyright infringement at the time. That's why it's also called "AIR-FIGHT"
-rather than "Combat (#24)" or something to that effect.
+rather than "Combat (#24)" or something to that effect. It has also only really been
+used **once**.
 
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
