@@ -2,9 +2,9 @@
 
 
 # ABC80 AIR-FIGHT 1981
+
 A recreated program/code from paper trail. Originally the program was
-coded for the Swedish home computer
-[ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
+coded for the Swedish home computer [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
 abbreviation for "Advanced Basic Computer for the 80s'', (approx. translation) 
 in 1981. Inspired by the contemporary game console
 [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
@@ -170,7 +170,7 @@ The cost of computers was quite high at this time, but also shrinking rapidly.
 
 Specifications of the ABC80:
 * Zilog Z80, 3 MHz (2.9952 MHz)
-* 16K RAM installed (could be expanded to 32K)
+* 16K RAM installed (could be expanded originally to 32K)
 * 16K ROM with BASIC semi compiler/interpreter and e.g. driver for a tape recorder
 * Monitor B/W included (modified TV set from Luxor)
 * Graphics 78 x 72 dots (near the "standards" of Teletext
@@ -293,7 +293,8 @@ some questions
   3. Choose your joysticks.
   4. Choose if you want the game to terminate when time is out, or when the highest
 score has been reached.
-* The main part of the game then runs, and ends with a musical score and the winner is announced!
+* The main part of the game then runs, and ends with a musical score and the winner is
+announced!
 * Play again? No? Please turn over to (presumably) the next player in line!
 
 
