@@ -451,6 +451,7 @@ in programming. I. e. testing your ideas as "code".
 
 
 ### contrib/ATARI 2600/VCS
+
 A partially implemented AIR-FIGHT, i.e. just the movement of the aeroplane in code for
 [MOS 6502](https://en.wikipedia.org/wiki/MOS_Technology_6502) (6507) Atari VCS/2600.
 It might be that it has to be heavily reimplemented and changed due to the
@@ -464,17 +465,21 @@ on the emulator for Atari VCS/2600.
 
 
 ### contrib/JUPITER ACE
+
 A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, although
 I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
 There were only 5,000 made according to estimates. I did not have much money at this time,
-and it was actually my first computer. It was interesting that it was a cheap
-computer, but not running BASIC. But it also had a horrible "rubbery" keyboard,
-like its cousin Sinclair ZX-Spectrum. Fast, but not really usable. Even for the time.
+and it was actually my first computer. It was interesting that it was a cheap computer,
+but not running BASIC. I never was into games really, and this was a curious language.
+But it also had a horrible "rubbery" keyboard, like its cousin Sinclair ZX-Spectrum.
+The interior though resembles more ZX80/81. Fast, but not really usable with the keayboard.
+Even for the time.
 
 ![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
 
 
 # ABC80 MUSIC 1981
+
 Most simple sample we could come up with that made it to the presentation.
 
 
