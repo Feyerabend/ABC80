@@ -3,12 +3,12 @@
 
 # ABC80 AIR-FIGHT 1981
 
-A recreated program/code from paper trail. Originally the program was
-coded for the Swedish home computer [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
+A recreated program/code from paper trail. Originally the program was coded
+for the Swedish home computer [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
 abbreviation for "Advanced Basic Computer for the 80s'', (approx. translation) 
 in 1981. Inspired by the contemporary game console
-[Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
-game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+[Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) game
+[Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
 
 [^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
@@ -22,24 +22,24 @@ really been used at *one* occation.
 
 __There might be *spelling mistakes*, as I have not tried to run this code at all.__
 
-It has finally been put here as a remembrance of *U. Kristian Lidberg*,
-as he disappeared without trace in the mid 80s, never to return.
+It has finally been put here as a remembrance of *U. Kristian Lidberg*, as he
+disappeared without trace in the mid 80s, never to return.
 
-But we will return to this program later. The computer, ABC80,
-was a Swedish computer quite new at the time which came to market in 1978.
-It was bought by the school for classroom education in circa early 1979.
-Thus must have been one of the earliest schools in Sweden to have computers.
+But we will return to this program later. The computer, ABC80, was a Swedish computer
+quite new at the time which came to market in 1978. It was bought by the school for
+classroom education in circa early 1979. Thus must have been one of the earliest
+schools in Sweden to have computers.
 
-Read an [anecdote](ATALE.md) from about 1981 giving some personal context to
-the experience of ABC80.
+Read an [anecdote](ATALE.md) from about 1981 giving some personal context to the
+experience of ABC80.
 
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
- via Wikimedia Commons](assets/images/478px-ABC80.jpg)
+via Wikimedia Commons](assets/images/478px-ABC80.jpg)
 
 Modern captured photo of a ABC80 computer.[^2]
 
 [^2]: Photo: liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
- via Wikimedia Commons.
+via Wikimedia Commons.
 
 
 ## Some historical context
@@ -473,7 +473,7 @@ and it was actually my first computer. It was interesting that it was a cheap co
 but not running BASIC. I never was into games really, so game oriented machines was not
 in my aim at all. The Jupiter ACE had a interesting language FORTH that was interesting.
 But it also had a horrible "rubbery" keyboard, like its cousin Sinclair ZX-Spectrum.
-The interior though resembles more ZX80/81. Fast, but not really usable with the keayboard.
+The interior though resembles more ZX80/81. Fast, but not really usable with the keyboard.
 Even for the time.
 
 ![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
