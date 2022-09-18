@@ -471,7 +471,7 @@ I have an original machine seen below. I bought the Jupiter ACE sometime around 
 There were only 5,000 made according to estimates. I did not have much money at this time,
 and it was actually my first computer. It was interesting that it was a cheap computer,
 but not running BASIC. I never was into games really, so game oriented machines was not
-in my aim. The Jupiter ACE had a interesting language that was interesting.
+in my aim at all. The Jupiter ACE had a interesting language FORTH that was interesting.
 But it also had a horrible "rubbery" keyboard, like its cousin Sinclair ZX-Spectrum.
 The interior though resembles more ZX80/81. Fast, but not really usable with the keayboard.
 Even for the time.
