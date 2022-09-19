@@ -46,10 +46,12 @@ especially home/personal computers in the mid 80s. The grand plans Sweden politi
 in the beginning of the 80s were more evidently public slightly in time after I wrote the
 article but before the publication. Thus I guess that's why the article was published, because
 it was taken as an argument in that *later* debate -- although it wasn't intended as such.
-My article was created in a more open context, where there was no national grand plan for
+My article was created in a more open context, where there was yet no national grand plan for
 education on computer topics. It related to the diverse field where hardware (remember that IBM PC
 was launched in Sweden in 1983) and software were constantly shifting, and innovation was done in
-a very different way ...
+a very different way. Yes, education were brought to the masses, but not evolving around a single
+plan. It was diverse, discrete, non-uniform, but too much -- in my opinion -- focused on
+a single programming langauge: BASIC.
 
 Well back to the computer, ABC80, was a Swedish computer quite new at the time which came to
 market in 1978. It was bought by the school for classroom education in circa early
