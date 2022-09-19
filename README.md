@@ -25,13 +25,16 @@ __There might be *spelling mistakes*, as I have not tried to run this code at al
 It has finally been put here as a remembrance of *U. Kristian Lidberg*, as he
 disappeared without trace in the mid 80s, never to return.
 
-But we will return to this program later. The computer, ABC80, was a Swedish computer
-quite new at the time which came to market in 1978. It was bought by the school for
-classroom education in circa early 1979. Thus must have been one of the earliest
-schools in Sweden to have computers.
+But we will return to this program later. Keeping to my own [dictum](MOVE.md)
+from the time, a wider context should be given when introducing computer related
+topics.
 
-Read an [anecdote](ATALE.md) from about 1981 giving some personal context to the
-experience of ABC80.
+The computer, ABC80, was a Swedish computer quite new at the time which came to
+market in 1978. It was bought by the school for classroom education in circa early
+1979. Thus must have been one of the earliest schools in Sweden to have computers.
+
+Read an [anecdote](ATALE.md) from about 1981 giving some more personal context
+to the experience of ABC80.
 
 ![liftarn, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>,
 via Wikimedia Commons](assets/images/478px-ABC80.jpg)
