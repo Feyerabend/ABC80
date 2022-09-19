@@ -53,9 +53,9 @@ a very different way. Yes, education were brought to the masses, but not evolvin
 plan. It was diverse, discrete, non-uniform, but too much -- in my opinion -- focused on
 a single topic: the programming language BASIC.
 
-Well let's go back some years to 1978 and the computer, ABC80, was a Swedish computer
-quite new at the time, which came to market this year. It was bought by our school
-for classroom education in circa early 1979. Thus must have been one of the earliest
+Well let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
+quite new at the time, and which came to market this year. It was bought by our school
+for classroom education in circa early 1979. Thus we must have been one of the earliest
 schools in Sweden to have computers.
 
 Read an [anecdote](ATALE.md) from about 1981 giving some more personal context
