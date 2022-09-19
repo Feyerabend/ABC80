@@ -65,7 +65,7 @@ such as they are out today. But only so that the specific behaviour of the progr
 language is made sufficiently comprehensible, comprehensible. Allowing the students to
 change a certain instrument, may well be pedagogically more evident than showing all
 individuals details, parts with which you can, for example, build this. From the above
-understand we why an education, where we concentrate on the computer as a structure but
+we understand why an education, where we concentrate on the computer as a structure but
 not as a model as well as a levelling of the interest of the total, will be
 a suitable alternative. Thus the conclusion is a direction towards the previous 
 proposed training.
