@@ -21,8 +21,8 @@ construction, etc., enough for them to be able to manufacture their own
 program of simple type. What happens is that they have to learn how to adapt
 to the computer to adapt the computer to themselves. This procedure is at
 present very cumbersome and time-consuming, especially after the short
-experience the course provides. Note well the development of programming
-languages; intuitively constructed structures, versions in step with the
+experience the course provides. Pay attension to the development of programming
+languages: intuitively constructed structures, versions in step with the
 change in the architecture of the computer at large, without fixed theoretical
 control of, for example, semantics. Moreover, it is possibly so that what they
 have learned is or can be something highly temporary. For example, if the future
@@ -37,32 +37,32 @@ comes into intimate contact with the computer.
 
 What should happen is that a more general education can be offered to those
 people who will not be using the computer in direct programming in the short term.
-It should furthermore, have an even balance between the internal and the external.
+It should furthermore, have an even balance between the *internal* and the *external*.
 With the former I understand everything that is concrete, directly connected to
 the computer by both hardware and software. In the latter I want to include everything
 that does not is internal, but of course relevant relative to the computer. This
 includes e.g the consequences of computerization (officerization, robotization, etc.).
-The training should also pay attention to the early stages of development and use.
+The training should also pay attention to the early stages of *development* and *use*.
 To concisely summarise the above hints is a possible educational
-content and goals: the past, present and future of both the external and
-the internal, in terms of development and use.
+content and goals: the *past*, *present* and *future* of both the *external* and
+the *internal*, in terms of *development* and *use*.
 
 Perhaps this described training seems inappropriate in practice, but let me
 then comment another possible improvement to the already existing one. Herbert
 Söderström has previously given expression to such, where he mentions how the
-method because learning can change.
+method of learning can change.
 
 When elementary teaching of a programming language takes place, its syntactic and
 semantic qualities up, through often already constructed and working examples
 and partly programs made by the students themselves. They are expected further in a
 considerable speed to acquire and understand this. Very little of the time is devoted
-to ascertain whether this has really happened. But the education can get a whole
+to ascertain whether this has really happened. The education can get a completely
 different character as we also see that the programs' behaviour changes through
 changes in atomic functions. My intention here is not that, but what HS
 tends to, that tests and corrections etc. in programs should become some main task.
 I also do not believe that programming languages should in any way become natural,
 such as they are out today. But only so that the specific behaviour of the programming
-language is made sufficiently comprehensible, comprehensible. Allowing the students to
+language is made sufficiently comprehensible. Allowing the students to
 change a certain instrument, may well be pedagogically more evident than showing all
 individuals details, parts with which you can, for example, build this. From the above
 we understand why an education, where we concentrate on the computer as a structure but
