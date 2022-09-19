@@ -39,7 +39,8 @@ My thesis was in short that narrow focus on the computer itself in general educa
 was misleading for those who did not had the purpose set for becoming computer specialists.
 Not far from what was happening in other countries such as Britain, at the time, Sweden
 was discussing to do a very broad political/educational program for the masses on computers.
-In case of Britain, the BBC and the industry produced the BBC Micro and complementary educational
+In case of Britain, the BBC and the industry produced the
+[BBC Micro](https://en.wikipedia.org/wiki/BBC_Micro) and complementary educational
 TV programs starting from around 1981. Sweden much later came to discuss special hardware for
 schools which led them astray (*Esselte 100*, *Compis* ..), but also produced TV series around
 especially home/personal computers in the mid 80s. The grand plan politicians in Sweden had
