@@ -42,8 +42,8 @@ was discussing to do a very broad political/educational program for the masses o
 In case of Britain, the BBC and the industry produced the BBC Micro and complementary educational
 TV programs starting from around 1981. Sweden much later came to discuss special hardware for
 schools which led them astray (*Esselte 100*, *Compis* ..), but also produced TV series around
-especially home/personal computers in the mid 80s. The grand plans Sweden politicians had
-in the beginning of the 80s were more evidently public slightly in time after I wrote the
+especially home/personal computers in the mid 80s. The grand plan politicians in Sweden had
+in the beginning of the 80s were more evidently public slightly in time *after* I wrote the
 article but before the publication. Thus I guess that's why the article was published, because
 it was taken as an argument in that *later* debate -- although it wasn't intended as such.
 My article was created in a more open context, where there was yet no national grand plan for
