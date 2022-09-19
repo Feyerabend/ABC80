@@ -25,6 +25,8 @@ __There might be *spelling mistakes*, as I have not tried to run this code at al
 It has finally been put here as a remembrance of *U. Kristian Lidberg*, as he
 disappeared without trace in the mid 80s, never to return.
 
+## Background and intro
+
 But we will return to this program later. Keeping to my own dictum from around the
 time, a wider context should be given when introducing computer related topics.
 Development doesn't progress in a vacuum. I wrote an opinion article in around 1983,
