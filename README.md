@@ -58,9 +58,11 @@ educational tool by such people as Kevlin Henney, is already present here, but i
 that *change* do not break but alter (or proper code refactoring do *not alter*) behaviour of
 programs, but debugging or testing is not really educational in the same sense.
 
-> But education can get a whole different character as we also see that the programs' behaviour changes through changes in atomic functions. My intention here is not that, but what HS tends to, that tests and corrections etc. in programs should become some main task. 
+> But education can get a whole different character as we also see that the programs' behaviour
+> changes through changes in atomic functions. My intention here is not that, but what HS tends
+> to, that tests and corrections etc. in programs should become some main task. 
 
-Well let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
+Well, let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
 quite new at the time, and which came to market this year. It was bought by our school
 for classroom education in circa early 1979. Thus we must have been one of the earliest
 schools in Sweden to have computers.
