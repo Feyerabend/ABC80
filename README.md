@@ -32,7 +32,8 @@ time, a wider context should be given when introducing computer related topics.
 *Development doesn't progress in a vacuum.* I wrote an opinion article in around 1983,
 about education and computers. About a year or half a year later to my astonishment
 it was published in the recently renamed computer newspaper Computer Sweden
-["Flytta tyngdpunkten i utbildningen!"](MOVE.md) ("Shift the focus of education!").
+["Flytta tyngdpunkten i utbildningen!"](MOVE.md) ("Shift the focus of education!")
+in April 1984.
 
 My thesis was in short that narrow focus on the computer itself in general education
 was misleading for those who did not had the purpose set for becoming computer specialists.
