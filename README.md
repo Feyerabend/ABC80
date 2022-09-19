@@ -53,6 +53,11 @@ a very different way. Yes, education were brought to the masses, but not evolvin
 plan. It was diverse, discrete, non-uniform, but too much -- in my opinion -- focused on
 a single topic: the programming language BASIC.
 
+As a side note I can see that what today is referred to as "refactoring" as an educational
+tool by such people as Kevlin Henney, is already present here:
+
+> But education can get a whole different character as we also see that the programs' behaviour changes through changes in atomic functions. My intention here is not that, but what HS tends to, that tests and corrections etc. in programs should become some main task. 
+
 Well let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
 quite new at the time, and which came to market this year. It was bought by our school
 for classroom education in circa early 1979. Thus we must have been one of the earliest
