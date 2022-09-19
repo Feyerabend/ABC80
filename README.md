@@ -29,17 +29,26 @@ disappeared without trace in the mid 80s, never to return.
 
 But we will return to this program later. Keeping to my own dictum from around the
 time, a wider context should be given when introducing computer related topics.
-Development doesn't progress in a vacuum. I wrote an opinion article in around 1983,
+*Development doesn't progress in a vacuum.* I wrote an opinion article in around 1983,
 about education and computers. About a year or half a year later to my astonishment
 it was published in the recently renamed computer newspaper Computer Sweden
-["Flytta tyngdpunkten i utbildningen!"](MOVE.md). My thesis was in short
-that narrow focus on the computer itself was misleading for those who did not
-had the purpose set for becoming computer specialists. Not far from what was happening
-in other countries such as Britain, at the time, Sweden was discussing to do a very broad
-political/educational program for the masses on computers. The plans were more evidently
-public slightly in time before the publication of my article. Thus I guess that's why the
-article was published, because it was taken as an argument in that *later* debate --
-although it wasn't intended as such. It was created in a different context ...
+["Flytta tyngdpunkten i utbildningen!"](MOVE.md) ("Shift the focus of education!").
+
+My thesis was in short that narrow focus on the computer itself in general education
+was misleading for those who did not had the purpose set for becoming computer specialists.
+Not far from what was happening in other countries such as Britain, at the time, Sweden
+was discussing to do a very broad political/educational program for the masses on computers.
+In case of Britain, the BBC and the industry produced the BBC Micro and complementary educational
+TV programs starting from around 1981. Sweden much later came to discuss special hardware for
+schools which led them astray (*Esselte 100*, *Compis* ..), but also produced TV series around
+especially home/personal computers in the mid 80s. The grand plans Sweden politicians had
+in the beginning of the 80s were more evidently public slightly in time after I wrote the
+article but before the publication. Thus I guess that's why the article was published, because
+it was taken as an argument in that *later* debate -- although it wasn't intended as such.
+My article was created in a more open context, where there was no national grand plan for
+education on computer topics. It related to the diverse field where hardware (remember that IBM PC
+was launched in Sweden in 1983) and software were constantly shifting, and innovation was done in
+a very different way ...
 
 Well back to the computer, ABC80, was a Swedish computer quite new at the time which came to
 market in 1978. It was bought by the school for classroom education in circa early
