@@ -1,7 +1,7 @@
 
-Translation of a opinion article
+__Translation of a opinion article
 published in Computer Sweden no 11,
-Monday 2 of April 1984.
+Monday 2 of April 1984.__
 
 
 # Shift the focus of education!
