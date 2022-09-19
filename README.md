@@ -53,8 +53,10 @@ a very different way. Yes, education were brought to the masses, but not evolvin
 plan. It was diverse, discrete, non-uniform, but too much -- in my opinion -- focused on
 a single topic: the programming language BASIC.
 
-As a side note I can see that what today is referred to as "refactoring" as an educational
-tool by such people as Kevlin Henney, is already present here:
+As a side note I can see that what today is referred to as working with "refactoring" as an
+educational tool by such people as Kevlin Henney, is already present here, but in the way
+that *change* do not break but alter (or proper code refactoring do *not alter*) behaviour of
+programs, but debugging or testing is not really educational in the same sense.
 
 > But education can get a whole different character as we also see that the programs' behaviour changes through changes in atomic functions. My intention here is not that, but what HS tends to, that tests and corrections etc. in programs should become some main task. 
 
