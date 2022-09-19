@@ -32,15 +32,14 @@ about education and computers. About a year or half a year later to my astonishm
 it was published in the recently renamed computer newspaper Computer Sweden
 ["Flytta tyngdpunkten i utbildningen!"](MOVE.md). My thesis was in short
 that narrow focus on the computer itself was misleading for those who did not
-had the purpose set for becoming computer specialists.
-Not far from what was happening in other countries such as Britain, at the time,
-Sweden was discussing to do a very broad political/educational program for the masses
-on computers. The plans were more evidently public slightly in time before the publication
-of my article. Thus I guess that's why the article was published, because it was taken as an
-argument in that debate -- although it wasn't intended as such. It was created in a different
-context.
+had the purpose set for becoming computer specialists. Not far from what was happening
+in other countries such as Britain, at the time, Sweden was discussing to do a very broad
+political/educational program for the masses on computers. The plans were more evidently
+public slightly in time before the publication of my article. Thus I guess that's why the
+article was published, because it was taken as an argument in that *later* debate --
+although it wasn't intended as such. It was created in a different context ...
 
-The computer, ABC80, was a Swedish computer quite new at the time which came to
+Well back to the computer, ABC80, was a Swedish computer quite new at the time which came to
 market in 1978. It was bought by the school for classroom education in circa early
 1979. Thus must have been one of the earliest schools in Sweden to have computers.
 
