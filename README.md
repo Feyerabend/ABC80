@@ -47,12 +47,12 @@ especially home/personal computers in the mid 80s. The grand plan politicians in
 in the beginning of the 80s were more evidently public slightly in time *after* I wrote the
 article but before the publication. Thus I guess that's why the article was published, because
 it was taken as an argument in that *later* debate -- although it wasn't intended as such.
-My article was created in a more open context, where there was yet no national grand plan for
-education on computer topics. It related to the diverse field where hardware (remember that IBM PC
-was launched in Sweden in 1983) and software were constantly shifting, and innovation was done in
-a very different way. Yes, education were brought to the masses, but not evolving around a single
-plan. It was diverse, discrete, non-uniform, but too much -- in my opinion -- focused on
-a single topic: the programming language BASIC.
+My article was created in a more open context, where there was yet no national grand plan, or
+at least no *annonced plan*, for education on computer topics. It related to the diverse field
+where hardware (remember that IBM PC was launched in Sweden in 1983) and software were constantly
+shifting, and innovation was done in a very different way. Yes, education were brought to the
+masses, but not evolving around a single plan. It was diverse, discrete, non-uniform, but too
+much -- in my opinion -- focused on a single topic: the programming language BASIC.
 
 As a side note I can see that what today is referred to as working with "refactoring" as an
 educational tool by such people as Kevlin Henney, is already present here, but in the way
