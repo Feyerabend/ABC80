@@ -67,7 +67,7 @@ change a certain instrument, may well be pedagogically more evident than showing
 individuals details, parts with which you can, for example, build this. From the above
 understand we why an education, where we concentrate on the computer as a structure but
 not as a model as well as a levelling of the interest of the total, will be
-a suitable alternative. This is the conclusion, a direction against the previous one
+a suitable alternative. Thus the conclusion is a direction towards the previous 
 proposed training.
 
 *Set Lonnert*
