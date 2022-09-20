@@ -26,5 +26,5 @@ The rest is, as you say, history.
 * https://en.wikipedia.org/wiki/Personal_computer
 * http://www.old-computers.com/history/timeline.asp
 * http://www.pc-museum.com
-* http://setlonnert.com/slht/wp-content/uploads/2019/01/ABC80-historik.pdf
+* [ABC80 historik](./assets/pdf/ABC80-historik.pdf)
 * https://computerhistory.org/blog/microsoft-ms-dos-early-source-code/
