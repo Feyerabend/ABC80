@@ -55,13 +55,13 @@ masses, but not evolving around a single plan. It was diverse, discrete, non-uni
 much -- in my opinion -- focused on a single topic: the programming language BASIC.
 
 As a side note I can see that what today is referred to as working with "refactoring" as an
-educational tool by such people as Kevlin Henney, is already present here, but in the way
-that *change* do not break but alter (or proper code refactoring do *not alter*) behaviour of
-programs, but debugging or testing is not really educational in the same sense.
+educational tool mentioned by such people as Kevlin Henney, is already present here, but in
+the way that *change* do not break but alter (or proper code refactoring do *not alter*)
+behaviour of programs, but debugging or testing is not really educational in the same sense.
 
-> But education can get a whole different character as we also see that the programs' behaviour
-> changes through changes in atomic functions. My intention here is not that, but what HS tends
-> to, that tests and corrections etc. in programs should become some main task. 
+> The education can get a completely different character as we also see that the programs'
+> behaviour changes through changes in atomic functions. My intention here is not that, but
+> what HS tends to, that tests and corrections etc. in programs should become some main task. 
 
 Well, let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
 quite new at the time, and which came to market this year. It was bought by our school
@@ -508,11 +508,11 @@ A small snippet of the Forth on Jupiter ACE, which I tested on an emulator, alth
 I have an original machine seen below. I bought the Jupiter ACE sometime around 1983/1984.
 There were only 5,000 made according to estimates. I did not have much money at this time,
 and it was actually my first computer. It was interesting that it was a cheap computer,
-but not running BASIC. I never was into games really, so game oriented machines was not
-in my aim at all. The Jupiter ACE had a interesting language FORTH that was interesting.
-But it also had a horrible "rubbery" keyboard, like its cousin Sinclair ZX-Spectrum.
-The interior though resembles more ZX80/81. Fast, but not really usable with the keyboard.
-Even for the time.
+but not running BASIC. It had FORTH. I never was into games really, so game oriented
+machines was not in my aim at all. Rather exploring programming languages was.
+But the Jupiter ACE had a horrible "rubbery" keyboard, like its cousin Sinclair ZX-Spectrum.
+Though the interior resembles more the Sinclair ZX80/81. It was fast, but not really usable
+with the keyboard. Even for the time. So it was soon shelved.
 
 ![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
 
