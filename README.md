@@ -55,13 +55,13 @@ masses, but not evolving around a single plan. It was diverse, discrete, non-uni
 much -- in my opinion -- focused on a single topic: the programming language BASIC.
 
 As a side note I can see that what today is referred to as working with "refactoring" as an
-educational tool by such people as Kevlin Henney, is already present here, but in the way
-that *change* do not break but alter (or proper code refactoring do *not alter*) behaviour of
-programs, but debugging or testing is not really educational in the same sense.
+educational tool mentioned by such people as Kevlin Henney, is already present here, but in
+the way that *change* do not break but alter (or proper code refactoring do *not alter*)
+behaviour of programs, but debugging or testing is not really educational in the same sense.
 
-> But education can get a whole different character as we also see that the programs' behaviour
-> changes through changes in atomic functions. My intention here is not that, but what HS tends
-> to, that tests and corrections etc. in programs should become some main task. 
+> The education can get a completely different character as we also see that the programs'
+> behaviour changes through changes in atomic functions. My intention here is not that, but
+> what HS tends to, that tests and corrections etc. in programs should become some main task. 
 
 Well, let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
 quite new at the time, and which came to market this year. It was bought by our school
