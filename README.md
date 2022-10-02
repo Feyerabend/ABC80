@@ -221,11 +221,11 @@ Specifications of the ABC80:
  measurements, ...)
 
 I don't remember, but maybe the tape recorder was included at times.
-Disc drives were sold both from 3rd parties, and from the manufacturere
-origin of ABC80. A double disc drive unit
+Disc drives were sold both from 3rd parties, and from the original
+manufacturer of ABC80. A double disc drive unit
 [ABC832](https://www.abc80.net/archive/luxor/diskdrives/ABC832-flexskiveenhet-bruksanvisning.pdf)
-from Luxor would cost 14,000 SEK in 1982
-(cf. the computer would cost approx. 6,900 SEK!).
+from Luxor would cost 14,000 SEK in 1982, double the price of the computer
+itself.
 
 Later on the ABC80 could be extended with other 3rd party additions such as
 contemporary popular 80 column cards, CP/M, and local network, which
