@@ -221,12 +221,17 @@ Specifications of the ABC80:
  measurements, ...)
 
 I don't remember, but maybe the tape recorder was included at times.
-Disc drives were sold both from 3rd parties, and from the manufacturer DIAB.
+Disc drives were sold both from 3rd parties, and from the manufacturere
+origin of ABC80. A double disc drive unit
+[ABC832](https://www.abc80.net/archive/luxor/diskdrives/ABC832-flexskiveenhet-bruksanvisning.pdf)
+from Luxor would cost 14,000 SEK in 1982
+(cf. the computer would cost approx. 6,900 SEK!).
+
 Later on the ABC80 could be extended with other 3rd party additions such as
 contemporary popular 80 column cards, CP/M, and local network, which
 expanded its lifetime in the start of the 80s. But the support wasn't
 coming from the source itself that time, and adding possibly conflicting
-hardware didn't make its life easier.
+hardware from different manufacturers didn't make its life easier.
 
 The ABC80 was a collaboration between
 [DIAB Industrier](https://en.wikipedia.org/wiki/Dataindustrier_AB)
@@ -240,7 +245,12 @@ was also behind the large, but restricted to national and local, success.
 In mid and late 80s DIAB had moved on, betting on Unix, focusing its own crafted
 [DNIX](https://en.wikipedia.org/wiki/DNIX), and had other machines
 at this time, with little time for something they really wasn't that
-interested in.
+interested in. They did launch computers based on Unix-variant
+[ABC1600](https://en.wikipedia.org/wiki/ABC_1600) and
+[ABC9000](https://sv.wikipedia.org/wiki/DIAB_Serie_90) (in Swedish) (in principle
+same as [DIAB Serie 90](https://www.abc80.net/archive/luxor/marknad/DIAB_SERIE_90.pdf))
+together with partners in 1984/1985, but with little to no programs, the computers
+wouldn't sell.
 
 ![ABC80 exploded view](assets/images/abc80-split.jpg)
 
