@@ -214,7 +214,7 @@ Specifications of the ABC80:
 * Graphics 78 x 72 dots (near the "standards" of Teletext
  /[Videotex](https://en.wikipedia.org/wiki/Videotex) /Prestel Plus ... )
 * 24 rows x 40 columns character screen
-* Swedish keyboard (sold in some other countries also, Hungary e.g. with presumably
+* Swedish keyboard (made by Keytronic) (sold in some other countries also, Hungary e.g. with presumably
  Hungarian keyboard)
 * Sound (actually a decent chip SN76477, but not fully used by the computer)
 * Expansion slot (the DIAB favoured 4680 bus, used often for miscellaneous instruments,
@@ -222,7 +222,9 @@ Specifications of the ABC80:
 
 I don't remember, but maybe the tape recorder was included at times.
 Disc drives were sold both from 3rd parties, and from the original
-manufacturer of ABC80. A double disc drive unit
+manufacturer of ABC80. An affordable disc drive
+[FD2](https://www.abc80.net/archive/luxor/ABC80/Bruksanvisning-FD2-och-FD2U-Flexskivenhet.pdf)
+was offered. Later a double disc drive unit
 [ABC832](https://www.abc80.net/archive/luxor/diskdrives/ABC832-flexskiveenhet-bruksanvisning.pdf)
 from Luxor would cost 14,000 SEK in 1982, double the price of the computer
 itself.
