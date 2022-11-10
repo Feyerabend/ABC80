@@ -387,7 +387,6 @@ was naturally done through the position of characters.
 6. Eventually the game ends, but may start over depending on answered questions.
 
 
-![The classic book for BASIC](assets/images/basic.png)
 
 #### About the ABC80 BASIC
 
@@ -432,6 +431,8 @@ important from the standpoint of what makes a game in this early era of video
 games is *not only the time playing*. It is about *the whole experience*, 
 as they say.
 
+
+![The classic book for BASIC](assets/images/basic.png)
 
 ### Learning
 
