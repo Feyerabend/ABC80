@@ -442,7 +442,8 @@ maths teacher showed me in the late 1970s, when I was about 15 or 16 years of
 age. But it wasn't a computer.
 
 In the gymnasium, when you are about 16-18 years of age, we learned programming
-by ourselves. We had no teachers. We taught each other. We were hungry for
+by ourselves. Entering [code from books](https://en.wikipedia.org/wiki/Type-in_program),
+e.g. We had no teachers. We taught each other. We were hungry for
 learning, even in some cases to the detriment of subjects we should learn, in school.
 When we understood code, we also invited others to learn. Thus, a small
 [course in BASIC](assets/pdf/course.pdf) with state support through a
