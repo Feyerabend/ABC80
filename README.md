@@ -3,27 +3,23 @@
 
 # ABC80 AIR-FIGHT 1981
 
-A recreated program/code from paper trail. Originally the program was coded
-for the Swedish home computer [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1],
-abbreviation for "Advanced Basic Computer for the 80s'', (approx. translation) 
-in 1981. Inspired by the contemporary game console
-[Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600) game
-[Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+ABC80 AIR-FIGHT 1981 is a recreated program/code from a paper trail. Originally,
+the program was coded for the Swedish home computer
+[ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1] in 1981. It was inspired
+by the [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
+game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
+AIR-FIGHT has never been published until now,
+partly because of potential copyright infringement at the time. It has also only
+been used on one occasion.
 
-[^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
+There may be spelling mistakes in the code, as it has not been run. The program
+is being published here as a remembrance of *U. Kristian Lidberg*, who disappeared
+without a trace in the mid-80s and never returned.
+
+^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 ![Atari VCS/2600](assets/images/Atari-2600.jpg)
-
-AIR-FIGHT has never been published, **until now**, partly because we were probably
-afraid of possible copyright infringement at the time. That's why it's also called
-"AIR-FIGHT" rather than "Combat (#24)" or something to that effect. It has also only
-really been used at *one* occation.
-
-__There might be *spelling mistakes*, as I have not tried to run this code at all.__
-
-It has finally been put here as a remembrance of *U. Kristian Lidberg*, as he
-disappeared without trace in the mid 80s, never to return.
 
 ## Background and intro
 
@@ -61,7 +57,7 @@ behaviour of programs, but debugging or testing is not really educational in the
 
 > The education can get a completely different character as we also see that the programs'
 > behaviour changes through changes in atomic functions. My intention here is not that, but
-> what HS tends to, that tests and corrections etc. in programs should become some main task. 
+> what HS tends to, that tests and corrections etc. in programs should become some main task.
 
 Well, let's go back some years to 1978 and the computer ABC80. It was a Swedish computer
 quite new at the time, and which came to market this year. It was bought by our school
@@ -272,7 +268,7 @@ technology etc. were left behind. Instead schools were completely misled by
 investing in failed projects such as "[COMPIS](https://en.wikipedia.org/wiki/Compis)".
 But that is quite another story...*
 
-In general the horizontal field of innovation and diversity came to be replaced by 
+In general the horizontal field of innovation and diversity came to be replaced by
 vertical strata. The highly incompatible plethora of machines in spirit of the 70s,
 was replaced by a single item hardware during the 80s where new competition was in speed,
 speed, and more speed, but also internal memory expansion, external storage and programs
@@ -359,7 +355,7 @@ player during its turn.
 the plane is flying (if we start then the variable has already been set) by a single move.
 As in an animated movie, one move is made one step for each frame. The motor is always
 running. The plane can move in 8 directions, let's use some geographical terms:
-N, NW, W, SW, S, SE, E, NE. So we can e.g. move one step in the N, north direction. 
+N, NW, W, SW, S, SE, E, NE. So we can e.g. move one step in the N, north direction.
 If we hit a boundary of the screen, up, down, left or right, then we roll over so that
 we can appear on the right if the plane took a turn outside screen limits to the left,
 and so on.
@@ -390,7 +386,7 @@ was naturally done through the position of characters.
 
 #### About the ABC80 BASIC
 
-As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the 
+As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the
 semi-compiled BASIC interpreter in ABC80 was quite fast for integer based
 programs, for the time. Games have the property of always require more of
 the computer that it can handle. But for our goals in this case, the BASIC
@@ -403,7 +399,7 @@ through a computer (which we also did back in the day).
 
 In this BASIC integers are denoted by a percent character '%' after the
 variable name. Thus almost all the variable names have this sign after them.
-I don't remember if assigning a numeric constant, a number, to a variable 
+I don't remember if assigning a numeric constant, a number, to a variable
 with the sign after it had any impact on speed. But the program as you can
 see is littered with them.
 
@@ -428,7 +424,7 @@ Also can be noted that almost half of the code is actually sound,
 graphics, presentation, ending, tunes, interactivity with questions/answers
 etc. That is, most of the code is not about the actual game logic. This is
 important from the standpoint of what makes a game in this early era of video
-games is *not only the time playing*. It is about *the whole experience*, 
+games is *not only the time playing*. It is about *the whole experience*,
 as they say.
 
 
@@ -437,7 +433,7 @@ as they say.
 ### Learning
 
 The ABC80 was really the first school computer in general use for education.
-Yes, I had previous experience with a home built binary counter which my 
+Yes, I had previous experience with a home built binary counter which my
 maths teacher showed me in the late 1970s, when I was about 15 or 16 years of
 age. But it wasn't a computer.
 
@@ -468,7 +464,7 @@ you are into *programming*. This is no absolute distinction, but more of a
 guideline navigating the concepts in development. As a coder/programmer
 you oscillate between "*programming*" and "*coding*".
 
-In the example of early development in software for the 
+In the example of early development in software for the
 [Atari VCS](https://en.wikipedia.org/wiki/Atari_2600), video computer
 system, later called Atari 2600, programming was more of a *time based experience*.
 You have to keep track of scanlines, and when clocks made their ticks, the
@@ -545,5 +541,3 @@ Most simple sample we could come up with that made it to the presentation.
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978
 - Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009
 - Wolf, Mark J. P. (red.), *The video game explosion: a history from Pong to Playstation and beyond*, Greenwood Press, Westport, Conn., 2008
-
-
