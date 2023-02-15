@@ -1,0 +1,7 @@
+10 PRINT "Räksmörgås é GÖTT. För att ta IDÉN vidare."
+20 GOTO 10
+30 PRINT "MER AV SAMMA VARA FÖR ATT SE"
+40 PRINT "OM NÅGOT ÄNDRAR SIG"
+50 A¤="Sträng"
+60 PRINT A¤
+60 END
