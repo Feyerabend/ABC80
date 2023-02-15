@@ -1,4 +1,3 @@
-
 # Cassette routines for ABC80
 
 *Software for transfering BASIC programs between modern computer
@@ -20,7 +19,7 @@ experience.*
 The hardware setup is as follows:
 
 ```
-ABC80 <-> 5 pind DIN connector [cord] 3.5 mm audio plug <-> modern computer
+ABC80 <-> 5 pin DIN connector [cord] 3.5 mm audio plug <-> modern computer
 ```
 
 With a suitable program such as e.g. Audacity installed on your modern computer,
@@ -29,7 +28,7 @@ you can record and play sound.
 In this case the handling of sound files will be through the Microsoft Wave-format.
 
 
-## to WAVE
+## from BASIC to WAVE
 
 So if you have a program in BASIC as text for the ABC80, but as in my case 
 on a Apple Macintosh, you can transfer the file by first run the program
@@ -46,10 +45,10 @@ sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav
 
 PENDING TEXT
 
-## to BASIC
+## from WAVE to BASIC
 
 ```
-sample.wav -> [wav2bin] -> sample.bin -> [bin2basic] -> sample.bas (unicode)
+sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode)
 ```
 
 PENDING TEXT
