@@ -16,7 +16,7 @@ There may be spelling mistakes in the code, as it has not been run. The program
 is being published here as a remembrance of *U. Kristian Lidberg*, who disappeared
 without a trace in the mid-80s and never returned.
 
-^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
+[^1]: More info in Swedish: https://www.idg.se/allt-om/abc+80.
 Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 ![Atari VCS/2600](assets/images/Atari-2600.jpg)
