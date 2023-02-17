@@ -190,13 +190,9 @@ int prepare(char *inputname) {
     int numsamp, filelen, numblk, numbyte;
     struct stat filestat;
 
-printf("o: %s\n", inputname);
-
     // file length
     stat(inputname, &filestat);
     filelen = filestat.st_size;
-
-printf("l: %d\n", filelen);
 
     // 253 byte user data per block
     numblk = filelen / 253;
@@ -257,17 +253,22 @@ int converting(options_t *options) {
     int opt = TRUE;
     if (*options->filename) {
 
+        // too long or too short suggestion
         if (!(strlen(options->filename) > 8 || strlen(options->filename) < 1)) {
+
+            // a temp string, copy from suggestion
             char temp[9];
             strncpy(temp, options->filename, 8);
 
+            // if the length is smaller than 8
             if (strlen(temp) < 9) {
                 int i, n = strlen(temp);
 
+                // copy suggestion to filename
                 for (i = 0; i < n && temp[i] != '\0'; i++) {
                     int c = temp[i];
-                    int a = isalpha(c);
-                    int d = isdigit(c);
+                    int a = isalpha(c); // accept A-Za-z
+                    int d = isdigit(c); // accept 0-9
 
                     if (i == 0) {
                         if (a)
@@ -283,13 +284,14 @@ int converting(options_t *options) {
                     }
                 }
                 for ( ; i < n; i++)
-                    filename[i] = ' '; // space, 32 ASCII
+                    filename[i] = ' '; // rest, fill with space, 32 ASCII
             }
         }
         else {
             opt = FALSE;
         }
     }
+    // if there is no compelling suggestion, back to default
     if (opt == FALSE)
         memcpy(filename, "DEFAULTSBAS", 11);
 
