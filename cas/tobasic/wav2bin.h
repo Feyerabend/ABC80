@@ -1,5 +1,5 @@
-#ifndef _CASABC_H
-#define _CASABC_H
+#ifndef _WAVBIN_H
+#define _WAVBIN_H
 
 #define FALSE 0
 #define TRUE 1

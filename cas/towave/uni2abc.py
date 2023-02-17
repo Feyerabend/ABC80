@@ -29,7 +29,7 @@ def svenska(content):
 def linereplacement(content):
     ncontent = []
     for line in content:
-        line = line.replace('\n', '\r') # return for line feeed
+        line = line.replace('\n', '\r') # return for line feed
         line = line.replace('\r\r', '\r') # then, no doubles
         ncontent.append(line)
     return ncontent
@@ -49,7 +49,7 @@ def convertabc(inputfile, outputfile, verbose):
     with open(outputfile, 'w', encoding = 'ascii') as f:
         f.write(''.join(content)) # introduces new lines?
 
-# call with parsing of args to assembler
+# call with parsing of args to conversion
 def main(argv):
     inputfile = ''
     outputfile = ''
