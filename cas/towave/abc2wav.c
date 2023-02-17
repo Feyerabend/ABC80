@@ -34,10 +34,7 @@ int faster = FALSE; // somewhat faster, louder, higher .. error prone?
 int juhasz = FALSE; // if true, patches for Juhasz original version, overrides faster if set
 
 char filename[11] = "        BAS";
-
-
 unsigned char buffer[256];
-//char outname[80];
 static int outbit = 150;
 static int ofs = 40;
 
@@ -130,6 +127,9 @@ void datablockout(FILE* fin, FILE* fout) {
     int numbyte= 0;
 
     while (!feof(fin)) {
+        // so we *reset* the buffer,
+        // important in case only parts
+        // will be sent
         memset(buffer, 0, sizeof(buffer));
 
         buffer[0] = 0; // always null
@@ -137,7 +137,7 @@ void datablockout(FILE* fin, FILE* fout) {
         buffer[2] = (blcnt >> 8) & 0xff;
 		numbyte = fread(&buffer[3], 253, 1, fin);
         if (numbyte != 1)
-            ;
+            ; // check for this?
         blockout(fout);
         blcnt++;
     }
@@ -185,16 +185,20 @@ void usage(char *progname, int opt) {
     exit(EXIT_FAILURE);
 }
 
-//
-int prepare(char *outputfile) {
+// prepare the sound file and data
+int prepare(char *inputname) {
     int numsamp, filelen, numblk, numbyte;
     struct stat filestat;
 
+printf("o: %s\n", inputname);
+
     // file length
-    stat(outputfile, &filestat);
+    stat(inputname, &filestat);
     filelen = filestat.st_size;
 
-    // 253 byte user data per block?
+printf("l: %d\n", filelen);
+
+    // 253 byte user data per block
     numblk = filelen / 253;
     if (filelen % 253)
         numblk++; // add, if not exact
@@ -215,7 +219,7 @@ int prepare(char *outputfile) {
 }
 
 
-//
+// look at options, and configure
 int converting(options_t *options) {
     FILE *fin, *fout;
 
@@ -299,7 +303,7 @@ int converting(options_t *options) {
     if (options->verbose)
         printf("parsing ..\n");
 
-    int n = prepare(options->outputname);
+    int n = prepare(options->inputname);
     wavheaderout(fout, n);
     nameblockout(fout);
     datablockout(fin, fout);
@@ -311,7 +315,7 @@ int converting(options_t *options) {
 }
 
 
-//
+// start, naturally
 int main(int argc, char *argv[]) {
     int opt;
     opterr = 0;
@@ -326,6 +330,7 @@ int main(int argc, char *argv[]) {
                     perror(ERR_FOPEN_INPUT);
                     exit(EXIT_FAILURE);
                 }
+                options.inputname = optarg;
                 break;
 
             case 'o':
@@ -337,9 +342,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 'e':
-                    options.filename = optarg;
-                    // parse and put in the global filename
-                    // if error parsing    exit(EXIT_FAILURE);
+                options.filename = optarg;
                 break;
 
             case 'f':
