@@ -1,4 +1,4 @@
-# Cassette routines for ABC80
+# Cassette routines for transferring files to/from ABC80
 
 *Software for transferring BASIC programs between a modern computer
 and ABC80 using the tape recorder connection.*
