@@ -23,6 +23,7 @@ typedef struct options_t {
     int verbose;
     uint32_t flags;
     char *filename;
+    char *inputname;
     char *outputname;
     FILE *input, *output;
 } options_t;
