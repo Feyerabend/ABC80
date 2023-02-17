@@ -215,8 +215,6 @@ void bitout(int b, FILE *out) {
 	}
 	if (b == -2)
 		; // return FALSE;
-		// we relax this, to allow for some "analog" errors ?
-		// 
 }
 
 // main handling
