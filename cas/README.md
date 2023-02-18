@@ -10,11 +10,11 @@ their mechanics: play, record, pause, fast forward and backward
 winding.
 
 
-## the principle
+## The principle
 
 *At this moment when writing, I do not have yet tested this. But
 from what I understand by reading and viewing similar experiments,
-this should be able to work. I'll retiurn later to review and
+this should be able to work. I'll return later to review and
 explain more when I have the physical experience.*
 
 The hardware setup is as follows:
@@ -23,16 +23,19 @@ The hardware setup is as follows:
 ABC80 <-> 5 pin DIN connector [cord] 3.5 mm audio plug <-> modern computer
 ```
 
-With a suitable program such as e.g. Audacity installed on your
+Or, other suitable connection to your computer.
+The important thing is obviously how the wires are connected.
+
+With a program such as e.g. Audacity installed on your
 modern computer, you can record and play sound, just as with a
-cassette recorder.
+cassette recorder. The computer thus replaces the recorder.
 
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
 
 
 
-## from BASIC to WAVE
+## From BASIC to WAVE
 
 So if you have a program in BASIC as text for the ABC80, you can
 transfer the file by first run the program through a Python program
@@ -53,7 +56,10 @@ sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav
 
 PENDING TEXT
 
-## from WAVE to BASIC
+## From WAVE to BASIC
+
+For going the other way around, from the produced wave file to BASIC,
+there is a bit of "parsing" once the binary encoding has been decoded.
 
 ```
 sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode)
