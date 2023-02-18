@@ -45,12 +45,10 @@ def checkforname(block):
 
 def nameblock(block):
     fullname = block[24:112]
-    byts = [fullname[i : i + 8] for i in range(0, len(fullname), 8)]
-
+    byts = [fullname[i: i + 8] for i in range(0, len(fullname), 8)]
     name = ''
     for i in range(len(byts)):
         name += svenska(int((byts[i])[::-1], 2))
-
     return name[0:8] + '.' + name[8:11]
 
 
@@ -61,11 +59,9 @@ def datablock(block):
     null = block[0:8]
     userdata = block[24:2048]
     byts = [userdata[i: i + 8] for i in range(0, len(userdata), 8)]
-
     userstring = ''
     for i in range(len(byts)):
         userstring += svenska(int((byts[i])[::-1], 2))
-
     return userstring
 
 
@@ -89,6 +85,7 @@ def checksums(block):
 
     if (calcsum == cs):
         return True
+    print('ERR 35\n') # CHECKSUMMAFEL VID LÄSNING
     return False
 
 
@@ -117,7 +114,7 @@ def prepare(content, verbose):
                     out += datablock(blk)
                     no += 1
                 else:
-                    print('ERR 37\n')
+                    print('ERR 37\n') # FELAKTIGT RECORDFORMAT eller ERR38 RECORDNUMMER UTANFÖR FILEN?
         else:
             pass # print(datablock(blk)) # the non-checkable block?
     return out
