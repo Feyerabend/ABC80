@@ -26,9 +26,10 @@ ABC80 <-> 5 pin DIN connector [cord] 3.5 mm audio plug <-> modern computer
 Or, other suitable connection to your computer.
 The important thing is obviously how the wires are connected.
 
-With a program such as e.g. Audacity installed on your
-modern computer, you can record and play sound, just as with a
-cassette recorder. The computer thus replaces the recorder.
+With a program such as e.g. [Audacity](https://www.audacityteam.org/)
+installed on your modern computer, you can record and play
+sound, just as with a cassette recorder. The computer thus
+replaces the recorder.
 
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
