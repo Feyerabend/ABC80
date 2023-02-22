@@ -9,6 +9,14 @@ and machines, but also their wide spread use and the general
 understanding of their mechanics: *play*, *record*, *pause*, *fast*
 *forward* and *backward* winding.
 
+When you bought a brand new ABC80 as a package, there was a special
+monitor including the power transformer for the computer, and a
+special tape recorder. As a company that usually manufactured
+receivers, stereo equipment, TVs etc. Luxor could naturally also
+provide the recorder: ABC820.
+
+![Kassettminne](../assets/images/kminne.jpg)
+
 
 ## The principle
 
@@ -19,10 +27,11 @@ explain more when I have the physical experience.*
 
 ![Kassettminne - ABC80](../assets/images/connect.jpg)
 
-The original hardware has a connection by three wires, one for
-input, one for output and one for ground. Each with a 5 pol. DIN
-male connector at the end. It also have a motor control that
-acts for stopping the motor and starting when the tape is played.
+The original hardware has a cable connection of three wires, one for
+input, one for output and one for ground. At each end it has a 5 pol. DIN
+male connector. It also have a motor control cable that acts as control 
+from the computer for stopping the motor and starting when the tape
+is played.
 
 The new hardware setup is roughly as follows:
 
@@ -51,8 +60,6 @@ following the previous programs in C for BASIC to WAVE, and then
 later on adding a Python-script. Python is much more concise and
 powerful for these types of tasks, and you might consider to
 rewrite everything into Python.
-
-![Kassettminne](../assets/images/kminne.jpg)
 
 
 ## From BASIC to WAVE
