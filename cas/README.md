@@ -19,7 +19,12 @@ explain more when I have the physical experience.*
 
 ![Kassettminne - ABC80](../assets/images/connect.jpg)
 
-The hardware setup is as follows:
+The original hardware has a connection by three wires, one for
+input, one for output and one for ground. Each with a 5 pol. DIN
+male connector at the end. It also have a motor control that
+acts for stopping the motor and starting when the tape is played.
+
+The new hardware setup is roughly as follows:
 
 ```
 ABC80 <-> 5 pin DIN connector [cord] 3.5 mm audio plug <-> modern computer
