@@ -17,6 +17,8 @@ from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
 explain more when I have the physical experience.*
 
+![Kassettminne - ABC80](../assets/images/connect.jpg)
+
 The hardware setup is as follows:
 
 ```
