@@ -3,11 +3,11 @@
 *Software for transferring BASIC programs between a modern computer
 and ABC80 using the tape recorder connection.*
 
-In the early days of home computing, cassette tapes were used very
-much for storage. Mainly due to the affordability of tapes and machines,
-but also their wide spread use and the general understanding of
-their mechanics: play, record, pause, fast forward and backward
-winding.
+In the early days of home computing, cassette tapes were used
+very much for storage. Mainly due to the affordability of tapes
+and machines, but also their wide spread use and the general
+understanding of their mechanics: play, record, pause, fast
+forward and backward winding.
 
 
 ## The principle
@@ -34,7 +34,7 @@ replaces the recorder.
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
 
-![Kassettminne](assets/images/kminne.jpg)
+![Kassettminne](../assets/images/kminne.jpg)
 
 
 ## From BASIC to WAVE
