@@ -34,6 +34,7 @@ replaces the recorder.
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
 
+![Kassettminne](assets/images/kminne.jpg)
 
 
 ## From BASIC to WAVE
