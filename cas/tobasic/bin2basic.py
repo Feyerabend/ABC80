@@ -17,28 +17,30 @@ def svenska(ascii):
         return ''
 
     char = chr(ascii & int(0xff))
+    if (ascii == 64): # @
+        char = 'É'
     if (ascii == 91): # [
         char = 'Ä'
     if (ascii == 92): # \
         char = 'Ö'
     if (ascii == 93): # ]
         char = 'Å'
-    if (ascii == 64): # @
-        char = 'É'
+    if (ascii == 94): # ^
+        char = 'Ü'
+    if (ascii == 96): # `
+        char = 'é'
     if (ascii == 123): # {
         char = 'ä'
     if (ascii == 124): # |
         char = 'ö'
     if (ascii == 125): # }
         char = 'å'
-    if (ascii == 96): # `
-        char = 'é'
+    if (ascii == 126): # ~
+        char = 'ü'
 
     if (ascii == 36): # $
         char = '¤'
-
     return char
-
 
 def checkforname(block):
     return re.fullmatch('1{24}', block[0:24])
@@ -114,9 +116,9 @@ def prepare(content, verbose):
                     out += datablock(blk)
                     no += 1
                 else:
-                    print('ERR 37\n') # FELAKTIGT RECORDFORMAT eller ERR38 RECORDNUMMER UTANFÖR FILEN?
+                    print('ERR 38\n') # FELAKTIGT RECORDFORMAT eller ERR38 RECORDNUMMER UTANFÖR FILEN?
         else:
-            pass # print(datablock(blk)) # the non-checkable block?
+            print('ERR 37\n') # FELAKTIGT RECORDFORMAT # print(datablock(blk)) # the non-checkable block?
     return out
 
 
