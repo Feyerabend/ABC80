@@ -6,8 +6,8 @@ and ABC80 using the tape recorder connection.*
 In the early days of home computing, cassette tapes were used
 very much for storage. Mainly due to the affordability of tapes
 and machines, but also their wide spread use and the general
-understanding of their mechanics: play, record, pause, fast
-forward and backward winding.
+understanding of their mechanics: *play*, *record*, *pause*, *fast*
+*forward* and *backward* winding.
 
 
 ## The principle
