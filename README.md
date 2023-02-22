@@ -216,7 +216,8 @@ Specifications of the ABC80:
 * Expansion slot (the DIAB favoured 4680 bus, used often for miscellaneous instruments,
  measurements, ...)
 
-I don't remember, but maybe the tape recorder was included at times.
+The tape recorder was included when you bought the package (monitor, computer, cables).
+(Some [code](/cas) for transferring files between ABC80 and a modern computer.) 
 Disc drives were sold both from 3rd parties, and from the original
 manufacturer of ABC80. An affordable disc drive
 [FD2](https://www.abc80.net/archive/luxor/ABC80/Bruksanvisning-FD2-och-FD2U-Flexskivenhet.pdf)
