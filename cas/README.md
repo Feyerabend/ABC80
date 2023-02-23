@@ -10,7 +10,7 @@ understanding of their mechanics: *play*, *record*, *pause*, *fast*
 *forward* and *backward* winding.
 
 When you bought a brand new ABC80 as a package, there was a special
-monitor including the power transformer for the computer, and a
+monitor including the power supply for the computer, and a
 special tape recorder. As a company that usually manufactured
 receivers, stereo equipment, TVs etc. Luxor could naturally also
 provide the recorder: ABC820.
@@ -28,10 +28,10 @@ explain more when I have the physical experience.*
 ![Kassettminne - ABC80](../assets/images/connect.jpg)
 
 The original hardware has a cable connection of three wires, one for
-input, one for output and one for ground. At each end it has a 5 pol. DIN
-male connector. It also have a motor control cable that acts as control 
-from the computer for stopping the motor and starting when the tape
-is played.
+input, one for output and one for ground. At each end it has a 5 pol.
+DIN male connector. It also have a motor control cable that acts as
+control from the computer for stopping the motor and starting when
+the tape is played.
 
 The new hardware setup is roughly as follows:
 
@@ -81,7 +81,18 @@ used for the final transfer to the target: ABC80.
 sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav 
 ```
 
-PENDING TEXT
+### Converting files
+
+Prerequisites: install or make sure you have `Python3` and `gcc`
+(or equivalent) and optional `make`. Compile 'abc2wav.c' to an
+executable.
+
+```
+> Python3 uni2abc.py -i sample.bas -o sample.abc
+> make abc2wav
+> ./abc2wav -i sample.abc -o sample.wav
+```
+
 
 ## From WAVE to BASIC
 
@@ -93,6 +104,18 @@ sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode
 ```
 
 PENDING TEXT
+
+### Converting files
+
+Prerequisites: install or make sure you have `Python3` and `gcc`
+(or equivalent) and optional `make`. Compile 'wav2bin.c' to an
+executable.
+
+```
+> make wav2bin
+> ./wav2bin -i sample.wav -o sample.bin
+> Python3 bin2basic.py -i sample.bin -o sample.bas
+```
 
 
 ## References
