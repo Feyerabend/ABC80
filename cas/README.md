@@ -1,3 +1,6 @@
+![Kassettminne](../assets/images/kassett.jpg)
+
+
 # Cassette routines for transferring files to/from ABC80
 
 *Software for transferring BASIC programs between a modern computer
