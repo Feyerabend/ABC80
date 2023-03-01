@@ -23,6 +23,9 @@ provide the recorder: ABC820.
 
 ## The principle
 
+
+### Old hardware
+
 *At this moment when writing, I do not have yet tested this. But
 from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
@@ -38,6 +41,8 @@ the tape is played.
 
 ![ABC80 ports](../assets/images/abc80-cas.jpeg)
 
+
+### New hardware
 
 The new hardware setup is roughly as follows:
 
@@ -68,7 +73,9 @@ powerful for these types of tasks, and you might consider to
 rewrite everything into Python.
 
 
-## From BASIC to WAVE
+## Conversion
+
+### From BASIC to WAVE
 
 So if you have a program in BASIC as text for the ABC80, you can
 transfer the file by first run the program through a Python program
@@ -87,7 +94,7 @@ used for the final transfer to the target: ABC80.
 sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav 
 ```
 
-### Converting files
+#### Converting files
 
 Prerequisites: install or make sure you have `Python3` and `gcc`
 (or equivalent) and optional `make`. Compile 'abc2wav.c' to an
@@ -100,7 +107,7 @@ executable.
 ```
 
 
-## From WAVE to BASIC
+### From WAVE to BASIC
 
 For going the other way around, from the produced wave file to BASIC,
 there is a bit of "parsing" once the binary encoding has been decoded.
@@ -111,7 +118,7 @@ sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode
 
 PENDING TEXT
 
-### Converting files
+#### Converting files
 
 Prerequisites: install or make sure you have `Python3` and `gcc`
 (or equivalent) and optional `make`. Compile 'wav2bin.c' to an
