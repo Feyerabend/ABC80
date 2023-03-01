@@ -28,13 +28,16 @@ from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
 explain more when I have the physical experience.*
 
-![Kassettminne - ABC80](../assets/images/connect.jpg)
+![Kassettminne ports](../assets/images/connect.jpg)
 
 The original hardware has a cable connection of three wires, one for
 input, one for output and one for ground. At each end it has a 5 pol.
 DIN male connector. It also have a motor control cable that acts as
 control from the computer for stopping the motor and starting when
 the tape is played.
+
+![ABC80 ports](../assets/images/abc80-cas.jpeg)
+
 
 The new hardware setup is roughly as follows:
 
