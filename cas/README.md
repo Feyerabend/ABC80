@@ -16,7 +16,7 @@ When you bought a brand new ABC80 as a package, there was a special
 monitor including the power supply for the computer, and a
 special tape recorder. As a company that usually manufactured
 receivers, stereo equipment, TVs etc. Luxor could naturally also
-provide the recorder: ABC820.
+provide the recorder: __ABC820__.
 
 ![Kassettminne](../assets/images/kminne.jpg)
 
@@ -35,11 +35,12 @@ explain more when I have the physical experience.*
 
 The original hardware has a cable connection of three wires, one for
 input, one for output and one for ground. At each end it has a 5 pol.
-DIN male connector. It also have a motor control cable that acts as
-control from the computer for stopping the motor and starting when
-the tape is played.
+DIN male connector.
 
 ![ABC80 ports](../assets/images/abc80-cas.jpeg)
+
+It also have a motor control cable that acts as control from the
+computer for stopping the motor and starting when the tape is played.
 
 
 ### New hardware
