@@ -23,13 +23,18 @@ provide the recorder: __ABC820__.
 
 ## The principle
 
+*But what happends when your tape recorder doesn't work,
+or you do not have a recorder? Well, here a new solution
+might be at hand: transfer files to and from your modern
+computer.*
+
 
 ### Old hardware
 
-*At this moment when writing, I do not have yet tested this. But
+__*At this moment when writing, I do not have yet tested this. But
 from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
-explain more when I have the physical experience.*
+explain more when I have the physical experience.*__
 
 ![Kassettminne ports](../assets/images/connect.jpg)
 
