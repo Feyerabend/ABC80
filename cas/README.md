@@ -87,7 +87,7 @@ character substitutions to allow for e.g. umlauts.
 Next step is to translate the newly adopted text into a Wave-file.
 This time I used the experience of two previous developers Robert
 Juhasz for the [original code](towave/alt/abccas/abccas.c),
-and Stefano Bodrato for some [updates](towave/alt/abc80.c.txt),
+and Stefano Bodrato for some [updates](towave/alt/abc80.c),
 to make my version in C. Through `abc2wav.c` the sound file can be
 used for the final transfer to the target: ABC80.
 
