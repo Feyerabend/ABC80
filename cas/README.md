@@ -88,11 +88,11 @@ Next step is to translate the newly adopted text into a Wave-file.
 This time I used the experience from two previous developers Robert
 Juhasz for the [original code](towave/alt/abccas/abccas.c),
 and Stefano Bodrato for some [updates](towave/alt/abc80.c),
-to make my version in C. Through `abc2wav.c` the sound file can be
+to make my version in C. Through `[abc2wav.c](towave/abc2wav.c)` the sound file can be
 used for the final transfer to the target: ABC80.
 
 ```
-sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [[abc2wav.c](towave/abc2wav.c)] -> sample.wav 
+sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav 
 ```
 
 #### Converting files
