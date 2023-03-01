@@ -80,9 +80,9 @@ rewrite everything into Python.
 
 So if you have a program in BASIC as text for the ABC80, you can
 transfer the file by first run the program through a Python program
-`uni2abc.py` to adopt it for ABC80. It will translate from Unicode
-to 7 bit ASCII, but as a Swedish character set there are some
-character substitutions to allow for e.g. umlauts.
+'[uni2abc.py](towave/uni2abc.py)' to adopt it for ABC80. It will
+translate from Unicode to 7 bit ASCII, but as a Swedish character
+set there are some character substitutions to allow for e.g. umlauts.
 
 Next step is to translate the newly adopted text into a Wave-file.
 This time I used the experience from two previous developers Robert
