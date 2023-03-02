@@ -197,6 +197,13 @@ and the rest of 253 bytes are user data.
 ![Block details](../assets/images/blockparts.png)
 
 
+### Signals
+
+As the binaries are represented as frequency of sound tones with respect
+to time, the coding and decoding can be done in various ways.
+The way it was solved for ABC80 was by frequency modulation. Another
+better known standard used at the time was the Kansas City
+([KC](https://en.wikipedia.org/wiki/Kansas_City_standard)).
 
 ![Block details](../assets/images/freq.png)
 
