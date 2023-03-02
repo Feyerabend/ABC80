@@ -23,13 +23,18 @@ provide the recorder: __ABC820__.
 
 ## The principles in hardware
 
+*But what happends when your tape recorder doesn't work,
+or you do not have a recorder? Well, here a new solution
+might be at hand: transfer files to and from your modern
+computer.*
+
 
 ### Old hardware
 
-*At this moment when writing, I do not have yet tested this. But
+__*At this moment when writing, I do not have yet tested this. But
 from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
-explain more when I have the physical experience.*
+explain more when I have the physical experience.*__
 
 ![Kassettminne ports](../assets/images/connect.jpg)
 
@@ -80,16 +85,16 @@ rewrite everything into Python.
 
 So if you have a program in BASIC as text for the ABC80, you can
 transfer the file by first run the program through a Python program
-`uni2abc.py` to adopt it for ABC80. It will translate from Unicode
-to 7 bit ASCII, but as a Swedish character set there are some
-character substitutions to allow for e.g. umlauts.
+'[uni2abc.py](towave/uni2abc.py)' to adopt it for ABC80. It will
+translate from Unicode to 7 bit ASCII, but as a Swedish character
+set there are some character substitutions to allow for e.g. umlauts.
 
 Next step is to translate the newly adopted text into a Wave-file.
-This time I used the experience of two previous developers Robert
+This time I used the experience from two previous developers Robert
 Juhasz for the [original code](towave/alt/abccas/abccas.c),
-and Stefano Bodrato for some [updates](towave/alt/abc80.c.txt),
-to make my version in C. Through `abc2wav.c` the sound file can be
-used for the final transfer to the target: ABC80.
+and Stefano Bodrato for some [updates](towave/alt/abc80.c),
+to make my version in C. Through '[abc2wav.c](towave/abc2wav.c)'
+the sound file can be used for the final transfer to the target: *ABC80*.
 
 ```
 sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav 
@@ -98,8 +103,9 @@ sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav
 #### Converting files
 
 Prerequisites: install or make sure you have `Python3` and `gcc`
-(or equivalent) and optional `make`. Compile 'abc2wav.c' to an
-executable.
+(or equivalent) and optional `make`. Compile '[abc2wav.c](towave/abc2wav.c)'
+to an executable. Run the Python3 interpreter with
+'[uni2abc.py](towave/uni2abc.py)'.
 
 ```
 > Python3 uni2abc.py -i sample.bas -o sample.abc
