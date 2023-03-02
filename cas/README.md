@@ -152,6 +152,8 @@ of the file in principle.[^mikro]
 
 ![Files](../assets/images/block.png)
 
+### Files
+
 On the tape there can obviously be more than one file stored.
 A problem is that the files and bits are stored sequentially, so you
 simply have to wait. Here the files are stored with a gap of 5 seconds
@@ -159,6 +161,8 @@ in between. A sample file "SPADER" can be separated into blocks.
 The first block consists of the name, extension (type) and not much else.
 The body of the program are stored sequentially by a block number,
 and the acutal data.
+
+### Blocks
 
 ![Blocks](../assets/images/blk.png)
 
