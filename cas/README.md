@@ -94,7 +94,8 @@ This time I used the experience from two previous developers Robert
 Juhasz for the [original code](towave/alt/abccas/abccas.c),
 and Stefano Bodrato for some [updates](towave/alt/abc80.c),
 to make my version in C. Through '[abc2wav.c](towave/abc2wav.c)'
-the sound file can be used for the final transfer to the target: *ABC80*.
+the sound file can be used for the final transfer to the target:
+*ABC80*.
 
 ```
 sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav 
@@ -116,8 +117,9 @@ to an executable. Run the Python3 interpreter with
 
 ### From WAVE to BASIC
 
-For going the other way around, from the produced wave file to BASIC,
-there is a bit of "parsing" once the binary encoding has been decoded.
+For going the other way around, from the produced wave file to
+BASIC, there is a bit of "parsing" once the binary encoding has
+been decoded.
 
 ```
 sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode)
@@ -139,41 +141,41 @@ executable.
 
 ## The principles in software
 
-Much of the programs in C are code for satisfying how the WAVE-format 
-is specified. Headers of different kinds are added. Here a "raw"
-format has been chosen, which __does not__ alter the content.
-We are not interested in how it sounds like to the ear, but that the
-representation of bits are correct. The body of the file is actually
-the "binary" for how the (cassette) file is stored and retrieved
-from/to ABC80. Therefore it can be interesting to look at the storage 
-of the file in principle.[^mikro]
+Much of the programs in C are code for satisfying how the
+WAVE-format is specified. Headers of different kinds are added.
+Here a "raw" format has been chosen, which __does not__ alter
+the content. We are not interested in how it sounds like to the
+ear, but that the representation of bits are correct. The body
+of the file is actually the "binary" for how the (cassette) file
+is stored and retrieved from/to ABC80. Therefore it can be
+interesting to look at the storage of the file in principle.[^mikro]
 
 [^mikro]: Images are copied from the book Mikrodatorns ABC by Gunnar Markesjö.
 
 
 ### Files
 
-On the tape (BAND) there can obviously be more than one file (FIL) stored.
-A problem is that the files and bits are stored sequentially, so you
-simply have to wait. Here the files are stored with a gap of 5 seconds
-in between. A sample file "SPADER" can be separated into blocks (BLOCK).
-The first block consists of the name (Namn), extension or type and not much else.
-The body of the program are stored sequentially by a block number,
-and the actual data (DATA 0, DATA 1 .. DATA N).
+On the tape (BAND) there can obviously be more than one file (FIL)
+stored. A problem is that the files and bits are stored sequentially,
+so you simply have to wait. Here the files are stored with a gap of
+5 seconds in between. A sample file "SPADER" can be separated into
+blocks (BLOCK). The first block consists of the name (Namn), extension
+or type and not much else. The body of the program are stored sequentially
+by a block number, and the actual data (DATA 0, DATA 1 .. DATA N).
 
 ![Files](../assets/images/block.png)
 
 
 ### Blocks
 
-Each *block* have a structure of 256 bits of zero, 3 bytes of SYNC i.e. 16h,
-1 byte STX i.e. 2h, 256 bytes of data, 1 byte ETX i.e. 3h and finally
+Each *block* have a structure of 256 bits of zero, 3 bytes of SYNC i.e.
+16h, 1 byte STX i.e. 2h, 256 bytes of data, 1 byte ETX i.e. 3h and finally
 2 bytes checksum. The first control bytes are pretty straightforward to
-separate the blocks from each other. They are used in 'bin2basic.py' to split the
-string of "binaries". The string represents the binaries in the form of left
-to right, rather than the usual way right to left (most significant to the left).
-As the bits are added along the way in time, the are put at the right of previous
-bits.
+separate the blocks from each other. They are used in 'bin2basic.py' to
+split the string of "binaries". The string represents the binaries in the
+form of left to right, rather than the usual way right to left (most
+significant to the left). As the bits are added along the way in time,
+they are put at the right of previous bits.
 
 ```python
 sync = '01101000' # 16h in reverse
@@ -181,9 +183,9 @@ stx = '01000000' # 2h in reverse
 blocks = re.split('0{256}' + sync + sync + sync + stx, content)
 ```
 
-What remains are the data itself of 256 bytes, 1 byte ETX and checksum in 2
-bytes. As the checksum is derived from all of this as an addition, it can be
-used to control if the data was correctly transferred.
+What remains are the data itself of 256 bytes, 1 byte ETX and checksum
+in 2 bytes. As the checksum is derived from all of this as an addition,
+it can be used to control if the data was correctly transferred.
 
 There are two variants to the blocks: *name* (Namnblock) and
 *data* (Datablock) block.
@@ -207,6 +209,40 @@ to time, the coding and decoding can be done in various ways.
 The way it was solved for ABC80 was by frequency modulation. Another
 better known standard used at the time was Kansas City
 ([KC](https://en.wikipedia.org/wiki/Kansas_City_standard)).
+
+Regular pulses through a clock sets the points from where you can
+derive if it is a zero (0) or one (1). The hardware solution permits
+also implementation of the Kansas City standard, as well as others.
+
+If the signal changes at the edge, start counting the time and
+perhaps assume a zero. If it then changes again at the edge after
+(at the same time) the pulse comes (expected to come), then
+it is most likely a zero. But if a change of edge comes in the middle
+of pulses, they you can expect a change at the edge when the next pulse
+comes, hence it should be a one.
+
+```c
+int bit(int count) {
+	// zero confirmed
+	if (count > threshold) {
+		return 0;
+	}
+	// full one confirmed
+	else if (count < threshold && previous == TRUE) {
+		previous = FALSE; // .. so reset
+		return 1;
+	}
+	// half of one confirmed
+	else if (count < threshold) {
+		previous = TRUE; // ok, halfways ..
+		return -1;
+	}
+	else {
+		printf("ERROR");
+		return -2;
+	}
+}
+```
 
 ![Block details](../assets/images/freq.png)
 
