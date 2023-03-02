@@ -249,6 +249,15 @@ int bit(int count) {
 }
 ```
 
+Converting a signal from continuous-time to discrete-time is known as
+*sampling the signal*. The value of the signal is measured at certain
+time intervals. Each measurement is referred to as a *sample*.
+Higher number of samples, higher precision of its replication.
+
+A threshold somewhere between the likelihood of one and zero,
+marks where we should be able to deduce the "binary".
+A count functions as a number of samples that hasn't changed
+in a while.
 
 
 
