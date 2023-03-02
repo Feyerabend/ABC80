@@ -26,7 +26,9 @@ provide the recorder: __ABC820__.
 *But what happends when your tape recorder doesn't work,
 or you do not have a recorder? Well, here a new solution
 might be at hand: transfer files to and from your modern
-computer.*
+computer. What counts as a "modern computer" is however a 
+moving target, where jacks and hardware connections might
+change over time.*
 
 
 ### Old hardware
