@@ -149,10 +149,15 @@ how the (cassette) file is stored and retrieved from/to ABC80.
 Therefore it can be interesting to look at the storage of
 the file in principle.
 
-![Blocks](../assets/images/block.png)
+![Files](../assets/images/block.png)
+
+![Blocks](../assets/images/blk.png)
 
 ![Block details](../assets/images/blockparts.png)
 
+
+
+![Block details](../assets/images/freq.png)
 
 
 
