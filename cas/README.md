@@ -221,6 +221,11 @@ it is most likely a zero. But if a change of edge comes in the middle
 of pulses, they you can expect a change at the edge when the next pulse
 comes, hence it should be a one.
 
+![Block details](../assets/images/freq.png)
+
+
+This is reflected in C-code.
+
 ```c
 int bit(int count) {
 	// zero confirmed
@@ -244,7 +249,6 @@ int bit(int count) {
 }
 ```
 
-![Block details](../assets/images/freq.png)
 
 
 
