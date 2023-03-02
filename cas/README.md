@@ -21,7 +21,7 @@ provide the recorder: __ABC820__.
 ![Kassettminne](../assets/images/kminne.jpg)
 
 
-## The principle
+## The principles in hardware
 
 
 ### Old hardware
@@ -130,6 +130,14 @@ executable.
 > ./wav2bin -i sample.wav -o sample.bin
 > Python3 bin2basic.py -i sample.bin -o sample.bas
 ```
+
+## The principles in software
+
+![Blocks](../assets/images/block.png)
+
+![Block details](../assets/images/blockparts.png)
+
+
 
 
 ## References
