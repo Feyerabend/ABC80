@@ -166,6 +166,24 @@ and the actual data (DATA 0, DATA 1 .. DATA N).
 
 ### Blocks
 
+Each *block* have a structure of 256 bits of zero, 3 bytes of SYNC i.e. 16h,
+1 byte STX i.e. 2h, 256 bytes of data, 1 byte ETX i.e. 3h and finally
+2 bytes checksum. The first control bytes are pretty straightforward to
+separate the blocks from each other. They are used in 'bin2basic.py' to split the
+string of "binaries".
+
+```python
+    sync = '01101000' # 16h in reverse
+    stx = '01000000' # 2h in reverse
+    blocks = re.split('0{256}' + sync + sync + sync + stx, content)
+```
+
+Then the checksum can be used to control if the data was correctly transferred.
+
+There are two variants to the blocks: *name* and *data* block. The name block
+is simple, name of maximum 8 characters and an extension of the characters
+(or bytes in the case of 8-bit computers).
+
 ![Blocks](../assets/images/blk.png)
 
 ![Block details](../assets/images/blockparts.png)
