@@ -170,12 +170,15 @@ Each *block* have a structure of 256 bits of zero, 3 bytes of SYNC i.e. 16h,
 1 byte STX i.e. 2h, 256 bytes of data, 1 byte ETX i.e. 3h and finally
 2 bytes checksum. The first control bytes are pretty straightforward to
 separate the blocks from each other. They are used in 'bin2basic.py' to split the
-string of "binaries".
+string of "binaries". The string represents the binaries in the form of left
+to right, rather than the usual way right to left (most significant to the left).
+As the bits are added along the way in time, the are put at the right of previous
+bits.
 
 ```python
-    sync = '01101000' # 16h in reverse
-    stx = '01000000' # 2h in reverse
-    blocks = re.split('0{256}' + sync + sync + sync + stx, content)
+sync = '01101000' # 16h in reverse
+stx = '01000000' # 2h in reverse
+blocks = re.split('0{256}' + sync + sync + sync + stx, content)
 ```
 
 What remains are the data itself of 256 bytes, 1 byte ETX and checksum in 2
@@ -202,7 +205,7 @@ and the rest of 253 bytes are user data.
 As the binaries are represented as frequency of sound tones with respect
 to time, the coding and decoding can be done in various ways.
 The way it was solved for ABC80 was by frequency modulation. Another
-better known standard used at the time was the Kansas City
+better known standard used at the time was Kansas City
 ([KC](https://en.wikipedia.org/wiki/Kansas_City_standard)).
 
 ![Block details](../assets/images/freq.png)
