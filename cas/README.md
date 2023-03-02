@@ -68,7 +68,8 @@ With a program such as e.g. [Audacity](https://www.audacityteam.org/)
 installed on your modern computer, you can record and play
 sound, just as with a cassette recorder.
 
-__The computer thus replaces the recorder.__
+You can think of it as __the  modern computer thus replaces
+the tape recorder__.
 
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
