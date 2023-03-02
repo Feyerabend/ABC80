@@ -66,22 +66,24 @@ The important thing is obviously how the wires are connected.
 
 With a program such as e.g. [Audacity](https://www.audacityteam.org/)
 installed on your modern computer, you can record and play
-sound, just as with a cassette recorder. The computer thus
-replaces the recorder.
+sound, just as with a cassette recorder.
+
+__The computer thus replaces the recorder.__
 
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
 
 Requirements for these programs below is to install Python
-(preferably any 3-version) and to compile the C-program.
+(any 3-version) and to compile the C-program.
 You can start compiling through the tool `make` which
 produces an object-file (.o) and a library linked executable.
 
 The decision to do this into two separate steps are mostly due to
 following the previous programs in C for BASIC to WAVE, and then
-later on adding a Python-script. Python is much more concise and
-powerful for these types of tasks, and you might consider to
-rewrite everything into Python.
+later on adding a Python-script. I also started with the other
+way around 'from Wave to BASIC' in C, then added Python.
+Python is much more concise and powerful for these types of tasks,
+and you might consider to rewrite everything into Python.
 
 
 ### From BASIC to WAVE
