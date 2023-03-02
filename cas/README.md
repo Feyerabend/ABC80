@@ -257,7 +257,7 @@ Higher number of samples, higher precision of its replication.
 A threshold somewhere between the likelihood of one and zero,
 marks where we should be able to deduce the "binary".
 A count functions as a number of samples that hasn't changed
-in a while.
+(much) in a while.
 
 
 
