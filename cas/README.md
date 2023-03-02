@@ -107,10 +107,10 @@ sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav
 ```
 
 Connect the machines, the modern to the old computer.
-Start loading a program with `LOAD CAS:` and hit return.
-At almost the same time, start playing the sound in wave-format
-through the cable from your modern computer to ABC80.
-It should start loading the program ..
+At the old ABC80 start loading a program with typing `LOAD CAS:`
+and then hit return. At almost the same time, start playing the
+sound in wave-format through the cable from your modern computer
+to the ABC80. It should in best case start loading the program ..
 
 
 
