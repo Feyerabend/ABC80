@@ -216,8 +216,8 @@ it can be used to control if the data was correctly transferred.
 There are two variants to the blocks: *name* (Namnblock) and
 *data* (Datablock) block.
 
-The name block is simple, a name (namn) of maximum 8 characters and an
-extension of the characters (or bytes in the case of 8-bit computers).[^name]
+The name block is simple, a name (namn) of maximum 8 characters
+and 3 character extension (or bytes in the case of 8-bit computers).[^name]
 It has a small header of 3 FFh.
 
 [^name]: Note: The 'internal' name used by ABC80 has no impact on the names at
