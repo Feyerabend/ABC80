@@ -182,7 +182,8 @@ What remains are the data itself of 256 bytes, 1 byte ETX and checksum in 2
 bytes. As the checksum is derived from all of this as an addition, it can be
 used to control if the data was correctly transferred.
 
-There are two variants to the blocks: *name* and *data* block.
+There are two variants to the blocks: *name* (Namnblock) and
+*data* (Datablock) block.
 
 The name block is simple, a name (namn) of maximum 8 characters and an
 extension of the characters (or bytes in the case of 8-bit computers).
