@@ -159,7 +159,7 @@ simply have to wait. Here the files are stored with a gap of 5 seconds
 in between. A sample file "SPADER" can be separated into blocks (BLOCK).
 The first block consists of the name (Namn), extension or type and not much else.
 The body of the program are stored sequentially by a block number,
-and the acutal data (DATA 0, DATA 1 ..).
+and the actual data (DATA 0, DATA 1 .. DATA N).
 
 ![Files](../assets/images/block.png)
 
