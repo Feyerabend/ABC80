@@ -141,15 +141,23 @@ executable.
 
 Much of the programs in C are code for satisfying how the WAVE-format 
 is specified. Headers of different kinds are added. Here a "raw"
-format has been chosen, which *does not* alter the content.
-We are not really interested in how it sounds like to the ear,
-but that the representation of bits are correct.
-The body of the file is actually the "binary" for
-how the (cassette) file is stored and retrieved from/to ABC80.
-Therefore it can be interesting to look at the storage of
-the file in principle.
+format has been chosen, which __does not__ alter the content.
+We are not interested in how it sounds like to the ear, but that the
+representation of bits are correct. The body of the file is actually
+the "binary" for how the (cassette) file is stored and retrieved
+from/to ABC80. Therefore it can be interesting to look at the storage 
+of the file in principle.
+(*Images are copied from the book Mikrodatorns ABC by Gunnar Markesjö.*)
 
 ![Files](../assets/images/block.png)
+
+On the tape there can obviously be more than one file stored.
+A problem is that the files and bits are stored sequentially, so you
+simply have to wait. Here the files are stored with a gap of 5 seconds
+in between. A sample file "SPADER" can be separated into blocks.
+The first block consists of the name, extension (type) and not much else.
+The body of the program are stored sequentially by a block number,
+and the acutal data.
 
 ![Blocks](../assets/images/blk.png)
 
