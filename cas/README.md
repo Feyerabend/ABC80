@@ -178,11 +178,18 @@ string of "binaries".
     blocks = re.split('0{256}' + sync + sync + sync + stx, content)
 ```
 
-Then the checksum can be used to control if the data was correctly transferred.
+What remains are the data itself of 256 bytes, 1 byte ETX and checksum in 2
+bytes. As the checksum is derived from all of this as an addition, it can be
+used to control if the data was correctly transferred.
 
-There are two variants to the blocks: *name* and *data* block. The name block
-is simple, name of maximum 8 characters and an extension of the characters
-(or bytes in the case of 8-bit computers).
+There are two variants to the blocks: *name* and *data* block.
+
+The name block is simple, a name (namn) of maximum 8 characters and an
+extension of the characters (or bytes in the case of 8-bit computers).
+It has a small header of 3 FFh.
+
+The data block has one byte of zeros, then 2 bytes of binary block number,
+and the rest of 253 bytes are user data.
 
 ![Blocks](../assets/images/blk.png)
 
