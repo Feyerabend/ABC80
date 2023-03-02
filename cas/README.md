@@ -82,7 +82,7 @@ produces an object-file (.o) and a library linked executable.
 The decision to do this into two separate steps are mostly due to
 following the previous programs in C for BASIC to WAVE, and then
 later on adding a Python-script. I also started with the other
-way around 'from Wave to BASIC' in C, then added Python.
+way around 'from WAVE to BASIC' in C, then added Python.
 Python is much more concise and powerful for these types of tasks,
 and you might consider to rewrite everything into Python.
 
@@ -136,6 +136,9 @@ to an executable. Run the Python3 interpreter with
 For going the other way around, from the produced wave file to
 BASIC, there is a bit of "parsing" once the binary encoding has
 been decoded.
+
+'[wav2bin.c](tobasic/wav2bin.c)'
+'[bin2basic.py](tobasic/bin2basic.py)'
 
 ```
 sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode)
