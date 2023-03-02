@@ -146,8 +146,9 @@ We are not interested in how it sounds like to the ear, but that the
 representation of bits are correct. The body of the file is actually
 the "binary" for how the (cassette) file is stored and retrieved
 from/to ABC80. Therefore it can be interesting to look at the storage 
-of the file in principle.
-(*Images are copied from the book Mikrodatorns ABC by Gunnar Markesjö.*)
+of the file in principle.[^mikro]
+
+[^mikro]: Images are copied from the book Mikrodatorns ABC by Gunnar Markesjö.
 
 ![Files](../assets/images/block.png)
 
