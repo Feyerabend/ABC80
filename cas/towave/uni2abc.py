@@ -8,17 +8,18 @@ def svenska(content):
         line.encode().decode('unicode-escape')
 
         # svensk teckenkod 7 bitar ISO ESC 2/8 4/7
-        # ÄÖÅÉ äöåé
+        # ÄÖÅÉÜ äöåéü
         line = line.replace(u'Ä', '[')
         line = line.replace(u'Ö', '\\')
         line = line.replace(u'Å', ']')
-        line = line.replace(u'È', '@') # ?? right
+        line = line.replace(u'È', '@')
+        line = line.replace(u'Ü', '^')
         line = line.replace(u"ä", '{')
         line = line.replace(u'ö', '|')
         line = line.replace(u'å', '}')
-        line = line.replace(u'é', '`') # ?? right
-
-        line = line.replace(u'¤', '$') # ?? right
+        line = line.replace(u'é', '`')
+        line = line.replace(u'ü', '~')
+        line = line.replace(u'¤', '$')
 
         line.encode('ascii', 'ignore')
         ncontent.append(line)
