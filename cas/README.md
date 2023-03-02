@@ -135,10 +135,16 @@ to an executable. Run the Python3 interpreter with
 
 For going the other way around, from the produced wave file to
 BASIC, there is a bit of "parsing" once the binary encoding has
-been decoded.
+been decoded. First start with a cable connected so that the modern
+computer can listen to what ABC80 sends out. Start some audio
+program to capture sound, and start with recording. At the
+ABC80 you have the program to send, type `SAVE CAS:` and hit return.
+Audio should now be broadcast through the cable.
+Save the new file in the Wave-format.
 
-'[wav2bin.c](tobasic/wav2bin.c)'
-'[bin2basic.py](tobasic/bin2basic.py)'
+First translate the Wave-file to a (decimal) binary file with
+'[wav2bin.c](tobasic/wav2bin.c)'. Then from the "binary" file translate
+to BASIC with '[bin2basic.py](tobasic/bin2basic.py)'.
 
 ```
 sample.wav -> [wav2bin.c] -> sample.bin -> [bin2basic.py] -> sample.bas (unicode)
@@ -210,8 +216,11 @@ There are two variants to the blocks: *name* (Namnblock) and
 *data* (Datablock) block.
 
 The name block is simple, a name (namn) of maximum 8 characters and an
-extension of the characters (or bytes in the case of 8-bit computers).
+extension of the characters (or bytes in the case of 8-bit computers).[^name]
 It has a small header of 3 FFh.
+
+[^name]: Note: The 'internal' name used by ABC80 has no impact on the names at
+the modern computer side in the conversion.
 
 The data block has one byte of zeros, then 2 bytes of binary block number,
 and the rest of 253 bytes are user data.
