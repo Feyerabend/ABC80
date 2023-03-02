@@ -106,6 +106,14 @@ the sound file can be used for the final transfer to the target:
 sample.bas (unicode) -> [uni2abc.py] -> sample.abc -> [abc2wav.c] -> sample.wav 
 ```
 
+Connect the machines, the modern to the old computer.
+Start loading a program with `LOAD CAS:` and hit return.
+At almost the same time, start playing the sound in wave-format
+through the cable from your modern computer to ABC80.
+It should start loading the program ..
+
+
+
 #### Converting files
 
 Prerequisites: install or make sure you have `Python3` and `gcc`
