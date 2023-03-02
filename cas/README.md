@@ -116,7 +116,6 @@ modern computer to the ABC80. It should in best case start loading
 the program ..
 
 
-
 #### Converting files
 
 Prerequisites: install or make sure you have `Python3` and `gcc`
@@ -140,7 +139,8 @@ computer can listen to what ABC80 sends out. Start some audio
 program to capture sound, and start with recording. At the
 ABC80 you have the program to send, type `SAVE CAS:` and hit return.
 Audio should now be broadcast through the cable.
-Save the new file in the Wave-format.
+Save the new file in the Wave-format and 
+[PCM](https://en.wikipedia.org/wiki/Pulse-code_modulation).
 
 First translate the Wave-file to a (decimal) binary file with
 '[wav2bin.c](tobasic/wav2bin.c)'. Then from the "binary" file translate
