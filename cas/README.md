@@ -65,8 +65,11 @@ thing is obviously how the wires are connected.
 Unfourtunately the 3.5 audio jack/plug have not had any formal
 standard connected to its various pins, but de facto standards that has
 developed during time. Different manufacturers: different solutions.
-But sometimes some of them do agree, and other then follows.
+But sometimes some of them do agree, and others then follows.
+One such standard is CITA/AHJ[^cita].
 
+
+[^cita]: E.g. https://support.headsetbuddy.com/hc/en-us/articles/207970396-Smartphone-Headset-Standards-Apple-iPhone-AHJ-CTIA-OMTP
 
 
 
