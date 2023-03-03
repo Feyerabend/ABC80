@@ -15,8 +15,9 @@ understanding of their mechanics: *play*, *record*, *pause*, *fast*
 When you bought a brand new ABC80 as a package, there was a special
 monitor including the power supply for the computer, and a
 special tape recorder. As a company that usually manufactured
-receivers, stereo equipment, TVs etc. Luxor could naturally also
-provide the recorder: __ABC820__.
+receivers, stereo equipment, TVs etc.
+[Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB) could naturally also
+provide the tape recorder: __ABC820__.
 
 ![Kassettminne](../assets/images/kminne.jpg)
 
@@ -58,8 +59,15 @@ The new hardware setup is roughly as follows:
 ABC80 <-> 5 pin DIN connector [cord] 3.5 mm audio plug <-> modern computer
 ```
 
-Or, other suitable connection to your computer.
-The important thing is obviously how the wires are connected.
+Or, other suitable connection to your computer. The important
+thing is obviously how the wires are connected.
+
+Unfourtunately the 3.5 audio jack/plug have not had any formal
+standard connected to its various pins, but de facto standards that has
+developed during time. Different manufacturers: different solutions.
+But sometimes some of them do agree, and other then follows.
+
+
 
 
 ## Conversion
