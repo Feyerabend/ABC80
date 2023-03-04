@@ -209,11 +209,12 @@ by a block number, and the actual data (DATA 0, DATA 1 .. DATA N).
 Each *block* have a structure of 256 bits of zero, 3 bytes of SYNC i.e.
 16h, 1 byte STX i.e. 2h, 256 bytes of data, 1 byte ETX i.e. 3h and finally
 2 bytes checksum. The first control bytes are pretty straightforward to
-separate the blocks from each other. They are used in 'bin2basic.py' to
-split the string of "binaries". The string represents the binaries in the
-form of left to right, rather than the usual way right to left (most
-significant to the left). As the bits are added along the way in time,
-they are put at the right of previous bits.
+separate the blocks from each other. They are used in
+'[bin2basic.py](tobasic/bin2basic.py)' to split the string of "binaries".
+The string represents the binaries in the form of left to right,
+rather than the usual way right to left (most significant to the left).
+As the bits are added along the way in time, they are put at the right
+of previous bits.
 
 ```python
 sync = '01101000' # 16h in reverse
