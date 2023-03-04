@@ -167,8 +167,8 @@ PENDING TEXT
 #### Converting files
 
 Prerequisites: install or make sure you have `Python3` and `gcc`
-(or equivalent) and optional `make`. Compile 'wav2bin.c' to an
-executable.
+(or equivalent) and optional `make`. Compile 
+'[wav2bin.c](tobasic/wav2bin.c)' to an executable.
 
 ```
 > make wav2bin
@@ -308,4 +308,4 @@ A count functions as a number of samples that hasn't changed
 - Finnved, Johan, *Programvaran i persondatorn i ABC80*, manuskript, Inst. för tillämpad elektronik, Kungl. Tekniska Högskolan, 1979.
 - Isaksson, Anders & Kärrsgård, Örjan, *Avancerad programmering på ABC80*, Studentlitt., Lund, 1980.
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978 [URL](https://www.abc80.org/docs/Mikrodatorns_ABC.pdf).
-- Stockman, Arne, *Programvaran i ABC 80: disassemblering med kommentarer*, ABC-klubben, Bromma,. 1981.
+- Stockman, Arne, *Programvaran i ABC 80: disassemblering med kommentarer*, ABC-klubben, Bromma, 1981.
