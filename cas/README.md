@@ -2,8 +2,8 @@ __*At this moment when writing, I do not have yet tested this. But
 from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
 explain more when I have the physical experience. I've though
-tested the software which works as testing each other. But
-still untested is still how it works in reality.*__
+tested the software which works as testing each other, BASIC files
+to and from WAVE files.*__
 
 
 ![Kassettminne](../assets/images/kassett.jpg)
