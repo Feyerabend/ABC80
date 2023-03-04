@@ -31,6 +31,8 @@ computer. What counts as a "modern computer" is however a
 moving target, where jacks and hardware connections might
 change over time.*
 
+![Kassettminne specifikation](../assets/images/kassett-spec.png)
+
 
 ### Old hardware
 
