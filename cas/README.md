@@ -29,23 +29,23 @@ or you do not have a recorder? Well, here a new solution
 might be at hand: transfer files to and from your modern
 computer. What counts as a "modern computer" is however a 
 moving target, where jacks and hardware connections might
-change over time.*
-
-![Kassettminne specifikation](../assets/images/kassett-spec.png)
-
-
-### Old hardware
+change over time.*[^serv]
 
 __*At this moment when writing, I do not have yet tested this. But
 from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
 explain more when I have the physical experience.*__
 
+![Kassettminne specifikation](../assets/images/kassett-spec.png)
+
+
+### Old hardware
+
 ![Kassettminne ports](../assets/images/connect.jpg)
 
 The original hardware has a cable connection of three wires, one for
 input, one for output and one for ground. At each end it has a 5 pol.
-DIN male connector.[^serv]
+DIN male connector.
 
 ![ABC80 ports](../assets/images/abc80-cas.jpeg)
 
