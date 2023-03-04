@@ -36,7 +36,12 @@ from what I understand by reading and viewing similar experiments,
 this should be able to work. I'll return later to review and
 explain more when I have the physical experience.*__
 
+#### Specification ABC820
+
 ![Kassettminne specifikation](../assets/images/kassett-spec.png)
+
+Notably from the specification above in Swedish may be a 700 baud
+rate for recording and playing data to/from cassette.
 
 
 ### Old hardware
@@ -317,3 +322,4 @@ A count functions as a number of samples that hasn't changed
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978 [URL](https://www.abc80.org/docs/Mikrodatorns_ABC.pdf).
 - Stockman, Arne, *Programvaran i ABC 80: disassemblering med kommentarer*, ABC-klubben, Bromma, 1981.
 - Westh, Åke, *Styr och mät med ABC80*, Studentlitt., Lund, 1980.
+
