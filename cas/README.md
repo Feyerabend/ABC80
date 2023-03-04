@@ -43,9 +43,11 @@ explain more when I have the physical experience.*__
 
 The original hardware has a cable connection of three wires, one for
 input, one for output and one for ground. At each end it has a 5 pol.
-DIN male connector.
+DIN male connector.[^serv]
 
 ![ABC80 ports](../assets/images/abc80-cas.jpeg)
+
+[^serv]: Images from the ABC80 service manual.
 
 It also have a motor control cable that acts as control from the
 computer for stopping the motor and starting when the tape is played.
