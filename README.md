@@ -203,8 +203,11 @@ The cost of computers was quite high at this time, but also shrinking rapidly.
 ## The computer ABC80
 
 Specifications of the ABC80:
-* Zilog Z80, 3 MHz (2.9952 MHz)
+* Zilog Z80A, 3 MHz (2.9952 MHz)
+* 8 bit words
+* 64K address space
 * 16K RAM installed (could be expanded originally to 32K)
+* 1K RAM for screen 
 * 16K ROM with BASIC semi compiler/interpreter and e.g. driver for a tape recorder
 * Monitor B/W included (modified TV set from Luxor)
 * Graphics 78 x 72 dots (near the "standards" of Teletext
@@ -212,12 +215,20 @@ Specifications of the ABC80:
 * 24 rows x 40 columns character screen
 * Swedish keyboard (made by Keytronic) (sold in some other countries also, Hungary e.g. with presumably
  Hungarian keyboard)
+* Special version of Swedish standard SIS 662241 for keyboard
+* Keycodes according to Swedish standard SEN 850200 ver. 2
 * Sound (actually a decent chip SN76477, but not fully used by the computer)
 * Expansion slot (the DIAB favoured 4680 bus, used often for miscellaneous instruments,
  measurements, ...)
+* Conn. 64-pol DIN ABC-bus
+* Conn. 12-pol power + video
+* Conn. 9-pol V-24 (RS232)
+* Conn. 5-pol DIN for cassette memory
+* Conn. 2-pol motor control of cassette memory
 
 The tape recorder was included when you bought the package (monitor, computer, cables).
-(Some [code](/cas) for transferring files between ABC80 and a modern computer.) 
+(Here are some [code](/cas) for transferring files between ABC80 and a modern computer
+through the audio jack.) 
 Disc drives were sold both from 3rd parties, and from the original
 manufacturer of ABC80. An affordable disc drive
 [FD2](https://www.abc80.net/archive/luxor/ABC80/Bruksanvisning-FD2-och-FD2U-Flexskivenhet.pdf)
