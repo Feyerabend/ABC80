@@ -312,3 +312,4 @@ A count functions as a number of samples that hasn't changed
 - *Luxor Service Manual ABC80 190 9589* (printed service manual).
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978 [URL](https://www.abc80.org/docs/Mikrodatorns_ABC.pdf).
 - Stockman, Arne, *Programvaran i ABC 80: disassemblering med kommentarer*, ABC-klubben, Bromma, 1981.
+- Westh, Åke, *Styr och mät med ABC80*, Studentlitt., Lund, 1980.
