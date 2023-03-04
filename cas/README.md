@@ -248,8 +248,9 @@ and the rest of 253 bytes are user data.
 
 As the binaries are represented as frequency of sound tones with respect
 to time, the coding and decoding can be done in various ways.
-The way it was solved for ABC80 was by frequency modulation. Another
-better known standard used at the time was Kansas City
+The way it was solved for ABC80 was by frequency modulation
+([FM](https://en.wikipedia.org/wiki/Frequency_modulation)).
+Another better known standard used at the time was Kansas City
 ([KC](https://en.wikipedia.org/wiki/Kansas_City_standard)).
 
 Regular pulses through a clock sets the points from where you can
