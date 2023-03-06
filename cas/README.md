@@ -99,17 +99,29 @@ the tape recorder__.
 In this case the handling of sound files will be through the
 IBM/Microsoft [Wave](https://en.wikipedia.org/wiki/WAV) format.
 
-Requirements for these programs below is to install Python
-(any 3-version) and to compile the C-program.
+Requirements for the programs below is to install Python
+(any 3-version) and to compile the C-program (with `gcc` e.g.).
 You can start compiling through the tool `make` which
 produces an object-file (.o) and a library linked executable.
 
-The decision to do this into two separate steps are mostly due to
-following the previous programs in C for BASIC to WAVE, and then
-later on adding a Python-script. I also started with the other
-way around 'from WAVE to BASIC' in C, then added Python.
-Python is much more concise and powerful for these types of tasks,
-and you might consider to rewrite everything into Python.
+```
+> python3 --version
+..
+> gcc --version
+..
+> make --version
+..
+```
+
+The decision to do this conversion into two separate steps
+are mostly due to following the previous programs in C for
+BASIC to WAVE, and then later on adding a Python-script.
+I also started with the other way around 'from WAVE to BASIC'
+in C to make a test of the former, and then after added Python.
+Python is much more concise and powerful language for these
+types of tasks, and you might consider to rewrite everything
+into Python.
+
 
 
 ### From BASIC to WAVE
