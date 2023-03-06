@@ -103,6 +103,7 @@ Requirements for the programs below is to install Python
 (any 3-version) and to compile the C-program (with `gcc` e.g.).
 You can start compiling through the tool `make` which
 produces an object-file (.o) and a library linked executable.
+Check for installed tools.
 
 ```
 > python3 --version
