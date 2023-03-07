@@ -79,11 +79,10 @@ Unfourtunately the 3.5 audio jack/plug have not had any formal
 standard connected to its various pins, but de facto standards that has
 developed during time. Different manufacturers: different solutions.
 But sometimes some of them do agree, and others then follows.
-One such almost standard is CITA/AHJ[^cita] where Apple really
-didn't follow.
+One such almost standard is CITA/AHJ[^cita].
 
-
-[^cita]: E.g. https://support.headsetbuddy.com/hc/en-us/articles/207970396-Smartphone-Headset-Standards-Apple-iPhone-AHJ-CTIA-OMTP
+[^cita]: E.g. https://support.headsetbuddy.com/hc/en-us/articles/207970396-Smartphone-Headset-Standards-Apple-iPhone-AHJ-CTIA-OMTP.
+Also see: https://en.wikipedia.org/wiki/Phone_connector_(audio).
 
 
 
@@ -136,7 +135,7 @@ set there are some character substitutions to allow for e.g. umlauts.
 Next step is to translate the newly adopted text into a Wave-file.
 This time I used the experience from two previous developers Robert
 Juhasz for the [original code](towave/alt/abccas/abccas.c),
-and Stefano Bodrato for some [updates](towave/alt/abc80.c),
+and Stefano Bodrato for some [updates](towave/alt/abc80.c)[^z88dk],
 to make my version in C. Through '[abc2wav.c](towave/abc2wav.c)'
 the sound file can be used for the final transfer to the target:
 *ABC80*.
@@ -153,6 +152,7 @@ start playing the sound in wave-format through the cable from your
 modern computer to the ABC80. It should in best case start loading
 the program ..
 
+[^z88dk]: https://github.com/z88dk/z88dk.
 
 #### Converting files
 
@@ -174,9 +174,9 @@ For going the other way around, from the produced wave file to
 BASIC, there is a bit of "parsing" once the binary encoding has
 been decoded. First start with a cable connected so that the modern
 computer can listen to what ABC80 sends out. Start some audio
-program to capture sound, and start with recording. At the
-ABC80 you have the program to send, type `SAVE CAS:` and hit return.
-Audio should now be broadcast through the cable.
+program to capture sound, and start recording. At the side of
+ABC80 you have the program to be sent, type `SAVE CAS:` and hit return.
+Audio should now be broadcasted through the cable.
 Save the new file in the Wave-format and 
 [PCM](https://en.wikipedia.org/wiki/Pulse-code_modulation).
 
