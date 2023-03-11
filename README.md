@@ -26,9 +26,10 @@ Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 But we will return to this program later. Keeping to my own dictum from around the
 time, a wider context should be given when introducing computer related topics.
 *Development doesn't progress in a vacuum.* I wrote an opinion article in around
-the start of 1983, about education and computers. About a year or half a year
-later to my astonishment it was published in the then recently renamed computer
-newspaper Computer Sweden ["Shift the focus of education!"](MOVE.md)
+the summer of 1982, about education and computers for the Swedish magazine 
+"Nova gram". About a two years later to my astonishment it was published in the
+then recently renamed computer newspaper "Computer Sweden"
+["Shift the focus of education!"](MOVE.md)
 ("Flytta tyngdpunkten i utbildningen!") in April 1984.
 
 My thesis was in short that narrow focus on the computer itself in general education
