@@ -2,7 +2,8 @@
 
 There are naturally several emulators for ABC80. But this one
 may be the simplest, although barely functional.
-Built upon "tinyz80"[^tiny] it illustrates some simple concepts such as:
+Built upon "tinyz80"[^tiny] in C it illustrates some simple concepts
+such as:
 
 [^tiny]: https://github.com/kspalaiologos/tinyz80
 
