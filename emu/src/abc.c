@@ -86,11 +86,9 @@ static uint8_t keyboard_check() {
     return current_key;
 }
 
-void sound(int val) {
-    if (val == 131) {
-        putchar(7); // print chr$(7)
-        fflush(stdout);
-    }
+void beep() {
+    putchar(7); // print chr$(7)
+    fflush(stdout);
 }
 
 u8 port_in(u8 port) {
@@ -103,7 +101,7 @@ u8 port_in(u8 port) {
 
 void port_out(u8 port, u8 val) {
     if (port == 6 && val == 131)
-        sound(val);
+        beep();
 }
 
 // screen represented through ncurses
