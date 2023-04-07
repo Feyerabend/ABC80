@@ -405,7 +405,10 @@ As noted by [Wikipedia](https://en.wikipedia.org/wiki/ABC_80), the
 semi-compiled BASIC interpreter in ABC80 was quite fast for integer based
 programs, for the time. Games have the property of always require more of
 the computer that it can handle. But for our goals in this case, the BASIC
-was enough without having to resort to assembly.
+was enough without having to resort to assembly.[^emul]
+
+[^emul]: Test code in a very simple [emulator](/emu). Nothing but illustration
+of principles of the ABC80 BASIC.
 
 In general was in fact one of the main advantages of ABC80.
 That it was fast and reliable. And that was often enough for setting up
