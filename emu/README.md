@@ -5,7 +5,7 @@ may be the simplest, although barely functional.
 It lacks most features, graphics, sound etc. but it shows how
 simple programs (text based) can work. Starting from a simple
 Z80 emulator, the program copies what is in the screen memory
-and recognizes some keys as input.
+to display, and recognizes some keys as input, but not much beyond.
 Built upon "tinyz80"[^tiny] in C it illustrates some simple
 programming concepts such as a sample:
 
