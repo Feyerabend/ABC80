@@ -31,7 +31,7 @@ Create a folder `build` in parallel to (same parent as) `src`. From the
 As tinyz80 is licensed with a "greedy" version 3 of GNU, every
 file that works with it must follow the same license.
 
-The `abcprom.h` file however is data and *not* part of the program.
+*The `abcprom.h` file however is data and __not__ part of the program.
 Dataindustrier AB (DIAB) gave Jonas Yngvesson permission to distribute
-the PROM-contents. Jonas Yngvesson also made a proper simluator/emulator
-for ABC80.
+the PROM-contents. Jonas Yngvesson also made a proper simulator/emulator
+for ABC80.*
