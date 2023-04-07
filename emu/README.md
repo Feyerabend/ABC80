@@ -2,8 +2,9 @@
 
 There are naturally several emulators for ABC80. But this one
 may be the simplest, although barely functional.
-Built upon "tinyz80": https://github.com/kspalaiologos/tinyz80
-it illustrates some simple concepts such as:
+Built upon "tinyz80"[^tiny] it illustrates some simple concepts such as:
+
+[^tiny]: https://github.com/kspalaiologos/tinyz80
 
 ```basic
 10 ; "Hejsan ";
