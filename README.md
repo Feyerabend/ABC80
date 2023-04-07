@@ -406,10 +406,10 @@ semi-compiled BASIC interpreter in ABC80 was quite fast for integer based
 programs, for the time. Games have the property of always require more of
 the computer that it can handle. But for our goals in this case, the BASIC
 was enough without having to resort to assembly.
-(Test your code in a very simple [emulator](/emu). Nothing but illustration
-of the principles of ABC80 BASIC.)
+(Test your own code in a very simple [emulator](/emu), where nothing but
+the bare bones of illustration of ABC80 BASIC.)
 
-In general was in fact one of the main advantages of ABC80.
+In fact the BASIC was one of the main advantages of ABC80.
 That it was fast and reliable. And that was often enough for setting up
 e.g. [measurement of temperatures](assets/pdf/temp.pdf) relatively easy
 through a computer (which we also did back in the day).
