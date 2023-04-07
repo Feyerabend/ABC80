@@ -2,8 +2,12 @@
 
 There are naturally several emulators for ABC80. But this one
 may be the simplest, although barely functional.
-Built upon "tinyz80"[^tiny] in C it illustrates some simple concepts
-such as:
+It lacks most features, graphics, sound etc. but it shows how
+simple programs (text based) can work. Starting from a simple
+Z80 emulator, the program copies what is in the screen memory
+and recognizes some keys as input.
+Built upon "tinyz80"[^tiny] in C it illustrates some simple
+programming concepts such as a sample:
 
 [^tiny]: https://github.com/kspalaiologos/tinyz80
 
