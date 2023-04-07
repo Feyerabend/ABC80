@@ -20,8 +20,8 @@ typedef _Bool bv;
 // PROCESSOR STATE.
 
 // The z80 memory.
-//u8 * m = NULL;
-#define MEMORY_SIZE     (1 << 16)
+//SL: removed u8 * m = NULL;
+#define MEMORY_SIZE (1 << 16)
 uint8_t m[MEMORY_SIZE];
 
 // ---------------------------------------
@@ -72,4 +72,3 @@ u8 int_vec;
 bv int_pending, nmi_pending;
 
 bv halted;
-
