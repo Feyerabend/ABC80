@@ -407,8 +407,8 @@ programs, for the time. Games have the property of always require more of
 the computer that it can handle. But for our goals in this case, the BASIC
 was enough without having to resort to assembly.[^emu]
 
-[^emu]: To experiment with some elementary principles of ABC80 BASIC, you
-can test a simple [emulator](emu).
+[^emu]: To experiment with some elementary principles in ABC80 BASIC test
+the simple [emulator](emu/README.md).
 
 In general was in fact one of the main advantages of ABC80.
 That it was fast and reliable. And that was often enough for setting up
