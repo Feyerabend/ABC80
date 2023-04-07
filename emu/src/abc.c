@@ -1,13 +1,10 @@
+// most simple emulator of/for ABC80
 
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <time.h>
 #include <ncurses.h>
-#include <errno.h>
-#include <termios.h>
-#include <sys/ioctl.h>
 
 #include "abcprom.h"
 #include "z80.h"
@@ -72,6 +69,7 @@ static uint8_t keyboard_check() {
     char input = getch(); // ncurses
 
     switch (input) {
+        case 27 : done = TRUE; break; // ESC
         case 127: input = '\b'; break; // DEL (backspace)
         // ...
     }
