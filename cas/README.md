@@ -133,7 +133,7 @@ translate from Unicode to 7 bit ASCII, but as a Swedish character
 set there are some character substitutions to allow for e.g. umlauts.
 
 
-Latin G0 na - tional option subsets
+*Latin G0 national option subsets (teletext)*
 
 | | 23 | 24 | 40 | 5B | 5C | 5D | 5E | 5F | 60 | 7B | 7C | 7D | 7E |
 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | 
