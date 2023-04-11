@@ -134,6 +134,7 @@ set there are some character substitutions to allow for e.g. umlauts.
 
 
 Latin G0 national option subsets
+
 | 23 | 24 | 40 | 5B | 5C | 5D | 5E | 5F |60 | 7B | 7C | 7D | 7E |
 | Swedish | # | ¤ | É | Ä | Ö | Å | Ü | _ | é | ä | ö | å | ü |
 | Primary set | # | ¤ | @ | [ | \ | ] | ^ | _ | ` | { | | | } | ~  |
