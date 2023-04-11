@@ -191,12 +191,12 @@ dominant for some time.[^3]
 
 ![Timeline of proportional sales of computers in Sweden](assets/images/ABC80-timeline.png)
 
-[^3]: Diagram reproduced from: Sjöström, Roland, Positionering under strategisk osäkerhet:
-Vol. 2 Luxor datorer och persondatorbranschen, Unitryck, Linköping, 1996, p. 212.
+[^3]: Diagram reproduced from: Sjöström, Roland, *Positionering under strategisk osäkerhet:
+Vol. 2 Luxor datorer och persondatorbranschen*, Unitryck, Linköping, 1996, p. 212.
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
 
-| Year | Computer | Sold | Today 2022 |
+| Year | Computer | Sold at | Today 2022 value |
 | --- | --- | --- | --- |
 | 1977 | Commodore PET | $595 | ca $2,850 USD |
 | 1978 | ABC80  | 6,900 SEK (no VAT) | ca $2,900 USD |
