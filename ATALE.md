@@ -28,3 +28,6 @@ The rest is, as you say, history.
 * http://www.pc-museum.com
 * [ABC80 historik](./assets/pdf/ABC80-historik.pdf)
 * https://computerhistory.org/blog/microsoft-ms-dos-early-source-code/
+
+
+![ABC80](assets/images/mikrodatorn-81-framsida.jpeg)
