@@ -30,4 +30,5 @@ The rest is, as you say, history.
 * https://computerhistory.org/blog/microsoft-ms-dos-early-source-code/
 
 
+### Mikrodatorn nr 1, 1981, front page: Lars Karlsson
 ![ABC80](assets/images/mikrodatorn-81-framsida.jpeg)
