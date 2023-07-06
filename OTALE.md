@@ -6,9 +6,9 @@
 
 *We at T-D-X SmåDatorer AB like inquisitive visitors and they like us. Since the start of May, we haven't had a quiet moment. Maybe it's because an ABC800 was included from the very beginning.*
 
-*If you have not yet found Kungsgatan 79 - not far from Amaranten - you are welcome to try us and ABC800. Here you can also try Microline, Anadex, Epson, Data-Board, Apple, Pet-Commodore, Canon etc.*
+*If you have not yet found Kungsgatan 79 -- not far from Amaranten -- you are welcome to try us and ABC800. Here you can also try Microline, Anadex, Epson, Data-Board, Apple, Pet-Commodore, Canon etc.*
 
-*Also try our new large floppy disc for ABC 80/ 800 – Storage capacity 2 Mbyte!!! We also separately demonstrate ABC-Net (Multiuser) Which enables the connection of up to 32 pcs to __a__ floppy disc and __a__ printer. Welcome!*
+*Also try our new large floppy disc for ABC 80/ 800 – Storage capacity __2 Mbyte__!!! We also separately demonstrate ABC-Net (Multiuser) Which enables the connection of up to 32 pcs to __a__ floppy disc and __a__ printer. Welcome!*
 
 *Are you on our register? Call, write or come to us and we will ensure that you receive continuous information.*
 
