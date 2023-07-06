@@ -4,7 +4,7 @@
 
 *The best at ABC800!?*
 
-*We at TDX SmåDatorer AB like inquisitive visitors and they like us. Since the start of May, we haven't had a quiet moment. Maybe it's because an ABC800 was included from the very beginning.*
+*We at T-D-X SmåDatorer AB like inquisitive visitors and they like us. Since the start of May, we haven't had a quiet moment. Maybe it's because an ABC800 was included from the very beginning.*
 
 *If you have not yet found Kungsgatan 79 - not far from Amaranten - you are welcome to try us and ABC800. Here you can also try Microline, Anadex, Epson, Data-Board, Apple, Pet-Commodore, Canon etc.*
 
@@ -17,7 +17,7 @@
 
 # ANOTHER TALE FROM THE PAST
 
-One day in the early 80’s I and a friend of mine, Ola Gunnars, visited a rather extraordinary computer retailer in Stockholm: *T-D-X Smådatorer AB*. We made several visits to this particular store, because they both accepted us as young as we were for what we were, but also respected our deep interest in computers. They were early, importing brand new computers. This was a time of instant change, i.e. the era before IBM came to dominate. The pace of innovation was somewhat impressive.
+One day in the very early 80’s I and a friend of mine, Ola Gunnars, visited a rather extraordinary computer retailer in Stockholm: *T-D-X Smådatorer AB*. We made several visits to this particular store, because they both accepted us as young as we were for what we were, but also respected our deep interest in computers. They were early, importing brand new computers. This was a time of instant change, i.e. the era before IBM came to dominate. The pace of innovation was somewhat impressive.
 
 So, one of the employed at T-D-X (or if he was one of the owners), Allan Larsson, were often occupied in front of a computer when we visited, not really having time to chat with us. But he was still very polite and kind to us, so when I asked him what he was doing obviously hacking hard at a Commodore PET (exactly which model it was I don't recall), he answered shortly: ”I’m building a database”. Ok, so I was halfway impressed. It must be quite a large program, was my first thought, even if I couldn’t grasp really what was implied.
 
