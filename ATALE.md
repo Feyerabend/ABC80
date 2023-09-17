@@ -28,6 +28,7 @@ The rest is, as you say, history.
 * http://www.pc-museum.com
 * [ABC80 historik](./assets/pdf/ABC80-historik.pdf)
 * https://computerhistory.org/blog/microsoft-ms-dos-early-source-code/
+* Interesting story told on the complexity behind Gary Kildall, Bill Gates, and the IBM stories separated in three parts: https://www.youtube.com/watch?v=59D1L7xj8eM&ab_channel=Al%27sGeekLab
 
 
 ### Mikrodatorn nr 1, 1981, front page: Lars Karlsson
