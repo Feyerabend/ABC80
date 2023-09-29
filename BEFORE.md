@@ -30,7 +30,7 @@ landscape).
 
 We can thus speculate in the historical success of "qwerty" as the result
 of a lot of 'things' influencing its path. One of these influences can be
-the technological reason mentioned above. But it not even be *the* reason.
+the technological reason mentioned above. But it not even be *the* cause.
 
 
 ![Seven-S](assets/images/sevens.jpeg)
