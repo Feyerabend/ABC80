@@ -12,15 +12,16 @@ An argument of *why* we have this might not be as interesting as the question
 of why it became som *popular and wide spread*. The question of why can be
 construed in hindsight (even contrafactual), and might not be the actual
 reason (or in case: reasons) for why it became to be so popular. The reason,
-could be argued, the keyboard layout was due to technical reasons, as the
-typebars should not collide to often (as the often used keys are spread out).
-Those who have typed on an ordinary typewriter may agree to this, and draw
-the immediate conclusion that this must have *caused* the layout to be the still
-dominant way of manufacturing keyboards today. This historical "hunt" for such
-causal relationships may or may not be the actual case, naturally. But, perhaps,
-rather than internal arguments, we could look for emergence of *streams of
-technological innovation* where some find their way through the changing landscape
-and derive larger and larger streams, but where others stops and go no futher.
+it could be argued, the keyboard layout was due to technical reasons, as the
+(maybe overlapping) typebars should not collide to often (as the often used
+keys are spread out). Those of us who have typed on an ordinary typewriter
+may agree to this, and draw the immediate conclusion that this must have
+*caused* the layout to be the still dominant way of manufacturing keyboards today.
+This historical "hunt" for such causal relationships may or may not be the
+actual case, naturally. But, perhaps, rather than internal arguments, we
+could look for emergence of *streams of technological innovation* where
+some find their way through the changing landscape and derive larger and
+larger streams, but where others stops and go no futher.
 To keep with the analogy, success (or failure) might *not* have to do with the
 strength of the stream itself from the start, but may very well have to do
 with the form of the landscape, hills and valleys, soft and hard ground, and
