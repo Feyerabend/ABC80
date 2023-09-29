@@ -38,7 +38,8 @@ the technological reason mentioned above. But it not even might be
 
 ![Datapoint patent](assets/images/datapoint-2200.jpeg)
 
-Image from patent: https://patents.google.com/patent/USD224415S/en.[^patent]
+Image from patent: https://patents.google.com/patent/USD224415S/en.
+[^patent]
 
 
 In 1970 Computer Terminal Corporation (CTC) annonced the terminal/computer
