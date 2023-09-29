@@ -61,15 +61,17 @@ In 1971 Lars Karlsson started his company...
 
 
 
+[^qwerty]: https://en.wikipedia.org/wiki/QWERTY
+
 [^patent]: Seems to show Datapoint 1100 which had one cassette interface,
 rather than two as in Datapoint 2200.
+
+[^datapoint2200]: https://en.wikipedia.org/wiki/Datapoint_2200
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
 [^diabsv]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 
-[^qwerty]: https://en.wikipedia.org/wiki/QWERTY
 
-[^datapoint2200]: https://en.wikipedia.org/wiki/Datapoint_2200
 
 
 ## References
