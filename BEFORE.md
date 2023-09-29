@@ -38,7 +38,10 @@ the technological reason mentioned above. But it not even might be
 
 ![Datapoint patent](assets/images/datapoint-2200.jpeg)
 
-Image from patent: https://patents.google.com/patent/USD224415S/en
+Image from patent: https://patents.google.com/patent/USD224415S/en.[^dp2200]
+
+[^dp2200]: Seem to show Datapoint 1100 which had one cassette interface,
+rather than two as in Datapoint 2200.
 
 In 1970 Computer Terminal Corporation (CTC) annonced the terminal/computer
 *Datapoint 2200*.[^datapoint2200] Later, in 1971, the company shipped the
