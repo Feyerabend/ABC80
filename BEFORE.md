@@ -34,16 +34,25 @@ the technological reason mentioned above. But it not even might be
 *the* cause, if such a thing actually exists.
 
 
+## Datapoint 2200
+
+![Datapoint patent](assets/images/datapoint-2200.jpeg)
+
+Image from patent: https://patents.google.com/patent/USD224415S/en
+
+In 1970 Computer Terminal Corporation (CTC) annonced the terminal/computer
+*Datapoint 2200*.[^datapoint2200] Later, in 1971, the company shipped the
+product to customers.
+
+
+## Seven-S
+
 ![Seven-S](assets/images/sevens.jpeg)
 
 From Peter Häll - https://digitaltmuseum.se/021026362412/dator,
 CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 
-## Seven-S
 
-In 1970 Computer Terminal Corporation (CTC) annonced the terminal/computer
-*Datapoint 2200*.[^datapoint2200] Later, in 1971, the company shipped the
-product to customers.
 
 
 In 1971 Lars Karlsson started his company...
