@@ -6,7 +6,7 @@
 History can be written in many ways. This includes the history of technology
 and computer science. One way of looking at things relates to often the context
 in which something appeared. Let's take the "western" type of keyboard layout
-which many of usare used to: the qwerty keyboard.[^qwerty]
+which many of us are used to: the *qwerty* keyboard.[^qwerty]
 
 An argument of *why* we have this might not be as interesting as the question
 of why it became som *popular and wide spread*. The question of why can be
