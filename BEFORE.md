@@ -11,7 +11,7 @@ which many of us are used to: the *qwerty* keyboard.[^qwerty]
 An argument of *why* we have this might not be as interesting as the question
 of why it became som *popular and wide spread*. The question of why can be
 construed in hindsight (even contrafactual), and might not be the actual
-reason (or in case: reasons) for why it became to be so popoluar. The reason,
+reason (or in case: reasons) for why it became to be so popular. The reason,
 could be argued, the keyboard layout was due to technical reasons, as the
 typebars should not collide to often (as the often used keys are spread out).
 Those who have typed on an ordinary typewriter may agree to this, and draw
