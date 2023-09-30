@@ -57,27 +57,29 @@ computer that was personal, or private to the operator, i.e. a "PC".
 
 There was several periferals that could be connected such as removable
 cartridge hard disk drive, modems, priters, serial and parallel interface,
-but also, later on, it was first with an 8" disk drive.
-But also there was software which could independently run, not only emulate
-different terminal protocols. It had its own processor, its own CPU.
-The idea from start was that a CPU could be designed such that it
-would be possible to have the main functions in one chip (to reduce
-problems with heat). CTC designed this chip called 1201, and went to
-Intel[^intel] for planning the production. However, after some time, CTC
-went ahead and made the CPU by TTL-logic in hardware. That was the
-hardware base when Datapoint 2200 when it went into production. At the time
-CTC dropped the idea of a CPU on a chip, and transferred the design
-to Intel. This happend almost concurrently with the design of Intel 4004 for
-Busicom and their calculator, released in 1971.[^intelf]
-At this time memory was the really expensive part in machines, and
+but also, later on, it was first with an 8" disk drive. But also there was
+software which could independently run, not only emulate different terminal
+protocols. It had its own processor, its own CPU. The idea from start was
+that a CPU could be designed such that it would be possible to have the
+main functions in one chip (to reduce problems with heat). CTC designed
+this chip called 1201, and went to Intel[^intel] for planning ultimately
+in production. Also Texas Instrument was asked to compete. However, after
+some time, CTC went ahead and made the CPU by TTL-logic in hardware instead.
+They were not satified with what was delivered to them. TTL-logic was thus
+the hardware base when Datapoint 2200 first went into production.
+At the time CTC dropped the idea of a CPU on a chip, and transferred
+the design to Intel.[^datap] This happend almost concurrently with the
+design of Intel 4004 for Busicom and their calculator, released in 1971.[^intelf]
+At this time *memory* was the really expensive part in machines, and
 therefore decisions on design and production had a different focus
-than a decade later on.
+than a decade later on. A CPU (or part of a CPU) on a chip would however
+reduce costs as well as the heat issues.
 
 A renewed interest in the 1201 design came up as Seiko found interest
 for a scientific calculator. An improved design tuned into
 Intel 8008, a microprocessor that could claim to have started
-the microprocessor revolution. But also the lineage to its
-processors for ordinary PCs of today in x86.
+the microprocessor/microcomputer revolution. But also the lineage to its
+processors for ordinary PCs of today in x86.[^xintel]
 
 
 
@@ -92,7 +94,12 @@ and https://en.wikipedia.org/wiki/Datapoint
 
 [^intel]: https://en.wikipedia.org/wiki/Intel
 
+[^datap]: https://en.wikipedia.org/wiki/Datapoint
+
 [^intelf]: https://en.wikipedia.org/wiki/Intel_4004
+
+[^xintel]: https://en.wikipedia.org/wiki/X86
+
 
 
 ## Seven-S
