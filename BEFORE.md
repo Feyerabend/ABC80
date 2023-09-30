@@ -167,8 +167,14 @@ purpose of selling Seven-S. It was promising at first, they
 aquired some needed capital, they won a reputable prize for
 innovation, and also a larger customer (Kommundata) was ready
 for 500 terminals, or even more in the future.
+
 Hardware isn't mentioned much from what can be found in sources,
-but was build around the Z80, with 16k byte of dynamic RAM.
+but was build around the Z80, with 16k byte of dynamic RAM,
+initially. From the picture displayed above, the caption
+says that the configuration here is a Zilog Z80 processor,
+it has a 15" screen (25x18 characters), and 64k of RAM. 
+It was manufactured by Stansaab, which later
+fusioned with Datasaab.
 
 Then something happend. The control of the sole customer and
 the product was transferred to Datasaab.[^datasaab] Datasaab
