@@ -33,6 +33,8 @@ of a lot of 'things' influencing its path. One of these influences can be
 the technological reason mentioned above. But it not even might be
 *the* cause, if such a thing actually exists.
 
+[^qwerty]: https://en.wikipedia.org/wiki/QWERTY
+
 
 ## Datapoint 2200
 
@@ -80,10 +82,10 @@ for a scientific calculator. An improved design turned into
 Intel 8008, a microprocessor that could claim to have started
 the microprocessor/microcomputer revolution. But also the lineage to its
 processors for ordinary PCs of today in x86.[^xintel]
-*This is one of the strains from the stream.* The fact that the instruction
-set, or the use of little endian kept making progress for decades to come,
-was the demarkation of a strong hold. A physical habit, one might
-call it. Hard to overturn.
+*This is one of the strains from the stream.* The fact that the core of
+instruction set, or the use of little endian kept making progress for
+decades to come, was the demarkation of a strong hold. A physical habit,
+one might call it. Hard to overturn.
 
 ![Datapoint patent](assets/images/cw20dec1972.jpeg)
 
@@ -112,7 +114,7 @@ and https://en.wikipedia.org/wiki/Datapoint
 
 ![Seven-S](assets/images/sevens.jpeg)
 
-From Peter Häll - https://digitaltmuseum.se/021026362412/dator,
+Image from Peter Häll - https://digitaltmuseum.se/021026362412/dator,
 CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 
 
@@ -122,7 +124,6 @@ In 1971 Lars Karlsson started his company...
 
 
 
-[^qwerty]: https://en.wikipedia.org/wiki/QWERTY
 
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
@@ -134,6 +135,6 @@ In 1971 Lars Karlsson started his company...
 ## References
 
 * A short history on Datapoint 2200: https://www.old-computers.com/museum/computer.asp?c=596
-* More on the Datapoint 2200: https://web.archive.org/web/20080819031221/http://www.computerworld.com/action/article.do?command=printArticleBasic&articleId=9111341
+* More on Datapoint 2200: https://web.archive.org/web/20080819031221/http://www.computerworld.com/action/article.do?command=printArticleBasic&articleId=9111341
 
 
