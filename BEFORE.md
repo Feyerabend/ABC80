@@ -103,17 +103,11 @@ in *Computerworld*, December 1972, p.12.
 
 [^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
 and https://en.wikipedia.org/wiki/Datapoint
-
 [^teletype]: https://en.wikipedia.org/wiki/Teleprinter
-
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
-
 [^intel]: https://en.wikipedia.org/wiki/Intel
-
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
-
 [^intelf]: https://en.wikipedia.org/wiki/Intel_4004
-
 [^xintel]: https://en.wikipedia.org/wiki/X86
 
 
@@ -166,12 +160,28 @@ Also other applications are possible, programmable calculator
 systems, process control, and industrial programmable
 controller system are mentioned.
 
+It took some years but in 1975 eventually Dataindustrier AB
+together with Innovation Tomas Nilsson AB, formed a new
+company, a joint-venture, Data Future AB for the sole
+purpose of selling Seven-S. It was promising at first, they
+aquired some needed capital, they won a reputable prize for
+innovation, and also a larger customer (Kommundata) was ready
+for 500 terminals, or even more in the future. Then something 
+happend. The control of the sole customer and the product was
+transferred to Datasaab.[^datasaab] Datasaab cancelled the project
+in 1979, and that was the end of that.
+
+Ignoring interesting futher politics here, ideas and solutions
+from Seven-S was brought in to the project of ABC80.
+The pace in which the project of ABC80 proceeded could only
+come from the experience from Seven-S.
+
 
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
 [^diabsv]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 [^triad]: See https://www.df.lth.se/~triad/diab/archive/Seven%20S/1974%20SevenS%20konceptstudie.pdf (probably archived by Linus Walleij).
-
+[^datasaab]: https://en.wikipedia.org/wiki/Datasaab
 
 
 ## References
