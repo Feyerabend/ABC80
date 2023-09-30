@@ -185,7 +185,7 @@ cancelled the project in 1979, and that was the end of that.
 Ignoring interesting futher politics here involving larger
 companies and competition, the ideas and solutions from Seven-S
 was brought in to the project of ABC80. The pace in which
-the project of ABC80 proceeded could only come from the
+the project of ABC80 proceeded could only come through the
 previous experience of its predecessor Seven-S.
 *A small strain survived.*
 
