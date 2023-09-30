@@ -186,7 +186,7 @@ Ignoring interesting futher politics here involving larger
 companies and competition, the ideas and solutions from Seven-S
 was brought in to the project of ABC80. The pace in which
 the project of ABC80 proceeded could only come from the
-previous experience of its predecessor Seven-S.
+previous experience of its predecessor Seven-S. A small strain.
 
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
