@@ -76,10 +76,14 @@ than a decade later on. A CPU (or part of a CPU) on a chip would however
 reduce costs as well as the heat issues.
 
 A renewed interest in the 1201 design came up as Seiko found interest
-for a scientific calculator. An improved design tuned into
+for a scientific calculator. An improved design turned into
 Intel 8008, a microprocessor that could claim to have started
 the microprocessor/microcomputer revolution. But also the lineage to its
 processors for ordinary PCs of today in x86.[^xintel]
+*This is one of the strains from the stream.* The fact that the instruction
+set, or the use of little endian kept making progress for decades to come,
+was the demarkation of a strong hold. A physical habit, one might
+call it. Hard to overturn.
 
 ![Datapoint patent](assets/images/cw20dec1972.jpeg)
 
