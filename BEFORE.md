@@ -176,7 +176,7 @@ initially at least from the outset according to a newspaper
 article. From the picture displayed above, the caption says
 that the configuration here is a Zilog Z80 processor,
 it has a 15" screen (25x18 characters), and 64k of RAM. 
-It was manufactured by Stansaab starting 1977, which later
+The Seven-S was manufactured by Stansaab starting 1977, which later
 fusioned with Datasaab. Production was slow, as they had
 problems with the mechanics.
 
