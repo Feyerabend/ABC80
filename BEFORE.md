@@ -81,8 +81,9 @@ Intel 8008, a microprocessor that could claim to have started
 the microprocessor/microcomputer revolution. But also the lineage to its
 processors for ordinary PCs of today in x86.[^xintel]
 
+![Datapoint patent](assets/images/cw20dec1972.jpeg)
 
-
+Image from *Computerworld*, December 1972, p.12.
 
 
 [^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
@@ -127,5 +128,6 @@ In 1971 Lars Karlsson started his company...
 
 ## References
 
-* adasd
+* A short history on Datapoint 2200: https://www.old-computers.com/museum/computer.asp?c=596
+* 
 
