@@ -134,7 +134,7 @@ Besides a versatile board computer driving the bus, cards
 could be added in the style of the S-100 bus to build custom computers
 suitable for the intended audience of industrial applications.
 
-In 1974 an internal paper describes ideas for a new computer,
+In 1974 a memorandum describes ideas for a new computer,
 the "Seven-S". At the end of the memorandum, the main competition
 is mentioned:
 
