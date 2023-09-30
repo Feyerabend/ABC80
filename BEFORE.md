@@ -78,10 +78,17 @@ than a decade later on. A CPU (or part of a CPU) on a chip would however
 reduce costs as well as the heat issues, even though it were some issues
 with speed in the first of designs.
 
+The Datapoint 2200 was very popular, and had a relatively long life.
+It also changed its internals over time, where the driving CPU in TTL
+was soon replaced by only one chip. On the other hand it could only
+reach a limited set of customers, as it was leased and not sold at
+the start, exactly as IBM's products were at the time from which the
+marketing model was copied.
+
 A renewed interest in the 1201 design came up as Seiko found interest
 for a scientific calculator. An improved design turned into
 Intel 8008, a microprocessor that could claim to have started
-the microprocessor/microcomputer revolution. But also the lineage to its
+the microprocessor/ microcomputer revolution. But also the lineage to its
 processors for ordinary PCs of today in x86.[^xintel]
 *This is one of the strains from the stream.* The fact that the core of
 instruction set, or the use of little endian kept making progress for
@@ -118,11 +125,31 @@ and https://en.wikipedia.org/wiki/Datapoint
 Image from Peter Häll - https://digitaltmuseum.se/021026362412/dator,
 CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 
+The man behind the technological part of ABC80, Lars Karlsson, started
+in 1971 his company Dataindustrier AB (approximately translated as
+"Computer Industries ltd.").[^diab] The core products was for a long
+time based on the bus "Data Board 4680". The numbers in the name came
+from the intended support of Intel 4004, Motorola 6800 and Zilog Z80.
+Besides a versatile board computer driving the bus, cards
+could be added in the style of the S-100 bus to build custom computers
+suitable for the intended audience of industrial applications.
 
+In 1974 an internal paper describes ideas for a new computer,
+the "Seven-S". At the end of the memorandum, the main competition
+is mentioned:
 
+> The main competitor is Datapoint 2200 made by Computer Terminal
+Corporation, USA. This unit has been on the marketfor about four
+years and some 6000 units have been sold, of which 300 in Sweden.
 
-In 1971 Lars Karlsson started his company...
+> Datapoint 2200 has been a success and has open a market for a new
+generation of decentralized computers. Many new brands will follow
+but Seven-S will take an economical and technological lead, and
+based on aggressive marketing, will reach most of the potential
+markets inside and outside of Sweden.
 
+> Seven-S will be the new weapon to fight the computer giants
+like IBM, Honeywell-Bull, CDC etc.
 
 
 
