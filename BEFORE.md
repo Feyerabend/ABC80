@@ -73,7 +73,7 @@ design of Intel 4004 for Busicom and their calculator, released in 1971.[^intelf
 At this time *memory* was the really expensive part in machines, and
 therefore decisions on design and production had a different focus
 than a decade later on. A CPU (or part of a CPU) on a chip would however
-reduce costs as well as the heat issues.
+reduce costs as well as the heat issues.[^stories]
 
 A renewed interest in the 1201 design came up as Seiko found interest
 for a scientific calculator. An improved design turned into
@@ -87,7 +87,7 @@ call it. Hard to overturn.
 
 ![Datapoint patent](assets/images/cw20dec1972.jpeg)
 
-Image from *Computerworld*, December 1972, p.12.
+Advertisment from *Computerworld*, December 1972, p.12.
 
 
 [^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
@@ -102,6 +102,8 @@ and https://en.wikipedia.org/wiki/Datapoint
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
 
 [^intelf]: https://en.wikipedia.org/wiki/Intel_4004
+
+[^stories]: More on the Datapoint 2200 can be read at https://web.archive.org/web/20080819031221/http://www.computerworld.com/action/article.do?command=printArticleBasic&articleId=9111341, and ...
 
 [^xintel]: https://en.wikipedia.org/wiki/X86
 
