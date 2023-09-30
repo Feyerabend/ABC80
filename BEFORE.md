@@ -130,16 +130,16 @@ in 1971 his company Dataindustrier AB (approximately translated as
 "Computer Industries ltd.").[^diab] The core products was for a long
 time based on the bus "Data Board 4680". The numbers in the name came
 from the intended support of Intel 4004, Motorola 6800 and Zilog Z80.
-Besides a versatile board computer driving the bus, cards
-could be added in the style of the S-100 bus to build custom computers
+Besides a versatile board computer driving the bus, cards could be
+added in the style of the S-100 bus to build custom computers
 suitable for the intended audience of industrial applications.
 
-In 1974 a memorandum describes ideas for a new computer,
-the "Seven-S". At the end of the memorandum, the main competition
-is mentioned:
+In 1974 a memorandum describes ideas for a new computer, the
+"Seven-S". At the end of the memorandum, the main competition
+is mentioned:[^triad]
 
 > The main competitor is Datapoint 2200 made by Computer Terminal
-Corporation, USA. This unit has been on the marketfor about four
+Corporation, USA. This unit has been on the market for about four
 years and some 6000 units have been sold, of which 300 in Sweden.
 
 > Datapoint 2200 has been a success and has open a market for a new
@@ -151,12 +151,26 @@ markets inside and outside of Sweden.
 > Seven-S will be the new weapon to fight the computer giants
 like IBM, Honeywell-Bull, CDC etc.
 
+Maybe a bit ironic is the cirumstance that DIAB (as the company
+later was called), was later on bought in 1994 by Bull recently
+renationalized.
+
+The functions of the computer is described such as it could
+be used for word processing, data collection, as a terminal,
+remote batching, stock-keeping, inventory, personnel, salaries,
+etc. suitable for then current office needs. A remark
+is also that smaller companies could use this computer, as
+well as larger (through the terminal function).
+
+Also other applications are possible, programmable calculator
+systems, process control, and industrial programmable
+controller system are mentioned.
 
 
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
 [^diabsv]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
-
+[^triad]: See https://www.df.lth.se/~triad/diab/archive/Seven%20S/1974%20SevenS%20konceptstudie.pdf (probably archived by Linus Walleij).
 
 
 
