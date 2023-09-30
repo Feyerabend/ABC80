@@ -166,16 +166,19 @@ company, a joint-venture, Data Future AB for the sole
 purpose of selling Seven-S. It was promising at first, they
 aquired some needed capital, they won a reputable prize for
 innovation, and also a larger customer (Kommundata) was ready
-for 500 terminals, or even more in the future. Then something 
-happend. The control of the sole customer and the product was
-transferred to Datasaab.[^datasaab] Datasaab cancelled the project
-in 1979, and that was the end of that.
+for 500 terminals, or even more in the future.
+Hardware isn't mentioned much from what can be found in sources,
+but was build around the Z80, with 16k byte of dynamic RAM.
 
-Ignoring interesting futher politics here, ideas and solutions
-from Seven-S was brought in to the project of ABC80.
-The pace in which the project of ABC80 proceeded could only
-come from the experience from Seven-S.
+Then something happend. The control of the sole customer and
+the product was transferred to Datasaab.[^datasaab] Datasaab
+cancelled the project in 1979, and that was the end of that.
 
+Ignoring interesting futher politics here involving larger
+companies and competition, the ideas and solutions from Seven-S
+was brought in to the project of ABC80. The pace in which
+the project of ABC80 proceeded could only come from the
+previous experience of its predecessor Seven-S.
 
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
