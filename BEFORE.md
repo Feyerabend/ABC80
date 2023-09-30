@@ -75,7 +75,8 @@ design of Intel 4004 for Busicom and their calculator, released in 1971.[^intelf
 At this time *memory* was the really expensive part in machines, and
 therefore decisions on design and production had a different focus
 than a decade later on. A CPU (or part of a CPU) on a chip would however
-reduce costs as well as the heat issues.
+reduce costs as well as the heat issues, even though it was some issues
+with speed in the first of designs.
 
 A renewed interest in the 1201 design came up as Seiko found interest
 for a scientific calculator. An improved design turned into
