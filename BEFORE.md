@@ -183,7 +183,7 @@ problems with the mechanics.
 Then something happend. The control of the sole customer and
 the product was transferred to Datasaab.[^datasaab] Datasaab
 cancelled the project in 1978/1979, and that was the end of that.
-A total of hundred Seeven-S were produced.
+A total of hundred Seven-S were produced.
 
 Ignoring interesting futher politics here involving larger
 companies and competition, the ideas and solutions from Seven-S
