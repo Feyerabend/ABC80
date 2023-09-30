@@ -41,10 +41,58 @@ the technological reason mentioned above. But it not even might be
 Image from patent: https://patents.google.com/patent/USD224415S/en.
 [^patent]
 
+[^patent]: Seems to show Datapoint 1100 which had one cassette interface,
+rather than two as in Datapoint 2200, as only one lid on the top is visible.
+
 
 In 1970 Computer Terminal Corporation (CTC) annonced the terminal/computer
-*Datapoint 2200*.[^datapoint2200] Later, in 1971, the company shipped the
-product to customers.
+*Datapoint 2200*.[^datapoint] Later, in 1971, the company shipped the
+product to customers. The rather recent video terminals[^terminal] had some
+inheritance from the old teletype.[^teletype] But as many video terminals
+relied on *replacing* the interface to the computer from teletype, papertape
+and the like, the new Datapoint 2200 introduced more of a proper *computer*
+inside the case, besides being a terminal emulating Model 33. This was
+innovation. Therefore there are some claims as it was the start of the
+computer that was personal, or private to the operator, i.e. a "PC".
+
+There was several periferals that could be connected such as removable
+cartridge hard disk drive, modems, priters, serial and parallel interface,
+but also, later on, it was first with an 8" disk drive.
+But also there was software which could independently run, not only emulate
+different terminal protocols. It had its own processor, its own CPU.
+The idea from start was that a CPU could be designed such that it
+would be possible to have the main functions in one chip (to reduce
+problems with heat). CTC designed this chip called 1201, and went to
+Intel[^intel] for planning the production. However, after some time, CTC
+went ahead and made the CPU by TTL-logic in hardware. That was the
+hardware base when Datapoint 2200 when it went into production. At the time
+CTC dropped the idea of a CPU on a chip, and transferred the design
+to Intel. This happend almost concurrently with the design of Intel 4004 for
+Busicom and their calculator, released in 1971.[^intelf]
+At this time memory was the really expensive part in machines, and
+therefore decisions on design and production had a different focus
+than a decade later on.
+
+A renewed interest in the 1201 design came up as Seiko found interest
+for a scientific calculator. An improved design tuned into
+Intel 8008, a microprocessor that could claim to have started
+the microprocessor revolution. But also the lineage to its
+processors for ordinary PCs of today in x86.
+
+
+
+
+
+[^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
+and https://en.wikipedia.org/wiki/Datapoint
+
+[^teletype]: https://en.wikipedia.org/wiki/Teleprinter
+
+[^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
+
+[^intel]: https://en.wikipedia.org/wiki/Intel
+
+[^intelf]: https://en.wikipedia.org/wiki/Intel_4004
 
 
 ## Seven-S
@@ -63,10 +111,6 @@ In 1971 Lars Karlsson started his company...
 
 [^qwerty]: https://en.wikipedia.org/wiki/QWERTY
 
-[^patent]: Seems to show Datapoint 1100 which had one cassette interface,
-rather than two as in Datapoint 2200.
-
-[^datapoint2200]: https://en.wikipedia.org/wiki/Datapoint_2200
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
 [^diabsv]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
