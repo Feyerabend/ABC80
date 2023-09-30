@@ -122,7 +122,7 @@ CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 
 ## Seven-S
 
-The man behind the technological part of ABC80, Lars Karlsson, started
+The man behind the technical part of ABC80, Lars Karlsson, started
 in 1971 his company Dataindustrier AB (approximately translated as
 "Computer Industries ltd.").[^diab] The core products was for a long
 time based on the bus "Data Board 4680". The numbers in the name came
@@ -166,21 +166,24 @@ It took some years but in 1975 eventually Dataindustrier AB
 together with Innovation Tomas Nilsson AB, formed a new
 company, a joint-venture, Data Future AB for the sole
 purpose of selling Seven-S. It was promising at first, they
-aquired some needed capital, they won a reputable prize for
+acquired some needed capital, they won a reputable prize for
 innovation, and also a larger customer (Kommundata) was ready
 for 500 terminals, or even more in the future.
 
 Hardware isn't mentioned much from what can be found in sources,
 but was build around the Z80, with 16k byte of dynamic RAM,
-initially at least. From the picture displayed above, the caption
-says that the configuration here is a Zilog Z80 processor,
+initially at least from the outset according to a newspaper
+article. From the picture displayed above, the caption says
+that the configuration here is a Zilog Z80 processor,
 it has a 15" screen (25x18 characters), and 64k of RAM. 
-It was manufactured by Stansaab, which later
-fusioned with Datasaab.
+It was manufactured by Stansaab starting 1977, which later
+fusioned with Datasaab. Production was slow, as they had
+problems with the mechanics.
 
 Then something happend. The control of the sole customer and
 the product was transferred to Datasaab.[^datasaab] Datasaab
-cancelled the project in 1979, and that was the end of that.
+cancelled the project in 1978/1979, and that was the end of that.
+A total of hundred Seeven-S were produced.
 
 Ignoring interesting futher politics here involving larger
 companies and competition, the ideas and solutions from Seven-S
