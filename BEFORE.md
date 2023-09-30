@@ -87,7 +87,8 @@ call it. Hard to overturn.
 
 ![Datapoint patent](assets/images/cw20dec1972.jpeg)
 
-Advertisment from *Computerworld*, December 1972, p.12.
+Advertisment from Datapoint (recently renamed from CTC)
+in *Computerworld*, December 1972, p.12.
 
 
 [^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
