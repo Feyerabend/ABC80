@@ -117,7 +117,7 @@ and https://en.wikipedia.org/wiki/Datapoint
 
 ![Seven-S](assets/images/sevens.jpeg)
 
-Image from Peter Häll - https://digitaltmuseum.se/021026362412/dator,
+Seven-S. Image from Peter Häll - https://digitaltmuseum.se/021026362412/dator,
 CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 
 ## Seven-S
