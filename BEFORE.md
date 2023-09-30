@@ -36,7 +36,7 @@ the technological reason mentioned above. But it not even might be
 [^qwerty]: https://en.wikipedia.org/wiki/QWERTY
 
 
-## Datapoint 2200
+
 
 ![Datapoint patent](assets/images/datapoint-2200.jpeg)
 
@@ -46,6 +46,8 @@ Image from patent: https://patents.google.com/patent/USD224415S/en.
 [^patent]: Seems to show Datapoint 1100 which had one cassette interface,
 rather than two as in Datapoint 2200, as only one lid on the top is visible.
 
+
+## Datapoint 2200
 
 In 1970 Computer Terminal Corporation (CTC) annonced the terminal/computer
 *Datapoint 2200*.[^datapoint] Later, in 1971, the company shipped the
@@ -112,12 +114,13 @@ and https://en.wikipedia.org/wiki/Datapoint
 
 
 
-## Seven-S
 
 ![Seven-S](assets/images/sevens.jpeg)
 
 Image from Peter Häll - https://digitaltmuseum.se/021026362412/dator,
 CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
+
+## Seven-S
 
 The man behind the technological part of ABC80, Lars Karlsson, started
 in 1971 his company Dataindustrier AB (approximately translated as
