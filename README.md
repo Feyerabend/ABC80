@@ -254,6 +254,7 @@ with its roots in industry, and
 [Luxor AB](https://en.wikipedia.org/wiki/Luxor_AB)
 which made radios and television sets. There were retailers that
 was also behind the large, but restricted to national and local, success.
+Read about some of the [background](BEFORE.md) of ABC80.
 
 In mid and late 80s DIAB had moved on, betting on Unix, focusing its own crafted
 [DNIX](https://en.wikipedia.org/wiki/DNIX), and had other machines
