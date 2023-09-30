@@ -178,5 +178,5 @@ controller system are mentioned.
 
 * A short history on Datapoint 2200: https://www.old-computers.com/museum/computer.asp?c=596
 * More on Datapoint 2200: https://web.archive.org/web/20080819031221/http://www.computerworld.com/action/article.do?command=printArticleBasic&articleId=9111341
-
+* An archive of information about Seven-S: https://www.df.lth.se/~triad/diab/archive/Seven%20S/
 
