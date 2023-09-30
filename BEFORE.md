@@ -173,7 +173,7 @@ for 500 terminals, or even more in the future.
 Hardware isn't mentioned much from what can be found in sources,
 but was build around the Z80, with 16k byte of dynamic RAM,
 initially at least from the outset according to a newspaper
-article. From the picture displayed above, the caption says
+article.[^di] From the picture displayed above, the caption says
 that the configuration here is a Zilog Z80 processor,
 it has a 15" screen (25x18 characters), and 64k of RAM. 
 The Seven-S was manufactured by Stansaab starting 1977, which later
@@ -194,7 +194,8 @@ previous experience of its predecessor Seven-S.
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
 [^diabsv]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
-[^triad]: See https://www.df.lth.se/~triad/diab/archive/Seven%20S/1974%20SevenS%20konceptstudie.pdf (probably archived by Linus Walleij).
+[^triad]: See https://www.df.lth.se/~triad/diab/archive/Seven%20S/1974%20SevenS%20konceptstudie.pdf (archived by Linus Walleij).
+[^di]: *Dagens Industri*, 14 Feb. 1978 (?)
 [^datasaab]: https://en.wikipedia.org/wiki/Datasaab
 
 
