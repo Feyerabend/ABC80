@@ -158,7 +158,6 @@ remote batching, stock-keeping, inventory, personnel, salaries,
 etc. suitable for then current office needs. A remark
 is also that smaller companies could use this computer, as
 well as larger (through the terminal function).
-
 Also other applications are possible, programmable calculator
 systems, process control, and industrial programmable
 controller system are mentioned.
@@ -173,7 +172,7 @@ for 500 terminals, or even more in the future.
 
 Hardware isn't mentioned much from what can be found in sources,
 but was build around the Z80, with 16k byte of dynamic RAM,
-initially. From the picture displayed above, the caption
+initially at least. From the picture displayed above, the caption
 says that the configuration here is a Zilog Z80 processor,
 it has a 15" screen (25x18 characters), and 64k of RAM. 
 It was manufactured by Stansaab, which later
