@@ -161,7 +161,7 @@ well as larger (through the terminal function).
 Also other applications are possible, programmable calculator
 systems, process control, and industrial programmable
 controller system are mentioned. In total this made up the
-seven points, the seven application areas, to which Seven-S
+seven bullet points, the seven application areas, to which Seven-S
 was intended, hence its name.
 
 In 1975 eventually Dataindustrier AB together with Innovation
