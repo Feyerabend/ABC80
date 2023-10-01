@@ -32,4 +32,5 @@ The rest is, as you say, history.
 * https://computerhistory.org/blog/microsoft-ms-dos-early-source-code/
 * Interesting story told on the complexity behind Gary Kildall, Bill Gates, and the IBM stories separated in three parts: https://www.youtube.com/watch?v=59D1L7xj8eM&ab_channel=Al%27sGeekLab
 
+![ABC80](assets/images/Timeline_0878_ABC80_1.jpg)
 
