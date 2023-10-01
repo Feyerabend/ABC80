@@ -114,8 +114,8 @@ Micral: https://en.wikipedia.org/wiki/Micral in 1973.
 The Swedes (of course) also claimed to be first:
 https://dflund.se/~triad/diab/archive/Tidningsartiklar/1986%20Datornytt%2010%20om%20Transdata.jpg.
 For our story here, the interesting part is that Lars Karlsson used the 8008 in a computer
-intended for education: Transdata. It was introduced at a computer fair, where I grew up,
-Älvsjömässan in 1972.
+intended for education: Transdata. It was introduced at a computer fair, one kilometer from
+where I grew up, Älvsjömässan in 1972.
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
 [^intel]: https://en.wikipedia.org/wiki/Intel
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
