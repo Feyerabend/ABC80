@@ -82,16 +82,16 @@ with speed in the first of designs.
 
 The Datapoint 2200 was very popular, and had a relatively long life.
 It also changed its internals over time, where the driving CPU in TTL
-was soon replaced by only one chip. On the other hand it could only
+was eventually replaced by only one chip. On the other hand it could only
 reach a limited set of customers, as it was leased and not sold at
 the start, exactly as IBM's products were at the time from which the
 marketing model was copied.
 
 A renewed interest in the 1201 design came up as Seiko found interest
-for a scientific calculator. An improved design turned into
-Intel 8008, a microprocessor that could claim to have started
-the microprocessor/ microcomputer revolution. But also the lineage to its
-processors for ordinary PCs of today in x86.[^xintel]
+for a scientific calculator. An improved design turned into Intel 8008,
+a microprocessor that could claim to have started the microprocessor/
+microcomputer revolution. But also the lineage to its processors for
+ordinary PCs of today in x86.[^xintel]
 *This is one of the strains from the stream.* The fact that the core of
 instruction set, or the use of little endian kept making progress for
 decades to come, was the demarkation of a strong hold. A physical habit,
@@ -150,7 +150,7 @@ like IBM, Honeywell-Bull, CDC etc.
 
 Maybe a bit ironic is the cirumstance that DIAB (as the company
 later was called), was bought in 1991 by Bull, later in 1994
-denationalized.
+denationalized.[^bull]
 
 The functions of the computer is described such as it could
 be used for word processing, data collection, as a terminal,
@@ -160,15 +160,17 @@ is also that smaller companies could use this computer, as
 well as larger (through the terminal function).
 Also other applications are possible, programmable calculator
 systems, process control, and industrial programmable
-controller system are mentioned.
+controller system are mentioned. In total this made up the
+seven points, the seven application areas, to which Seven-S
+was intended, hence its name.
 
-It took some years but in 1975 eventually Dataindustrier AB
-together with Innovation Tomas Nilsson AB, formed a new
-company, a joint-venture, Data Future AB for the sole
-purpose of selling Seven-S. It was promising at first, they
-acquired some needed capital, they won a reputable prize for
-innovation, and also a larger customer (Kommundata) was ready
-for 500 terminals, or even more in the future.
+In 1975 eventually Dataindustrier AB together with Innovation
+Tomas Nilsson AB, formed a new company, a joint-venture, Data
+Future AB for the sole purpose of selling Seven-S. It was
+promising at first, they acquired some needed investment capital
+from the state, they won a reputable prize for innovation, and
+also a larger customer (Kommundata) was ready for 500 terminals,
+or even more in the future.
 
 Hardware isn't mentioned much from what can be found in sources,
 but was build around the Z80, with 16k byte of dynamic RAM,
@@ -195,6 +197,7 @@ previous experience of its predecessor Seven-S.
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
 [^diabsv]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 [^triad]: See https://www.df.lth.se/~triad/diab/archive/Seven%20S/1974%20SevenS%20konceptstudie.pdf (archived by Linus Walleij).
+[^bull]: https://en.wikipedia.org/wiki/Groupe_Bull
 [^di]: *Dagens Industri*, 14 Feb. 1978 (?)
 [^datasaab]: https://en.wikipedia.org/wiki/Datasaab
 
