@@ -57,7 +57,7 @@ relied on *replacing* the interface to the computer from teletype, papertape
 and the like, the new Datapoint 2200 introduced more of a proper *computer*
 inside the case, besides being a terminal emulating Model 33. This was
 innovation. Therefore there are some claims as it was the start of the
-computer that was personal, or private to the operator, i.e. a "PC".
+computer that was personal, or private to the operator, i.e. a "PC".[^disc]
 
 There was several periferals that could be connected such as removable
 cartridge hard disk drive, modems, priters, serial and parallel interface,
@@ -106,6 +106,10 @@ in *Computerworld*, December 1972, p.12.
 [^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
 and https://en.wikipedia.org/wiki/Datapoint
 [^teletype]: https://en.wikipedia.org/wiki/Teleprinter
+[^disc]: There is often, to my mind, a futile debate on who came first
+(of anything). Depending on what criteria you use, different computers
+come to mind. One compeditor here should probably be Kenbak-1:
+https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971.
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
 [^intel]: https://en.wikipedia.org/wiki/Intel
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
@@ -126,7 +130,8 @@ The man behind the technical part of ABC80, Lars Karlsson, started
 in 1971 his company Dataindustrier AB (approximately translated as
 "Computer Industries ltd.").[^diab] The core products was for a long
 time based on the bus "Data Board 4680". The numbers in the name came
-from the intended support of Intel 4004, Motorola 6800 and Zilog Z80.
+from the intended support of Intel 4004, Motorola 6800 (later also
+MOS 6502) and Intel 8080 (late also Zilog Z80).
 Besides a versatile board computer driving the bus, cards could be
 added in the style of the S-100 bus to build custom computers
 suitable for the intended audience of industrial applications.
