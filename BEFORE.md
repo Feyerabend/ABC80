@@ -109,7 +109,13 @@ and https://en.wikipedia.org/wiki/Datapoint
 [^disc]: There is often, to my mind, a futile debate on who came first
 (of anything). Depending on what criteria you use, different computers
 come to mind. One compeditor here should probably be Kenbak-1:
-https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971.
+https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971. The French have their
+Micral: https://en.wikipedia.org/wiki/Micral in 1973.
+The Swedes (of course) also claimed to be first:
+https://dflund.se/~triad/diab/archive/Tidningsartiklar/1986%20Datornytt%2010%20om%20Transdata.jpg.
+For our story here, the interesting part is that Lars Karlsson used the 8008 in a computer
+intended for education: Transdata. It was introduced at a computer fair, where I grew up,
+Älvsjömässan in 1972.
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
 [^intel]: https://en.wikipedia.org/wiki/Intel
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
@@ -211,5 +217,5 @@ previous experience of its predecessor Seven-S.
 
 * A short history on Datapoint 2200: https://www.old-computers.com/museum/computer.asp?c=596
 * More on Datapoint 2200: https://web.archive.org/web/20080819031221/http://www.computerworld.com/action/article.do?command=printArticleBasic&articleId=9111341
-* An archive about Seven-S: https://www.df.lth.se/~triad/diab/archive/Seven%20S/
-
+* An archive about Seven-S: https://www.df.lth.se/~triad/diab/archive/Seven%20S/, or
+https://dflund.se/~triad/diab/archive/Seven%20S/
