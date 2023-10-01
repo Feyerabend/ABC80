@@ -1,4 +1,5 @@
 ![ABC80](assets/images/mikrodatorn-81-framsida.jpeg)
+
 Mikrodatorn nr 1, 1981, front page: Lars Karlsson
 
 # A TALE FROM THE PAST
