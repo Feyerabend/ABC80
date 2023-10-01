@@ -174,12 +174,12 @@ or even more in the future.
 
 Hardware isn't mentioned much from what can be found in sources,
 but was build around the Z80, with 16k byte of dynamic RAM,
-initially at least from the outset according to a newspaper
-article.[^di] From the picture displayed above, the caption says
+initially at least from the outset according to an article.[^di]
+From the picture displayed above, the caption says
 that the configuration here is a Zilog Z80 processor,
 it has a 15" screen (25x18 characters), and 64k of RAM. 
 The Seven-S was manufactured by Stansaab starting 1977, which later
-fusioned with Datasaab. Production was slow.
+fusioned with Datasaab. Production was relatively slow.
 
 Then something happend. The control of the sole customer and
 the product was transferred to Datasaab.[^datasaab] Datasaab
