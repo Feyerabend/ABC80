@@ -113,9 +113,9 @@ https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971. The French have their
 Micral: https://en.wikipedia.org/wiki/Micral in 1973.
 The Swedes (of course) also claimed to be first:
 https://dflund.se/~triad/diab/archive/Tidningsartiklar/1986%20Datornytt%2010%20om%20Transdata.jpg.
-For our story here, the interesting part is that Lars Karlsson used the 8008 in a computer
-intended for education: Transdata. It was introduced at a computer fair, one kilometer from
-where I grew up, Älvsjömässan in 1972.
+For our story here, the interesting part is that Lars Karlsson (together with others) used the
+Intel 8008 in a computer intended for education: Transdata. It was introduced at a computer fair,
+one kilometer from where I grew up, Älvsjömässan in 1972.
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
 [^intel]: https://en.wikipedia.org/wiki/Intel
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
