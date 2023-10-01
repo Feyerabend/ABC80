@@ -81,11 +81,11 @@ reduce costs as well as the heat issues, even though it were some issues
 with speed in the first of designs.
 
 The Datapoint 2200 was very popular, and had a relatively long life.
-It also changed its internals over time, where the driving CPU in TTL
-was eventually replaced by only one chip. On the other hand it could only
-reach a limited set of customers, as it was leased and not sold at
-the start, exactly as IBM's products were at the time from which the
-marketing model was copied.
+It also changed its internals over time, improving e.g. memory from
+serial shift register to RAM, or adding a hard drive.
+On the other hand it could only reach a limited set of customers,
+as it was leased and not sold at the start, exactly as IBM's products
+were at the time from which the marketing model was copied.
 
 A renewed interest in the 1201 design came up as Seiko found interest
 for a scientific calculator. An improved design turned into Intel 8008,
