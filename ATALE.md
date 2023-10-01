@@ -14,6 +14,7 @@ On top of this OS, Bill Gates eventually built an empire of Microsoft’s licens
 
 The rest is, as you say, history.
 
+
 ## References
 
 * https://en.wikipedia.org/wiki/ABC_80
@@ -32,4 +33,3 @@ The rest is, as you say, history.
 * Interesting story told on the complexity behind Gary Kildall, Bill Gates, and the IBM stories separated in three parts: https://www.youtube.com/watch?v=59D1L7xj8eM&ab_channel=Al%27sGeekLab
 
 
-![ABC80](assets/images/Timeline_0878_ABC80_1.jpg)
