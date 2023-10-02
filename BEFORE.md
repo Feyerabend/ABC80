@@ -80,22 +80,21 @@ than a decade later on. A CPU (or part of a CPU) on a chip would however
 reduce costs as well as the heat issues, even though it were some issues
 with speed in the first of designs.
 
-The Datapoint 2200 was very popular, and had a relatively long life.
-It also changed its internals over time, improving e.g. memory from
-serial shift register to RAM, or adding a hard drive.
-On the other hand it could only reach a limited set of customers,
-as it was leased and not sold at the start, exactly as IBM's products
-were at the time from which the marketing model was copied.
+The Datapoint 2200 was very popular, and had a relatively long life. It also
+changed its internals over time, improving e.g. memory from serial shift
+register to RAM, or adding a hard drive. On the other hand it could only
+reach a limited set of customers, as it was leased and not sold at the start,
+exactly as IBM's products were at the time from which the marketing model was
+copied.
 
-A renewed interest in the 1201 design came up as Seiko found interest
-for a scientific calculator. An improved design turned into Intel 8008,
-a microprocessor that could claim to have started the microprocessor/
-microcomputer revolution. But also the lineage to its processors for
-ordinary PCs of today in 'x86'.[^xintel]
-*This is one of the strains from the stream.* The fact that the core of
-instruction set, or the use of little endian kept making progress for
-decades to come, was the demarkation of a strong hold. A physical habit,
-one might call it. Hard to overturn.
+A renewed interest in the 1201 design came up as Seiko found interest for a
+scientific calculator. An improved design turned into Intel 8008, a
+microprocessor that could claim to have started the microprocessor/
+microcomputer revolution. But also the lineage to its processors for ordinary
+PCs of today in 'x86'.[^xintel] *This is one of the strains from the stream.*
+The fact that the core of instruction set, or the use of little endian kept
+making progress for decades to come, was the demarkation of a strong hold.
+A physical habit, one might call it. Hard to overturn.
 
 ![Datapoint patent](assets/images/cw20dec1972.jpeg)
 
@@ -134,19 +133,17 @@ CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 
 ## Seven-S
 
-The man behind the technical part of ABC80, Lars Karlsson, started
-in 1971 his company Dataindustrier AB (approximately translated as
-"Computer Industries ltd.").[^diab] The core products was for a long
-time based on the bus "Data Board 4680". The numbers in the name came
-from the intended support of Intel 4004, Motorola 6800 (later also
-MOS 6502) and Intel 8080 (later also Zilog Z80).
-Besides a versatile board computer driving the bus, cards could be
-added in the style of the S-100 bus to build custom computers
+The man behind the technical part of ABC80, Lars Karlsson, started in 1971 his
+company Dataindustrier AB (approximately translated as "Computer Industries
+ltd.").[^diab] The core products was for a long time based on the bus "Data Board
+4680". The numbers in the name came from the intended support of Intel 4004,
+Motorola 6800 (later also MOS 6502) and Intel 8080 (later also Zilog Z80).
+Besides a versatile board computer driving this bus (4/8 bit processors), cards
+could be added in the style of the S-100 bus to build custom computers
 suitable for the intended audience of industrial applications.
 
-In 1974 a memorandum describes ideas for a new computer, the
-"Seven-S". At the end of the memorandum, the main competition
-is mentioned:[^triad]
+In 1974 a memorandum describes ideas for a new computer, the "Seven-S". At the 
+end of the memorandum, the main competition is mentioned:[^triad]
 
 > The main competitor is Datapoint 2200 made by Computer Terminal
 Corporation, USA. This unit has been on the market for about four
@@ -161,50 +158,39 @@ markets inside and outside of Sweden.
 > Seven-S will be the new weapon to fight the computer giants
 like IBM, Honeywell-Bull, CDC etc.
 
-Maybe a bit ironic is the cirumstance that DIAB Data AB (as the
-company later was called), was bought in 1991 by Bull, later i
-1994 denationalized in France.[^bull]
+Maybe a bit ironic is the cirumstance that DIAB Data AB (as the company later was
+called), was bought in 1991 by Bull, later i 1994 denationalized in France.[^bull]
 
-The functions of the computer is described such as it could
-be used for word processing, data collection, as a terminal,
-remote batching, stock-keeping, inventory, personnel, salaries,
-etc. suitable for then current office needs. A remark
-is also that smaller companies could use this computer, as
-well as larger (through the terminal function).
-Also other applications are possible, programmable calculator
-systems, process control, and industrial programmable
-controller system are mentioned. In total this made up the
-seven bullet points, the seven application areas, to which Seven-S
-was intended, hence its name.
+The functions of the computer is described such as it could be used for word
+processing, data collection, as a terminal, remote batching, stock-keeping,
+inventory, personnel, salaries, etc. suitable for then current office needs.
+A remark is also that smaller companies could use this computer, as well a
+larger (through the terminal function). Also other applications are possible,
+programmable calculator systems, process control, and industrial programmable
+controller system are mentioned. In total this made up the seven bullet points,
+the seven application areas, to which Seven-S was intended, hence its name.
 
-In 1975 eventually Dataindustrier AB together with Innovation
-Tomas Nilsson AB, formed a new company, a joint-venture, Data
-Future AB for the sole purpose of selling Seven-S. It was
-promising at first, they acquired some needed investment capital
-from the state, they won a reputable prize for innovation, and
-also a larger customer (Kommundata) was ready for 500 terminals,
-or even more in the future.
+In 1975 eventually Dataindustrier AB together with Innovation Tomas Nilsson AB,
+formed a new company, a joint-venture, Data Future AB for the sole purpose of
+selling Seven-S. It was promising at first, they acquired some needed investment
+capital from the state, they won a reputable prize for innovation, and also a
+larger customer (Kommundata) was ready for 500 terminals, or even more in the future.
 
-Hardware isn't mentioned much from what can be found in sources,
-but was build around the Z80, with 16k byte of dynamic RAM,
-initially at least from the outset according to an article.[^di]
-From the picture displayed above, the caption says
-that the configuration here is a Zilog Z80 processor,
-it has a 15" screen (25x18 characters), and 64k of RAM. 
-The Seven-S was manufactured by Stansaab starting 1977, which later
+Hardware isn't mentioned much from what can be found in sources, but was build around
+the Z80, with 16k byte of dynamic RAM, initially at least from the outset according
+to an article.[^di] From the picture displayed above, the caption says that the
+configuration here is a Zilog Z80 processor, it has a 15" screen (25x18 characters),
+and 64k of RAM. The Seven-S was manufactured by Stansaab starting 1977, which later
 fusioned with Datasaab. Production was relatively slow.
 
-Then something happend. The control of the sole customer and
-the product was transferred to Datasaab.[^datasaab] Datasaab
-cancelled the project in 1978/1979, and that was the end of that.
-A total of hundred Seven-S were produced.
+Then something happend. The control of the sole customer and the product was transferred
+to Datasaab.[^datasaab] Datasaab cancelled the project in 1978/1979, and that was the
+end of that. A total of hundred Seven-S were produced.
 
-Ignoring interesting futher politics here involving larger
-companies and competition, the ideas and solutions from Seven-S
-was brought in to the project of ABC80. The pace in which
-the project of ABC80 proceeded could only come through the
-previous experience of its predecessor Seven-S.
-*A small strain survived.*
+Ignoring interesting futher politics here involving larger companies and competition,
+the ideas and solutions from Seven-S was brought in to the project of ABC80. The pace
+in which the project of ABC80 proceeded could only come through the previous experience
+of its predecessor Seven-S. *A small strain survived.*
 
 
 [^diab]: https://en.wikipedia.org/wiki/Dataindustrier_AB
