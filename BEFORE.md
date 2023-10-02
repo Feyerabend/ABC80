@@ -91,7 +91,7 @@ A renewed interest in the 1201 design came up as Seiko found interest
 for a scientific calculator. An improved design turned into Intel 8008,
 a microprocessor that could claim to have started the microprocessor/
 microcomputer revolution. But also the lineage to its processors for
-ordinary PCs of today in x86.[^xintel]
+ordinary PCs of today in 'x86'.[^xintel]
 *This is one of the strains from the stream.* The fact that the core of
 instruction set, or the use of little endian kept making progress for
 decades to come, was the demarkation of a strong hold. A physical habit,
@@ -109,13 +109,15 @@ and https://en.wikipedia.org/wiki/Datapoint
 [^disc]: There is often, to my mind, a futile debate on who came first
 (of anything). Depending on what criteria you use, different computers
 come to mind. One compeditor here should probably be Kenbak-1:
-https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971. The French have their
-Micral: https://en.wikipedia.org/wiki/Micral in 1973.
+https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971. The French have
+their Micral: https://en.wikipedia.org/wiki/Micral in 1973.
 The Swedes (of course) also claimed to be first:
 https://dflund.se/~triad/diab/archive/Tidningsartiklar/1986%20Datornytt%2010%20om%20Transdata.jpg.
-For our story here, the interesting part is that Lars Karlsson (together with others) used the
-Intel 8008 in a computer intended for education: Transdata. It was introduced at a computer fair,
-one kilometer from where I grew up, Älvsjömässan in 1972.
+For our story here, the interesting part is that Lars Karlsson (together
+with others) used the Intel 8008 in a computer intended for education
+in e.g. programming: Transdata. It thus had a *microprocessor* and
+could mark the start of the *microcomputer*. It was introduced at a
+computer fair, one kilometer from where I grew up, Älvsjömässan in 1972.
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
 [^intel]: https://en.wikipedia.org/wiki/Intel
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
