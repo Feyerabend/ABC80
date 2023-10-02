@@ -137,7 +137,7 @@ in 1971 his company Dataindustrier AB (approximately translated as
 "Computer Industries ltd.").[^diab] The core products was for a long
 time based on the bus "Data Board 4680". The numbers in the name came
 from the intended support of Intel 4004, Motorola 6800 (later also
-MOS 6502) and Intel 8080 (late also Zilog Z80).
+MOS 6502) and Intel 8080 (later also Zilog Z80).
 Besides a versatile board computer driving the bus, cards could be
 added in the style of the S-100 bus to build custom computers
 suitable for the intended audience of industrial applications.
