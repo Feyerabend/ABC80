@@ -118,7 +118,7 @@ in e.g. programming: Transdata 7261. It thus had a *microprocessor* and
 could mark the start of the *microcomputer*. It was introduced at a
 computer fair, one kilometer from where I grew up, Älvsjömässan in 1972.
 Besides the Transdata in 1972, there was a Univac 1972 and a Q1.
-All of them had the 8008. All of the born in 1972, including the
+All of them had the 8008. All of them were born in 1972, including the
 processor. The Q1 can be seen in the video: https://www.youtube.com/watch?v=dB3V_Q9wQ-M&t=6s.
 The Univac 1982 can be seen at: https://www.youtube.com/watch?v=9KojS1ezQIY.
 And the Transdata have no video, but some presentation at:
