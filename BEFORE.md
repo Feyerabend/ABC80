@@ -114,9 +114,18 @@ The Swedes (of course) also claimed to be first:
 https://dflund.se/~triad/diab/archive/Tidningsartiklar/1986%20Datornytt%2010%20om%20Transdata.jpg.
 For our story here, the interesting part is that Lars Karlsson (together
 with others) used the Intel 8008 in a computer intended for education
-in e.g. programming: Transdata. It thus had a *microprocessor* and
+in e.g. programming: Transdata 7261. It thus had a *microprocessor* and
 could mark the start of the *microcomputer*. It was introduced at a
 computer fair, one kilometer from where I grew up, Älvsjömässan in 1972.
+
+Besides the Transdata in 1972, there was a Univac 1972 and a Q1.
+All of them had the 8008. All of the born in 1972, including the
+processor. The Q1 can be seen in the video: https://www.youtube.com/watch?v=dB3V_Q9wQ-M&t=6s.
+The Univac 1982 can be seen at: https://www.youtube.com/watch?v=9KojS1ezQIY.
+And the Transdata have no video, but some presentation at:
+https://sv.wikipedia.org/wiki/Dataindustrier_AB (in Swedish), and
+e.g. https://dflund.se/~triad/diab/archive/Transdata/Transintro%20Transdata%207260.jpg
+(also in Swedish).
 [^terminal]: https://en.wikipedia.org/wiki/Computer_terminal
 [^intel]: https://en.wikipedia.org/wiki/Intel
 [^datap]: https://en.wikipedia.org/wiki/Datapoint
