@@ -34,7 +34,7 @@ the technological reason (overlapping typebars) mentioned above.
 But it not even might be *the* cause, if such a thing actually exists.
 Other concerns might have been sale prices, availability of sources or
 ready made items, unfortunate or fortunate events, unforseen events,
-etc. etc. But context may clarify circumstance.
+etc. etc. But *context* may clarify *circumstance*.
 
 [^qwerty]: https://en.wikipedia.org/wiki/QWERTY
 
