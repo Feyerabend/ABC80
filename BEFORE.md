@@ -30,8 +30,11 @@ landscape).
 
 We can thus speculate in the historical success of "qwerty" as the result
 of a lot of 'things' influencing its path. One of these influences can be
-the technological reason mentioned above. But it not even might be
-*the* cause, if such a thing actually exists.
+the technological reason (overlapping typebars) mentioned above.
+But it not even might be *the* cause, if such a thing actually exists.
+Other concerns might have been sale prices, availability of sources or
+ready made items, unfortunate or fortunate events, unforseen events,
+etc. etc. But context may clarify circumstance.
 
 [^qwerty]: https://en.wikipedia.org/wiki/QWERTY
 
