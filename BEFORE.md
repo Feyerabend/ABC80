@@ -167,7 +167,7 @@ markets inside and outside of Sweden.
 like IBM, Honeywell-Bull, CDC etc.
 
 Maybe a bit ironic is the cirumstance that DIAB Data AB (as the company later was
-called), was bought in 1991 by Bull, later i 1994 denationalized in France.[^bull]
+called), was bought in 1991 by Bull, later in 1994 denationalized in France.[^bull]
 
 The functions of the computer is described such as it could be used for word
 processing, data collection, as a terminal, remote batching, stock-keeping,
