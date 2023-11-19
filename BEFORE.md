@@ -108,7 +108,7 @@ in *Computerworld*, December 1972, p.12.
 [^datapoint]: https://en.wikipedia.org/wiki/Datapoint_2200
 and https://en.wikipedia.org/wiki/Datapoint
 [^teletype]: https://en.wikipedia.org/wiki/Teleprinter
-[^disc]: There is often, to my mind, a futile debate on who came first
+[^disc]: There is often, to my mind, a futile debate on *who came first*
 (of anything). Depending on what criteria you use, different computers
 come to mind. One compeditor here should probably be Kenbak-1:
 https://en.wikipedia.org/wiki/Kenbak-1 sold in 1971. The French have
@@ -120,7 +120,7 @@ with others) used the Intel 8008 in a computer intended for education
 in e.g. programming: Transdata 7261. It thus had a *microprocessor* and
 could mark the start of the *microcomputer*. It was introduced at a
 computer fair, one kilometer from where I grew up, Älvsjömässan in 1972.
-Besides the Transdata in 1972, there was a Univac 1972 and a Q1.
+Besides the Transdata in 1972, there was a Univac 1972 and a Q1 from Belgium.
 All of them had the 8008. All of them were born in 1972, including the
 processor. The Q1 can be seen in the video: https://www.youtube.com/watch?v=dB3V_Q9wQ-M&t=6s.
 The Univac 1982 can be seen at: https://www.youtube.com/watch?v=9KojS1ezQIY.
