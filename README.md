@@ -12,6 +12,8 @@ AIR-FIGHT has never been published until now,
 partly because of potential copyright infringement at the time. It has also only
 been used on one occasion.
 
+![AIRFIGHT](assets/images/print.jpeg)
+
 There may be spelling mistakes in the code, as it has not been run. The program
 is being published here as a remembrance of *U. Kristian Lidberg*, who disappeared
 without a trace in the mid-80s and never returned.
