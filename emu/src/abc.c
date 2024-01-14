@@ -43,7 +43,7 @@ uint16_t rowstart[] = {
     0x7F50, // 22
     0x7FD0  // 23
 };
-
+// or .. pos <- 31744 + y * 128 - y / 8 * 984 + x 
 
 u8 kbhit() {
     int character = getch();
