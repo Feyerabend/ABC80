@@ -30,7 +30,8 @@ The rest is, as you say, history.
 * http://www.pc-museum.com
 * [ABC80 historik](./assets/pdf/ABC80-historik.pdf)
 * https://computerhistory.org/blog/microsoft-ms-dos-early-source-code/
-* Interesting story told on the complexity behind Gary Kildall, Bill Gates, and the IBM stories separated in three parts: https://www.youtube.com/watch?v=59D1L7xj8eM&ab_channel=Al%27sGeekLab
+* Interesting story told on the complexity behind Gary Kildall, Bill Gates, and the IBM stories separated in three parts: https://www.youtube.com/watch?v=59D1L7xj8eM&ab_channel=Al%27sGeekLab. Also a different perspective than retold here, in: https://en.wikipedia.org/wiki/Gary_Kildall. Actually the
+history around how and why IBM selected Microsoft and PC-DOS/MS-DOS seems to be held in such a cloud that it might never be cleared.
 
 ![ABC80](assets/images/Timeline_0878_ABC80_1.jpg)
 
