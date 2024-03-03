@@ -92,7 +92,7 @@ copied.
 
 A renewed interest in the 1201 design came up as Seiko found interest for a
 scientific calculator. An improved design turned into Intel 8008, a
-microprocessor that could claim to have started the microprocessor/
+microprocessor that could arguably claim to have started the microprocessor/
 microcomputer revolution. But also the lineage to its processors for ordinary
 PCs of today in 'x86'.[^xintel] *This is one of the strains from the stream.*
 The fact that the core of instruction set, or the use of little endian kept
@@ -145,7 +145,7 @@ CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=80713670
 ## Seven-S
 
 The man behind the technical part of ABC80, Lars Karlsson, started in 1971 his
-company Dataindustrier AB (approximately translated as "Computer Industries
+company 'Dataindustrier AB' (approximately translated as "Computer Industries
 ltd.").[^diab] The core products was for a long time based on the bus "Data Board
 4680". The numbers in the name came from the intended support of Intel 4004,
 Motorola 6800 (later also MOS 6502) and Intel 8080 (later also Zilog Z80).
