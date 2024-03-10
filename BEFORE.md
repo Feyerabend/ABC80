@@ -150,8 +150,8 @@ ltd.").[^diab] The core products was for a long time based on the bus "Data Boar
 4680". The numbers in the name came from the intended support of Intel 4004,
 Motorola 6800 (later also MOS 6502) and Intel 8080 (later also Zilog Z80).
 Besides a versatile board computer driving this bus (4/8 bit processors), cards
-could be added in the style of the S-100 bus to build custom computers
-suitable for the intended audience of industrial applications.
+could be added in the style of the later popular S-100 bus[^bus] to build custom
+computers suitable for the intended audience of industrial applications.
 
 In 1974 a memorandum describes ideas for a new computer, the "Seven-S". At the 
 end of the memorandum, the main competition is mentioned:[^triad]
@@ -210,7 +210,7 @@ of its predecessor Seven-S. *A small strain survived.*
 [^bull]: https://en.wikipedia.org/wiki/Groupe_Bull
 [^di]: *Dagens Industri*, 14 Feb. 1978 (?)
 [^datasaab]: https://en.wikipedia.org/wiki/Datasaab
-
+[^bus]: Or e.g. previous more accutrate influencial DEC UNIBUS (https://en.wikipedia.org/wiki/Unibus).
 
 
 ## References
