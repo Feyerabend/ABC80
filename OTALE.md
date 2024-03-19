@@ -27,7 +27,9 @@ Many years later Allan, together with Mikael Widenius and David Axmark, started 
 
 MySQL is probably one of the most well known small databases, well spread and is one part in ’LAMP’, where Linux, PHP and Apache are the other components.
 
-![Allan Larsson 1984, Mikrodatorn](assets/images/1984-allan-larsson.png)
+![Allan Larsson, Mikrodatorn 1984](assets/images/1984-allan-larsson.png)
+
+Photo from computer fair, *Mikrodatorn 1984*. Allan showing 'NetBAS' on a ABC800? 
 
 ## References
 
