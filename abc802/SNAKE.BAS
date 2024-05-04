@@ -73,7 +73,7 @@
 1720   T1=Tail-1
 1730   Tr=R(T1) : Tc=C(T1)
 1740   FOR I=Tail TO 1 STEP -1
-1750     R(I)=R(I-1) : C(I)=C(C-1)
+1750     R(I)=R(I-1) : C(I)=C(I-1)
 1760   NEXT I
 1770   R(0)=Tr : C(0)=Tc
 1780 RETURN 0
