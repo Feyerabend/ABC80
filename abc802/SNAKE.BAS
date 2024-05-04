@@ -1,9 +1,9 @@
 1000 EXTEND : RANDOMIZE : INTEGER
 1010 ! init of game for ABC802
-1020 T=FNGinit
-1030 Cu1=1
-1040 Fx=0 : Fy=0
-1050 T=FNGfood
+1020 !
+1030 T=FNGinit
+1040 Cu1=1
+1050 Fx=0 : Fy=0
 1060 Mx=79 : My=71
 1070 Smin=5
 1080 Tail=Smin
@@ -14,7 +14,7 @@
 1130 C(0)=T : C(1)=T : C(2)=T : C(3)=T : C(5)=T
 1140 R1=R(Tail-1) : C1=C(Tail-1)
 1150 Score=0
-1160 !
+1160 T=FNGfood
 1170 !
 1180 ! game loop
 1190 !
