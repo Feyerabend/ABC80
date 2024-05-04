@@ -14,7 +14,7 @@
 1130 C(0)=T : C(1)=T : C(2)=T : C(3)=T : C(5)=T
 1140 R1=R(Tail-1) : C1=C(Tail-1)
 1150 Score=0
-1160 T=FNGfood
+1160 !
 1170 !
 1180 ! game loop
 1190 !
