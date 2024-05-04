@@ -2,7 +2,7 @@
 1010 ! init of game for ABC802
 1020 T=FNGinit
 1030 Cu1=1
-1040 Fx=0 Fy=0
+1040 Fx=0 : Fy=0
 1050 T=FNGfood
 1060 Mx=79 : My=71
 1070 Smin=5
@@ -32,7 +32,7 @@
 1310 ! function routines
 1320 !
 1330 ! keys
-1340 DEF FNGkey LOCAL K, Cu
+1340 DEF FNGkey LOCAL K,Cu
 1350   K=ABS(SYS(8)*INP(34))
 1360   IF 97=K AND Cu1<>3 THEN Cu=1
 1370   IF 115=K AND Cu1<>1 THEN Cu=3
