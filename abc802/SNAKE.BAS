@@ -4,7 +4,7 @@
 1030 T=FNGinit
 1040 Cu1=1
 1050 Fx=0 : Fy=0
-1060 Mx=79 : My=71
+1060 Mx=79*2 : My=71*2
 1070 Smin=5
 1080 Tail=Smin
 1090 Smax=500
