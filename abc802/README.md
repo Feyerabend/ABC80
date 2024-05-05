@@ -44,11 +44,12 @@ Timing for programs that takes a longer time, result in seconds:
 | NOEL1.BAS     | %       | 8             |
 | NOEL2.BAS     | SINGLE  | 26            |
 | NOEL3.BAS     | DOUBLE  | 26            |
-| SCRUSS2.BAS   | none    | --            |
+| SCRUSS2.BAS   | none    | 246[^bbc]     |
 | MANDEL1.BAS   | %       | 3317          |
 | MANDEL2.BAS   | none    | 93            |
 | MANDEL3.BAS   | %       | 88            |
 
+[^BBC]: Cf. BBC BASIC at 202. Commodore 64 at 100.
 
 
 ### Noel[^noel]
