@@ -36,10 +36,15 @@ Timing for programs that takes a longer time, result in seconds:
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
 
-### FizzBuzz
+### FizzBuzz[^fizzbuzz]
+
+Perhaps a bit odd to introduce FizzBuzz as a benchmark. But why not? It is easy
+to change and adopt to different flavours of BASIC.
 
 * [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program.
 * [FIZZBUZ1.BAS](FIZZBUZ1.BAS) Introduce % everywhere.
+
+[^fizzbuzz]: https://en.wikipedia.org/wiki/Fizz_buzz
 
 
 ### Noel[^noel]
