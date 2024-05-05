@@ -3,9 +3,9 @@
 
 Some different versions of samples in BASIC II for ABC802 to show how it can work.
 
-* SNAKE1.BAS - more or less regular BASIC of the time, selecting and jumping by using GOSUB och GOTO.
-* SNAKE2.BAS - an attemt of DEF FN to replace some jumping. All essential variables are *globals*,
-  thus no real gain in structure were performed.
+* __SNAKE1.BAS__ - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
+* __SNAKE2.BAS__ - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
+  *globals*, thus no real gain in structure were performed.
 * ..
 
 ### ..
