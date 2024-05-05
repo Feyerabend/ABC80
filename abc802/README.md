@@ -45,9 +45,9 @@ Timing for programs that takes a longer time, result in seconds:
 | NOEL2.BAS     | SINGLE  | 26            |
 | NOEL3.BAS     | DOUBLE  | 26            |
 | SCRUSS2.BAS   | none    | 246(*)        |
-| MANDEL1.BAS   | %       | 3317          |
+| MANDEL1.BAS   | % some  | 3317          |
 | MANDEL2.BAS   | none    | 93            |
-| MANDEL3.BAS   | %       | 88            |
+| MANDEL3.BAS   | % some  | 88            |
 
 (*) In this case higher the better:
 cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
