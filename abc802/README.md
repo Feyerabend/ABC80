@@ -4,6 +4,7 @@
 I'm not really a fan of benchmarks. I find them too restrictive in the way they only measure what they measure.
 That is, they only could give you an estimate of something (that they measure), not an evaluation of what the
 machine can do in general. It doesn't indicate the possibilities, they only convey a test of something.
+Mostly is has been for speed ..
 
 Besides that, they can be fun to look at. The following are benchmarks that have been done through the early
 years of personal computing, when programming in BASIC was the primary choice. It was the time when the BASIC
