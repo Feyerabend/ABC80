@@ -38,6 +38,8 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
 ### Representation of numbers
 
 Integer, Float, Double, ASCII ..
+Something noticeable about the built-in number types in BASIC II is that there is a clear trade-off between
+precision and speed, which is probably one of the reasons for the different types offered.
 
 
 ## Timing in BASIC II with ABC802
