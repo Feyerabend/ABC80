@@ -51,7 +51,8 @@ point. At least if it was known to the programmer.
 * [SCRUSS.BAS](SCRUSS.BAS) Original program.
 * [SCRUSS2.BAS](SCRUSS2.BAS) Changed timing for ABC802.
 
-I do agree with *not* using any special `POKE`, machine code or assembly routines. *It's not BASIC*.
+I do agree with *not* using any special `POKE` e.g. turning off interrupts, using machine code
+or any assembly routines. *It's not BASIC*. It doesn't measure the BASIC.
 
 [^scruss]: https://scruss.com/blog/2020/12/17/bench64-a-new-basic-benchmark-index-for-8-bit-computers/
 
