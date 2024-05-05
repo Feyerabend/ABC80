@@ -39,15 +39,22 @@ Timing for programs that takes a longer time, result in seconds:
 
 ### Scruss[^scruss]
 
+I have kept the original program as close as possible. The only thing that was changed was
+the timing, as necessary. However, the restriction to a syntactical alignment is troublesome
+as no one, even then in the 80's, would make a program without adopting internal speedups
+in available BASIC, such as using integer where possible instead of the always slower floating
+point. At least if it was known to the programmer. 
+
 * [SCRUSS.BAS](SCRUSS.BAS) Original program.
-* [SCRUSS2.BAS](SCRUSS2.BAS) .. changed timing for ABC802.
+* [SCRUSS2.BAS](SCRUSS2.BAS) Changed timing for ABC802.
 
 [^scruss]: https://scruss.com/blog/2020/12/17/bench64-a-new-basic-benchmark-index-for-8-bit-computers/
 
 
 ### Mandelbrot Set[^mandel]
 
-A traditional benchmark for programming languages have been the Mandelbrot set.
+A traditional benchmark for programming languages have been the Mandelbrot set. Especially when colours are
+present, it shows speed in zooming and the spread of colours in the palette.
 
 * [MANDEL1.BAS](MANDEL1.BAS) Plotted with `TX POINT`. Adopted from ZX81 sample.
 * [MANDEL2.BAS](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (e.g. some
