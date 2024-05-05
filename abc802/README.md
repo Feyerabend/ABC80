@@ -36,6 +36,11 @@ Timing for programs that takes a longer time, result in seconds:
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
 
+### FizzBuzz
+
+* [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program.
+* [FIZZBUZ1.BAS](FIZZBUZ1.BAS) Introduce % everywhere.
+
 
 ### Noel[^noel]
 
