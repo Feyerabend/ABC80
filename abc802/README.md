@@ -37,7 +37,12 @@ Timing which takes longer time, result in seconds:
 ```
 
 
-### ..
+### Scruss
+
+* [SCRUSS.BAS](SCRUSS.BAS) Original program.[^scruss]
+* [SCRUSS2.BAS](SCRUSS2.BAS) .. changed timing for ABC802.
+
+[^scruss]: https://scruss.com/blog/2020/12/17/bench64-a-new-basic-benchmark-index-for-8-bit-computers/
 
 
 ### Mandelbrot Set[^mandel]
