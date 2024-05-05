@@ -55,10 +55,10 @@ cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
 
 ### Noel[^noel]
 
-* [NOEL.BAS](NOEL.BAS)
-* [NOEL1.BAS](NOEL1.BAS) %
-* [NOEL2.BAS](NOEL2.BAS) SINGLE
-* [NOEL3.BAS](NOEL3.BAS) DOUBLE
+* [NOEL.BAS](NOEL.BAS) Original test.
+* [NOEL1.BAS](NOEL1.BAS) Introduce % all over.
+* [NOEL2.BAS](NOEL2.BAS) First line SINGLE.
+* [NOEL3.BAS](NOEL3.BAS) First line DOUBLE.
 
 [^noel]: https://www.youtube.com/@NoelsRetroLab
 
