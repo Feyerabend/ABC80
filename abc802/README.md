@@ -4,9 +4,12 @@
 Some different versions of samples in BASIC II for ABC802 to show how it can work.
 
 * __SNAKE1.BAS__ - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
+  First attempt of making separate routines.
 * __SNAKE2.BAS__ - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
-  *globals*, thus no real gain in structure were performed.
+  *globals*, thus no real gain of the structure were performed.
 * ..
+
+
 
 ### ..
 
@@ -17,7 +20,6 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
 ## References
 
 - Andersson, Anders (red.), *ABC om BASIC*, (1979) 2. uppl., Didact, Linköping, 1980.
-- Finnved, Johan, *Programvaran i persondatorn i ABC80*, manuskript, Inst. för tillämpad elektronik, Kungl. Tekniska Högskolan, 1979.
 - Isaksson, Anders & Kärrsgård, Örjan, *Avancerad programmering på ABC80*, Studentlitt., Lund, 1980.
 - Lundgren, Jan & Thornell, Sören, *BASIC II boken*, 1. uppl., Emmdata, Umeå, 1982
 - Lundgren, Jan & Thornell, Sören, *BASIC II boken för ABC 802*, 1. uppl., Emmdata, Umeå, 1983
