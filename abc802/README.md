@@ -34,11 +34,13 @@ Timing which takes longer time, result in seconds:
 ### ..
 
 
-### Mandelbrot
+### Mandelbrot Set
 
-* [__MANDEL1.BAS__](MANDEL1.BAS) Plotted with `TX POINT`. Adepted from ZX81 sample.
-* [__MANDEL2.BAS__](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (some oddities).
-* [__MANDEL3.BAS__](MANDEL3.BAS) Printed with characters, and somewhat optimized.
+* [__MANDEL1.BAS__](MANDEL1.BAS) Plotted with `TX POINT`. Adopted from ZX81 sample. Very slow, measured to 3317 seconds,
+  i.e. ≈55 min.
+* [__MANDEL2.BAS__](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (e.g. some
+  oddities in represented chars).
+* [__MANDEL3.BAS__](MANDEL3.BAS) Printed with characters, and somewhat optimized slightly better than the above.
 
 
 ## References
