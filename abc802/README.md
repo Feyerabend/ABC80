@@ -5,9 +5,9 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
 
 * [__SNAKE1.BAS__](SNAKE1.BAS) - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
   First attempt of making separate routines.
-* __SNAKE2.BAS__ - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
+* [__SNAKE2.BAS__](SNAKE2.BAS) - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
   *globals*, thus no real gain of the structure were performed.
-* __SNAKE2.BAS__ - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
+* [__SNAKE2.BAS__](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
   we know them from (contemporary) other languages such as C or Pascal.
 
