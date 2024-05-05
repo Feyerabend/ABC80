@@ -39,7 +39,7 @@ Timing for programs that takes a longer time, result in seconds:
 
 ### Scruss[^scruss]
 
-I have kept the original program as close as possible. The only thing that was changed was
+I have kept to the original program as close as possible. The only thing that was changed was
 the timing, as necessary. However, the restriction to a syntactical alignment is troublesome
 as no one, even then in the 80's, would make a program without adopting internal speedups
 in available BASIC, such as using integer where possible instead of the always slower floating
