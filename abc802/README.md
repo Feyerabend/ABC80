@@ -50,7 +50,7 @@ Timing for programs that takes a longer time, result in seconds:
 | MANDEL3.BAS   | % some  | 88            |
 
 (#) Same result as BBC Micro.
-(##) Slightly better than BBC Micro using integers (BBC Micro: 9 sec).
+(##) Slightly better than BBC Micro w/ second 6502 using integers (here BBC Micro: 9 sec).
 (*) In this case higher the better: cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
 
 
