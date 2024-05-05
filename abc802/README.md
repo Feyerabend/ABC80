@@ -5,11 +5,11 @@
 
 Some different versions of samples in BASIC II for ABC802 to show how it can work.
 
-* [__SNAKE1.BAS__](SNAKE1.BAS) - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
+* [SNAKE1.BAS](SNAKE1.BAS) - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
   First attempt of making separate routines.
-* [__SNAKE2.BAS__](SNAKE2.BAS) - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
+* [SNAKE2.BAS](SNAKE2.BAS) - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
   *globals*, thus no real gain of the structure were performed.
-* [__SNAKE2.BAS__](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
+* [SNAKE2.BAS](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
   we know them from (contemporary) other languages such as C or Pascal.
 
@@ -42,11 +42,10 @@ Timing which takes longer time, result in seconds:
 
 ### Mandelbrot Set[^mandel]
 
-* [__MANDEL1.BAS__](MANDEL1.BAS) Plotted with `TX POINT`. Adopted from ZX81 sample. Very slow, measured to 3317 seconds,
-  i.e. ≈55 min.
-* [__MANDEL2.BAS__](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (e.g. some
+* [MANDEL1.BAS](MANDEL1.BAS) Plotted with `TX POINT`. Adopted from ZX81 sample.
+* [MANDEL2.BAS](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (e.g. some
   oddities in represented chars).[^mandel2]
-* [__MANDEL3.BAS__](MANDEL3.BAS) Printed with characters, and somewhat optimized slightly better than the above.
+* [MANDEL3.BAS](MANDEL3.BAS) Printed with characters, and somewhat optimized slightly better than the above.
 
 [^mandel]: https://en.wikipedia.org/wiki/Mandelbrot_set
 [^mandel2]: http://forum.6502.org/viewtopic.php?p=87398, and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.bas?ref_type=heads.
