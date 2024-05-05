@@ -2,24 +2,24 @@
 1010 ! init of game for ABC802
 1020 F=0 ! flag for dot
 1030 GOTO 1510 ! init screen
-1040 Cu1=1
-1050 Fx=0 : Fy=0
-1060 Mx=79*2 : My=71*2
-1070 Smin=5
-1080 Tail=Smin
-1090 Smax=500
-1100 DIM R(Smax),C(Smax)
-1110 R(0)=5 : R(1)=4 : R(2)=3 : R(3)=2 : R(4)=1
+1040 Cu1=1 ! keep last keypress, at start choose 1-4
+1050 Fx=0 : Fy=0 ! food coords.
+1060 Mx=79*2 : My=71*2 ! where the food can be (change if width 40)
+1070 Smin=5 ! snake minimal length
+1080 Tail=Smin ! "last" bit of snake
+1090 Smax=500 ! the maximum for the snake length
+1100 DIM R(Smax),C(Smax) ! coords. for snake, each part thus indexed
+1110 R(0)=5 : R(1)=4 : R(2)=3 : R(3)=2 : R(4)=1 ! snake at start
 1120 T=Mx/2
 1130 C(0)=T : C(1)=T : C(2)=T : C(3)=T : C(5)=T
 1140 R1=R(Tail-1) : C1=C(Tail-1)
-1150 Score=0
+1150 Score=0 ! keep track of
 1160 GOSUB 1660 ! prepare food
 1170 !
 1180 ! game loop
 1190 !
 1200 GOTO 1340 ! get key and prepare move
-1210 IF Fx=X AND Fy=Y THEN GOSUB 1800 ELSE GOSUB 1950 ! food at head?
+1210 IF Fx=X AND Fy=Y THEN GOSUB 1800 ELSE GOSUB 1950 ! food at the head?
 1220 IF F THEN 1270 ! dot was not food, then crash
 1230 GOTO 1900 ! move
 1240 GOTO 1700 ! shift
