@@ -36,6 +36,16 @@ Timing for programs that takes a longer time, result in seconds:
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
 
+### Mikrodatorn + Hobbydata
+..
+
+### Creative Computing 1984 Ahl's Simple Benchmark
+..
+
+### Interface Age Prime Numbers 1980
+..
+
+
 ### FizzBuzz[^fizzbuzz]
 
 Perhaps a bit odd to introduce FizzBuzz as a benchmark. But why not? It is easy
