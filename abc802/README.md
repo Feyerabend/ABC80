@@ -37,7 +37,12 @@ Timing for programs that takes a longer time, result in seconds:
 ```
 
 
+### Noel[^noel]
 
+* [NOEL.BAS](NOEL.BAS)
+* [NOEL1.BAS](NOEL1.BAS)
+
+[^noel]: https://www.youtube.com/@NoelsRetroLab
 
 
 ### Scruss[^scruss]
