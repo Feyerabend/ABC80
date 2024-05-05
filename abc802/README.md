@@ -22,6 +22,10 @@ its time. This was true for the *business market* where ABC802 belonged. On the 
 compleatly different home computer domain in which BASIC stayed for some time longer, almost in to the
 next decade ..
 
+But as can be witnessed below, BASIC II was quite fast for its time. Often very near (below or above)
+the highly prasied BBC Micro. It also hade the possible choice between different number types in trafe-off
+between speed and precision. Thus making it versatile in many applications.
+
 
 ## Samples of BASIC II
 
