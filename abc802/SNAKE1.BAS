@@ -1,6 +1,6 @@
 1000 EXTEND : RANDOMIZE : INTEGER
 1010 ! init of game for ABC802
-1020 !
+1020 F=0 ! flag for dot
 1030 GOTO 1510 ! init screen
 1040 Cu1=1
 1050 Fx=0 : Fy=0
@@ -19,8 +19,8 @@
 1180 ! game loop
 1190 !
 1200 GOTO 1340 ! get key and prepare move
-1210 IF Fx=X AND Fy=Y THEN GOSUB 1800 ELSE GOSUB 1950
-1220 IF F THEN 1270
+1210 IF Fx=X AND Fy=Y THEN GOSUB 1800 ELSE GOSUB 1950 ! food at head?
+1220 IF F THEN 1270 ! dot was not food, then crash
 1230 GOTO 1900 ! move
 1240 GOTO 1700 ! shift
 1250 GOTO 2000 ! draw
