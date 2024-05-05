@@ -92,6 +92,10 @@ present, it shows speed in zooming and the spread of colours in the palette.
 
 | Program       | Mods    | Seconds         |
 | ------------- | ------- | --------------- |
+| FIZZBUZZ.BAS  | none    | ?               |
+| FIZZBUZ1.BAS  | %       | ?               |
+| FIZZBUZ2.BAS  | SINGLE  | ?               |
+| FIZZBUZ3.BAS  | DOUBLE  | ?               |
 | NOEL.BAS      | none    | 19<sup>1</sup>  |
 | NOEL1.BAS     | %       | 8<sup>2</sup>   |
 | NOEL2.BAS     | SINGLE  | 26              |
