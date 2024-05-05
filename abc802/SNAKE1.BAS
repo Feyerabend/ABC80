@@ -12,7 +12,7 @@
 1110 R(0)=5 : R(1)=4 : R(2)=3 : R(3)=2 : R(4)=1 ! snake at start
 1120 T=Mx/2
 1130 C(0)=T : C(1)=T : C(2)=T : C(3)=T : C(5)=T
-1140 R1=R(Tail-1) : C1=C(Tail-1)
+1140 R1=R(Tail-1) : C1=C(Tail-1) ! last dot of snake (to clear when moved)
 1150 Score=0 ! keep track of
 1160 GOSUB 1660 ! prepare food
 1170 !
@@ -33,7 +33,7 @@
 1320 !
 1330 ! keys
 1340 !
-1350 K=ABS(SYS(8)*INP(34))
+1350 K=ABS(SYS(8)*INP(34)) ! key polling, ascii from key
 1360 IF 97=K AND Cu1<>3 THEN Cu=1
 1370 IF 115=K AND Cu1<>1 THEN Cu=3
 1380 IF 122=K AND Cu1<>4 THEN Cu=2
@@ -80,13 +80,13 @@
 1790 !
 1800 ! eat food
 1810 !
-1820 Tx=X : Ty=Y
-1830 R(Tail)=Tx : C(Tail)=Ty
-1840 IF Tail<Smax THEN Tail=Tail+1 ELSE Tail=Smax
-1850 Score=Score+1
-1860 GOSUB 1660
-1870 F=0
-1880 RETURN
+1820 R(Tail)=X : C(Tail)=Y
+1830 IF Tail<Smax THEN Tail=Tail+1 ELSE Tail=Smax
+1840 Score=Score+1
+1850 GOSUB 1660
+1860 F=0
+1870 RETURN
+1880 !
 1890 ! move
 1900 !
 1910 R(Tail-1)=X : C(Tail-1)=Y

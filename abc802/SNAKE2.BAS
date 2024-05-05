@@ -79,9 +79,9 @@
 1780 RETURN 0
 1790 FNEND
 1800 ! eat food
-1810 DEF FNGeat LOCAL Tx,Ty
-1820   Tx=X : Ty=Y
-1830   R(Tail)=Tx : C(Tail)=Ty
+1810 DEF FNGeat
+1820   R(Tail)=X
+1830   C(Tail)=Y
 1840   IF Tail<Smax THEN Tail=Tail+1 ELSE Tail=Smax
 1850   Score=Score+1
 1860   T=FNGfood
