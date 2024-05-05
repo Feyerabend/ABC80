@@ -53,7 +53,7 @@ __Notes__
 
 <sup>1</sup> Same result as BBC Micro.
 
-<sup>2</sup> Slightly better than BBC Micro w/ second 6502 using integers (here BBC Micro: 9 sec).
+<sup>2</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
 
 <sup>3</sup> In this case a higher number the better.
 Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100. And alas *ABC802* at 246.
