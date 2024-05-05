@@ -36,11 +36,28 @@ Timing for programs that takes a longer time, result in seconds:
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
 
+## Benchmark results
+
+| Program       | Mods    | Seconds       |
+| ------------- | ------- | ------------- |
+| NOEL.BAS      | none    |               |
+| NOEL1.BAS     | %       |               |
+| NOEL2.BAS     | SINGLE  |               |
+| NOEL3.BAS     | DOUBLE  |               |
+| SCRUSS2.BAS   | none    |               |
+| MANDEL1.BAS   | %       |               |
+| MANDEL2.BAS   | none    |               |
+| MANDEL3.BAS   | %       |               |
+| ------------- | ------- | ------------- |
+
+
 
 ### Noel[^noel]
 
 * [NOEL.BAS](NOEL.BAS)
-* [NOEL1.BAS](NOEL1.BAS)
+* [NOEL1.BAS](NOEL1.BAS) %
+* [NOEL2.BAS](NOEL2.BAS) SINGLE
+* [NOEL3.BAS](NOEL3.BAS) DOUBLE
 
 [^noel]: https://www.youtube.com/@NoelsRetroLab
 
