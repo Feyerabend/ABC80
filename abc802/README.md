@@ -11,6 +11,22 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
   we know them from (contemporary) other languages such as C or Pascal.
 
+Simple timing with approx. seconds:
+```BASIC
+POKE 65524%,0%,0%
+...
+PRINT "Time: ”;PEEK(65524%)+(PEEK(65525%)/100)
+```
+
+Timing which takes longer time, result in seconds:
+```BASIC
+T1$=RIGHT$(TIME$,12)
+...
+T2$=RIGHT(TIME$,12)
+T=(VAL(LEFT$(T2$,2))-VAL(LEFT$(T1$,2)))*3600+VAL(RIGHT$(T2$,7))-VAL(RIGHT$(T1$,7))
+PRINT T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
+```
+
 
 ### ..
 
