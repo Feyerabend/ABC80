@@ -41,11 +41,12 @@ Timing which takes longer time, result in seconds:
 * [__MANDEL1.BAS__](MANDEL1.BAS) Plotted with `TX POINT`. Adopted from ZX81 sample. Very slow, measured to 3317 seconds,
   i.e. ≈55 min.
 * [__MANDEL2.BAS__](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (e.g. some
-  oddities in represented chars).
+  oddities in represented chars).[*mandel2]
 * [__MANDEL3.BAS__](MANDEL3.BAS) Printed with characters, and somewhat optimized slightly better than the above.
 
 [^mandel]: https://en.wikipedia.org/wiki/Mandelbrot_set
-
+[^mandel2]: http://forum.6502.org/viewtopic.php?p=87398, and
+https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.bas?ref_type=heads.
 
 ## References
 
