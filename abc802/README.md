@@ -50,7 +50,7 @@ Timing for programs that takes a longer time, result in seconds:
 | MANDEL3.BAS   | %       | 88            |
 
 (*) In this case higher the better:
-cf. BBC BASIC at 202. Commodore 64 at 100.
+cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
 
 
 ### Noel[^noel]
