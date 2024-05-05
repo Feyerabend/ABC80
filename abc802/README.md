@@ -27,7 +27,7 @@ Simple timing with approx. seconds:
 1000 PRINT "Time: ”;PEEK(65524%)+(PEEK(65525%)/100)
 ```
 
-Timing which takes longer time, result in seconds:
+Timing for programs that takes a longer time, result in seconds:
 ```BASIC
 10 T1$=RIGHT$(TIME$,12)
 ...
