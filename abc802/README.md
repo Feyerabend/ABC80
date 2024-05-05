@@ -40,15 +40,14 @@ Timing for programs that takes a longer time, result in seconds:
 
 | Program       | Mods    | Seconds       |
 | ------------- | ------- | ------------- |
-| NOEL.BAS      | none    |               |
-| NOEL1.BAS     | %       |               |
-| NOEL2.BAS     | SINGLE  |               |
-| NOEL3.BAS     | DOUBLE  |               |
-| SCRUSS2.BAS   | none    |               |
-| MANDEL1.BAS   | %       |               |
-| MANDEL2.BAS   | none    |               |
-| MANDEL3.BAS   | %       |               |
-| ------------- | ------- | ------------- |
+| NOEL.BAS      | none    | 19            |
+| NOEL1.BAS     | %       | 8             |
+| NOEL2.BAS     | SINGLE  | 26            |
+| NOEL3.BAS     | DOUBLE  | 26            |
+| SCRUSS2.BAS   | none    | --            |
+| MANDEL1.BAS   | %       | 3317          |
+| MANDEL2.BAS   | none    | 93            |
+| MANDEL3.BAS   | %       | 88            |
 
 
 
