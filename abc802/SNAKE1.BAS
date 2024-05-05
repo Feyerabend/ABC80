@@ -64,7 +64,7 @@
 1630 !
 1640 ! create food
 1650 !
-1660 Fx=INT(RND*(Mx-20))+10
+1660 Fx=INT(RND*(Mx/2-20))+10
 1670 Fy=INT(RND*(My-10))+5
 1680 RETURN
 1690 !
