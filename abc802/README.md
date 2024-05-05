@@ -13,6 +13,10 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
   we know them from (contemporary) other languages such as C or Pascal.
 
+### Represantation of numbers
+
+Integer, Foat, Double, ASCII ..
+
 
 ## Timing in BASIC II with ABC802
 
