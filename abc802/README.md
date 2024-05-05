@@ -38,20 +38,20 @@ Timing for programs that takes a longer time, result in seconds:
 
 ## Benchmark results
 
-| Program       | Mods    | Seconds       |
-| ------------- | ------- | ------------- |
-| NOEL.BAS      | none    | 19(&)         |
-| NOEL1.BAS     | %       | 8(&&)         |
-| NOEL2.BAS     | SINGLE  | 26            |
-| NOEL3.BAS     | DOUBLE  | 26            |
-| SCRUSS2.BAS   | none    | 246(*)        |
-| MANDEL1.BAS   | % some  | 3317          |
-| MANDEL2.BAS   | none    | 93            |
-| MANDEL3.BAS   | % some  | 88            |
+| Program       | Mods    | Seconds         |
+| ------------- | ------- | --------------- |
+| NOEL.BAS      | none    | 19<sup>1</sup>  |
+| NOEL1.BAS     | %       | 8<sup>2</sup>   |
+| NOEL2.BAS     | SINGLE  | 26              |
+| NOEL3.BAS     | DOUBLE  | 26              |
+| SCRUSS2.BAS   | none    | 246<sup>3</sup> |
+| MANDEL1.BAS   | % some  | 3317            |
+| MANDEL2.BAS   | none    | 93              |
+| MANDEL3.BAS   | % some  | 88              |
 
-(&) Same result as BBC Micro.
-(&&) Slightly better than BBC Micro w/ second 6502 using integers (here BBC Micro: 9 sec).
-(*) In this case higher the better: cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
+<sup>1</sup> Same result as BBC Micro.
+<sup>2</sup> Slightly better than BBC Micro w/ second 6502 using integers (here BBC Micro: 9 sec).
+<sup>3</sup> In this case higher the better: cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
 
 
 ### Noel[^noel]
