@@ -75,7 +75,8 @@ Timing for programs that takes a longer time, result in seconds:
 Perhaps a bit odd to introduce FizzBuzz as a benchmark. But why not? It is easy
 to change and adopt to different flavours of BASIC.
 
-* [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program. Increase to 1000 instead of 100, shows smaller diviations.
+* [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program. Increased to 1000 instead of 100,
+  shows smaller diviations more explicit.
 * [FIZZBUZ1.BAS](FIZZBUZ1.BAS) Introduce % everywhere.
 
 [^fizzbuzz]: https://en.wikipedia.org/wiki/Fizz_buzz
