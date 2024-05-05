@@ -1,6 +1,27 @@
 
 # BENCHMARKS
 
+I'm not really a fan of benchmarks. I find them too restrictive in the way they only measure what they measure.
+That is, they only could give you an estimate of something (that they measure), not an evaluation of what the
+machine can do in general. It doesn't indicate the possibilities, they only convey a test of something.
+
+Besides that, they can be fun to look at. The following are benchmarks that have been done through the early
+years of personal computing, when programming in BASIC was the primary choice. It was the time when the BASIC
+came in ROMs, and basically was the computer software/operating system. But also there are some new retro
+community contributions of benchmarks, which are fun.
+
+The ABC802, which is the focus here, was a follow-up to the ancestor ABC80. It was almost the same computer,
+but had an improved BASIC, the BASIC II. The BASIC II was used in the similar machines ABC800 and ABC806,
+but also there was a version made for PC-DOS/MS-DOS, intended for easier transitioning to the future PC-line
+of computers.
+
+Even if the IBM PC first was launced with a BASIC in ROM, the ABC802 also marked the end of an era started
+with SOL, Apple II, Commodore PET, TRS-80 (model 1), and the like. The instant BASIC at startup had passed
+its time. This was true for the *business market* where ABC802 belonged. On the other hand there was a
+compleatly different home computer domain in which BASIC stayed for some time longer, almost in to the
+next decade ..
+
+
 ## Samples of BASIC II
 
 Some different versions of samples in BASIC II for ABC802 to show how it can work.
@@ -12,6 +33,7 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
 * [SNAKE3.BAS](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
   we know them from (contemporary) other languages such as C or Pascal.
+
 
 ### Representation of numbers
 
@@ -40,7 +62,9 @@ Timing for programs that takes a longer time, result in seconds:
 ..
 
 ### Creative Computing 1984 Ahl's Simple Benchmark
-..
+
+* [AHLS.BAS](AHLS.BAS)
+
 
 ### Interface Age Prime Numbers 1980
 ..
