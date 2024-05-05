@@ -15,7 +15,7 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
 
 ### Representation of numbers
 
-Integer, Foat, Double, ASCII ..
+Integer, Float, Double, ASCII ..
 
 
 ## Timing in BASIC II with ABC802
