@@ -37,15 +37,17 @@ Timing for programs that takes a longer time, result in seconds:
 ```
 
 
-### Scruss
+### Scruss[^scruss]
 
-* [SCRUSS.BAS](SCRUSS.BAS) Original program.[^scruss]
+* [SCRUSS.BAS](SCRUSS.BAS) Original program.
 * [SCRUSS2.BAS](SCRUSS2.BAS) .. changed timing for ABC802.
 
 [^scruss]: https://scruss.com/blog/2020/12/17/bench64-a-new-basic-benchmark-index-for-8-bit-computers/
 
 
 ### Mandelbrot Set[^mandel]
+
+A traditional benchmark for programming languages have been the Mandelbrot set.
 
 * [MANDEL1.BAS](MANDEL1.BAS) Plotted with `TX POINT`. Adopted from ZX81 sample.
 * [MANDEL2.BAS](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (e.g. some
