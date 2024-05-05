@@ -11,6 +11,9 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
   we know them from (contemporary) other languages such as C or Pascal.
 
+
+## Timing in BASIC II with ABC802
+
 Simple timing with approx. seconds:
 ```BASIC
 10 POKE 65524%,0%,0%
@@ -31,7 +34,11 @@ Timing which takes longer time, result in seconds:
 ### ..
 
 
+### Mandelbrot
 
+* [__MANDEL1.BAS__](MANDEL1.BAS) Plotted with `TX POINT`. Adepted from ZX81 sample.
+* [__MANDEL2.BAS__](MANDEL2.BAS) Printed with characters. This seems to have been written for an emulator (some oddities).
+* [__MANDEL3.BAS__](MANDEL3.BAS) Printed with characters, and somewhat optimized.
 
 
 ## References
