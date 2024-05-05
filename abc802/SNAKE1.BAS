@@ -4,7 +4,7 @@
 1030 GOTO 1510 ! init screen
 1040 Cu1=1 ! keep last keypress, at start choose 1-4
 1050 Fx=0 : Fy=0 ! food coords.
-1060 Mx=79*2 : My=71*2 ! where the food can be (change if width 40)
+1060 Mx=79*2 : My=71 ! where the food can be (change if width 40)
 1070 Smin=5 ! snake minimal length
 1080 Tail=Smin ! "last" bit of snake
 1090 Smax=500 ! the maximum for the snake length
