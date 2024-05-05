@@ -53,7 +53,8 @@ Timing for programs that takes a longer time, result in seconds:
 
 <sup>2</sup> Slightly better than BBC Micro w/ second 6502 using integers (here BBC Micro: 9 sec).
 
-<sup>3</sup> In this case higher the better: cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
+<sup>3</sup> In this case a higher number the better.
+Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100. And alas *ABC802* at 246.
 
 
 
