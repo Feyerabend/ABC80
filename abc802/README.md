@@ -36,29 +36,6 @@ Timing for programs that takes a longer time, result in seconds:
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
 
-## Benchmark results
-
-| Program       | Mods    | Seconds         |
-| ------------- | ------- | --------------- |
-| NOEL.BAS      | none    | 19<sup>1</sup>  |
-| NOEL1.BAS     | %       | 8<sup>2</sup>   |
-| NOEL2.BAS     | SINGLE  | 26              |
-| NOEL3.BAS     | DOUBLE  | 26              |
-| SCRUSS2.BAS   | none    | 246<sup>3</sup> |
-| MANDEL1.BAS   | % some  | 3317            |
-| MANDEL2.BAS   | none    | 93              |
-| MANDEL3.BAS   | % some  | 88              |
-
-__Notes__
-
-<sup>1</sup> Same result as BBC Micro.
-
-<sup>2</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
-
-<sup>3</sup> In this case a higher number the better.
-Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100. And alas *ABC802* at 246.
-
-
 
 ### Noel[^noel]
 
@@ -99,6 +76,32 @@ present, it shows speed in zooming and the spread of colours in the palette.
 
 [^mandel]: https://en.wikipedia.org/wiki/Mandelbrot_set
 [^mandel2]: http://forum.6502.org/viewtopic.php?p=87398, and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.bas?ref_type=heads.
+
+
+## Summary benchmark results
+
+| Program       | Mods    | Seconds         |
+| ------------- | ------- | --------------- |
+| NOEL.BAS      | none    | 19<sup>1</sup>  |
+| NOEL1.BAS     | %       | 8<sup>2</sup>   |
+| NOEL2.BAS     | SINGLE  | 26              |
+| NOEL3.BAS     | DOUBLE  | 26              |
+| SCRUSS2.BAS   | none    | 246<sup>3</sup> |
+| MANDEL1.BAS   | % some  | 3317            |
+| MANDEL2.BAS   | none    | 93              |
+| MANDEL3.BAS   | % some  | 88              |
+
+__Notes__
+
+<sup>1</sup> Same result as BBC Micro.
+
+<sup>2</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
+
+<sup>3</sup> In this case a higher number the better.
+Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100. And alas *ABC802* at 246.
+
+
+
 
 ## References
 
