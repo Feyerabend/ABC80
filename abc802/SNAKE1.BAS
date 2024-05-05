@@ -29,7 +29,7 @@
 1280 ; CUR(12,34);CHR$(135) 'Score: ';Score;CHR$(151);
 1290 END
 1300 !
-1310 ! function routines
+1310 ! (sub)routines
 1320 !
 1330 ! keys
 1340 !
