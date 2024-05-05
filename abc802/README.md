@@ -9,7 +9,7 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
   *globals*, thus no real gain of the structure were performed.
 * __SNAKE2.BAS__ - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
   values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
-  we know them from (contmporary) other languages.
+  we know them from (contemporary) other languages such as C or Pascal.
 
 
 ### ..
