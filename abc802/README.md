@@ -163,7 +163,7 @@ computers, unsurprisingly from the ABC-line. Below I've added lacking results fr
   about *accuracy* in number crunching, beside speed.
 
 
-### Interface Age 1980 Prime Numbers[înter]
+### Interface Age 1980 Prime Numbers[^inter]
 
 At page 131 the author writes: 'Use any tricks you know to speed up the program execution
 (multiple statement lines, integer variables, etc.), but don't "improve" on the basic algorithm
