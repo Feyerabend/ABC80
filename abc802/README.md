@@ -160,8 +160,9 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
 
 ### Creative Computing 1984 Ahl's Simple Benchmark[^ahl]
 
-* [AHLS.BAS](AHLS.BAS) This is the only benchmark among the selected ones here, that also gives a hint
-  about *accuracy* in number crunching, beside speed.
+* [AHLS.BAS](AHLS.BAS) This is the only benchmark among the selected ones here,
+  that also gives a hint about *accuracy* in number crunching, beside 'quality'
+  of random numbers.
 * [AHLS1.BAS](AHLS1.BAS) Another version of the same benchmark.
 * [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802.
 
@@ -261,8 +262,6 @@ present, it shows speed in zooming and the spread of colours in the palette.
 | B6.BAS        | none    | ?               |
 | B7.BAS        | none    | ?               |
 | B8.BAS        | none    | ?               |
-| AHLS.BAS      | none    | ?               |
-| AHLS1.BAS     | none    | ?               |
 | AHLS2.BAS     | % some  | ?               |
 | INTER1.BAS    | none    | ?               |
 | INTER2.BAS    | SINGLE  | ?               |
@@ -290,7 +289,8 @@ __Notes__
 <sup>2</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
 
 <sup>3</sup> In this case a higher number the better.
-Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100. And alas *ABC802* at 246.
+Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
+And alas *ABC802 BASIC II* at 246.
 
 
 
