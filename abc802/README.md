@@ -8,6 +8,9 @@ That is, they only could give you an estimate of something (that they measure), 
 machine can do in general. It doesn't indicate the possibilities, they only convey a test of something.
 Mostly is has been for speed ..
 
+Today when almost all interests on 'retro computers' are in the spotlight of how and if they are able to play
+games, and in this area the ABC802 can not compete, benchmarks shows other aspects.
+
 Besides that, they can be fun to look at. The following are benchmarks that have been done through the early
 years of personal computing, when programming in BASIC was the primary choice. It was the time when the BASIC
 came in ROMs, and basically was the computer software/operating system. But also there are some new retro
@@ -95,7 +98,8 @@ Computer World* added a benchmark in 1978, below 'B8.BAS'.
 * [B8.BAS](B8.BAS) PCW Feb. 1978
 
 The samples built most on each other progressively towards more advanced. Later two
-Swedish magazines extended the list with other computers, notably naturally the ABC-line.
+Swedish magazines extended the list with other computers, notably naturally from the
+ABC-line.
 
 [^rugg]: https://en.wikipedia.org/wiki/Rugg/Feldman_benchmarks
 
@@ -108,6 +112,11 @@ Swedish magazines extended the list with other computers, notably naturally the 
 
 ### Interface Age 1980 Prime Numbers
 ..
+
+
+### BYTE 1981
+
+* ...
 
 
 ### FizzBuzz[^fizzbuzz]
