@@ -80,7 +80,15 @@ Timing for programs that takes a longer time, result in seconds:
 ```
 
 ### Mikrodatorn + Hobbydata
-..
+* [B1.BAS](B1.BAS)
+* [B2.BAS](B2.BAS)
+* [B3.BAS](B3.BAS)
+* [B4.BAS](B4.BAS)
+* [B5.BAS](B5.BAS)
+* [B6.BAS](B6.BAS)
+* [B7.BAS](B7.BAS)
+* [B8.BAS](B8.BAS)
+
 
 ### Creative Computing 1984 Ahl's Simple Benchmark
 
@@ -124,8 +132,8 @@ as no one, even then in the 80's, would make a program without adopting internal
 in available BASIC, such as using integer where possible instead of the always slower floating
 point. At least if it was known to the programmer. 
 
-* [SCRUSS.BAS](SCRUSS.BAS) Original program.
-* [SCRUSS2.BAS](SCRUSS2.BAS) Changed timing for ABC802.
+* [SCRUSS.BAS](SCRUSS.BAS) Original program. Can not be used as is.
+* [SCRUSS2.BAS](SCRUSS2.BAS) Changed for timing in ABC802.
 
 I do agree with *not* using any special `POKE` e.g. turning off interrupts, using machine code
 or any assembly routines. *It's not BASIC*. It doesn't measure the BASIC.
@@ -151,6 +159,14 @@ present, it shows speed in zooming and the spread of colours in the palette.
 
 | Program       | Mods    | Seconds         |
 | ------------- | ------- | --------------- |
+| B1.BAS        | none    | ?               |
+| B2.BAS        | none    | ?               |
+| B3.BAS        | none    | ?               |
+| B4.BAS        | none    | ?               |
+| B5.BAS        | none    | ?               |
+| B6.BAS        | none    | ?               |
+| B7.BAS        | none    | ?               |
+| B8.BAS        | none    | ?               |
 | FIZZBUZZ.BAS  | none    | ?               |
 | FIZZBUZ1.BAS  | %       | ?               |
 | FIZZBUZ2.BAS  | SINGLE  | ?               |
