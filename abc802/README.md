@@ -22,7 +22,7 @@ ABC800 and ABC806, but also there was a version made for PC-DOS/MS-DOS, intended
 to the future PC-line of computers. Or was it suppose to conquer?
 
 Well, even if the first IBM PC was launched with a Microsoft *BASIC in ROM*, the ABC802 also marked the
-end of an era started with SOL, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup
+end of an era started with SOL-20, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup
 had passed its prime time. This was true for the *business market* where ABC802 belonged, when you either
 made your own program or bought from it on the market from small developers, small firms. That was about
 to change. On the other hand there was a compleatly different *home computer* domain in which BASIC in ROM
@@ -165,7 +165,10 @@ computers, unsurprisingly from the ABC-line. Below I've added lacking results fr
 
 ### Interface Age 1980 Prime Numbers
 
-* ..
+* [INTER.BAS](INTER.BAS) Original.
+* [INTER1.BAs](INTER1.BAS)
+* [INTER2.BAS](INTER2.BAS) SINGLE.
+* [INTER3.BAS](INTER3.BAS) DOUBLE.
 
 
 ### BYTE 1981 Erathostenes Sieve[^byte]
