@@ -58,11 +58,56 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
   the language still has too weak constructs, or in itself is not sufficient.
 
 
-### Representation of numbers
+### Representation of numbers[^numbers]
 
 Integer, Float, Double, ASCII ..
-Something noticeable about the built-in number types in BASIC II is that there is a clear trade-off between
-precision and speed, which is probably one of the best reasons for the different types offered.
+Something noticeable about the built-in number types in BASIC II is that
+there is a clear trade-off between precision and speed, which is probably
+one of the best reasons for the different types offered.
+
+#### Integers
+
+The value of an integer is stored in 2 bytes in two's complement form. With
+two bytes, a binary number can be written in the number range 0 to 65535. In
+two's complement form, the number range becomes -32768 to +32767. The
+two's complement form uses the most significant bit, i.e. the bit 15, to
+indicate whether the number is negative or positive. Is the number is negative,
+the bit is 1, else 0.
+
+In the symbol table, a simple integer variable takes up 6 bytes.
+
+#### Floating point
+
+A floating point number has the form:
+  * +/- Mantissa * 10 ** Exponent
+
+In the computer, a simple floating point number is stored in 4 bytes
+at SINGLE and in 8 swap at DOUBLE. Unlike ABC80, which used BCD arithmetic,
+ABC802 uses binary arithmetic. The computer sees a floating point number as:
+  * byte 1 The exponent
+  * byte 2-4/8 The mantissa
+
+Calculation of the correct exponent value from exponent changes is done with:
+  * Exponent value = Exponent bytes - 128
+
+Byte 2 differs from the others in the mantissa in that the most
+significant bit indicates whether the mantissa is negative or not.
+Is the bit set to one the mantissa is negative, otherwise positive.
+To save space, the highest bit is *not* stored in the mantissa
+since it is always "one" due to normalization (that bit is used in
+instead of showing the sign of the mantissa as above). One
+exception to this is when the floating point is zero (O),
+which is indicated in that the exponent byte is zero.
+
+In the symbol table, a floating point number occupies 8 bytes for
+SINGLE and 12 bytes for DOUBLE.
+
+#### ASCII-aritmetic
+
+In ABC802, some new features have been added to the ASCII arithmetic
+from ABC80 which are:
+  * The number of digits has been increased to 125.
+  * Exponent allowed in input data.
 
 
 ## Timing in BASIC II with ABC802
@@ -120,7 +165,7 @@ computers, unsurprisingly from the ABC-line. Below I've added lacking results fr
 
 * [SIEVE.BAS](SIEVE.BAS) In contrast to the other benchmarks, this intend to compare different
   *programming languages*, and their outcome in speed. Here it is of course a sample in BASIC.
-* [SIEVE10.BAS](SIEVE10.BAS) From *Byte* Jan. 1983. Now update with 10 iterations in BASIC.
+* [SIEVE10.BAS](SIEVE10.BAS) From *Byte* Jan. 1983. Now updated with 10 iterations in BASIC.
 
 [^byte]: https://en.wikipedia.org/wiki/Byte_Sieve
 
