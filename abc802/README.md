@@ -82,12 +82,14 @@ A floating point number has the form:
   * +/- Mantissa * 10 ** Exponent
 
 In the computer, a simple floating point number is stored in 4 bytes
-at SINGLE and in 8 swap at DOUBLE. Unlike ABC80, which used BCD arithmetic,
-ABC802 uses binary arithmetic. The computer sees a floating point number as:
+at SINGLE and 8 at DOUBLE. Unlike ABC80, which used BCD arithmetic,
+ABC802 uses binary arithmetic. Thus, the computer sees a floating point
+number as:
   * byte 1 The exponent
   * byte 2-4/8 The mantissa
 
-Calculation of the correct exponent value from exponent changes is done with:
+Calculation of the correct exponent value from exponent changes is
+done with:
   * Exponent value = Exponent bytes - 128
 
 Byte 2 differs from the others in the mantissa in that the most
