@@ -98,7 +98,7 @@ Computer World* added a benchmark in 1978, below 'B8.BAS'.
 * [B8.BAS](B8.BAS) PCW Feb. 1978
 
 The samples built most on each other progressively towards more advanced. Later two
-Swedish magazines extended the list with other computers, notably naturally from the
+Swedish magazines extended the list with other computers, unsurprisingly from the
 ABC-line.
 
 [^rugg]: https://en.wikipedia.org/wiki/Rugg/Feldman_benchmarks
