@@ -117,8 +117,8 @@ ABC-line.
 
 ### BYTE 1981 Erathostenes Sieve[^byte]
 
-* [SIEVE.BAS](SIEVE.BAS) In contrast to the other benchmarks, this compares different *programming
-  languages*, and their outcome in speed. Here it is of course in BASIC.
+* [SIEVE.BAS](SIEVE.BAS) In contrast to the other benchmarks, this intend to compare different
+  *programming languages*, and their outcome in speed. Here it is of course a sample in BASIC.
 
 [^byte]: https://en.wikipedia.org/wiki/Byte_Sieve
 
