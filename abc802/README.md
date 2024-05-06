@@ -44,6 +44,8 @@ Some relevant specs, introduced in Feb. 1983:
 * 24k ROM BASIC II (made by DIAB AB)
 * 32k RAM (+ additional 32k RAM-disc, or combined let you have 64k CP/M)
 
+__The following programs have all been tested on an original machine, Luxor ABC802.__
+
 
 ## Samples of BASIC II
 
