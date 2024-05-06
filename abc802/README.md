@@ -166,7 +166,7 @@ computers, unsurprisingly from the ABC-line. Below I've added lacking results fr
 ### Interface Age 1980 Prime Numbers
 
 * [INTER.BAS](INTER.BAS) Original.
-* [INTER1.BAs](INTER1.BAS)
+* [INTER1.BAS](INTER1.BAS) Timing inclued.
 * [INTER2.BAS](INTER2.BAS) SINGLE.
 * [INTER3.BAS](INTER3.BAS) DOUBLE.
 
