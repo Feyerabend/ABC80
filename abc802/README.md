@@ -19,12 +19,19 @@ of computers.
 Even if the IBM PC first was launced with a BASIC in ROM, the ABC802 also marked the end of an era started
 with SOL, Apple II, Commodore PET, TRS-80 (model 1), and the like. The instant BASIC at startup had passed
 its time. This was true for the *business market* where ABC802 belonged. On the other hand there was a
-compleatly different home computer domain in which BASIC stayed for some time longer, almost in to the
-next decade ..
+compleatly different home computer domain in which BASIC in ROM stayed for some time longer and much stringer,
+almost in to the next decade ..
 
 But as can be witnessed below, BASIC II was quite fast for its time. Often very near (below or above)
 the highly prasied BBC Micro. It also hade the possible choice between different number types in trafe-off
 between speed and precision. Thus making it versatile in many applications.
+
+### ABC802
+
+Some relevant spec:
+* Z80 3 Mhz
+* 24k ROM BASIC II
+* 32k RAM (+ additional 32k RAM-disc, or combined let you have CP/M)
 
 
 ## Samples of BASIC II
@@ -32,12 +39,13 @@ between speed and precision. Thus making it versatile in many applications.
 Some different versions of samples in BASIC II for ABC802 to show how it can work.
 
 * [SNAKE1.BAS](SNAKE1.BAS) - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
-  First attempt of making separate routines.
+  First attempt of making separate routines. Sample of 'spagetti code'.
 * [SNAKE2.BAS](SNAKE2.BAS) - an attempt of using `DEF FN` to replace some previous jumping. All essential variables are
   *globals*, thus no real gain of the structure were performed.
-* [SNAKE3.BAS](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows single 
-  values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
-  we know them from (contemporary) other languages such as C or Pascal.
+* [SNAKE3.BAS](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows for
+  single values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
+  we know them from (contemporary) other languages such as C or Pascal. Even though this may count as 'strucutured BASIC'
+  the language still has too weak constructs, or in itself is not sufficient.
 
 
 ### Representation of numbers
