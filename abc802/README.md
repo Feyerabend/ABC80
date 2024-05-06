@@ -65,13 +65,16 @@ Something noticeable about the built-in number types in BASIC II is that
 there is a clear trade-off between precision and speed, which is probably
 one of the best reasons for the different types offered.
 
+But there was also care taken for the number of bytes each and every number
+took. Memory was scarce, and bytes had significance. 
+
 #### Integers
 
 The value of an integer is stored in 2 bytes in two's complement form. With
 two bytes, a binary number can be written in the number range 0 to 65535. In
 two's complement form, the number range becomes -32768 to +32767. The
-two's complement form uses the most significant bit, i.e. the bit 15, to
-indicate whether the number is negative or positive. Is the number is negative,
+two's complement form uses the most significant bit (bit 15) to
+indicate whether the number is negative or positive. If the number is negative,
 the bit is 1, else 0.
 
 In the symbol table, a simple integer variable takes up 6 bytes.
@@ -82,7 +85,7 @@ A floating point number has the form:
   * +/- Mantissa * 10 ** Exponent
 
 In the computer, a simple floating point number is stored in 4 bytes
-at SINGLE and 8 at DOUBLE. Unlike ABC80, which used BCD arithmetic,
+as SINGLE and 8 as DOUBLE. Unlike ABC80, which used BCD arithmetic,
 ABC802 uses binary arithmetic. Thus, the computer sees a floating point
 number as:
   * byte 1 The exponent
@@ -101,8 +104,8 @@ instead of showing the sign of the mantissa as above). One
 exception to this is when the floating point is zero (O),
 which is indicated in that the exponent byte is zero.
 
-In the symbol table, a floating point number occupies 8 bytes for
-SINGLE and 12 bytes for DOUBLE.
+In the symbol table, a floating point number occupies 8 bytes as
+SINGLE and 12 bytes as DOUBLE.
 
 #### ASCII-aritmetic
 
@@ -110,6 +113,8 @@ In ABC802, some new features have been added to the ASCII arithmetic
 from ABC80 which are:
   * The number of digits has been increased to 125.
   * Exponent allowed in input data.
+
+[^numbers]: *Bit för bit med ABC 800*, Luxor datorer, Motala, 1984, pp.44-6
 
 
 ## Timing in BASIC II with ABC802
