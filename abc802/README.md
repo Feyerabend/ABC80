@@ -19,13 +19,13 @@ of computers.
 Even if the IBM PC first was launced with a BASIC in ROM, the ABC802 also marked the end of an era started
 with SOL, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup had passed its prime
 time. This was true for the *business market* where ABC802 belonged, when you either made your own program
-or bought from it on the market from small developers, small firms. On the other hand there was a
-compleatly different *home computer* domain in which BASIC in ROM right at this time rised and thrived,
-where it stayed for some time longer and much stronger, almost in to the next decade ..
+or bought from it on the market from small developers, small firms. That was to change. On the other hand
+there was a compleatly different *home computer* domain in which BASIC in ROM right at this time rised and
+thrived, where it stayed for some time longer and much stronger, almost into the next decade ..
 
-But as can be witnessed below, BASIC II was quite fast for its time. Often very near (below or above)
-the highly prasied BBC Micro. It also had the possible choice between different number types in trafe-off
-between speed and precision. Thus making it versatile in many applications.
+But as can be witnessed below, BASIC II in ABC802 was quite fast for its time. Often very near (below or
+above) the highly prasied BBC Micro. It also had the possible choice between different number types in
+trade-off between speed and precision. Thus making it versatile in many applications.
 
 ### ABC802
 
