@@ -163,12 +163,19 @@ computers, unsurprisingly from the ABC-line. Below I've added lacking results fr
   about *accuracy* in number crunching, beside speed.
 
 
-### Interface Age 1980 Prime Numbers
+### Interface Age 1980 Prime Numbers[înter]
+
+At page 131 the author writes: 'Use any tricks you know to speed up the program execution
+(multiple statement lines, integer variables, etc.), but don't "improve" on the basic algorithm
+itself.'
 
 * [INTER.BAS](INTER.BAS) Original.
-* [INTER1.BAS](INTER1.BAS) Timing inclued.
+* [INTER1.BAS](INTER1.BAS) Timing included.
 * [INTER2.BAS](INTER2.BAS) SINGLE.
 * [INTER3.BAS](INTER3.BAS) DOUBLE.
+* [INTER4.BAS](INTER4.BAS) Tricks used.
+
+[^inter]: Interface Age, 1980, pp.130-1
 
 
 ### BYTE 1981 Erathostenes Sieve[^byte]

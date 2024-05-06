@@ -1,0 +1,20 @@
+100 REM INTERFACE AGE’s benchmark program to
+110 REM ’discover’ the first 1000 Prime numbers
+120 PRINT "Starting:"
+130 T1$=RIGHT$(TIME$,12%)
+140 FOR N% = 1% TO 1000%
+150   FOR K% = 2% TO 500%
+160     M. = N%/K% : L% = INT(M.)
+180     IF L% = 0% THEN 230
+190     IF L% = 1% THEN 220
+200     IF M. > L% THEN 220
+210     IF M. = L% THEN 240
+220   NEXT K%
+230   PRINT ;N%;" ";
+240 NEXT N%
+250 T2$=RIGHT$(TIME$,12%)
+260 PRINT CHR$(7%)
+270 PRINT "Finished."
+280 T=(VAL(LEFT$(T2$,2))-VAL(LEFT$(T1$,2)))*3600+VAL(RIGHT$(T2$,7))-VAL(RIGHT$(T1$,7))
+290 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
+300 END
