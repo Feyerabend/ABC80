@@ -25,8 +25,8 @@ or bought from it on the market from small developers, small firms. That was to 
 there was a compleatly different *home computer* domain in which BASIC in ROM right at this time rised and
 thrived, where it stayed for some time longer and much stronger, almost into the next decade ..
 
-But as can be witnessed below, BASIC II in ABC802 was quite fast for its time. Often very near (below or
-above) the highly prasied BBC Micro. It also had the possible choice between different number types in
+But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
+above) the highly prasied __BBC Micro__. It also had the possible choice between different number types in
 trade-off between speed and precision. Thus making it versatile in many applications.
 
 ### ABC802
