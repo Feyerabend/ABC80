@@ -30,7 +30,8 @@ right at this time rised and thrived, where it stayed for some time longer and m
 the next decade. Hand in hand with the rise and fall of *BASIC in ROM* was the *cassette tape recoder/player*
 used as data/program storage. If you think about it .. not that surprising. The diskette, and eventually
 the hard drive, changed the personal computer to using a *disc operating system* (yeah, DOS) as a focus point,
-instead.
+instead. This is far from declaring the language as dead. No, it still thrives even today and may develop
+futher. Who knows. However the large base it once supported is not longer there.
 
 But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
 above) the highly prasied BBC BASIC of the __BBC Micro__. It also had the possible choice between different
@@ -254,6 +255,11 @@ present, it shows speed in zooming and the spread of colours in the palette.
 | B6.BAS        | none    | ?               |
 | B7.BAS        | none    | ?               |
 | B8.BAS        | none    | ?               |
+| AHLS.BAS      | -       | ?               |
+| INTER1.BAS    | none    | ?               |
+| INTER2.BAS    | SINGLE  | ?               |
+| INTER3.BAS    | DOUBLE  | ?               |
+| INTER4.BAS    | % & al. | ?               |
 | SIEVE.BAS     | %       | ?               |
 | SIEVE10.BAS   | %       | ?               |
 | FIZZBUZZ.BAS  | none    | ?               |
