@@ -107,13 +107,13 @@ which is indicated in that the exponent byte is zero.
 In the symbol table, a floating point number occupies 8 bytes as
 SINGLE and 12 bytes as DOUBLE.
 
-#### ASCII-aritmetic
+#### ASCII-arithmetic
 
 With BASIC II, some new features was added to the ASCII arithmetic:
   * The number of digits was increased to 125.
   * Exponent wasallowed in input data.
 
-[^numbers]: More or less translation from
+[^numbers]: More or less a translation from
 *Bit för bit med ABC 800*, Luxor datorer, Motala, 1984, pp.44-6
 
 
