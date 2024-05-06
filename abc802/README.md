@@ -23,12 +23,12 @@ compleatly different home computer domain in which BASIC in ROM stayed for some 
 almost in to the next decade ..
 
 But as can be witnessed below, BASIC II was quite fast for its time. Often very near (below or above)
-the highly prasied BBC Micro. It also hade the possible choice between different number types in trafe-off
+the highly prasied BBC Micro. It also had the possible choice between different number types in trafe-off
 between speed and precision. Thus making it versatile in many applications.
 
 ### ABC802
 
-Some relevant spec:
+Some relevant specs:
 * Z80 3 Mhz
 * 24k ROM BASIC II
 * 32k RAM (+ additional 32k RAM-disc, or combined let you have CP/M)
