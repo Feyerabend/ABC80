@@ -29,7 +29,7 @@ storage. If you think about it .. not that surprising. The diskette, and eventua
 the personal computer to using a *disc operating system* (yeah, DOS) as a focus point, instead.
 
 But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
-above) the highly prasied the BASIC of the __BBC Micro__. It also had the possible choice between different
+above) the highly prasied the BBC BASIC of the __BBC Micro__. It also had the possible choice between different
 number types in trade-off between speed and precision. Thus making it versatile in many applications.
 
 ### ABC802
@@ -79,7 +79,12 @@ Timing for programs that takes a longer time, result in seconds:
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
 
-### Mikrodatorn + Hobbydata
+### Kilobaud 1977, Personal Computer World 1978, Mikrodatorn 1982, Hobbydata 1984[^rugg]
+
+One of the earliest comprehensive benchmarks for primarily home computing (but also occationally
+larger machines) came in 1977 with Rugg-Feldman samples in 1977 *Kilobaud* magazine. Later *Personal
+Computer World* added a benchmark in 1978, below 'B8.BAS'.
+
 * [B1.BAS](B1.BAS)
 * [B2.BAS](B2.BAS)
 * [B3.BAS](B3.BAS)
@@ -87,7 +92,12 @@ Timing for programs that takes a longer time, result in seconds:
 * [B5.BAS](B5.BAS)
 * [B6.BAS](B6.BAS)
 * [B7.BAS](B7.BAS)
-* [B8.BAS](B8.BAS)
+* [B8.BAS](B8.BAS) PCW Feb. 1978
+
+The samples built most on each other progressively towards more advanced. Later two
+Swedish magazines extended the list with other computers, notably naturally the ABC-line.
+
+[^rugg]: https://en.wikipedia.org/wiki/Rugg/Feldman_benchmarks
 
 
 ### Creative Computing 1984 Ahl's Simple Benchmark
