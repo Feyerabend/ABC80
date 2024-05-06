@@ -1,0 +1,22 @@
+5 EXTEND
+10 DIM FLAGS%(8191%)
+20 PRINT "10 iterations"
+30 FOR M%=1% TO 10%
+40   COUNT%=0%
+50   FOR I%=0% TO 8190%
+60     FLAGS%(I%)=1%
+70   NEXT I%
+80   FOR I%=0% TO 8190%
+90     IF FLAGS%(I%)=0% GOTO 170
+100      PRIME%=I%+I%+3%
+105      ! PRINT PRIME
+110      K%=I%+PRIME%
+120      WHILE K%<=8190%
+130        FLAGS%(K%)=0%
+140        K%=K%+PRIME%
+150      WEND
+160      COUNT%=COUNT%+1%
+170   NEXT I%
+180 NEXT M%
+190 PRINT COUNT%,"primes"
+200 END
