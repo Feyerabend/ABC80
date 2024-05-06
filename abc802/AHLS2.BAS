@@ -1,0 +1,15 @@
+100 ! ' Ahl's Simple Benchmark
+110 FOR N%=1% TO 100%
+120   A=N%
+130   FOR I%=1% TO 10%
+140     A=SQR(A)
+150     R=R+RND(1)
+160   NEXT I%
+170   FOR I%=1% TO 10%
+180     A=Aü2
+190     R=R+RND(1)
+200   NEXT I%
+210   S=S+A%
+220 NEXT N%
+230 PRINT ABS(1010-S/5)
+240 PRINT ABS(1000-R)

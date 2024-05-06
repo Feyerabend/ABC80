@@ -1,12 +1,9 @@
-100 REM Ahl’s Simple Benchmark
-110 FOR N=1 TO 100 : A=N
-120 FOR I=1 TO 10
-130 A=SQR(A) : R=R+RND
-140 NEXT I
-150 FOR I=1 TO 10
-160 A=Aü2 : R=R+RND
-170 NEXT I
-180 S=S+A
-190 NEXT N
-200 PRINT ABS(1010-S/5)
-210 PRINT ABS(1000-R)
+1 ' Ahl's simple benchmark test
+2 ' In Lines 30 and 40, some computers
+3 ' may require RND(1) for correct results
+10 PRINT "Accuracy  Random"
+20 FOR N=1 TO 100:A=N
+30 FOR I=1 TO 10:A=SQR(A):R=R+RND(0):NEXT I
+40 FOR I=1 TO 10:A=A^2:R=R+RND(0):NEXT I
+50 S=S+A:NEXT N
+60 PRINT ABS(1010-S/5);ABS(1000-R)

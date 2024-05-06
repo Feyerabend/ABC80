@@ -158,10 +158,16 @@ computers, unsurprisingly from the ABC-line. Below I've added lacking results fr
 [^rugg]: https://en.wikipedia.org/wiki/Rugg/Feldman_benchmarks
 
 
-### Creative Computing 1984 Ahl's Simple Benchmark
+### Creative Computing 1984 Ahl's Simple Benchmark[^ahl]
 
 * [AHLS.BAS](AHLS.BAS) This is the only benchmark among the selected ones here, that also gives a hint
   about *accuracy* in number crunching, beside speed.
+* [AHLS1.BAS](AHLS1.BAS) Another version of the same benchmark.
+* [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802.
+
+[^ahl]: David H. Ahl, "Benchmark Comparison Test", Creative Computing, Nov. 1983. pp. 259–260,
+        David H. Ahl, "Creative Computing Benchmark", Creative Computing 1984. p.6.
+        https://en.wikipedia.org/wiki/Creative_Computing_Benchmark
 
 
 ### Interface Age 1980 Prime Numbers[^inter]
