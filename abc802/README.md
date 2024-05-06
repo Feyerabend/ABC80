@@ -26,7 +26,7 @@ hand there was a compleatly different *home computer* domain in which BASIC in R
 and thrived, where it stayed for some time longer and much stronger, almost into the next decade. Hand in
 hand with the rise and fall of *BASIC in ROM* was the *cassette tape recoder/player* used as data/program
 storage. If you think about it .. not that surprising. The diskette, and eventually the hard drive, changed
-the personal computer to using a *disc operating system* as a focus point, instead.
+the personal computer to using a *disc operating system* (yeah, DOS) as a focus point, instead.
 
 But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
 above) the highly prasied the BASIC of the __BBC Micro__. It also had the possible choice between different
