@@ -49,7 +49,7 @@ __The following programs have all been tested on an original machine, Luxor ABC8
 
 ## Samples of BASIC II
 
-Some different versions of samples in BASIC II for ABC802 to show how it can work.
+Some different samples in BASIC II for ABC802 to show how it can work.
 
 * [SNAKE1.BAS](SNAKE1.BAS) - more or less regular BASIC of the time, selecting and jumping by using `GOSUB` och `GOTO`.
   First attempt of making separate routines. Sample of 'spagetti code'.
