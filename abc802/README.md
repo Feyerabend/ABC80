@@ -261,7 +261,9 @@ present, it shows speed in zooming and the spread of colours in the palette.
 | B6.BAS        | none    | ?               |
 | B7.BAS        | none    | ?               |
 | B8.BAS        | none    | ?               |
-| AHLS.BAS      | -       | ?               |
+| AHLS.BAS      | none    | ?               |
+| AHLS1.BAS     | none    | ?               |
+| AHLS2.BAS     | % some  | ?               |
 | INTER1.BAS    | none    | ?               |
 | INTER2.BAS    | SINGLE  | ?               |
 | INTER3.BAS    | DOUBLE  | ?               |
