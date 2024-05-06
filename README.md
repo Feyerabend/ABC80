@@ -150,7 +150,8 @@ the equilibrium of standards were needed even more.
 
 IBM PC was introduced in 1983 in Sweden, two years after the introduction in the USA.
 But the nationally homebrew computer ABC80 and its successor
-[ABC800](https://en.wikipedia.org/wiki/ABC_800), had strong sales in the
+[ABC800](https://en.wikipedia.org/wiki/ABC_800) (or read about the later in 1983
+introduced [ABC802](abc802/README.md) and the extended BASIC II), had strong sales in the
 late 70s until the mid-80s inside of Sweden, when it was gradually replaced by
 foremost IBM PC and its clones. But even if there was success of the PC,
 it was not immediate. The IBM PC XT, later AT, as well as Microsoft DOS
