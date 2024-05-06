@@ -66,7 +66,7 @@ there is a clear trade-off between precision and speed, which is probably
 one of the best reasons for the different types offered.
 
 But there was also care taken for the number of bytes each and every number
-took. Memory was scarce, and bytes had significance. 
+took. Memory was scarce, and number of bytes had serious significance. 
 
 #### Integers
 
