@@ -142,13 +142,13 @@ One of the earliest comprehensive benchmarks for primarily home computing (but a
 larger machines) came in 1977 with Rugg-Feldman samples in 1977 *Kilobaud* magazine. Later *Personal
 Computer World* added a benchmark in 1978, below 'B8.BAS'.
 
-* [B1.BAS](B1.BAS)
-* [B2.BAS](B2.BAS)
-* [B3.BAS](B3.BAS)
-* [B4.BAS](B4.BAS)
-* [B5.BAS](B5.BAS)
-* [B6.BAS](B6.BAS)
-* [B7.BAS](B7.BAS)
+* [B1.BAS](B1.BAS) Kilobaud, 1977
+* [B2.BAS](B2.BAS) "-
+* [B3.BAS](B3.BAS) "-
+* [B4.BAS](B4.BAS) "-
+* [B5.BAS](B5.BAS) "-
+* [B6.BAS](B6.BAS) "-
+* [B7.BAS](B7.BAS) "-
 * [B8.BAS](B8.BAS) PCW Feb. 1978
 
 The samples built most on each other progressively towards more advanced. They are intended
