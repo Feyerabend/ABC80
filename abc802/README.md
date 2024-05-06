@@ -18,9 +18,10 @@ of computers.
 
 Even if the IBM PC first was launced with a BASIC in ROM, the ABC802 also marked the end of an era started
 with SOL, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup had passed its prime
-time. This was true for the *business market* where ABC802 belonged. On the other hand there was a
-compleatly different *home computer* domain in which BASIC in ROM stayed for some time longer and much stringer,
-almost in to the next decade ..
+time. This was true for the *business market* where ABC802 belonged, when you either made your own program
+or bought from it on the market from small developers, small firms. On the other hand there was a
+compleatly different *home computer* domain in which BASIC in ROM right at this time rised and thrived,
+where it stayed for some time longer and much stronger, almost in to the next decade ..
 
 But as can be witnessed below, BASIC II was quite fast for its time. Often very near (below or above)
 the highly prasied BBC Micro. It also had the possible choice between different number types in trafe-off
@@ -30,8 +31,8 @@ between speed and precision. Thus making it versatile in many applications.
 
 Some relevant specs:
 * Z80 3 Mhz
-* 24k ROM BASIC II
-* 32k RAM (+ additional 32k RAM-disc, or combined let you have CP/M)
+* 24k ROM BASIC II (made by DIAB AB)
+* 32k RAM (+ additional 32k RAM-disc, or combined let you have 64k CP/M)
 
 
 ## Samples of BASIC II
@@ -52,7 +53,7 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
 
 Integer, Float, Double, ASCII ..
 Something noticeable about the built-in number types in BASIC II is that there is a clear trade-off between
-precision and speed, which is probably one of the reasons for the different types offered.
+precision and speed, which is probably one of the best reasons for the different types offered.
 
 
 ## Timing in BASIC II with ABC802
