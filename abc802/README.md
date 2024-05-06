@@ -112,7 +112,7 @@ SINGLE and 12 bytes as DOUBLE.
 
 With BASIC II, some new features was added to the ASCII arithmetic:
   * The number of digits was increased to 125.
-  * Exponent wasallowed in input data.
+  * Exponent was allowed in input data.
 
 [^numbers]: More or less a translation from
 *Bit för bit med ABC 800*, Luxor datorer, Motala, 1984, pp.44-6
