@@ -109,7 +109,7 @@ SINGLE and 12 bytes as DOUBLE.
 
 #### ASCII-aritmetic
 
-In ABC802, some new features was added to the ASCII arithmetic:
+With BASIC II, some new features was added to the ASCII arithmetic:
   * The number of digits was increased to 125.
   * Exponent wasallowed in input data.
 
