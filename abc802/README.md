@@ -17,9 +17,9 @@ but also there was a version made for PC-DOS/MS-DOS, intended for easier transit
 of computers.
 
 Even if the IBM PC first was launced with a BASIC in ROM, the ABC802 also marked the end of an era started
-with SOL, Apple II, Commodore PET, TRS-80 (model 1), and the like. The instant BASIC at startup had passed
-its time. This was true for the *business market* where ABC802 belonged. On the other hand there was a
-compleatly different home computer domain in which BASIC in ROM stayed for some time longer and much stringer,
+with SOL, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup had passed its prime
+time. This was true for the *business market* where ABC802 belonged. On the other hand there was a
+compleatly different *home computer* domain in which BASIC in ROM stayed for some time longer and much stringer,
 almost in to the next decade ..
 
 But as can be witnessed below, BASIC II was quite fast for its time. Often very near (below or above)
