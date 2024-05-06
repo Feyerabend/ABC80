@@ -50,7 +50,7 @@ Some different versions of samples in BASIC II for ABC802 to show how it can wor
   *globals*, thus no real gain of the structure were performed.
 * [SNAKE3.BAS](SNAKE3.BAS) - some more shakeing at the code strucure, but parameters to functions `FN` only allows for
   single values when called (from variables) to be passed, thus limiting the usefulness as procedures or functions as
-  we know them from (contemporary) other languages such as C or Pascal. Even though this may count as 'strucutured BASIC'
+  we know them from (contemporary) other languages such as C or Pascal. Even though this may count as 'structured BASIC'
   the language still has too weak constructs, or in itself is not sufficient.
 
 
