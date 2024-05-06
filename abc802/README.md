@@ -31,7 +31,7 @@ trade-off between speed and precision. Thus making it versatile in many applicat
 
 ### ABC802
 
-Some relevant specs:
+Some relevant specs, introduced in Feb. 1983:
 * Z80 3 Mhz
 * 24k ROM BASIC II (made by DIAB AB)
 * 32k RAM (+ additional 32k RAM-disc, or combined let you have 64k CP/M)
