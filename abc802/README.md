@@ -81,10 +81,11 @@ Timing for programs that takes a longer time, result in seconds:
 
 ### Creative Computing 1984 Ahl's Simple Benchmark
 
-* [AHLS.BAS](AHLS.BAS)
+* [AHLS.BAS](AHLS.BAS) This is the only benchmark among the selected ones here, that also gives a hint
+  about *accuracy* in number crunching, beside speed.
 
 
-### Interface Age Prime Numbers 1980
+### Interface Age 1980 Prime Numbers
 ..
 
 
@@ -96,6 +97,8 @@ to change and adopt to different flavours of BASIC.
 * [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program. Increased to 1000 instead of 100,
   shows smaller diviations more explicit.
 * [FIZZBUZ1.BAS](FIZZBUZ1.BAS) Introduce % everywhere.
+* [FIZZBUZ2.BAS](FIZZBUZ2.BAS) SINGLE.
+* [FIZZBUZ3.BAS](FIZZBUZ3.BAS) DOUBLE.
 
 [^fizzbuzz]: https://en.wikipedia.org/wiki/Fizz_buzz
 
@@ -104,8 +107,8 @@ to change and adopt to different flavours of BASIC.
 
 * [NOEL.BAS](NOEL.BAS) Original test.
 * [NOEL1.BAS](NOEL1.BAS) Introduce % all over.
-* [NOEL2.BAS](NOEL2.BAS) First line SINGLE.
-* [NOEL3.BAS](NOEL3.BAS) First line DOUBLE.
+* [NOEL2.BAS](NOEL2.BAS) SINGLE.
+* [NOEL3.BAS](NOEL3.BAS) DOUBLE.
 
 [^noel]: https://www.youtube.com/@NoelsRetroLab
 
