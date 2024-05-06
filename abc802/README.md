@@ -109,12 +109,12 @@ SINGLE and 12 bytes as DOUBLE.
 
 #### ASCII-aritmetic
 
-In ABC802, some new features have been added to the ASCII arithmetic
-from ABC80 which are:
-  * The number of digits has been increased to 125.
-  * Exponent allowed in input data.
+In ABC802, some new features was added to the ASCII arithmetic:
+  * The number of digits was increased to 125.
+  * Exponent wasallowed in input data.
 
-[^numbers]: *Bit för bit med ABC 800*, Luxor datorer, Motala, 1984, pp.44-6
+[^numbers]: More or less translation from
+*Bit för bit med ABC 800*, Luxor datorer, Motala, 1984, pp.44-6
 
 
 ## Timing in BASIC II with ABC802
