@@ -119,6 +119,7 @@ ABC-line.
 
 * [SIEVE.BAS](SIEVE.BAS) In contrast to the other benchmarks, this intend to compare different
   *programming languages*, and their outcome in speed. Here it is of course a sample in BASIC.
+* [SIEVE10.BAS](SIEVE10.BAS) From *Byte* Jan. 1983. Now update with 10 iterations in BASIC.
 
 [^byte]: https://en.wikipedia.org/wiki/Byte_Sieve
 
