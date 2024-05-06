@@ -17,22 +17,23 @@ came in ROMs, and basically was the computer software/operating system. But also
 community contributions of benchmarks, which are fun.
 
 The ABC802, which is the focus here, was a follow-up to the ancestor ABC80. It was almost the same computer,
-but had an improved BASIC, the BASIC II. The BASIC II was used in the similar machines ABC800 and ABC806,
-but also there was a version made for PC-DOS/MS-DOS, intended for easier transitioning to the future PC-line
-of computers.
+but, among other things, had an improved BASIC, the BASIC II. The BASIC II was used in the similar machines
+ABC800 and ABC806, but also there was a version made for PC-DOS/MS-DOS, intended for easier transitioning
+to the future PC-line of computers. Or was it suppose to conquer?
 
-Even if the IBM PC first was launced with a *BASIC in ROM*, the ABC802 also marked the end of an era started
-with SOL, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup had passed its prime
-time. This was true for the *business market* where ABC802 belonged, when you either made your own program
-or bought from it on the market from small developers, small firms. That was about to change. On the other
-hand there was a compleatly different *home computer* domain in which BASIC in ROM right at this time rised
-and thrived, where it stayed for some time longer and much stronger, almost into the next decade. Hand in
-hand with the rise and fall of *BASIC in ROM* was the *cassette tape recoder/player* used as data/program
-storage. If you think about it .. not that surprising. The diskette, and eventually the hard drive, changed
-the personal computer to using a *disc operating system* (yeah, DOS) as a focus point, instead.
+Well, even if the first IBM PC was launched with a Microsoft *BASIC in ROM*, the ABC802 also marked the
+end of an era started with SOL, Apple II, Commodore PET, TRS-80, and the like. The instant BASIC at startup
+had passed its prime time. This was true for the *business market* where ABC802 belonged, when you either
+made your own program or bought from it on the market from small developers, small firms. That was about
+to change. On the other hand there was a compleatly different *home computer* domain in which BASIC in ROM
+right at this time rised and thrived, where it stayed for some time longer and much stronger, almost into
+the next decade. Hand in hand with the rise and fall of *BASIC in ROM* was the *cassette tape recoder/player*
+used as data/program storage. If you think about it .. not that surprising. The diskette, and eventually
+the hard drive, changed the personal computer to using a *disc operating system* (yeah, DOS) as a focus point,
+instead.
 
 But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
-above) the highly prasied the BBC BASIC of the __BBC Micro__. It also had the possible choice between different
+above) the highly prasied BBC BASIC of the __BBC Micro__. It also had the possible choice between different
 number types in trade-off between speed and precision. Thus making it versatile in many applications.
 
 ### ABC802
@@ -191,6 +192,8 @@ present, it shows speed in zooming and the spread of colours in the palette.
 | B6.BAS        | none    | ?               |
 | B7.BAS        | none    | ?               |
 | B8.BAS        | none    | ?               |
+| SIEVE.BAS     | %       | ?               |
+| SIEVE10.BAS   | %       | ?               |
 | FIZZBUZZ.BAS  | none    | ?               |
 | FIZZBUZ1.BAS  | %       | ?               |
 | FIZZBUZ2.BAS  | SINGLE  | ?               |
