@@ -153,7 +153,7 @@ Computer World* added a benchmark in 1978, below 'B8.BAS'.
 
 The samples built most on each other progressively towards more advanced. They are intended
 to reflect floating point results. Later two Swedish magazines extended the list with other
-computers, unsurprisingly from the ABC-line. Below I've added lacking results from ABC802.
+computers, unsurprisingly most from the ABC-line. Below I've added lacking results from ABC802.
 
 [^rugg]: https://en.wikipedia.org/wiki/Rugg/Feldman_benchmarks
 
