@@ -263,7 +263,7 @@ as the timing in many cases was not that precise. Therefore most numbers are giv
 rounded up today, unless they are from computers tested a long time ago and already published
 as in fractions.
 
-| Program       | Mods    | Seconds                           |
+| Program       | Mods    | Seconds             (acc., rnd.)  |
 | ------------- | ------- | --------------------------------- |
 | B1.BAS        | none    | 1<sup>1</sup>                     |
 | B2.BAS        | none    | 2<sup>2</sup>                     |
@@ -273,7 +273,7 @@ as in fractions.
 | B6.BAS        | none    | 11<sup>6</sup>                    |
 | B7.BAS        | none    | 20<sup>7</sup>                    |
 | B8.BAS        | none    | 3<sup>8</sup>                     |
-| AHLS2.BAS     | % some  | 24 (.247559, 10.7994)<sup>9</sup> |
+| AHLS2.BAS     | % some  | 24<sup>9</sup> (.247559, 10.7994) |
 | INTER1.BAS    | none    | ?               |
 | INTER2.BAS    | SINGLE  | ?               |
 | INTER3.BAS    | DOUBLE  | ?               |
@@ -321,8 +321,8 @@ acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
    *So ABC802 should be 'acceptable' concerning the randomness.*
 * "The measure of accuracy should be as close to zero as possible. [...]
    A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
-   is poor, while smaller values (0.00000021, for example) is very good.", p.260
-   *ABC802 should therefore be quite good when using DOUBLE.*
+   is poor, while smaller values (0.00000021, for example) is very good.", p.260.
+   *ABC802 should therefore judge to be quite good when using DOUBLE.*
 
 <sup>a</sup> Same result as BBC Micro.
 
