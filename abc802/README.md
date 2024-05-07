@@ -260,7 +260,7 @@ and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.b
 
 The precision of seconds given in fractions may or may not be the true or actual case,
 as the timing in many cases was not that precise. Therefore most numbers are given as
-rounded today, unless they are from computers tested a long time ago and already published
+rounded up today, unless they are from computers tested a long time ago and already published
 as in fractions.
 
 | Program       | Mods    | Seconds         |
