@@ -265,13 +265,13 @@ as in fractions.
 
 | Program       | Mods    | Seconds         |
 | ------------- | ------- | --------------- |
-| B1.BAS        | none    | ?<sup>1</sup>   |
-| B2.BAS        | none    | ?<sup>2</sup>   |
-| B3.BAS        | none    | ?<sup>3</sup>   |
-| B4.BAS        | none    | ?<sup>4</sup>   |
-| B5.BAS        | none    | ?<sup>5</sup>   |
-| B6.BAS        | none    | ?<sup>6</sup>   |
-| B7.BAS        | none    | ?<sup>7</sup>   |
+| B1.BAS        | none    | 1<sup>1</sup>   |
+| B2.BAS        | none    | 2<sup>2</sup>   |
+| B3.BAS        | none    | 6<sup>3</sup>   |
+| B4.BAS        | none    | 6<sup>4</sup>   |
+| B5.BAS        | none    | 7<sup>5</sup>   |
+| B6.BAS        | none    | 11<sup>6</sup>   |
+| B7.BAS        | none    | 20<sup>7</sup>   |
 | B8.BAS        | none    | ?<sup>8</sup>   |
 | AHLS2.BAS     | % some  | ?               |
 | INTER1.BAS    | none    | ?               |
