@@ -17,7 +17,7 @@ Besides that reality distortion of today, benchmarks can be fun to look at. The 
 that have been done through the early years of personal computing, when programming in BASIC was the
 primary choice. It was the time when the BASIC came in ROMs, and basically was the computer
 software/operating system. But also there are some new retro community contributions of benchmarks, which
-are fun.
+are fun, also.
 
 The ABC802, which is the focus here, was a follow-up to the ancestor ABC80. It was almost the same computer,
 but, among other things, had an improved BASIC, the BASIC II. The BASIC II was used in the similar machines
@@ -178,9 +178,9 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
 
 ### Interface Age 1980 Prime Numbers[^inter]
 
-At page 131 the author writes: 'Use any tricks you know to speed up the program execution
+At page 131 the author writes: *'Use any tricks you know to speed up the program execution
 (multiple statement lines, integer variables, etc.), but don't "improve" on the basic algorithm
-itself.'
+itself.'*
 
 * [INTER.BAS](INTER.BAS) Original.
 * [INTER1.BAS](INTER1.BAS) Timing included.
