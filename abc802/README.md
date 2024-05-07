@@ -9,9 +9,9 @@ machine can do in general. It doesn't indicate the possibilities, they only conv
 Mostly is has been for speed .. of that something.
 
 Today when almost all interests on 'retro computers' are in the spotlight of how and if they are able to play
-(graphical) games, and in this area the ABC802 can not compete, benchmarks shows other aspects. Unfourtunately
-anti-historical viewpoints reduces important stepstones in computer developments, and distorts facts where
-they may eventually become tales of a historically non-existing reality.
+(graphical) games, and in this area the ABC802 can not compete, benchmarks shows other aspects. Regrettably,
+the presence of anti-historical perspectives undermines significant milestones in computer advancements and
+skews factual information, potentially transforming them into narratives that lack historical validity.
 
 Besides that reality distortion of today, benchmarks can be fun to look at. The following are benchmarks
 that have been done through the early years of personal computing, when programming in BASIC was the
