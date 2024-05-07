@@ -311,7 +311,7 @@ __Notes__
 
 <sup>8</sup> BBC Micro: 5.1
 
-<sup>9</sup> Cf. IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3;
+<sup>9</sup> Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3;
 
 ABC802: using DOUBLE but the rest of program with no change: 38 sec.,
 acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
@@ -322,7 +322,7 @@ acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 * "The measure of accuracy should be as close to zero as possible. [...]
    A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
    is poor, while smaller values (0.00000021, for example) is very good.", p.260.
-   *ABC802 should therefore judge to be quite good when using DOUBLE.*
+   *ABC802 should therefore judged to be quite good when using DOUBLE.*
 
 <sup>a</sup> Same result as BBC Micro.
 
