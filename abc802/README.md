@@ -170,7 +170,8 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
   of *random* numbers.
 * [AHLS1.BAS](AHLS1.BAS) Another version of the same benchmark.
 * [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802.
-* [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802. But using DOUBLE.
+* [AHLS3.BAS](AHLS3.BAS) Version adopted to ABC802. But using DOUBLE.
+* [AHLS4.BAS](AHLS4.BAS) Version adopted to ABC802. But using SINGLE.
 
   "The measure of randomness should also be as close to zero as possible.
    Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
