@@ -249,21 +249,27 @@ present, it shows speed in zooming and the spread of colours in the palette.
 * [MANDEL3.BAS](MANDEL3.BAS) Printed with characters, and somewhat optimized slightly better than the above.
 
 [^mandel]: https://en.wikipedia.org/wiki/Mandelbrot_set
-[^mandel2]: http://forum.6502.org/viewtopic.php?p=87398, and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.bas?ref_type=heads.
+[^mandel2]: http://forum.6502.org/viewtopic.php?p=87398,
+and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.bas?ref_type=heads.
 
 
 ## Summary benchmark results
 
+The precision of seconds given in fractions may or may not be the true or actual case,
+as the timing in many cases was not that precise. Therefore most numbers are given as
+rounded today, unless they are from computers tested a long time ago and already published
+as in fractions.
+
 | Program       | Mods    | Seconds         |
 | ------------- | ------- | --------------- |
-| B1.BAS        | none    | ?               |
-| B2.BAS        | none    | ?               |
-| B3.BAS        | none    | ?               |
-| B4.BAS        | none    | ?               |
-| B5.BAS        | none    | ?               |
-| B6.BAS        | none    | ?               |
-| B7.BAS        | none    | ?               |
-| B8.BAS        | none    | ?               |
+| B1.BAS        | none    | ?<sup>1</sup>   |
+| B2.BAS        | none    | ?<sup>2</sup>   |
+| B3.BAS        | none    | ?<sup>3</sup>   |
+| B4.BAS        | none    | ?<sup>4</sup>   |
+| B5.BAS        | none    | ?<sup>5</sup>   |
+| B6.BAS        | none    | ?<sup>6</sup>   |
+| B7.BAS        | none    | ?<sup>7</sup>   |
+| B8.BAS        | none    | ?<sup>8</sup>   |
 | AHLS2.BAS     | % some  | ?               |
 | INTER1.BAS    | none    | ?               |
 | INTER2.BAS    | SINGLE  | ?               |
@@ -275,22 +281,38 @@ present, it shows speed in zooming and the spread of colours in the palette.
 | FIZZBUZ1.BAS  | %       | ?               |
 | FIZZBUZ2.BAS  | SINGLE  | ?               |
 | FIZZBUZ3.BAS  | DOUBLE  | ?               |
-| NOEL.BAS      | none    | 19<sup>1</sup>  |
-| NOEL1.BAS     | %       | 8<sup>2</sup>   |
+| NOEL.BAS      | none    | 19<sup>a</sup>  |
+| NOEL1.BAS     | %       | 8<sup>b</sup>   |
 | NOEL2.BAS     | SINGLE  | 26              |
 | NOEL3.BAS     | DOUBLE  | 26              |
-| SCRUSS2.BAS   | none    | 246<sup>3</sup> |
+| SCRUSS2.BAS   | none    | 246<sup>c</sup> |
 | MANDEL1.BAS   | % some  | 3317            |
 | MANDEL2.BAS   | none    | 93              |
 | MANDEL3.BAS   | % some  | 88              |
 
 __Notes__
 
-<sup>1</sup> Same result as BBC Micro.
+<sup>1</sup> BBC Micro: 1.0
 
-<sup>2</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
+<sup>2</sup> BBC Micro: 3.1
 
-<sup>3</sup> In this case a higher number the better.
+<sup>3</sup> BBC Micro: 8.2
+
+<sup>4</sup> BBC Micro: 8.7
+
+<sup>5</sup> BBC Micro: 9.1
+
+<sup>6</sup> BBC Micro: 13.9
+
+<sup>7</sup> BBC Micro: 21.4
+
+<sup>8</sup> BBC Micro: 5.1
+
+<sup>a</sup> Same result as BBC Micro.
+
+<sup>b</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
+
+<sup>c</sup> In this case a higher number the better.
 Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
 And alas *ABC802 BASIC II* at 246.
 
