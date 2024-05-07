@@ -314,13 +314,15 @@ __Notes__
 <sup>9</sup> Cf. IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3;
 
 ABC802: using DOUBLE but the rest of program with no change: 38 sec.,
-acc. 6.02824457018869E-11, rnd. 10.79915231955238.
+acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 
 * "The measure of randomness should also be as close to zero as possible.
    Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
+   *So ABC802 should be 'acceptable' concerning the randomness.*
 * "The measure of accuracy should be as close to zero as possible. [...]
    A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
    is poor, while smaller values (0.00000021, for example) is very good.", p.260
+   *ABC802 should therefore be quite good when using DOUBLE.*
 
 <sup>a</sup> Same result as BBC Micro.
 
