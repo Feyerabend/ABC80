@@ -167,7 +167,7 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
 
 * [AHLS.BAS](AHLS.BAS) This is the only benchmark among the selected ones here,
   that also gives a hint about *accuracy* in number crunching, beside 'quality'
-  of random numbers.
+  of *random* numbers.
 * [AHLS1.BAS](AHLS1.BAS) Another version of the same benchmark.
 * [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802.
 
@@ -263,17 +263,17 @@ as the timing in many cases was not that precise. Therefore most numbers are giv
 rounded up today, unless they are from computers tested a long time ago and already published
 as in fractions.
 
-| Program       | Mods    | Seconds         |
-| ------------- | ------- | --------------- |
-| B1.BAS        | none    | 1<sup>1</sup>   |
-| B2.BAS        | none    | 2<sup>2</sup>   |
-| B3.BAS        | none    | 6<sup>3</sup>   |
-| B4.BAS        | none    | 6<sup>4</sup>   |
-| B5.BAS        | none    | 7<sup>5</sup>   |
-| B6.BAS        | none    | 11<sup>6</sup>   |
-| B7.BAS        | none    | 20<sup>7</sup>   |
-| B8.BAS        | none    | 3<sup>8</sup>   |
-| AHLS2.BAS     | % some  | ?               |
+| Program       | Mods    | Seconds                           |
+| ------------- | ------- | --------------------------------- |
+| B1.BAS        | none    | 1<sup>1</sup>                     |
+| B2.BAS        | none    | 2<sup>2</sup>                     |
+| B3.BAS        | none    | 6<sup>3</sup>                     |
+| B4.BAS        | none    | 6<sup>4</sup>                     |
+| B5.BAS        | none    | 7<sup>5</sup>                     |
+| B6.BAS        | none    | 11<sup>6</sup>                    |
+| B7.BAS        | none    | 20<sup>7</sup>                    |
+| B8.BAS        | none    | 3<sup>8</sup>                     |
+| AHLS2.BAS     | % some  | 24 (.247559, 10.7994)<sup>9</sup> |
 | INTER1.BAS    | none    | ?               |
 | INTER2.BAS    | SINGLE  | ?               |
 | INTER3.BAS    | DOUBLE  | ?               |
@@ -310,6 +310,15 @@ __Notes__
 <sup>7</sup> BBC Micro: 21.4
 
 <sup>8</sup> BBC Micro: 5.1
+
+<sup>9</sup> IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3;
+    ABC802: using DOUBLE but the rest of program with no change: 38 sec.,
+    acc. 6.02824457018869<sup>-11</sup>, rnd. 10.79915231955238.
+* "The measure of randomness should also be as close to zero as possible.
+   Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
+* "The measure of accuracy should be as close to zero as possible. [...]
+   A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
+   is poor, while smaller values (0.00000021, for example) is very good.", p.260
 
 <sup>a</sup> Same result as BBC Micro.
 
