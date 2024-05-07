@@ -57,8 +57,8 @@
 2190 DATA 'Fj#',255,80
 2200 DATA 'Gj',255,73
 2210 !
-3000 DATA "Di#B-BBB-BBB-Di#GiAB" ! (D^)  B - B     B       B - B     B      B-^D  G    A     B
-2010 DATA "C#C#C#C#C#BB" ! ^C   ^C    ^C ^C ^C  B   B
+3000 DATA "Di#,B,-,B,B,B,-,B,B,B,-,Di#,Gi,A,B" ! (D^)  B - B     B       B - B     B      B-^D  G    A     B
+2010 DATA "Ci#,Ci#,Ci#,Ci#,Ci#,B,B" ! ^C   ^C    ^C ^C ^C  B   B
 2020 DATA ! B  B   B       A        A-B   A-^D
 2030 DATA ! B - B      B       B - B     B       B-^D G    A     B
 2040 DATA ! ^C   ^C    ^C ^C ^C  B    B
