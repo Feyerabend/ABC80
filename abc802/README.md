@@ -170,6 +170,17 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
   of *random* numbers.
 * [AHLS1.BAS](AHLS1.BAS) Another version of the same benchmark.
 * [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802.
+* [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802. But using DOUBLE.
+
+  "The measure of randomness should also be as close to zero as possible.
+   Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
+   *So ABC802 should be 'acceptable' concerning the randomness.*
+
+  "The measure of accuracy should be as close to zero as possible. [...]
+   A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
+   is poor, while smaller values (0.00000021, for example) is very good.", p.260.
+   *ABC802 should therefore judged to be quite good when using DOUBLE.*
+
 
 [^ahl]: David H. Ahl, "Benchmark Comparison Test", Creative Computing, Nov. 1983. pp. 259–260,
         David H. Ahl, "Creative Computing Benchmark", Creative Computing 1984. p.6.
@@ -263,35 +274,36 @@ as the timing in many cases was not that precise. Therefore most numbers are giv
 rounded up today, unless they are from computers tested a long time ago and already published
 as in fractions.
 
-| Program       | Mods    | Seconds             (acc., rnd.)  |
-| ------------- | ------- | --------------------------------- |
-| B1.BAS        | none    | 1<sup>1</sup>                     |
-| B2.BAS        | none    | 2<sup>2</sup>                     |
-| B3.BAS        | none    | 6<sup>3</sup>                     |
-| B4.BAS        | none    | 6<sup>4</sup>                     |
-| B5.BAS        | none    | 7<sup>5</sup>                     |
-| B6.BAS        | none    | 11<sup>6</sup>                    |
-| B7.BAS        | none    | 20<sup>7</sup>                    |
-| B8.BAS        | none    | 3<sup>8</sup>                     |
-| AHLS2.BAS     | % some  | 24<sup>9</sup> (.247559, 10.7994) |
-| INTER1.BAS    | none    | ?               |
-| INTER2.BAS    | SINGLE  | ?               |
-| INTER3.BAS    | DOUBLE  | ?               |
-| INTER4.BAS    | % & al. | ?               |
-| SIEVE.BAS     | %       | ?               |
-| SIEVE10.BAS   | %       | ?               |
-| FIZZBUZZ.BAS  | none    | ?               |
-| FIZZBUZ1.BAS  | %       | ?               |
-| FIZZBUZ2.BAS  | SINGLE  | ?               |
-| FIZZBUZ3.BAS  | DOUBLE  | ?               |
-| NOEL.BAS      | none    | 19<sup>a</sup>  |
-| NOEL1.BAS     | %       | 8<sup>b</sup>   |
-| NOEL2.BAS     | SINGLE  | 26              |
-| NOEL3.BAS     | DOUBLE  | 26              |
-| SCRUSS2.BAS   | none    | 246<sup>c</sup> |
-| MANDEL1.BAS   | % some  | 3317            |
-| MANDEL2.BAS   | none    | 93              |
-| MANDEL3.BAS   | % some  | 88              |
+| Program       | Mods     | Seconds             |
+| ------------- | -------- | ------------------- |
+| B1.BAS        | none     | 1<sup>1</sup>       |
+| B2.BAS        | none     | 2<sup>2</sup>       |
+| B3.BAS        | none     | 6<sup>3</sup>       |
+| B4.BAS        | none     | 6<sup>4</sup>       |
+| B5.BAS        | none     | 7<sup>5</sup>       |
+| B6.BAS        | none     | 11<sup>6</sup>      |
+| B7.BAS        | none     | 20<sup>7</sup>      |
+| B8.BAS        | none     | 3<sup>8</sup>       |
+| AHLS2.BAS     | % some   | 24<sup>9</sup>      |
+| AHLS3.BAS     | % DOUBLE | 38<sup>10</sup>     |
+| INTER1.BAS    | none     | ?               |
+| INTER2.BAS    | SINGLE   | ?               |
+| INTER3.BAS    | DOUBLE   | ?               |
+| INTER4.BAS    | % & al.  | ?               |
+| SIEVE.BAS     | %        | ?               |
+| SIEVE10.BAS   | %        | ?               |
+| FIZZBUZZ.BAS  | none     | ?               |
+| FIZZBUZ1.BAS  | %        | ?               |
+| FIZZBUZ2.BAS  | SINGLE   | ?               |
+| FIZZBUZ3.BAS  | DOUBLE   | ?               |
+| NOEL.BAS      | none     | 19<sup>a</sup>  |
+| NOEL1.BAS     | %        | 8<sup>b</sup>   |
+| NOEL2.BAS     | SINGLE   | 26              |
+| NOEL3.BAS     | DOUBLE   | 26              |
+| SCRUSS2.BAS   | none     | 246<sup>c</sup> |
+| MANDEL1.BAS   | % some   | 3317            |
+| MANDEL2.BAS   | none     | 93              |
+| MANDEL3.BAS   | % some   | 88              |
 
 __Notes__
 
@@ -311,18 +323,12 @@ __Notes__
 
 <sup>8</sup> BBC Micro: 5.1
 
-<sup>9</sup> Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3;
+<sup>9</sup> ABC802: acc. 0.247559, rnd. 10.7994.
+Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
 
-ABC802: using DOUBLE but the rest of program with no change: 38 sec.,
+<sup>10</sup>
+Using DOUBLE but the rest of program with no change:
 acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
-
-* "The measure of randomness should also be as close to zero as possible.
-   Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
-   *So ABC802 should be 'acceptable' concerning the randomness.*
-* "The measure of accuracy should be as close to zero as possible. [...]
-   A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
-   is poor, while smaller values (0.00000021, for example) is very good.", p.260.
-   *ABC802 should therefore judged to be quite good when using DOUBLE.*
 
 <sup>a</sup> Same result as BBC Micro.
 
