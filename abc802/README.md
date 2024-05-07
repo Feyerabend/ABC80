@@ -312,8 +312,10 @@ __Notes__
 <sup>8</sup> BBC Micro: 5.1
 
 <sup>9</sup> IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3;
+
     ABC802: using DOUBLE but the rest of program with no change: 38 sec.,
     acc. 6.02824457018869<sup>-11</sup>, rnd. 10.79915231955238.
+
 * "The measure of randomness should also be as close to zero as possible.
    Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
 * "The measure of accuracy should be as close to zero as possible. [...]
