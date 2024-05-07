@@ -272,7 +272,7 @@ as in fractions.
 | B5.BAS        | none    | 7<sup>5</sup>   |
 | B6.BAS        | none    | 11<sup>6</sup>   |
 | B7.BAS        | none    | 20<sup>7</sup>   |
-| B8.BAS        | none    | ?<sup>8</sup>   |
+| B8.BAS        | none    | 3<sup>8</sup>   |
 | AHLS2.BAS     | % some  | ?               |
 | INTER1.BAS    | none    | ?               |
 | INTER2.BAS    | SINGLE  | ?               |
