@@ -31,7 +31,7 @@ the next decade. Hand in hand with the rise and fall of *BASIC in ROM* was the *
 used as data/program storage. If you think about it .. not that surprising. The diskette, and eventually
 the hard drive, changed the personal computer to using a *disc operating system* (yeah, DOS) as a focus point,
 instead. This is far from declaring the language as dead. No, it still thrives even today and may develop
-futher. Who knows. However the large base it once supported is not longer there.
+futher. Who knows. However, the large base it once supported is no longer there.
 
 But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
 above) the highly prasied BBC BASIC of the __BBC Micro__. It also had the possible choice between different
