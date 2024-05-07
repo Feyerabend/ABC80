@@ -6,15 +6,18 @@
 I'm not really a fan of benchmarks. I find them too restrictive in the way they only measure what they measure.
 That is, they only could give you an estimate of something (that they measure), not an evaluation of what the
 machine can do in general. It doesn't indicate the possibilities, they only convey a test of something.
-Mostly is has been for speed ..
+Mostly is has been for speed .. of that something.
 
 Today when almost all interests on 'retro computers' are in the spotlight of how and if they are able to play
-games, and in this area the ABC802 can not compete, benchmarks shows other aspects.
+(graphical) games, and in this area the ABC802 can not compete, benchmarks shows other aspects. Unfourtunately
+anti-historical viewpoints reduces important stepstones in computer developments, and distorts facts where
+they may eventually become tales of a historically non-existing reality.
 
-Besides that, they can be fun to look at. The following are benchmarks that have been done through the early
-years of personal computing, when programming in BASIC was the primary choice. It was the time when the BASIC
-came in ROMs, and basically was the computer software/operating system. But also there are some new retro
-community contributions of benchmarks, which are fun.
+Besides that reality distortion of today, benchmarks can be fun to look at. The following are benchmarks
+that have been done through the early years of personal computing, when programming in BASIC was the
+primary choice. It was the time when the BASIC came in ROMs, and basically was the computer
+software/operating system. But also there are some new retro community contributions of benchmarks, which
+are fun.
 
 The ABC802, which is the focus here, was a follow-up to the ancestor ABC80. It was almost the same computer,
 but, among other things, had an improved BASIC, the BASIC II. The BASIC II was used in the similar machines
