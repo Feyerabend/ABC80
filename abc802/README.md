@@ -362,7 +362,8 @@ the best performance for the price.
 
 Microsoft played a significant role by providing BASIC support for various
 computer hardware, expanding their influence through adaptations and widespread
-adoption. They leveraged cross-compiling and developed versions like Visual BASIC.
+adoption. Early on they leveraged cross-compiling BASIC interpreters to various
+CPUs, and later developed extended versions like Visual BASIC.
 The industry faced a choice between competing with the IBM PC/Microsoft DOS track
 or developing their own UNIX-based systems. Diab AB and Microsoft ventured into
 UNIX, but the market shifted as hardware improved and prices dropped, reducing
@@ -374,10 +375,14 @@ music, and art. Other companies with computers like Atari ST and Commodore Amiga
 targeted similar markets, but Apple stood out with programs like spreadsheets
 and desktop publishing, revealing the potential for a broader market.
 
-If the Swedish computer industry had chosen a different direction, perhaps
-embracing Apple's perspective and building upon the tight integration of
-hardware and software seen in ABC computers, it could have led to the
-development of other computer systems.
+Had the Swedish computer industry taken a different path, such as adopting
+Apple's approach and capitalizing on the strong hardware-software integration
+observed in ABC computers, it could have paved the way for the emergence of
+alternative computer systems. Rather than companies competing against each
+other, as was the case in the declining ABC market, they could have potentially
+cooperated, similar to the collaborative spirit that brought the ABC80 to fruition.
+In Japan, they had the 'MSX' platform as a foundation for computers, but even
+they struggled to expand beyond their domestic market and reach a wider audience.
 
 In 1985, prior to the release of Windows 1.0, I personally endeavored to
 persuade a small company specializing in ABC computer add-ons. Unfortunately,
