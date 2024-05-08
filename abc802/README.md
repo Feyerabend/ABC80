@@ -170,8 +170,8 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
   of *random* numbers.
 * [AHLS1.BAS](AHLS1.BAS) Another version of the same benchmark.
 * [AHLS2.BAS](AHLS2.BAS) Version adopted to ABC802.
-* [AHLS3.BAS](AHLS3.BAS) Version adopted to ABC802. But using DOUBLE.
-* [AHLS4.BAS](AHLS4.BAS) Version adopted to ABC802. But using SINGLE.
+* [AHLS3.BAS](AHLS3.BAS) Version adopted to ABC802. But using SINGLE.
+* [AHLS4.BAS](AHLS4.BAS) Version adopted to ABC802. But using DOUBLE.
 
   "The measure of randomness should also be as close to zero as possible.
    Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
@@ -287,7 +287,8 @@ again.
 | B7.BAS<sup>g</sup>      | none     |                      | 20                  |
 | B8.BAS<sup>h</sup>      | none     |                      | 3                   |
 | AHLS2.BAS<sup>i</sup>   | % some   |                      | 24                  |
-| AHLS3.BAS<sup>j</sup>   | % DOUBLE |                      | 38                  |
+| AHLS3.BAS<sup>j</sup>   | % SINGLE |                      | ?                   |
+| AHLS4.BAS<sup>k</sup>   | % DOUBLE |                      | 38                  |
 | INTER1.BAS              | none     | ?                    |                     |
 | INTER2.BAS              | SINGLE   | ?                    |                     |
 | INTER3.BAS              | DOUBLE   | ?                    |                     |
@@ -302,10 +303,10 @@ again.
 | NOEL1.BAS<sup>ä</sup>   | %        | ?                    | 8                   |
 | NOEL2.BAS               | SINGLE   | ?                    | 26                  |
 | NOEL3.BAS               | DOUBLE   | ?                    | 26                  |
-| SCRUSS2.BAS<sup>ö</sup> | none     | ?                    | 246                 |
+| SCRUSS2.BAS<sup>ö</sup> | none     | -                    | 246                 |
 | MANDEL1.BAS             | % some   | -                    | 3317                |
-| MANDEL2.BAS             | none     | ?                    | 93                  |
-| MANDEL3.BAS             | % some   | ?                    | 88                  |
+| MANDEL2.BAS             | none     | -                    | 93                  |
+| MANDEL3.BAS             | % some   | -                    | 88                  |
 
 __Notes__
 
@@ -328,7 +329,9 @@ __Notes__
 <sup>i</sup> Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
 ABC802 <b>TB</b>: acc. 0.247559, rnd. 10.7994.
 
-<sup>j</sup>
+<sup>j</sup> ..
+
+<sup>k</sup>
 ABC802 <b>TB</b>: Using DOUBLE but the rest of program with no change:
 acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 
