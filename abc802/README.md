@@ -351,8 +351,8 @@ ABC802 BASIC II <b>TB</b> at 246.
 
 ## Concluding remarks
 
-In 1986, Nokia had taken control of the struggling ABC computer line but
-eventually discontinued it due to poor sales and limited market reach.
+Nokia had taken control of the struggling ABC computer line but
+in 1986 eventually discontinued it due to poor sales and limited market reach.
 The entry of the IBM PC in Sweden led to intense competition, with Nokia
 and Ericsson attempting their own variations. However, full compatibility
 with the IBM PC emerged as the only viable option. IBM PC hardware became
