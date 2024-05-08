@@ -404,11 +404,15 @@ observed in ABC computers, it could have paved the way for the emergence of
 alternative computer systems. Rather than companies competing against each
 other, as was the case in the declining ABC market, they could have potentially
 cooperated, similar to the collaborative spirit that brought the ABC80 to fruition.
-In Japan, the 'MSX' platform served as a foundational computer system.
-However, even with the support of Microsoft, they faced challenges in
-expanding beyond their domestic market and reaching a wider audience.
-Despite the backing of Microsoft, the MSX platform struggled to achieve
-significant global penetration.
+Indeed, the 'MSX' platform in Japan faced difficulties in expanding beyond
+the domestic market and gaining widespread international adoption, despite
+having the support of Microsoft. The challenges encountered by the MSX
+platform highlight the uncertainties and complexities of the computer
+industry. Therefore, in retrospect or at the time, it was challenging
+to make any guarantees about the future prospects of the MSX platform
+or any other similar ventures in the industry. The ever-changing market
+dynamics, competition, and various other factors make it difficult to
+predict the outcome with any certainty.
 
 In 1985, prior to the release of Windows 1.0, I personally endeavored to
 persuade a small company specializing in ABC computer add-ons. Unfortunately,
