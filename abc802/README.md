@@ -279,37 +279,37 @@ are given as by the two methods above __TA__ and __TB__, unless they are from co
 tested a long time ago and already published as in fractions. I have not tested the latter
 again.
 
-| Program                 | Mods     | Seconds <b>TA</b>    | Seconds <b>TB</b>   |
-| ----------------------- | -------- | -------------------- | ------------------- |
-| B1.BAS<sup>a</sup>      | none     | ~0.81                | 1                   |
-| B2.BAS<sup>b</sup>      | none     | ~1.76                | 2                   |
-| B3.BAS<sup>c</sup>      | none     | ~5.91                | 6                   |
-| B4.BAS<sup>d</sup>      | none     | ~5.93                | 6                   |
-| B5.BAS<sup>e</sup>      | none     | ~6.4                 | 7                   |
-| B6.BAS<sup>f</sup>      | none     | ~11.71               | 11                  |
-| B7.BAS<sup>g</sup>      | none     | ~19.84               | 20                  |
-| B8.BAS<sup>h</sup>      | none     | ~29.26               | 29                  |
-| AHLS2.BAS<sup>i</sup>   | none     | ~23.81               | 24                  |
-| AHLS3.BAS<sup>j</sup>   | % SINGLE | ~22.62               | 22                  |
-| AHLS4.BAS<sup>k</sup>   | % DOUBLE | ~37.49               | 38                  |
-| INTER1.BAS              | none     | ?                    |                     |
-| INTER2.BAS              | SINGLE   | ?                    |                     |
-| INTER3.BAS              | DOUBLE   | ?                    |                     |
-| INTER4.BAS              | % & al.  | ?                    |                     |
-| SIEVE.BAS               | %        | ?                    |                     |
-| SIEVE10.BAS             | %        | ?                    |                     |
-| FIZZBUZZ.BAS            | none     | ?                    |                     |
-| FIZZBUZ1.BAS            | %        | ?                    |                     |
-| FIZZBUZ2.BAS            | SINGLE   | ?                    |                     |
-| FIZZBUZ3.BAS            | DOUBLE   | ?                    |                     |
-| NOEL.BAS<sup>å</sup>    | none     | ~18.89               | 19                  |
-| NOEL1.BAS<sup>ä</sup>   | %        | ~8.01                | 8                   |
-| NOEL2.BAS               | SINGLE   | ~18.89               | 19                  |
-| NOEL3.BAS               | DOUBLE   | ~25.21               | 26                  |
-| SCRUSS2.BAS<sup>ö</sup> | none     | -                    | 246                 |
-| MANDEL1.BAS             | % some   | -                    | 3317                |
-| MANDEL2.BAS             | none     | -                    | 93                  |
-| MANDEL3.BAS             | % some   | -                    | 88                  |
+| Program                 | Mods     | Seconds <b>TA</b>   | Seconds <b>TB</b>   |
+| ----------------------- | -------- | ------------------- | ------------------- |
+| B1.BAS<sup>a</sup>      | none     | ~0.81               | 1                   |
+| B2.BAS<sup>b</sup>      | none     | ~1.76               | 2                   |
+| B3.BAS<sup>c</sup>      | none     | ~5.91               | 6                   |
+| B4.BAS<sup>d</sup>      | none     | ~5.93               | 6                   |
+| B5.BAS<sup>e</sup>      | none     | ~6.4                | 7                   |
+| B6.BAS<sup>f</sup>      | none     | ~11.71              | 11                  |
+| B7.BAS<sup>g</sup>      | none     | ~19.84              | 20                  |
+| B8.BAS<sup>h</sup>      | none     | ~29.26              | 29                  |
+| AHLS2.BAS<sup>i</sup>   | none     | ~23.81              | 24                  |
+| AHLS3.BAS<sup>j</sup>   | % SINGLE | ~22.62              | 22                  |
+| AHLS4.BAS<sup>k</sup>   | % DOUBLE | ~37.49              | 38                  |
+| INTER1.BAS              | none     | ?                   |                     |
+| INTER2.BAS              | SINGLE   | ?                   |                     |
+| INTER3.BAS              | DOUBLE   | ?                   |                     |
+| INTER4.BAS              | % & al.  | ?                   |                     |
+| SIEVE.BAS               | %        | ?                   |                     |
+| SIEVE10.BAS             | %        | ?                   |                     |
+| FIZZBUZZ.BAS            | none     | ?                   |                     |
+| FIZZBUZ1.BAS            | %        | ?                   |                     |
+| FIZZBUZ2.BAS            | SINGLE   | ?                   |                     |
+| FIZZBUZ3.BAS            | DOUBLE   | ?                   |                     |
+| NOEL.BAS<sup>å</sup>    | none     | ~18.89              | 19                  |
+| NOEL1.BAS<sup>ä</sup>   | %        | ~8.01               | 8                   |
+| NOEL2.BAS               | SINGLE   | ~18.89              | 19                  |
+| NOEL3.BAS               | DOUBLE   | ~25.21              | 26                  |
+| SCRUSS2.BAS<sup>ö</sup> | none     | -                   | 246                 |
+| MANDEL1.BAS             | % some   | -                   | 3317                |
+| MANDEL2.BAS             | none     | -                   | 93                  |
+| MANDEL3.BAS             | % some   | -                   | 88                  |
 
 __Notes__
 
@@ -349,6 +349,42 @@ Cf. BBC BASIC at 202, Commodore 64 BASIC at 100.
 ABC802 BASIC II <b>TB</b> at 246.
 
 
+## Concluding remarks
+
+In 1986, Nokia took control of the struggling ABC computer line but
+eventually discontinued it due to poor sales and limited market reach.
+The entry of the IBM PC in Sweden led to intense competition, with Nokia
+and Ericsson attempting their own variations. However, full compatibility
+with the IBM PC emerged as the only viable option. IBM PC hardware became
+synonymous with personal computing, leading to a decline in loyalty towards
+domestically produced computers. Benchmarks played a role in determining
+the best performance for the price.
+
+Microsoft played a significant role by providing BASIC support for various
+computer hardware, expanding their influence through adaptations and widespread
+adoption. They leveraged cross-compiling and developed versions like Visual BASIC.
+The industry faced a choice between competing with the IBM PC/Microsoft DOS track
+or developing their own UNIX-based systems. Diab AB and Microsoft ventured into
+UNIX, but the market shifted as hardware improved and prices dropped, reducing
+the significance of resource sharing.
+
+Apple demonstrated an alternative path by focusing on hardware-software integration
+and user-friendly design. Their success extended beyond business to education,
+music, and art. Other companies with computers like Atari ST and Commodore Amiga
+targeted similar markets, but Apple stood out with programs like spreadsheets
+and desktop publishing, revealing the potential for a broader market.
+
+If the Swedish computer industry had chosen a different direction, perhaps
+embracing Apple's perspective and building upon the tight integration of
+hardware and software seen in ABC computers, it could have led to the
+development of other computer systems.
+
+In fact, I personally attempted to persuade a small company that manufactured
+add-ons for ABC computers in 1985, even before Windows 1.0 was released.
+However, my efforts were unsuccessful. To showcase the potential of a windowed
+interface on a screen, I created a lightweight demo using a markup language.
+The demo functioned similar to a printer but displayed content on the screen
+instead. Well, that never happended.
 
 
 ## References
