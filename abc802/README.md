@@ -198,7 +198,7 @@ At page 131 the author writes: *'Use any tricks you know to speed up the program
 itself.'*
 
 * [INTER.BAS](INTER.BAS) Original.
-* [INTER1.BAS](INTER1.BAS) Timing included.
+* [INTER1.BAS](INTER1.BAS) ABC802/BASIC II version
 * [INTER2.BAS](INTER2.BAS) SINGLE.
 * [INTER3.BAS](INTER3.BAS) DOUBLE.
 * [INTER4.BAS](INTER4.BAS) Tricks used.
