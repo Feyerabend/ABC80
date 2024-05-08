@@ -298,10 +298,12 @@ again.
 | INTER4.BAS              | % & al.  | ?                   |                     |
 | SIEVE.BAS               | %        | ?                   |                     |
 | SIEVE10.BAS             | %        | ?                   |                     |
-| FIZZBUZZ.BAS            | none     | ?                   |                     |
-| FIZZBUZ1.BAS            | %        | ?                   |                     |
-| FIZZBUZ2.BAS            | SINGLE   | ?                   |                     |
-| FIZZBUZ3.BAS            | DOUBLE   | ?                   |                     |
+| PRIMES.BAS              | none     | ?                   |                     |
+| PRIMES1.BAS             | %        | ?                   |                     |
+| FIZZBUZZ.BAS            | none     | ~2.47               | 3                   |
+| FIZZBUZ1.BAS            | %        | ~1.91               | 2                   |
+| FIZZBUZ2.BAS            | SINGLE   | ~2.48               | 3                   |
+| FIZZBUZ3.BAS            | DOUBLE   | ~2.5                | 3                   |
 | NOEL.BAS<sup>å</sup>    | none     | ~18.89              | 19                  |
 | NOEL1.BAS<sup>ä</sup>   | %        | ~8.01               | 8                   |
 | NOEL2.BAS               | SINGLE   | ~18.89              | 19                  |
@@ -356,15 +358,16 @@ in 1986 eventually discontinued it due to poor sales and limited
 market reach the year before. The abrupt decline came as a surprise
 to many, considering the strong brand presence of ABC computers.
 Nokia attempted to leverage the brand by introducing entirely
-different products, hoping to capitalize on its reputation in the market.
-The entry of the IBM PC in Sweden led to intense competition, with Nokia
-and Ericsson attempting their own variations. However, full compatibility
-with the IBM PC emerged later as the only viable option. IBM PC hardware became
-synonymous with personal computing, leading to a decline in loyalty towards
-domestically produced computers. *Benchmarks* played a distinct role in evaluating
-performance relative to cost, and the emergence of PC clones from Asia
-contributed to lower prices in the market. As the hardware was essentially
-the same, you could only compete with performance versus cost.
+different products, hoping to capitalize on its reputation in the
+market. The entry of the IBM PC in Sweden led to intense competition,
+with Nokia and Ericsson attempting their own variations. However,
+full compatibility with the IBM PC emerged later as the only viable
+option. IBM PC hardware became synonymous with personal computing,
+leading to a decline in loyalty towards domestically produced computers.
+*Benchmarks* played a distinct role in evaluating performance relative
+to cost, and the emergence of PC clones from Asia contributed to lower
+prices in the market. As the hardware was essentially the same, you
+could only compete with performance versus cost.
 
 Microsoft played a crucial role in the computer industry by offering
 comprehensive BASIC support for a wide range of computer hardware.
@@ -388,40 +391,45 @@ focus shifted away from UNIX-based systems and towards alternative
 options, with MS/PC-DOS (Microsoft/IBM PC Disk Operating System)
 emerging as a prominent choice.
 
-But Apple demonstrated an alternative path by focusing on hardware-software
-integration and user-friendly design. Their success extended beyond
-business to education, music, and art. Other companies with computers
-like Atari ST and Commodore Amiga targeted similar markets, but Apple
-stood out with programs like spreadsheets and desktop publishing,
-revealing the potential for a broader market.
-The initial adoption and market penetration of the Macintosh were
-slower than expected, but over time, Apple's unique approach and
-product offerings gained traction.
+But Apple demonstrated an alternative path by focusing on
+hardware-software integration and user-friendly design. Their
+success extended beyond business to education, music, and art.
+Other companies with computers like Atari ST and Commodore Amiga
+targeted similar markets, but Apple stood out with programs like
+spreadsheets and desktop publishing, revealing the potential
+for a broader market. The initial adoption and market penetration
+of the Macintosh were slower than expected, but over time,
+Apple's unique approach and product offerings gained traction.
 
-Had the Swedish computer industry taken a different path, such as adopting
-Apple's approach and capitalizing on the strong hardware-software integration
-observed in ABC computers, it could have paved the way for the emergence of
-alternative computer systems. Rather than companies competing against each
-other, as was the case in the declining ABC market, they could have potentially
-cooperated, similar to the collaborative spirit that brought the ABC80 to fruition.
-Indeed, the 'MSX' platform in Japan faced difficulties in expanding beyond
-the domestic market and gaining widespread international adoption, despite
-having the support of Microsoft. The challenges encountered by the MSX
-platform highlight the uncertainties and complexities of the computer
-industry. Therefore, in retrospect or at the time, it was challenging
-to make any guarantees about the future prospects of the MSX platform
-or any other similar ventures in the industry. The ever-changing market
-dynamics, competition, and various other factors make it difficult to
-predict the outcome with any certainty.
+Had the Swedish computer industry taken a different path, such
+as adopting Apple's approach and capitalizing on the strong
+hardware-software integration observed in ABC computers, it
+could have paved the way for the emergence of alternative computer
+systems. Rather than companies competing against each other,
+as was the case in the declining ABC market, they could have
+potentially cooperated, similar to the collaborative spirit
+that brought the ABC80 to fruition. Indeed, the 'MSX' platform
+in Japan faced difficulties in expanding beyond the domestic
+market and gaining widespread international adoption, despite
+having the support of Microsoft. The challenges encountered by
+the MSX platform highlight the uncertainties and complexities
+of the computer industry. Therefore, in retrospect or at the
+time, it was challenging to make any guarantees about the future
+prospects of the MSX platform or any other similar ventures in
+the industry. The ever-changing market dynamics, competition,
+and various other factors make it difficult to predict the
+outcome with any certainty.
 
-In 1985, prior to the release of Windows 1.0, I personally endeavored to
-persuade a small company specializing in ABC computer add-ons. Unfortunately,
-my attempts were unsuccessful. To demonstrate the potential of a windowed
-interface on a screen, I developed a lightweight demo utilizing a markup
-language. The demo operated in a manner reminiscent of a printer, but instead
-displayed content on the screen. My inspiration stemmed from both Lisa/Macintosh
-computers but also Lisp Machines, which featured mouse-driven interfaces and windows.
-Although I had only seen pictures of the latter, I was aware of their presence
+In 1985, prior to the release of Windows 1.0, I personally
+endeavored to persuade a small company specializing in ABC
+computer add-ons. Unfortunately, my attempts were unsuccessful.
+To demonstrate the potential of a windowed interface on a screen,
+I developed a lightweight demo utilizing a markup language.
+The demo operated in a manner reminiscent of a printer, but instead
+displayed content on the screen. My inspiration stemmed from both
+Lisa/Macintosh computers but also Lisp Machines, which featured
+mouse-driven interfaces and windows. Although I had only seen
+pictures of the latter, I was aware of their presence
 at the university where I was studying.
 
 The potential for the Swedish computer industry had greatly diminished,
