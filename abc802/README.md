@@ -125,14 +125,14 @@ With BASIC II, some new features was added to the ASCII arithmetic:
 
 ## Timing in BASIC II with ABC802
 
-Simple timing with approx. seconds method __TA__ that "wraps around" (modulus):
+__Method TA__: Simple timing with approx. seconds that "wraps around" (modulus):
 ```BASIC
 10 POKE 65524%,0%,0%
 ...
 1000 PRINT "Time: ”;PEEK(65524%)+(PEEK(65525%)/100)
 ```
 
-Timing for programs that takes a longer time, result in seconds method __TB__:
+__Method TB__: Timing for programs that takes a longer time, with result in seconds:
 ```BASIC
 10 T1$=RIGHT$(TIME$,12)
 ...
@@ -183,7 +183,7 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
    A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
    is poor, while smaller values (0.00000021, for example) is very good.", p.260.
    ABC802 should therefore judged to be *more than very good* when using DOUBLE.
-   When using SINGLE .. But with no mods, it is worse than poor.
+   When using SINGLE .. But with no mods, it is worse off than poor.
 
 
 [^ahl]: David H. Ahl, "Benchmark Comparison Test", Creative Computing, Nov. 1983. pp. 259–260,
