@@ -413,7 +413,9 @@ computers but also Lisp Machines, which featured mouse-driven interfaces and win
 Although I had only seen pictures of the latter, I was aware of their presence
 at the university where I was studying.
 
-The potential for the Swedish computer industry had diminished.
+The potential for the Swedish computer industry had significantly diminished,
+leading to the end of the line for the ABC802 and any further advancements.
+With no prospects for future development, it had reached a dead end.
 
 
 ## References
