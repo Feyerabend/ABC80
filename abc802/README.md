@@ -287,7 +287,7 @@ again.
 | B7.BAS<sup>g</sup>      | none     |                      | 20                  |
 | B8.BAS<sup>h</sup>      | none     |                      | 3                   |
 | AHLS2.BAS<sup>i</sup>   | % some   |                      | 24                  |
-| AHLS3.BAS<sup>j</sup    | % DOUBLE |                      | 38                  |
+| AHLS3.BAS<sup>j</sup>   | % DOUBLE |                      | 38                  |
 | INTER1.BAS              | none     | ?                    |                     |
 | INTER2.BAS              | SINGLE   | ?                    |                     |
 | INTER3.BAS              | DOUBLE   | ?                    |                     |
@@ -303,7 +303,7 @@ again.
 | NOEL2.BAS               | SINGLE   | ?                    | 26                  |
 | NOEL3.BAS               | DOUBLE   | ?                    | 26                  |
 | SCRUSS2.BAS<sup>ö</sup> | none     | ?                    | 246                 |
-| MANDEL1.BAS             | % some   | ?                    | 3317                |
+| MANDEL1.BAS             | % some   | -                    | 3317                |
 | MANDEL2.BAS             | none     | ?                    | 93                  |
 | MANDEL3.BAS             | % some   | ?                    | 88                  |
 
