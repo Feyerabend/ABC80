@@ -173,11 +173,13 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
 * [AHLS3.BAS](AHLS3.BAS) Version adopted to ABC802. But using SINGLE.
 * [AHLS4.BAS](AHLS4.BAS) Version adopted to ABC802. But using DOUBLE.
 
-  "The measure of randomness should also be as close to zero as possible.
+ *Randomness:*
+ "The measure of randomness should also be as close to zero as possible.
    Anything under 10 is quite good. Values between 10 and 20 are acceptable.", p.260.
    *So ABC802 should be 'acceptable' concerning the randomness.*
 
-  "The measure of accuracy should be as close to zero as possible. [...]
+ *Accuracy:*
+ "The measure of accuracy should be as close to zero as possible. [...]
    A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
    is poor, while smaller values (0.00000021, for example) is very good.", p.260.
    *ABC802 should therefore judged to be quite good when using DOUBLE.*
