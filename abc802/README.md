@@ -379,12 +379,15 @@ embracing Apple's perspective and building upon the tight integration of
 hardware and software seen in ABC computers, it could have led to the
 development of other computer systems.
 
-In fact, I personally attempted to persuade a small company that manufactured
-add-ons for ABC computers in 1985, even before Windows 1.0 was released.
-However, my efforts were unsuccessful. To showcase the potential of a windowed
-interface on a screen, I created a lightweight demo using a markup language.
-The demo functioned similar to a printer but displayed content on the screen
-instead. Well, that never happended.
+In 1985, prior to the release of Windows 1.0, I personally endeavored to
+persuade a small company specializing in ABC computer add-ons. Unfortunately,
+my attempts were unsuccessful. To demonstrate the potential of a windowed
+interface on a screen, I developed a lightweight demo utilizing a markup
+language. The demo operated in a manner reminiscent of a printer, but instead
+displayed content on the screen. My inspiration stemmed from both Lisa/Macintosh
+computers and Lisp Machines, which featured mouse-driven interfaces and windows.
+Although I had only seen pictures of the latter, I was aware of their presence
+at the university where I was studying.
 
 
 ## References
