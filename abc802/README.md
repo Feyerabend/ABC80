@@ -425,8 +425,8 @@ Although I had only seen pictures of the latter, I was aware of their presence
 at the university where I was studying.
 
 The potential for the Swedish computer industry had greatly diminished,
-resulting in the discontinuation of the ABC802 and the cessation of any
-further advancements. Despite the impressive speed of BASIC II, there
+resulting in the discontinuation of the *ABC802* and the cessation of any
+further advancements. Despite the impressive speed of *BASIC II*, there
 were no viable prospects for future development, and the industry had
 reached a dead end.
 
