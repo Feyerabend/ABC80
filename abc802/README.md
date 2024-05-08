@@ -404,8 +404,11 @@ observed in ABC computers, it could have paved the way for the emergence of
 alternative computer systems. Rather than companies competing against each
 other, as was the case in the declining ABC market, they could have potentially
 cooperated, similar to the collaborative spirit that brought the ABC80 to fruition.
-In Japan, they had the 'MSX' platform as a foundation for computers, but even
-they struggled to expand beyond their domestic market and reach a wider audience.
+In Japan, the 'MSX' platform served as a foundational computer system.
+However, even with the support of Microsoft, they faced challenges in
+expanding beyond their domestic market and reaching a wider audience.
+Despite the backing of Microsoft, the MSX platform struggled to achieve
+significant global penetration.
 
 In 1985, prior to the release of Windows 1.0, I personally endeavored to
 persuade a small company specializing in ABC computer add-ons. Unfortunately,
@@ -417,9 +420,11 @@ computers but also Lisp Machines, which featured mouse-driven interfaces and win
 Although I had only seen pictures of the latter, I was aware of their presence
 at the university where I was studying.
 
-The potential for the Swedish computer industry had significantly diminished,
-leading to the end of the line for the ABC802 and any further advancements.
-With no prospects for future development, it had reached a dead end.
+The potential for the Swedish computer industry had greatly diminished,
+resulting in the discontinuation of the ABC802 and the cessation of any
+further advancements. Despite the impressive speed of BASIC II, there
+were no viable prospects for future development, and the industry had
+reached a dead end.
 
 
 ## References
