@@ -329,10 +329,12 @@ __Notes__
 
 <sup>h</sup> BBC Micro: 5.1
 
-<sup>i</sup> Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
+<sup>i</sup> IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
 ABC802 <b>TB</b>: acc. 0.247559, rnd. 10.7994.
 
-<sup>j</sup> ..
+<sup>j</sup>
+ABC802 <b>TB</b>: Using SINGLE but the rest of program with no change:
+..
 
 <sup>k</sup>
 ABC802 <b>TB</b>: Using DOUBLE but the rest of program with no change:
