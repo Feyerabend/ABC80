@@ -276,7 +276,7 @@ are given as by the two methods above __TA__ and __TB__, unless they are from co
 tested a long time ago and already published as in fractions. I have not tested the latter
 again.
 
-| Program                 | Mods     | Seconds<b>TA</b>     | Seconds<b>TB</b>    |
+| Program                 | Mods     | Seconds <b>TA</b>    | Seconds <b>TB</b>   |
 | ----------------------- | -------- | -------------------- | ------------------- |
 | B1.BAS<sup>a</sup>      | none     | ~1.0                 | 1                   |
 | B2.BAS<sup>b</sup>      | none     |                      | 2                   |
