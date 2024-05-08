@@ -1,5 +1,5 @@
 100 ! ' Ahl's Simple Benchmark
-105 SINGLE
+105 DOUBLE
 110 FOR N%=1% TO 100%
 120   A=N%
 130   FOR I%=1% TO 10%
