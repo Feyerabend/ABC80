@@ -125,14 +125,14 @@ With BASIC II, some new features was added to the ASCII arithmetic:
 
 ## Timing in BASIC II with ABC802
 
-Simple timing with approx. seconds:
+Simple timing with approx. seconds method __TA__ that "wraps around" (modulus):
 ```BASIC
 10 POKE 65524%,0%,0%
 ...
 1000 PRINT "Time: ”;PEEK(65524%)+(PEEK(65525%)/100)
 ```
 
-Timing for programs that takes a longer time, result in seconds:
+Timing for programs that takes a longer time, result in seconds method __TB__:
 ```BASIC
 10 T1$=RIGHT$(TIME$,12)
 ...
@@ -271,73 +271,74 @@ and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.b
 ## Summary benchmark results
 
 The precision of seconds given in fractions may or may not be the true or actual case,
-as the timing in many cases was not that precise. Therefore most numbers are given as
-rounded up today, unless they are from computers tested a long time ago and already published
-as in fractions.
+as the timing in many cases was (and still are) not that precise. Therefore most numbers
+are given as by the two methods above __TA__ and __TB__, unless they are from computers
+tested a long time ago and already published as in fractions. I have not tested the latter
+again.
 
-| Program       | Mods     | Seconds             |
-| ------------- | -------- | ------------------- |
-| B1.BAS        | none     | 1<sup>1</sup>       |
-| B2.BAS        | none     | 2<sup>2</sup>       |
-| B3.BAS        | none     | 6<sup>3</sup>       |
-| B4.BAS        | none     | 6<sup>4</sup>       |
-| B5.BAS        | none     | 7<sup>5</sup>       |
-| B6.BAS        | none     | 11<sup>6</sup>      |
-| B7.BAS        | none     | 20<sup>7</sup>      |
-| B8.BAS        | none     | 3<sup>8</sup>       |
-| AHLS2.BAS     | % some   | 24<sup>9</sup>      |
-| AHLS3.BAS     | % DOUBLE | 38<sup>10</sup>     |
-| INTER1.BAS    | none     | ?               |
-| INTER2.BAS    | SINGLE   | ?               |
-| INTER3.BAS    | DOUBLE   | ?               |
-| INTER4.BAS    | % & al.  | ?               |
-| SIEVE.BAS     | %        | ?               |
-| SIEVE10.BAS   | %        | ?               |
-| FIZZBUZZ.BAS  | none     | ?               |
-| FIZZBUZ1.BAS  | %        | ?               |
-| FIZZBUZ2.BAS  | SINGLE   | ?               |
-| FIZZBUZ3.BAS  | DOUBLE   | ?               |
-| NOEL.BAS      | none     | 19<sup>a</sup>  |
-| NOEL1.BAS     | %        | 8<sup>b</sup>   |
-| NOEL2.BAS     | SINGLE   | 26              |
-| NOEL3.BAS     | DOUBLE   | 26              |
-| SCRUSS2.BAS   | none     | 246<sup>c</sup> |
-| MANDEL1.BAS   | % some   | 3317            |
-| MANDEL2.BAS   | none     | 93              |
-| MANDEL3.BAS   | % some   | 88              |
+| Program                 | Mods     | Seconds<b>TA</b>     | Seconds<b>TB</b>    |
+| ----------------------- | -------- | -------------------- | ------------------- |
+| B1.BAS<sup>a</sup>      | none     | ~1.0                 | 1                   |
+| B2.BAS<sup>b</sup>      | none     |                      | 2                   |
+| B3.BAS<sup>c</sup>      | none     |                      | 6                   |
+| B4.BAS<sup>d</sup>      | none     |                      | 6                   |
+| B5.BAS<sup>e</sup>      | none     |                      | 7                   |
+| B6.BAS<sup>f</sup>      | none     |                      | 11                  |
+| B7.BAS<sup>g</sup>      | none     |                      | 20                  |
+| B8.BAS<sup>h</sup>      | none     |                      | 3                   |
+| AHLS2.BAS<sup>i</sup>   | % some   |                      | 24                  |
+| AHLS3.BAS<sup>j</sup    | % DOUBLE |                      | 38                  |
+| INTER1.BAS              | none     | ?                    |                     |
+| INTER2.BAS              | SINGLE   | ?                    |                     |
+| INTER3.BAS              | DOUBLE   | ?                    |                     |
+| INTER4.BAS              | % & al.  | ?                    |                     |
+| SIEVE.BAS               | %        | ?                    |                     |
+| SIEVE10.BAS             | %        | ?                    |                     |
+| FIZZBUZZ.BAS            | none     | ?                    |                     |
+| FIZZBUZ1.BAS            | %        | ?                    |                     |
+| FIZZBUZ2.BAS            | SINGLE   | ?                    |                     |
+| FIZZBUZ3.BAS            | DOUBLE   | ?                    |                     |
+| NOEL.BAS<sup>å</sup>    | none     | ?                    | 19                  |
+| NOEL1.BAS<sup>ä</sup>   | %        | ?                    | 8                   |
+| NOEL2.BAS               | SINGLE   | ?                    | 26                  |
+| NOEL3.BAS               | DOUBLE   | ?                    | 26                  |
+| SCRUSS2.BAS<sup>ö</sup> | none     | ?                    | 246                 |
+| MANDEL1.BAS             | % some   | ?                    | 3317                |
+| MANDEL2.BAS             | none     | ?                    | 93                  |
+| MANDEL3.BAS             | % some   | ?                    | 88                  |
 
 __Notes__
 
-<sup>1</sup> BBC Micro: 1.0
+<sup>a</sup> BBC Micro: 1.0
 
-<sup>2</sup> BBC Micro: 3.1
+<sup>b</sup> BBC Micro: 3.1
 
-<sup>3</sup> BBC Micro: 8.2
+<sup>c</sup> BBC Micro: 8.2
 
-<sup>4</sup> BBC Micro: 8.7
+<sup>d</sup> BBC Micro: 8.7
 
-<sup>5</sup> BBC Micro: 9.1
+<sup>e</sup> BBC Micro: 9.1
 
-<sup>6</sup> BBC Micro: 13.9
+<sup>f</sup> BBC Micro: 13.9
 
-<sup>7</sup> BBC Micro: 21.4
+<sup>g</sup> BBC Micro: 21.4
 
-<sup>8</sup> BBC Micro: 5.1
+<sup>h</sup> BBC Micro: 5.1
 
-<sup>9</sup> ABC802: acc. 0.247559, rnd. 10.7994.
+<sup>i</sup> ABC802 <b>TB</b>: acc. 0.247559, rnd. 10.7994.
 Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
 
-<sup>10</sup>
-Using DOUBLE but the rest of program with no change:
+<sup>j</sup>
+ABC802 <b>TB</b>: Using DOUBLE but the rest of program with no change:
 acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 
-<sup>a</sup> Same result as BBC Micro.
+<sup>å</sup> Same result as BBC Micro.
 
-<sup>b</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
+<sup>ä</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
 
-<sup>c</sup> In this case a higher number the better.
+<sup>ö</sup> In this case a higher number the better.
 Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
-And alas *ABC802 BASIC II* at 246.
+And alas *ABC802 BASIC II* <b>TB</b> at 246.
 
 
 
