@@ -325,8 +325,8 @@ __Notes__
 
 <sup>h</sup> BBC Micro: 5.1
 
-<sup>i</sup> ABC802 <b>TB</b>: acc. 0.247559, rnd. 10.7994.
-Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
+<sup>i</sup> Compare IBM PC: 24 sec., acc. 0.1159668, rnd. 6.3
+ABC802 <b>TB</b>: acc. 0.247559, rnd. 10.7994.
 
 <sup>j</sup>
 ABC802 <b>TB</b>: Using DOUBLE but the rest of program with no change:
@@ -334,7 +334,7 @@ acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 
 <sup>å</sup> Same result as BBC Micro.
 
-<sup>ä</sup> Slightly better than BBC Micro using integers (here BBC Micro at 9 sec).
+<sup>ä</sup> BBC Micro: 9.
 
 <sup>ö</sup> In this case a higher number the better.
 Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
