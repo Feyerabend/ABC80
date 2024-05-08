@@ -183,7 +183,7 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
    A value of 0.001 is about the norm. Anything larger than that (0.18, for example)
    is poor, while smaller values (0.00000021, for example) is very good.", p.260.
    ABC802 should therefore judged to be *more than very good* when using DOUBLE.
-   When using SINGLE ..
+   When using SINGLE .. But with no mods, it is worse than poor.
 
 
 [^ahl]: David H. Ahl, "Benchmark Comparison Test", Creative Computing, Nov. 1983. pp. 259–260,
