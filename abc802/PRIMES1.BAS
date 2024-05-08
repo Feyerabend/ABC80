@@ -1,0 +1,12 @@
+130 PRINT "Primes"
+140 PRINT 2%
+150 C%=1%
+160 N%=3%
+170 WHILE C%<100%
+180   P%=1%
+190   FOR I%=2% TO INT(SQR(N%))
+200     IF MOD(N%,I%)=0% THEN P%=0%
+210   NEXT I%
+220   IF P%=1% THEN C%=C%+1% : PRINT N%
+230   N%=N%+1%
+240 WEND
