@@ -337,8 +337,8 @@ acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 <sup>ä</sup> BBC Micro: 9.
 
 <sup>ö</sup> In this case a higher number the better.
-Cf. *BBC BASIC* at 202, *Commodore 64 BASIC* at 100.
-And alas *ABC802 BASIC II* <b>TB</b> at 246.
+Cf. BBC BASIC at 202, Commodore 64 BASIC at 100.
+And ABC802 BASIC II <b>TB</b> at 246.
 
 
 
