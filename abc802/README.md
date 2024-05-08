@@ -386,9 +386,14 @@ integration and user-friendly design. Their success extended beyond
 business to education, music, and art. Other companies with computers
 like Atari ST and Commodore Amiga targeted similar markets, but Apple
 stood out with programs like spreadsheets and desktop publishing,
-revealing the potential for a broader market. In the mid-80s,
-Apple Macintosh did not achieve the level of success they had anticipated
-or hoped for.
+revealing the potential for a broader market.
+
+However, it is true that in the mid-80s, Apple Macintosh did not
+achieve the level of success they had anticipated or hoped for.
+The initial adoption and market penetration of the Macintosh were
+slower than expected, but over time, Apple's unique approach and
+product offerings gained traction and eventually contributed
+to their success in the computer industry.
 
 Had the Swedish computer industry taken a different path, such as adopting
 Apple's approach and capitalizing on the strong hardware-software integration
