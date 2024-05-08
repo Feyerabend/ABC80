@@ -163,7 +163,7 @@ computers, unsurprisingly most from the ABC-line. Below I've added lacking resul
 [^rugg]: https://en.wikipedia.org/wiki/Rugg/Feldman_benchmarks
 
 
-### Creative Computing 1984 Ahl's Simple Benchmark[^ahl]
+### Creative Computing 1983-4 Ahl's Simple Benchmark[^ahl]
 
 * [AHLS.BAS](AHLS.BAS) This is the only benchmark among the selected ones here,
   that also gives a hint about *accuracy* in number crunching, beside 'quality'
@@ -281,17 +281,17 @@ again.
 
 | Program                 | Mods     | Seconds <b>TA</b>    | Seconds <b>TB</b>   |
 | ----------------------- | -------- | -------------------- | ------------------- |
-| B1.BAS<sup>a</sup>      | none     | ~1.0                 | 1                   |
-| B2.BAS<sup>b</sup>      | none     |                      | 2                   |
-| B3.BAS<sup>c</sup>      | none     |                      | 6                   |
-| B4.BAS<sup>d</sup>      | none     |                      | 6                   |
-| B5.BAS<sup>e</sup>      | none     |                      | 7                   |
-| B6.BAS<sup>f</sup>      | none     |                      | 11                  |
-| B7.BAS<sup>g</sup>      | none     |                      | 20                  |
-| B8.BAS<sup>h</sup>      | none     |                      | 3                   |
-| AHLS2.BAS<sup>i</sup>   | % some   |                      | 24                  |
-| AHLS3.BAS<sup>j</sup>   | % SINGLE |                      | ?                   |
-| AHLS4.BAS<sup>k</sup>   | % DOUBLE |                      | 38                  |
+| B1.BAS<sup>a</sup>      | none     | ~0.81                | 1                   |
+| B2.BAS<sup>b</sup>      | none     | ~1.76                | 2                   |
+| B3.BAS<sup>c</sup>      | none     | ~5.91                | 6                   |
+| B4.BAS<sup>d</sup>      | none     | ~5.93                | 6                   |
+| B5.BAS<sup>e</sup>      | none     | ~6.4                 | 7                   |
+| B6.BAS<sup>f</sup>      | none     | ~11.71               | 11                  |
+| B7.BAS<sup>g</sup>      | none     | ~19.84               | 20                  |
+| B8.BAS<sup>h</sup>      | none     | ~29.26               | 29                  |
+| AHLS2.BAS<sup>i</sup>   | none     | ~23.81               | 24                  |
+| AHLS3.BAS<sup>j</sup>   | % SINGLE | ~22.62               | 22                  |
+| AHLS4.BAS<sup>k</sup>   | % DOUBLE | ~37.49               | 38                  |
 | INTER1.BAS              | none     | ?                    |                     |
 | INTER2.BAS              | SINGLE   | ?                    |                     |
 | INTER3.BAS              | DOUBLE   | ?                    |                     |
@@ -302,10 +302,10 @@ again.
 | FIZZBUZ1.BAS            | %        | ?                    |                     |
 | FIZZBUZ2.BAS            | SINGLE   | ?                    |                     |
 | FIZZBUZ3.BAS            | DOUBLE   | ?                    |                     |
-| NOEL.BAS<sup>å</sup>    | none     | ?                    | 19                  |
-| NOEL1.BAS<sup>ä</sup>   | %        | ?                    | 8                   |
-| NOEL2.BAS               | SINGLE   | ?                    | 26                  |
-| NOEL3.BAS               | DOUBLE   | ?                    | 26                  |
+| NOEL.BAS<sup>å</sup>    | none     | ~18.89               | 19                  |
+| NOEL1.BAS<sup>ä</sup>   | %        | ~8.01                | 8                   |
+| NOEL2.BAS               | SINGLE   | ~18.89               | 19                  |
+| NOEL3.BAS               | DOUBLE   | ~25.21               | 26                  |
 | SCRUSS2.BAS<sup>ö</sup> | none     | -                    | 246                 |
 | MANDEL1.BAS             | % some   | -                    | 3317                |
 | MANDEL2.BAS             | none     | -                    | 93                  |
@@ -344,7 +344,7 @@ acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 
 <sup>ö</sup> In this case a higher number the better.
 Cf. BBC BASIC at 202, Commodore 64 BASIC at 100.
-And ABC802 BASIC II <b>TB</b> at 246.
+ABC802 BASIC II <b>TB</b> at 246.
 
 
 
