@@ -220,11 +220,8 @@ itself.'*
 Perhaps a bit odd to introduce FizzBuzz as a benchmark. But why not? It is easy
 to change and adopt to different flavours of BASIC.
 
-* [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program. Increased to 1000 instead of 100,
-  shows smaller diviations more explicit.
+* [FIZZBUZZ.BAS](FIZZBUZZ.BAS) Original program.
 * [FIZZBUZ1.BAS](FIZZBUZ1.BAS) Introduce % everywhere.
-* [FIZZBUZ2.BAS](FIZZBUZ2.BAS) SINGLE.
-* [FIZZBUZ3.BAS](FIZZBUZ3.BAS) DOUBLE.
 
 [^fizzbuzz]: https://en.wikipedia.org/wiki/Fizz_buzz
 
