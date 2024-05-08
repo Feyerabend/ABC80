@@ -212,6 +212,11 @@ itself.'*
   *programming languages*, and their outcome in speed. Here it is of course a sample in BASIC.
 * [SIEVE10.BAS](SIEVE10.BAS) From *Byte* Jan. 1983. Now updated with 10 iterations in BASIC.
 
+#### Other prime number enums
+
+* [PRIMES.BAS](PRIMES.BAS) No mods.
+* [PRIMES1.BAS](PRIMES1.BAS) Adopted to % integers.
+
 [^byte]: https://en.wikipedia.org/wiki/Byte_Sieve
 
 
