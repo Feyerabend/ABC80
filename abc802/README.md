@@ -302,8 +302,6 @@ again.
 | PRIMES1.BAS             | %        | ?                   |                     |
 | FIZZBUZZ.BAS            | none     | ~2.47               | 3                   |
 | FIZZBUZ1.BAS            | %        | ~1.91               | 2                   |
-| FIZZBUZ2.BAS            | SINGLE   | ~2.48               | 3                   |
-| FIZZBUZ3.BAS            | DOUBLE   | ~2.5                | 3                   |
 | NOEL.BAS<sup>å</sup>    | none     | ~18.89              | 19                  |
 | NOEL1.BAS<sup>ä</sup>   | %        | ~8.01               | 8                   |
 | NOEL2.BAS               | SINGLE   | ~18.89              | 19                  |
