@@ -1,4 +1,4 @@
-10 FOR A%=1% TO 1000%
+10 FOR A%=1% TO 100%
 20   IF MOD(A%,15%)=0% THEN PRINT ”FizzBuzz" : GOTO 60
 30   IF MOD(A%,3%)=0% THEN PRINT ”Fizz" : GOTO 60
 40   IF MOD(A%,5%)=0% THEN PRINT ”Buzz" : GOTO 60
