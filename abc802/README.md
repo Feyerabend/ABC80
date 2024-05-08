@@ -359,8 +359,8 @@ with the IBM PC emerged as the only viable option. IBM PC hardware became
 synonymous with personal computing, leading to a decline in loyalty towards
 domestically produced computers. *Benchmarks* played a distinct role in evaluating
 performance relative to cost, and the emergence of PC clones from Asia
-contributed to lower prices in the market. As the hardware was the same,
-you could only compete with performance versus cost.
+contributed to lower prices in the market. As the hardware was essentially
+the same, you could only compete with performance versus cost.
 
 Microsoft played a crucial role in the computer industry by offering
 comprehensive BASIC support for a wide range of computer hardware.
