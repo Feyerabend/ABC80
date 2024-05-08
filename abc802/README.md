@@ -357,8 +357,8 @@ The entry of the IBM PC in Sweden led to intense competition, with Nokia
 and Ericsson attempting their own variations. However, full compatibility
 with the IBM PC emerged as the only viable option. IBM PC hardware became
 synonymous with personal computing, leading to a decline in loyalty towards
-domestically produced computers. Benchmarks played a role in determining
-the best performance for the price.
+domestically produced computers. *Benchmarks* played a different role in
+determining the best performance for the price.
 
 Microsoft played a significant role by providing BASIC support for various
 computer hardware, expanding their influence through adaptations and widespread
