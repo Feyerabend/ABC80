@@ -357,7 +357,7 @@ The entry of the IBM PC in Sweden led to intense competition, with Nokia
 and Ericsson attempting their own variations. However, full compatibility
 with the IBM PC emerged as the only viable option. IBM PC hardware became
 synonymous with personal computing, leading to a decline in loyalty towards
-domestically produced computers. Benchmarks played a distinct role in evaluating
+domestically produced computers. *Benchmarks* played a distinct role in evaluating
 performance relative to cost, and the emergence of computer clones from Asia
 contributed to lower prices in the market.
 
@@ -367,19 +367,21 @@ They extended their influence by adapting and widely adopting their
 BASIC programming language. In the early stages, Microsoft employed
 cross-compilation techniques to create BASIC interpreters for different
 CPUs. As time progressed, they further developed and introduced enhanced
-versions such as Visual BASIC. This strategic approach contributed to
-Microsoft's growth and influence in the industry.
+versions such as Visual BASIC. This abstraction or strategic approach
+contributed to Microsoft's growth and influence in the industry.
 
-The computer industry was confronted with a decision: either to compete
-within the IBM PC/Microsoft DOS track or to pursue the development of
-their own UNIX-based systems. Companies like Diab AB and Microsoft,
-for instance, ventured into UNIX with their respective offerings,
-D-NIX and Xenix. However, as hardware technology advanced and prices
-decreased, the market underwent a shift. The importance of resource
-sharing, which was a key advantage of UNIX systems, diminished during
-this period. Consequently, the industry's attention shifted away from
-UNIX-based systems and towards other alternatives, particularly
-MS/PC-DOS (Microsoft/IBM PC Disk Operating System).
+The computer industry was faced with a critical decision: whether to
+compete within the established IBM PC/Microsoft DOS track or to explore
+the development of their own UNIX-based systems. Some companies, such
+as Diab AB and Microsoft with their offerings D-NIX and Xenix
+respectively, ventured into UNIX despite Microsoft's partial commitment
+to the former track. However, as hardware technology advanced and prices
+dropped, the market underwent a significant transformation. The
+importance of resource sharing, which was a key advantage of UNIX
+systems, diminished during this time. Consequently, the industry's
+focus shifted away from UNIX-based systems and towards alternative
+options, with MS/PC-DOS (Microsoft/IBM PC Disk Operating System)
+emerging as a prominent choice.
 
 But Apple demonstrated an alternative path by focusing on hardware-software
 integration and user-friendly design. Their success extended beyond
@@ -387,13 +389,9 @@ business to education, music, and art. Other companies with computers
 like Atari ST and Commodore Amiga targeted similar markets, but Apple
 stood out with programs like spreadsheets and desktop publishing,
 revealing the potential for a broader market.
-
-However, it is true that in the mid-80s, Apple Macintosh did not
-achieve the level of success they had anticipated or hoped for.
 The initial adoption and market penetration of the Macintosh were
 slower than expected, but over time, Apple's unique approach and
-product offerings gained traction and eventually contributed
-to their success in the computer industry.
+product offerings gained traction.
 
 Had the Swedish computer industry taken a different path, such as adopting
 Apple's approach and capitalizing on the strong hardware-software integration
