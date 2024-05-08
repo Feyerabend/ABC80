@@ -352,10 +352,14 @@ ABC802 BASIC II <b>TB</b> at 246.
 ## Concluding remarks
 
 Nokia had taken control of the struggling ABC computer line, but
-in 1986 eventually discontinued it due to poor sales and limited market reach.
+in 1986 eventually discontinued it due to poor sales and limited
+market reach the year before. The abrupt decline came as a surprise
+to many, considering the strong brand presence of ABC computers.
+Nokia attempted to leverage the brand by introducing entirely
+different products, hoping to capitalize on its reputation in the market.
 The entry of the IBM PC in Sweden led to intense competition, with Nokia
 and Ericsson attempting their own variations. However, full compatibility
-with the IBM PC emerged as the only viable option. IBM PC hardware became
+with the IBM PC emerged later as the only viable option. IBM PC hardware became
 synonymous with personal computing, leading to a decline in loyalty towards
 domestically produced computers. *Benchmarks* played a distinct role in evaluating
 performance relative to cost, and the emergence of PC clones from Asia
