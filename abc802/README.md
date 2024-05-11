@@ -202,10 +202,8 @@ At page 131 the author writes: *'Use any tricks you know to speed up the program
 itself.'*
 
 * [INTER.BAS](INTER.BAS) Original.
-* [INTER1.BAS](INTER1.BAS) ABC802/BASIC II version
-* [INTER2.BAS](INTER2.BAS) SINGLE.
-* [INTER3.BAS](INTER3.BAS) DOUBLE.
-* [INTER4.BAS](INTER4.BAS) Tricks used.
+* [INTER1.BAS](INTER1.BAS) SINGLE.
+* [INTER2.BAS](INTER2.BAS) DOUBLE.
 
 [^inter]: Interface Age, 1980, pp.130-1
 
@@ -215,6 +213,7 @@ itself.'*
 * [SIEVE.BAS](SIEVE.BAS) In contrast to the other benchmarks, this intend to compare different
   *programming languages*, and their outcome in speed. Here it is of course a sample in BASIC.
 * [SIEVE10.BAS](SIEVE10.BAS) From *Byte* Jan. 1983. Now updated with 10 iterations in BASIC.
+  When testing in the table below, I deleted the line "105 PRINT PRIME" (not even commented).
 
 #### Other prime number enums
 
@@ -299,13 +298,12 @@ again.
 | AHLS2.BAS<sup>i</sup>   | none     | ~23.81              | 24                  |
 | AHLS3.BAS<sup>j</sup>   | % SINGLE | ~22.62              | 22                  |
 | AHLS4.BAS<sup>k</sup>   | % DOUBLE | ~37.49              | 38                  |
-| INTER1.BAS              | % & al.  | -                   |                     |
-| INTER2.BAS              | SINGLE   | -                   | 338                 |
-| INTER3.BAS              | DOUBLE   | ?                   |                     |
-| SIEVE.BAS               | %        | ?                   |                     |
-| SIEVE10.BAS             | %        | ?                   |                     |
-| PRIMES.BAS              | none     | ?                   |                     |
-| PRIMES1.BAS             | %        | ?                   |                     |
+| INTER1.BAS              | SINGLE   | -                   | 338                 |
+| INTER2.BAS              | DOUBLE   | -                   | 707                 |
+| SIEVE.BAS               | INTEGER  | ~24                 | 24                  |
+| SIEVE10.BAS             | INTEGER  | -                   | 613                 |
+| PRIMES.BAS              | none     | ~32.91              | 33                  |
+| PRIMES1.BAS             | %        | ~17                 | 17                  |
 | FIZZBUZZ.BAS            | none     | ~2.47               | 3                   |
 | FIZZBUZ1.BAS            | %        | ~1.91               | 2                   |
 | NOEL.BAS<sup>å</sup>    | none     | ~18.89              | 19                  |

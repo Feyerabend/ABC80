@@ -1,6 +1,6 @@
 100 REM INTERFACE AGE’s benchmark program to
 110 REM ’discover’ the first 1000 Prime numbers
-115 SINGLE
+115 DOUBLE
 120 PRINT "Starting:"
 140 FOR N = 1 TO 1000
 150   FOR K = 2 TO 500
