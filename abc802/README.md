@@ -276,6 +276,7 @@ present, it shows speed in zooming and the spread of colours in the palette.
 [^mandel2]: http://forum.6502.org/viewtopic.php?p=87398,
 and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.bas?ref_type=heads.
 
+![ABC802 Mandelbrot](../assets/images/mandel-802.jpg)
 
 ## Summary benchmark results
 
