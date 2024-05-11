@@ -6,7 +6,7 @@
 I'm not really a fan of benchmarks. I find them too restrictive in the way they only measure what they measure.
 That is, they only could give you an estimate of something (that they measure), not an evaluation of what the
 machine can do in general. It doesn't indicate the possibilities, they only convey a test of something.
-Mostly is has been for speed .. of that something.
+Mostly is has been for speed .. of that something.[^classic]
 
 Today when almost all interests on 'retro computers' are in the spotlight of how and if they are able to play
 (graphical) games, and in this area the ABC802 can not compete, benchmarks shows other aspects. Regrettably,
@@ -39,6 +39,10 @@ futher. Who knows. However, the large base it once supported is no longer there.
 But as can be witnessed below, BASIC II in __ABC802__ was quite fast for its time. Often very near (below or
 above) the highly prasied BBC BASIC of the __BBC Micro__. It also had the possible choice between different
 number types in trade-off between speed and precision. Thus making it versatile in many applications.
+
+[^classic]: For a comprehensive layout of benchmarks present and historical, see e.g.
+http://www.roylongbottom.org.uk/classic.htm
+
 
 ### ABC802
 
@@ -255,7 +259,8 @@ point. At least if it was known to the programmer.
 I do agree with *not* using any special `POKE` e.g. turning off interrupts, using machine code
 or any assembly routines. *It's not BASIC*. It doesn't measure the BASIC.
 
-[^scruss]: https://scruss.com/blog/2020/12/17/bench64-a-new-basic-benchmark-index-for-8-bit-computers/
+[^scruss]: https://scruss.com/blog/2020/12/17/bench64-a-new-basic-benchmark-index-for-8-bit-computers/,
+https://github.com/scruss/bench64
 
 
 ### Mandelbrot Set[^mandel]
