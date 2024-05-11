@@ -299,10 +299,9 @@ again.
 | AHLS2.BAS<sup>i</sup>   | none     | ~23.81              | 24                  |
 | AHLS3.BAS<sup>j</sup>   | % SINGLE | ~22.62              | 22                  |
 | AHLS4.BAS<sup>k</sup>   | % DOUBLE | ~37.49              | 38                  |
-| INTER1.BAS              | none     | ?                   |                     |
-| INTER2.BAS              | SINGLE   | ?                   |                     |
+| INTER1.BAS              | % & al.  | -                   |                     |
+| INTER2.BAS              | SINGLE   | -                   | 338                 |
 | INTER3.BAS              | DOUBLE   | ?                   |                     |
-| INTER4.BAS              | % & al.  | ?                   |                     |
 | SIEVE.BAS               | %        | ?                   |                     |
 | SIEVE10.BAS             | %        | ?                   |                     |
 | PRIMES.BAS              | none     | ?                   |                     |
