@@ -140,7 +140,7 @@ __Method TB__: Timing for programs that takes a longer time, with result in seco
 ```BASIC
 10 T1$=RIGHT$(TIME$,12)
 ...
-1000 T2$=RIGHT(TIME$,12)
+1000 T2$=RIGHT$(TIME$,12)
 1010 T=(VAL(LEFT$(T2$,2))-VAL(LEFT$(T1$,2)))*3600+VAL(RIGHT$(T2$,7))-VAL(RIGHT$(T1$,7))
 1020 PRINT "Time: ";T+(VAL(MID$(T2$,4,2))-VAL(MID$(T1$,4,2)))*60;
 ```
