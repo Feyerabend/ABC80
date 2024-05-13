@@ -377,9 +377,9 @@ comprehensive BASIC support for a wide range of computer hardware.
 They extended their influence by adapting and widely adopting their
 BASIC programming language. In the early stages, Microsoft employed
 cross-compilation techniques to create BASIC interpreters for different
-CPUs. As time progressed, they further developed and introduced enhanced
-versions such as Visual BASIC. This abstraction or strategic approach
-contributed to Microsoft's growth and influence in the industry.
+architectures. As time progressed, they further developed and introduced
+enhanced versions such as Visual BASIC. This abstraction or strategic
+approach contributed to Microsoft's growth and influence in the industry.
 
 The computer industry was faced with a critical decision: whether to
 compete within the established IBM PC/Microsoft DOS track or to explore
