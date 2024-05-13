@@ -356,7 +356,10 @@ ABC802 BASIC II <b>TB</b> at 246.
 <sup>o</sup>Nearest compeditor:
 BBC Master (mode 7)   111.95,
 BBC Master (mode 6)   112.04,
-BBC Micro B (mode 7)  144.96.
+BBC Micro B (mode 7)  144.96.[^bbcs]
+
+[^bbcs]: http://forum.6502.org/viewtopic.php?f=1&t=6323
+
 
 ## Concluding remarks
 
