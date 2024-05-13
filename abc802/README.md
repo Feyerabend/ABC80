@@ -307,13 +307,13 @@ again.
 | PRIMES1.BAS             | %        | ~17                 | 17                  |
 | FIZZBUZZ.BAS            | none     | ~2.47               | 3                   |
 | FIZZBUZ1.BAS            | %        | ~1.91               | 2                   |
-| NOEL.BAS<sup>å</sup>    | none     | ~18.89              | 19                  |
-| NOEL1.BAS<sup>ä</sup>   | %        | ~8.01               | 8                   |
+| NOEL.BAS<sup>l</sup>    | none     | ~18.89              | 19                  |
+| NOEL1.BAS<sup>m</sup>   | %        | ~8.01               | 8                   |
 | NOEL2.BAS               | SINGLE   | ~18.89              | 19                  |
 | NOEL3.BAS               | DOUBLE   | ~25.21              | 26                  |
-| SCRUSS2.BAS<sup>ö</sup> | none     | -                   | 246                 |
+| SCRUSS2.BAS<sup>n</sup> | none     | -                   | 246                 |
 | MANDEL1.BAS             | % some   | -                   | 3317                |
-| MANDEL2.BAS             | none     | -                   | 93                  |
+| MANDEL2.BAS<sup>o</sup> | none     | -                   | 93                  |
 | MANDEL3.BAS             | % some   | -                   | 88                  |
 
 __Notes__
@@ -345,14 +345,18 @@ ABC802 <b>TB</b>: Using SINGLE but the rest of program with no change:
 ABC802 <b>TB</b>: Using DOUBLE but the rest of program with no change:
 acc. 0.0000000000602824457018869, rnd. 10.79915231955238.
 
-<sup>å</sup> Same result as BBC Micro.
+<sup>l</sup> Same result as BBC Micro.
 
-<sup>ä</sup> BBC Micro: 9.
+<sup>m</sup> BBC Micro: 9.
 
-<sup>ö</sup> In this case a higher number the better.
+<sup>n</sup> In this case a higher number the better.
 Cf. BBC BASIC at 202, Commodore 64 BASIC at 100.
 ABC802 BASIC II <b>TB</b> at 246.
 
+<sup>o</sup>Nearest compeditor:
+BBC Master (mode 7)   111.95,
+BBC Master (mode 6)   112.04,
+BBC Micro B (mode 7)  144.96.
 
 ## Concluding remarks
 
