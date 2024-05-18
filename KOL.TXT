@@ -1,0 +1,95 @@
+10 RANDOMIZE
+20 DIM R%(20%) : DIM P%(16%) : DIM W%(16%)
+30 DIM P1%(16%) : DIM W1%(16%)
+40 ; CHR$(12);
+50 TAB(9);' KOLVÄTEN '
+60 ; CUR(2,8);'STOCKHOLM  82.04.14'
+70 ; CUR(3,2);CHR$(151);STRING$(31%,115%);
+80 ; CUR(6,0);'ABC80 ÄR NU PROGRAMMERAD FÖR ATT KUNNA'
+90 ; 'KONSTRUERA OLIKA KOLVÄTEN OCH ÄVEN'
+100 ; 'KUNNA NAMNGE DESSA.'
+110 ; 'KONSTUKTIONEN SKER HELT SLUMPMÄSSIGT'
+120 ; 'VARFÖR OLIKA SVÅRA KOLVÄTEN KOMMER'
+130 ; 'ATT DYKA UPP I BLANDAD ORDNING.'
+140 ; : ; 'DATORN HÅLLER INNE MED NAMNUPPGIFTEN'
+150 ; 'TILLS DU TRYCKER PÅ RETURN-tangenten'
+160 ; 'SÅ ATT DU SKALL FÅ EN CHANS ATT TESTA'
+170 ; 'DIG SJÄLV PÅ NAMNSÄTTNINGEN!!!'
+180 ; CUR(20,8);'TRYCK "RETURN"   '; : GET S$
+190 ; CHR$(12);
+200 ; : ; 'DATORN KAN HJÄLPA DIG OM DU TRYCKER:'
+210 ; : ; '  LÄN-DATORN TALAR OM FÖR DIG HUR'
+220 ; '      MÅNGA KOL DET FINNS I LÄNGSTA'
+230 ; '      OBRUTNA KEDJAN!'
+240 ; : ; '  RAD-DATORN TALAR OM HUR MÅNGA'
+250 ; '      AV DE OLIKA RADIKALERNA'
+260 ; '      SOM FINNS!'
+270 ; : ; '  REG-DATORN VISAR UPP NOMENKLATUR-'
+280 ; '      REGLERNA!'
+290 ; CUR(14,0);'DATORN KOMMER ATT HA TVÅ RADER ÖPPNA'
+300 ; 'FÖR SKRIVNING SÅ DU BEHÖVER INTE'
+310 ; 'ANVÄNDA PAPPER OCH PENNA!'
+320 ; : ; 'DÅ DU ÄR FÄRDIG TRYCKER DU PÅ "RETURN"'
+330 ; 'SÅ DYKER DATORNS SVAR UPP BREDVID ETT'
+340 ; 'BLINKANDE    !!!'
+350 POKE 32346,196
+360 ; CUR(23,8);'TRYCK "RETURN"!!!    ';
+370 GET S$ : ; CHR$(12);
+380 ; '       NOMENKLATURREGLER '
+390 ; : ; '1. Utåg från den längsta ogrenade kol-'
+400 ; '   kedjan, stamkolvätet, i föreningens'
+410 ; '   strukturformel.Namnge kolvätet.'
+420 ; : ; '2. Numrera kolatomerna i stamkolvätet'
+430 ; '   med början i den ände som har det'
+440 ; '   kortaste avståndet till en sidokedja'
+450 ; '   Läget av sidokedjorna anges med'
+460 ; '   numren på de kolatomer, till vilka'
+470 ; '   de är bundna.'
+480 ; : ; '3. Ange med förstavelserna di,tri,tetra'
+490 ; '    osv. hur många likadana grupper som'
+500 ; '    binds till stamkolvätet.'
+510 ; : ; '4. De grupper som binds till stam-'
+520 ; '    kolvätet anges i bokstavsordning.'
+530 ; CUR(23,8);'TRYCK "RETURN"!   ';
+540 GET $S : ; CHR$(12);
+550 ; '    NAMN  GREKISKA RÄKNEORD '
+560 ; : ; : ;
+570 RESTORE 1870
+580 FOR U%=1% TO 15%
+590 READ N$ : ; '    'U%'    'N$
+600 NEXT U%
+610 RESTORE 620
+620 DATA DI,TRI,TETRA,PENTA,HEXA,OKTA,NONA
+630 
+
+
+
+
+
+
+
+1700
+1710
+1720
+1730 FOR U1%=1% TO 4%
+1740 F%=0%
+1750 DATA 4,'BUTYL',2,'ETYL'
+1760 DATA 1,'METYL',3,'PROPYL'
+1770 READ T% : READ T$
+1780 FOR U%=0% TO 15%
+1790 IF NOT W%(U%)=T% THEN 1820
+1800 K$=K$+RIGHT$(NUM$(P%(U%)),2%)+','
+1810 F%=F%+1%
+1820 NEXT U%
+1830 IF F%=0% THEN 1860
+1840 K$=LEFT$(K$,LEN(K$)-1%)
+1850 K$=K$+'-'+V$(F%)+T$+'-'
+1860 NEXT U1%
+1870 DATA METAN,ETAN,PROPAN,BUTAN
+1880 DATA PENTAN,HEXAN,HEPTAN,OKTAN
+1890 DATA NONAN,DEKAN,UNDEKAN,DODEKAN
+1900 DATA TRIDEKAN,TETRADEKAN
+1910 DATA PENTADEKAN
+1920 RESTORE 1870
+1930 FOR U%=1% TO L1% : READ T$
+ß
