@@ -427,7 +427,7 @@ of the computer industry. Therefore, in retrospect or at the
 time, it was challenging to make any guarantees about the future
 prospects of the MSX platform or any other similar ventures in
 the industry. The ever-changing market dynamics, competition,
-and various other factors make it difficult to predict the
+and various other factors made it difficult to predict the
 outcome with any certainty.
 
 In 1985, prior to the release of Windows 1.0, I personally
@@ -444,8 +444,8 @@ at the university where I was studying.
 
 The potential for the Swedish computer industry had greatly diminished,
 resulting in the discontinuation of the *ABC802* and the cessation of any
-further advancements. Despite the impressive speed of BASIC II, there
-were no viable prospects for future development, and the endeavor in
+further advancements. Despite the impressive speed of *BASIC II*, there
+were no viable prospects for future development, and the endeavour in
 this respect had reached a dead end.
 
 

@@ -1,11 +1,11 @@
 
 # CP/M
 
+...[^cpm]
 
+[^cpm]: https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
 
-https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
-
-## ABCNIX: D-NIX, ..
+## ABCNIX, D-NIX, ..
 
 Cromix ...
 
