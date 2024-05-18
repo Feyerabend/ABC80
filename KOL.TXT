@@ -65,7 +65,13 @@
 
 
 
-1600
+
+
+1560 
+1570 Q1%=Q1%+P1%(N%) : N%=N%+1%
+1580 NEXT U%
+1590 IF NOT M1%=2% THEN P1%(N5)=M2%/2%-M1%/2%+1%+R%(M2%) : W1%(N%)=M1%/2%-1% : Q1%=Q1%+P1%(N%)
+1600 IF Q1%>Q% THEN 1640
 1610 FOR U%=0% TO 15%
 1620 P%(U%)=P1%(U%) : W%(U%)=W1%(U%)
 1630 NEXT U%
@@ -99,3 +105,4 @@
 1910 DATA PENTADEKAN
 1920 RESTORE 1870
 1930 FOR U%=1% TO L1% : READ T$
+.. rest of program missing
