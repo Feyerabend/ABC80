@@ -76,32 +76,39 @@
 760 IF T%<0% THEN T%=0%
 770 R%(N%)=T% : NEXT N%
 780 REM   LÄNGSTA KOLKEDJA
-790
-800
-810
-820
-830
-840
-850
-860
-870
-880
-890
-900
-910
-920
-930
-940
-950
-960
-970
-980
-990
-1000
+790 L1%=0% : M1%=0% : M2%=0%
+800 FOR N%=2% TO L3%-1%
+810 FOR N1%=N%+1% TO L3%
+820 C%=N1%/2%-N%/2%+1%
+830 C1%=R%(N%)+R%(N1%)+C%
+840 IF L1%<=C1% THEN L1%=C1% : M1%=N% : M2%=N1%
+850 NEXT N1% : NEXT N%
+860 REM   SKALA RAD.
+870 M8%=M1%-1%-(M1% AND 1%)
+880 M9%=M2%+2%-(M2% AND 1%)
+890 FOR N%=2% TO M8%
+900 R%(N%)=0% : NEXT N%
+910 FOR N%=2% TO M8%
+920 R%(N%)=0% : NEXT N%
+930 REM >> UPPRITNING <<
+940 REM   STAMKOLVÄTE
+950 FOR U%=1% TO L%
+960 V%=3% : X%=U%
+970 GOSUB 1150
+980 NEXT U%
+990 FOR U%=1% TO L%-1%
+1000 Y%=3% : X%=U%
+1010 GOSUB 1230
+1020 NEXT U%
+
 
 .. to be continued
 
-1490
+
+1460 W%(N%)=R%(U%)
+1470 Q%=Q%+P%(N%) : N%=N%+1%
+1480 NEXT U%
+1490 IF NOT M2%=L3% THEN P%(N%)=M2%/2%-M1%/2%+1%+R%(M1%) : W%(N%)=L%-M2%/2% : Q%=Q%+P%(N%)
 1500 REM -----
 1510 Q1%=0% : N%=0%
 1520 IF NOT M2%=L3% THEN Q1%=R%(M2%)+1% : P1%(N%)=Q1% : W1%(N%)=L%-M2%/2% : N%=1%
