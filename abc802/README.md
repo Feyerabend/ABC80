@@ -278,7 +278,7 @@ and https://gitlab.com/retroabandon/bascode/-/blob/master/abc800/mandel-abc800.b
 
 ![ABC802 Mandelbrot](../assets/images/mandel-802.jpg)
 
-## Summary benchmark results
+## Summary benchmark results[^abccomp]
 
 The precision of seconds given in fractions may or may not be the true or actual case,
 as the timing in many cases was (and still are) not that precise. Therefore most numbers
@@ -358,6 +358,10 @@ BBC Master (mode 7)   111.95,
 BBC Master (mode 6)   112.04,
 BBC Micro B (mode 7)  144.96.[^bbcs]
 
+[^abccomp]: These numbers should be representative of the other
+in the serie ABC800 and ABC806, as they are basically the same
+computer in these regards. In certain versions they can do better
+graphics, though.
 [^bbcs]: http://forum.6502.org/viewtopic.php?f=1&t=6323
 
 
