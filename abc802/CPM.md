@@ -255,19 +255,20 @@ Backward compatibility is gold in this context. These are also some reasons why
 hardware for PC’s have evolved in a very evolutionary way, in contrast to a revolutionary
 one. Much of the software developed some time ago can still be run on software years
 later. Binary compatibility of programs, and implied processor legacy keeps the computer
-relevant. E.g. processors for PC’s x86 internally run in a RISC fashion, although the
-instruction set looks like it is CISC for the program.*
+relevant. E.g. processors for PC’s x86 internally run in a more modern RISC fashion,
+although the instruction set looks like it is decades old CISC from the viewpoint
+of the program.*
 
 
 ### A new proposal
 
 So, legacy keeps the mainstream evolution of consumer computers within very restrictive
 borders. The operating system keeps programs from reaching the hardware through layers
-of abstractions. Could you/we manage otherwise? Yes, I  believe so.
+of abstractions. Could you/we manage otherwise? Yes, I believe so.
 
 Hardware could be built by software vendors, decreasing the gap between hardware and
 software. Standards could be developed either by some de facto circumstance, or a
-body unifying how hardware units should talk to each other (a unifying “bus”).
+body unifying how hardware units should talk to each other (à la unifying “bus”).
 
 What would be gained by this?
 
