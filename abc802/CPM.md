@@ -4,12 +4,12 @@
 # CP/M
 
 In the late 1970s and early 1980s, many contemporary computer manufacturers
-expanded their proprietary solutions by incorporating CP/M capabilities,
+expanded their proprietary solutions by incorporating CP/M[^cpmwiki] capabilities,
 either through add-on cards or by redesigning their machines. This trend
 emerged as CP/M gained market traction. For instance, the Apple II could
 run CP/M software using third-party Z80 processor cards, such as the Microsoft
-SoftCard. Similarly, the Commodore 128 included a Z80 processor, enabling
-it to run CP/M alongside its native operating systems.
+SoftCard[^softcard]. Similarly, the Commodore 128 included a Z80 processor, enabling
+it to run CP/M alongside its native operating systems.[^Commodore128]
 
 Additionally, some systems came with CP/M pre-installed from the start.
 Notable examples include the Osborne 1, an early portable computer that
@@ -18,9 +18,12 @@ integrations highlighted CP/M's versatility and widespread adoption during
 that era.
 
 *Not to be unfashionable, the ABC802 did also came prepared for a possible
-extension of running CP/M.*[^cpm]
+extension of running CP/M.*[^cpmabc800]
 
-[^cpm]: Almost the same computer, CP/M for ABC800:
+[^cpmwiki]: Elementary on CP/M: https://en.wikipedia.org/wiki/CP/M.
+[^softcard]: Z80 SoftCard: https://en.wikipedia.org/wiki/Z-80_SoftCard.
+[^Commodore128]: Commodore 128: https://en.wikipedia.org/wiki/Commodore_128
+[^cpmabc800]: Almost the same computer, CP/M for ABC800:
 https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
 
 
