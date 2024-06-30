@@ -238,38 +238,33 @@ of RAM and virtual memory.
 * __Modularity__: Designed to be highly portable across different hardware platforms.
 Unix was written in C, which facilitated easier adaptation to various systems.
 
-MS-DOS/IBM-DOS: Single-tasking operating system with a command-line interface.
-File System: Initially used the FAT12 file system, which also had an 8.3 filename
+__*MS-DOS/IBM-DOS*__: Single-tasking operating system with a command-line interface.
+* __File System__: Initially used the FAT12 file system, which also had an 8.3 filename
 convention. Later versions supported FAT16 and FAT32.
-Memory Management: Initially limited to 640 KB of conventional memory, with later
+* __Memory Management__: Initially limited to 640 KB of conventional memory, with later
 enhancements for extended and expanded memory.
-Modularity: Less modular compared to Unix but more standardised than CP/M, as
+* __Modularity__: Less modular compared to Unix but more standardised than CP/M, as
 MS-DOS was designed to run on IBM PCs and compatible with a standard BIOS interface.
 
 
 3. User Interface and Usability
 
-CP/M: Command-line interface (CLI) with a simple set of commands.
-Usability: Geared towards users with some technical knowledge, but less complex
-than Unix. Limited
-user interface features compared to Unix.
+__*CP/M*__: Command-line interface (CLI) with a simple set of commands.
+* __Usability__: Geared towards users with some technical knowledge, but less complex
+than Unix. Limited user interface features compared to Unix.
 
-Unix: Command-line interface with powerful shell scripting capabilities. Early
-Unix systems used shells
-like the Bourne shell (sh).
-Usability: More complex commands and utilities, providing greater power and
-flexibility but requiring
-more technical expertise. Unix systems often included a rich set of command-line
-tools and utilities.
-GUI: Some systems had some (propriatary) graphical interfaces.
+__*Unix*__: Command-line interface with powerful shell scripting capabilities. Early
+Unix systems used shells like the Bourne shell (sh).
+* __Usability__: More complex commands and utilities, providing greater power and
+flexibility but requiring more technical expertise. Unix systems often included a
+rich set of command-line tools and utilities.
+* __GUI__: Some systems had some (propriatary) graphical interfaces, like D-NIX.
 
-MS-DOS/IBM-DOS: Command-line interface (CLI) with a straightforward set of commands.
-Usability: Designed to be user-friendly for business and personal use, simpler
-than Unix but more advanced
-than CP/M in terms of user interface and available commands.
-GUI: MS-DOS/IBM-DOS itself did not include a GUI, but it could run graphical
-environments like Microsoft Windows,
-which started as an add-on to MS-DOS.
+__*MS-DOS/IBM-DOS*__: Command-line interface (CLI) with a straightforward set of commands.
+* __Usability__: Designed to be user-friendly for business and personal use, simpler
+than Unix but more advanced than CP/M in terms of user interface and available commands.
+* __GUI__: MS-DOS/IBM-DOS itself did not include a GUI, but it could run graphical
+environments like Microsoft Windows, which started as an add-on to MS-DOS.
 
 
 
