@@ -125,8 +125,9 @@ mainframes, underscored the reliability and growing popularity of the IBM PC.
 Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M,
 it evolved and laid the foundation for a large developer market.
 
-*This shift created a competitive software market for the PC, where previously
-individual computer brands / computers, had fought for dominance.*
+*This shift created a competitive software market for the PC which stood
+for a standard in hardware and software, where previously proprietary individual
+computer brands / computers with proprietary solutions, had fought for dominance.*
 
 
 ### Alternative routes
@@ -157,8 +158,8 @@ ecosystem and meet the demands of users who required seamless compatibility.
 Companies like Compaq successfully adopted this strategy, becoming significant
 players in the market by offering reliable IBM PC clones.
 
-But there was at least one group more: they bet on *UNIX* as the future.
-Note: among them were in fact Micorsoft with *Xenix*.
+But there was at least one group more: they bet on *UNIX* as the future.[^Xenix]
+[^Xenix]:]Among them were in fact Micorsoft with *Xenix*.
 
 
 ### UNIX
@@ -184,6 +185,76 @@ In the years to come, overcoming *fragmentation* was a significant issue,
 perhaps the largest of them all. Besides technological challenges, licensing
 restrictions and the use of the Unix brand also hindered companies, development,
 and market expansion.
+
+
+1. Target audience
+
+CP/M: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
+aimed at hobbyists, small businesses, and early personal computer users.
+
+Unix: Initially designed for minicomputers and mainframes used by researchers,
+academics, and enterprise environments. Early Unix required more powerful
+hardware compared to CP/M.
+
+MS-DOS/IBM-DOS: Designed for IBM PCs and compatible microcomputers using
+Intel x86 processors, aimed at personal and business users.
+
+
+2. Architecture and Design
+
+CP/M: Simple, single-tasking operating system with a command-line interface.
+File System: Utilised a flat file system with an 8.3 filename convention (eight
+characters for the name, three for the extension).
+Memory Management: Limited to 64 KB of RAM, reflecting the hardware constraints
+of early microcomputers.
+Modularity: Relied on a system BIOS to handle hardware-specific functions,
+requiring customization for different hardware.
+
+Unix: Multiuser, multitasking operating system with a hierarchical file system.
+File System: Supported long filenames and a complex directory structure.
+Utilised a hierarchical file system with nested directories.
+Memory Management: More advanced memory management, supporting larger amounts
+of RAM and virtual memory.
+Modularity: Designed to be highly portable across different hardware platforms.
+Unix was written in C, which facilitated easier adaptation to various systems.
+
+MS-DOS/IBM-DOS: Single-tasking operating system with a command-line interface.
+File System: Initially used the FAT12 file system, which also had an 8.3 filename
+convention. Later versions supported FAT16 and FAT32.
+Memory Management: Initially limited to 640 KB of conventional memory, with later
+enhancements for extended and expanded memory.
+Modularity: Less modular compared to Unix but more standardised than CP/M, as
+MS-DOS was designed to run on IBM PCs and compatible with a standard BIOS interface.
+
+
+3. User Interface and Usability
+
+CP/M: Command-line interface (CLI) with a simple set of commands.
+Usability: Geared towards users with some technical knowledge, but less complex
+than Unix. Limited
+user interface features compared to Unix.
+
+Unix: Command-line interface with powerful shell scripting capabilities. Early
+Unix systems used shells
+like the Bourne shell (sh).
+Usability: More complex commands and utilities, providing greater power and
+flexibility but requiring
+more technical expertise. Unix systems often included a rich set of command-line
+tools and utilities.
+GUI: Some systems had some (propriatary) graphical interfaces.
+
+MS-DOS/IBM-DOS: Command-line interface (CLI) with a straightforward set of commands.
+Usability: Designed to be user-friendly for business and personal use, simpler
+than Unix but more advanced
+than CP/M in terms of user interface and available commands.
+GUI: MS-DOS/IBM-DOS itself did not include a GUI, but it could run graphical
+environments like Microsoft Windows,
+which started as an add-on to MS-DOS.
+
+
+
+
+
 
 
 ### The proliferation of standards: ABCNIX, D-NIX, ..
