@@ -211,9 +211,11 @@ was sold to Cromenco as *Cromix*.[^D_NIX]
 
 __CP/M__: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
 aimed at hobbyists, small businesses, and early personal computer users.
+
 __Unix__: Initially designed for minicomputers and mainframes used by researchers,
 academics, and enterprise environments. Early Unix required more powerful
 hardware compared to CP/M.
+
 __MS-DOS/IBM-DOS__: Designed for IBM PCs and compatible microcomputers using
 Intel x86 processors, aimed at personal and business users.
 
