@@ -264,14 +264,14 @@ So, legacy keeps the mainstream evolution of consumer computers within very rest
 borders. The operating system keeps programs from reaching the hardware through layers
 of abstractions. Could you/we manage otherwise? Yes, I  believe so.
 
-hardware could be built by software vendors, decreasing the gap between hardware and
-software standards could be developed either by some de facto circumstance, or a
+Hardware could be built by software vendors, decreasing the gap between hardware and
+software. Standards could be developed either by some de facto circumstance, or a
 body unifying how hardware units should talk to each other (a unifying “bus”).
 
 What would be gained by this?
 
 .. to be contined ..
-
+ energy, costs, maintenance
 
 
 
