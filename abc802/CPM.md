@@ -94,22 +94,23 @@ mechanical issues and the need for frequent maintenance. As newer, more efficien
 like the ISA (internal 16-bit of IBM PC/AT) emerged, the S-100 bus quickly became outdated,
 struggling to keep up with evolving hardware capabilities.
 
-CP/M, designed for 8-bit microprocessors, had several drawbacks that limited its effectiveness
-as computing technology advanced. Its memory management capabilities were restricted, allowing
-it to address only up to 64KB of memory. The absence of built-in networking capabilities hindered
-its usefulness in networked environments, becoming a significant limitation as businesses and
-individuals began connecting computers in local area networks (LANs) and using modems for remot
-communication. CP/M's command-line interface, though functional, was basic and started to feel
-outdated as graphical user interfaces like those in the Apple Macintosh and later Microsoft
-Windows emerged, offering more intuitive and visually appealing experiences. Additionally,
-CP/M struggled to support emerging hardware technologies such as high-resolution graphics,
-advanced sound systems, and sophisticated input devices, making it less appealing for multimedia
-applications. Its single-tasking nature, which allowed only *one program to run at a time*, became
-a significant drawback as multitasking grew in importance for productivity and user convenience.
-Furthermore, the existence of many variations of CP/M created by different hardware manufacturers
-led to compatibility issues, with software written for one version often not running correctly on
-another. These limitations collectively contributed to CP/M's decline as a previous dominant
-operating system.
+CP/M, originally designed for 8-bit microprocessors, had several drawbacks that limited its
+effectiveness as computing technology advanced. Its memory management capabilities were
+restricted, allowing it to address only up to 64KB of memory. The absence of built-in
+networking capabilities hindered its usefulness in networked environments, becoming a
+significant limitation as businesses and individuals began connecting computers in local
+area networks (LANs) and using modems for remote communication -- although there were
+applications running e.g. terminal emulations. CP/M's command-line interface,
+though functional, was basic and started to feel outdated as graphical user interfaces like
+those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering more intuitive
+and visually appealing experiences. Additionally, CP/M struggled to support emerging hardware
+technologies such as high-resolution graphics, advanced sound systems, and sophisticated input
+devices, making it less appealing for multimedia applications. Its single-tasking nature,
+which allowed only *one program to run at a time*, became a significant drawback as multitasking
+grew in importance for productivity and user convenience. Furthermore, the existence of many
+variations of CP/M created by different hardware manufacturers led to compatibility issues,
+with software written for one version often not running correctly on another. These limitations
+collectively contributed to CP/M's decline as a previous dominant operating system.
 
 
 
