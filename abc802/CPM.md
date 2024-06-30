@@ -235,30 +235,35 @@ the ABC802 and its relatives.
 
 ## Comments on operating systems and legacy
 
-*An operating system is a convenient way of handling a computer. Contrary
-to common opinion: It is not a necessity. As can be seen from history,
-rudimentary system control and basic support for hardware can go a long way.
-ABC802 had some control in keyboard and screen routines, timing and the like,
-but also e.g. some additional fundamental routines for printers or for DOS
-in ROM. We could do what we could call “elementary” computer work such as word
+*An operating system is a convenient way of handling a computer.
+Contrary to common opinion: It is not a necessity. As can be seen
+from history, rudimentary system control and basic support for
+hardware can go a long way. ABC802 had some control in keyboard
+and screen routines, timing and the like, but also e.g. some
+additional fundamental routines for printers or for DOS in ROM.
+We could do what we could call “elementary” computer work such as word
 processing, accounting, or register/database management.*
 
-*Today we can emulate CP/M in a Raspberry Pi Pico, a very cheap microcontroller,
-cheaper than lunch. Not only the processor Z80 is emulated, but also the terminal
-interface to the screen and keyboard. It really shows that software or as a clear
-sample: word processing, has not evolved at the same pace as the hardware has.
-WordStar is not that far from Word. Some very elementary software can be run on
-every elementary hardware, not using a complex system and overly sophisticated
-hardware.*
+*Today we can emulate CP/M in a Raspberry Pi Pico, a very cheap
+microcontroller, cheaper than lunch. Not only the processor Z80
+is emulated, but also the terminal interface to the screen and
+keyboard. It really shows that software or as a clear sample:
+word processing, has not evolved at the same pace as the hardware
+has. WordStar is not that far from Word. Some very elementary
+software can be run on every elementary hardware, not using a
+complex system and overly sophisticated hardware.*
 
-*Historically operating systems have not been prevalent in game consoles or word
-processors. They have managed anyway. They often have had special hardware.
-Operating systems have occurred, but when there is no need for extra software,
-layers only get in the way of reaching the raw metal in the case of games.
-But as games are written by third party developers, a familiar environment
-and tools are easier and probably more efficient to work with (read:
-conventional operating system in a PC), than special hardware and new
-development tools in a new game console.*
+*Historically operating systems have not been prevalent in early arcade,
+game consoles or word processors. They have managed anyway. Sometimes
+they also have had special hardware. But there are advantages of having
+an operating system, as e.g. networking doesn't have to be reinvented.
+This is the positive side of legacy. Operating systems have occurred,
+but when there is no need for extra software, layers only get in the
+way of reaching the raw metal in the case of games. But as games are
+written by third party developers, a familiar environment and tools
+are easier and probably more efficient to work with
+(read: conventional operating system in a PC),
+than special hardware and new development tools in a new game console.*
 
 *This leads us to the question of legacy. Not only is the familiarity of the system
 from the user highly valuable, but also the possibility of using previous software.
@@ -284,7 +289,7 @@ by a unified body that defines how hardware components should communicate, akin 
 a standardized “bus.” Instead of relying on __APIs__ to mediate between programs, the
 operating system, and at last hardware, development could be guided by __protocols__
 that facilitate direct and efficient communication. This can be done either between
-hardware to hardware through the "bus", or through software to software, or again
+hardware to hardware through the "bus," or through software to software, or again
 directly beween software and hardware, bypassing multiple layers of abstraction.*
 
 *One solution could be for software vendors to also develop hardware, thereby bridging
