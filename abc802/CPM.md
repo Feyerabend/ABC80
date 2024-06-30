@@ -241,11 +241,12 @@ every elementary hardware, not using a complex system and overly sophisticated
 hardware.
 
 Historically operating systems have not been prevalent in game consoles or word
-processors. They have managed anyway. Operating systems have occurred, but when
-there is no need for extra software, layers only get in the way of reaching the
-raw metal in the case of games. But as games are written by third party developers,
-a familiar environment and tools are easier and probably more efficient to work with
-(read: conventional operating system in a PC), than special hardware and new
+processors. They have managed anyway. They often have had special hardware.
+Operating systems have occurred, but when there is no need for extra software,
+layers only get in the way of reaching the raw metal in the case of games.
+But as games are written by third party developers, a familiar environment
+and tools are easier and probably more efficient to work with (read:
+conventional operating system in a PC), than special hardware and new
 development tools in a new game console.
 
 This leads us to the question of legacy. Not only is the familiarity of the system
