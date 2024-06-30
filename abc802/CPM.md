@@ -290,15 +290,9 @@ a standardized “bus.” Instead of relying on __APIs__ to mediate between prog
 operating system, and at last hardware, development could be guided by __protocols__
 that facilitate direct and efficient communication. This can be done either between
 hardware to hardware through the "bus," or through software to software, or again
-directly beween software and hardware, bypassing multiple layers of abstraction.*
+directly beween software and hardware, bypassing multiple layers of abstraction.
+Data obviously should be standardised.*
 
-*One solution could be for software vendors to also develop hardware, thereby bridging
-the gap between the two. Standards could emerge either organically or through a unified
-body that dictates how hardware components should communicate (similar to a standardized
-“bus”). Instead of relying on APIs from program to operating system and down to hardware,
-development could be guided by protocols either between software parts or hardware,
-ensuring more direct and efficient communication between software and hardware. Not
-through layers. Data obviously should be standardised.*
 
 What would be gained from this approach?
 
