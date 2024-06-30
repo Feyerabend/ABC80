@@ -301,9 +301,9 @@ What would be gained from this approach?
   and less fragmented.
 
 
-## Technical comparation
+## Technical comparation  CP/M, Unix, MS-DOS/IBM-DOS
 
-#### Target audience CP/M, Unix, MS-DOS/IBM-DOS
+#### Target audience
 
 __CP/M__: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
 aimed at hobbyists, small businesses, and early personal computer users.
