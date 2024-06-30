@@ -122,7 +122,7 @@ It is important to note that IBM also offered CP/M and UCSD Pascal as alternativ
 to MS-DOS, but the pricing for CP/M was significantly higher. The saying
 'You couldn't go wrong with buying an IBM,' originally used when considering
 mainframes, underscored the reliability and growing popularity of the IBM PC.
-Even though PC-DOS (IBM's version of MS-DOS) was built on a 'clone' of CP/M,
+Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M,
 it evolved and laid the foundation for a large developer market.
 
 *This shift created a competitive software market for the PC, where previously
