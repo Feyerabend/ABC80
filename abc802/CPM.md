@@ -225,12 +225,13 @@ the ABC802 and its relatives.
 
 ## Comments on operating systems and legacy
 
-*An operating system is a convenient way of handling a computer. Contrary to opinion:
-It is not a necessity. As can be seen from history, rudimentary system control and
-basic support for hardware can go a long way. ABC802 had some control in keyboard
-and screen routines, timing and the like, but also e.g. some additional fundamental
-routines for printers or for DOS in ROM. We could do what we could call “elementary”
-computer work such as word processing, accounting, or register/database management.*
+*An operating system is a convenient way of handling a computer. Contrary
+to common opinion: It is not a necessity. As can be seen from history,
+rudimentary system control and basic support for hardware can go a long way.
+ABC802 had some control in keyboard and screen routines, timing and the like,
+but also e.g. some additional fundamental routines for printers or for DOS
+in ROM. We could do what we could call “elementary” computer work such as word
+processing, accounting, or register/database management.*
 
 *Today we can emulate CP/M in a Raspberry Pi Pico, a very cheap microcontroller,
 cheaper than lunch. Not only the processor Z80 is emulated, but also the terminal
@@ -262,19 +263,24 @@ of the program.*
 
 ### A new proposal
 
-So, legacy keeps the mainstream evolution of consumer computers within very restrictive
-borders. The operating system keeps programs from reaching the hardware through layers
-of abstractions. Could you/we manage otherwise? Yes, I believe so.
+Legacy systems significantly restrict the mainstream evolution of consumer computers,
+imposing tight boundaries on innovation. The operating system, with its multiple layers
+of abstraction, slows down the interaction between programs and hardware.
+Is there a better way? I believe so.
 
-Hardware could be built by software vendors, decreasing the gap between hardware and
-software. Standards could be developed either by some de facto circumstance, or a
-body unifying how hardware units should talk to each other (à la unifying “bus”).
+One solution could be for software vendors to also develop hardware, thereby bridging
+the gap between the two. Standards could emerge either organically or through a unified
+body that dictates how hardware components should communicate (similar to a standardized “bus”).
+Instead of relying on APIs, development could be guided by protocols, ensuring more direct
+and efficient communication between software and hardware.
 
-What would be gained by this?
+What would be gained from this approach?
 
-.. to be contined ..
- energy, costs, maintenance
+.. to be continued ..
 
+* Energy Efficiency: Streamlined communication between hardware and software could reduce power consumption.
+* Cost Reduction: Standardized protocols and closer integration could lower development and maintenance costs.
+* Simplified Maintenance: A unified system could make maintenance more straightforward and less fragmented.
 
 
 ## Technical comparation
