@@ -9,20 +9,24 @@ either through add-on cards or by redesigning their machines. This trend
 emerged as CP/M gained market traction. For instance, the Apple II could
 run CP/M software using third-party Z80 processor cards, such as the Microsoft
 SoftCard[^softcard]. Similarly, the Commodore 128 included a Z80 processor, enabling
-it to run CP/M alongside its native operating systems.[^Commodore128]
+it to run CP/M alongside its native operating systems.[^commodore128]
 
 Additionally, some systems came with CP/M pre-installed from the start.
-Notable examples include the Osborne 1, an early portable computer that
-bundled software like WordStar and SuperCalc, and the Kaypro II. These
-integrations highlighted CP/M's versatility and widespread adoption during
-that era.
+Notable examples include the Osborne 1[^osborne], an early portable computer that
+bundled software like WordStar[^wordstar] and SuperCalc[^supercalc], and the
+Kaypro II[^kaypro]. These integrations highlighted CP/M's versatility and
+widespread adoption during that era.
 
 *Not to be unfashionable, the ABC802 did also came prepared for a possible
 extension of running CP/M.*[^cpmabc800]
 
 [^cpmwiki]: Elementary on CP/M: https://en.wikipedia.org/wiki/CP/M.
 [^softcard]: Z80 SoftCard: https://en.wikipedia.org/wiki/Z-80_SoftCard.
-[^Commodore128]: Commodore 128: https://en.wikipedia.org/wiki/Commodore_128
+[^commodore128]: Commodore 128: https://en.wikipedia.org/wiki/Commodore_128
+[^osborne]: https://en.wikipedia.org/wiki/Osborne_1.
+[^wordstar]: ..
+[^supercalc]: ..
+[^kaypro]:..
 [^cpmabc800]: Almost the same computer, CP/M for ABC800:
 https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
 
