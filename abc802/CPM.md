@@ -225,38 +225,38 @@ the ABC802 and its relatives.
 
 ## Comments on operating systems and legacy
 
-An operating system is a convenient way of handling a computer. Contrary to opinion:
+*An operating system is a convenient way of handling a computer. Contrary to opinion:
 It is not a necessity. As can be seen from history, rudimentary system control and
 basic support for hardware can go a long way. ABC802 had some control in keyboard
 and screen routines, timing and the like, but also e.g. some additional fundamental
 routines for printers or for DOS in ROM. We could do what we could call “elementary”
-computer work such as word processing, accounting, or register/database management.
+computer work such as word processing, accounting, or register/database management.*
 
-Today we can emulate CP/M in a Raspberry Pi Pico, a very cheap microcontroller,
+*Today we can emulate CP/M in a Raspberry Pi Pico, a very cheap microcontroller,
 cheaper than lunch. Not only the processor Z80 is emulated, but also the terminal
 interface to the screen and keyboard. It really shows that software or as a clear
 sample: word processing, has not evolved at the same pace as the hardware has.
 WordStar is not that far from Word. Some very elementary software can be run on
 every elementary hardware, not using a complex system and overly sophisticated
-hardware.
+hardware.*
 
-Historically operating systems have not been prevalent in game consoles or word
+*Historically operating systems have not been prevalent in game consoles or word
 processors. They have managed anyway. They often have had special hardware.
 Operating systems have occurred, but when there is no need for extra software,
 layers only get in the way of reaching the raw metal in the case of games.
 But as games are written by third party developers, a familiar environment
 and tools are easier and probably more efficient to work with (read:
 conventional operating system in a PC), than special hardware and new
-development tools in a new game console.
+development tools in a new game console.*
 
-This leads us to the question of legacy. Not only is the familiarity of the system
+*This leads us to the question of legacy. Not only is the familiarity of the system
 from the user highly valuable, but also the possibility of using previous software.
 Backward compatibility is gold in this context. These are also some reasons why
 hardware for PC’s have evolved in a very evolutionary way, in contrast to a revolutionary
 one. Much of the software developed some time ago can still be run on software years
 later. Binary compatibility of programs, and implied processor legacy keeps the computer
 relevant. E.g. processors for PC’s x86 internally run in a RISC fashion, although the
-instruction set looks like it is CISC for the program.
+instruction set looks like it is CISC for the program.*
 
 
 ### A new proposal
