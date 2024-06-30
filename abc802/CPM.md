@@ -133,7 +133,8 @@ foundation for a large developer market.
 
 *This shift created a competitive software market for the PC which stood
 for a standard in hardware and software, where previously proprietary individual
-computer brands / computers with proprietary solutions, had fought for dominance.*
+computer brands / computers with proprietary solutions, had fought for dominance.
+The de facto standards could only help so much.*
 
 
 ### Alternative routes
