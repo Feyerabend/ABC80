@@ -263,24 +263,42 @@ of the program.*
 
 ### A new proposal
 
-Legacy systems significantly restrict the mainstream evolution of consumer computers,
+*Legacy systems significantly restrict the mainstream evolution of consumer computers,
 imposing tight boundaries on innovation. The operating system, with its multiple layers
 of abstraction, slows down the interaction between programs and hardware.
-Is there a better way? I believe so.
+Is there a better way? I believe so.*
 
-One solution could be for software vendors to also develop hardware, thereby bridging
+*One solution could be for software vendors to also develop hardware, effectively
+bridging the gap between the two. Standards could emerge organically or be established
+by a unified body that defines how hardware components should communicate, akin to
+a standardized “bus.” Instead of relying on __APIs__ to mediate between programs, the
+operating system, and at last hardware, development could be guided by __protocols__
+that facilitate direct and efficient communication. This can be done either between
+hardware to hardware through the "bus", or through software to software, or again
+directly beween software and hardware, bypassing multiple layers of abstraction.*
+
+*One solution could be for software vendors to also develop hardware, thereby bridging
 the gap between the two. Standards could emerge either organically or through a unified
-body that dictates how hardware components should communicate (similar to a standardized “bus”).
-Instead of relying on APIs, development could be guided by protocols, ensuring more direct
-and efficient communication between software and hardware.
+body that dictates how hardware components should communicate (similar to a standardized
+“bus”). Instead of relying on APIs from program to operating system and down to hardware,
+development could be guided by protocols either between software parts or hardware,
+ensuring more direct and efficient communication between software and hardware. Not
+through layers. Data obviously should be standardised.*
 
 What would be gained from this approach?
 
 .. to be continued ..
 
-* Energy Efficiency: Streamlined communication between hardware and software could reduce power consumption.
-* Cost Reduction: Standardized protocols and closer integration could lower development and maintenance costs.
-* Simplified Maintenance: A unified system could make maintenance more straightforward and less fragmented.
+* Energy Efficiency: Streamlined communication between hardware and software could
+  reduce power consumption. Special hardware suitable for only the software it runs,
+  reduce unnecessary energy consumption. There should be no accelerated costs in
+  hardware, if competition is fair.
+* Cost Reduction: Standardised protocols and closer integration could lower development
+  and maintenance costs.
+  Software developers are alone responsible for how their software works, not the
+  combination of systems the software runs on top of, beside the software itself.
+* Simplified Maintenance: A unified system could make maintenance more straightforward
+  and less fragmented.
 
 
 ## Technical comparation
