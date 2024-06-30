@@ -1,4 +1,6 @@
 
+![Emulated CP/M](assets/images/cpm.png)
+
 # CP/M
 
 In the late 1970s and early 1980s, many contemporary computer manufacturers
