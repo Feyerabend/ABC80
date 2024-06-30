@@ -211,11 +211,9 @@ was sold to Cromenco as *Cromix*.[^D_NIX]
 
 __CP/M__: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
 aimed at hobbyists, small businesses, and early personal computer users.
-
 __Unix__: Initially designed for minicomputers and mainframes used by researchers,
 academics, and enterprise environments. Early Unix required more powerful
 hardware compared to CP/M.
-
 __MS-DOS/IBM-DOS__: Designed for IBM PCs and compatible microcomputers using
 Intel x86 processors, aimed at personal and business users.
 
@@ -260,12 +258,14 @@ Unix systems used shells like the Bourne shell (sh).
 flexibility but requiring more technical expertise. Unix systems often included a
 rich set of command-line tools and utilities.
 * __GUI__: Some systems had some (propriatary) graphical interfaces, like D-NIX.
+Later on not uncommon with X-Windows.
 
 __*MS-DOS/IBM-DOS*__: Command-line interface (CLI) with a straightforward set of commands.
 * __Usability__: Designed to be user-friendly for business and personal use, simpler
 than Unix but more advanced than CP/M in terms of user interface and available commands.
 * __GUI__: MS-DOS/IBM-DOS itself did not include a GUI, but it could run graphical
-environments like Microsoft Windows, which started as an add-on to MS-DOS.
+environments like Microsoft Windows, which started out as an add-on (graphical shell) to
+MS-DOS.
 
 
 
