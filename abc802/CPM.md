@@ -22,11 +22,11 @@ extension of running CP/M.*[^cpmabc800]
 
 [^cpmwiki]: Elementary on CP/M: https://en.wikipedia.org/wiki/CP/M.
 [^softcard]: Z80 SoftCard: https://en.wikipedia.org/wiki/Z-80_SoftCard.
-[^commodore128]: Commodore 128: https://en.wikipedia.org/wiki/Commodore_128
-[^osborne]: https://en.wikipedia.org/wiki/Osborne_1.
-[^wordstar]: ..
-[^supercalc]: ..
-[^kaypro]:..
+[^commodore128]: Commodore 128: https://en.wikipedia.org/wiki/Commodore_128.
+[^osborne]: Osborne 1: https://en.wikipedia.org/wiki/Osborne_1.
+[^wordstar]: WordStar: https://en.wikipedia.org/wiki/WordStar.
+[^supercalc]: SuperCalc: https://en.wikipedia.org/wiki/SuperCalc.
+[^kaypro]: Kaypro: https://en.wikipedia.org/wiki/Kaypro
 [^cpmabc800]: Almost the same computer, CP/M for ABC800:
 https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
 
