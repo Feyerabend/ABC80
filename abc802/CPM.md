@@ -198,17 +198,17 @@ exemplifies a trend towards diverse platforms as well as fragmentation.
 The creators of ABC802 and its variants at DIAB AB believed that
 developing a Unix-based system was the next logical step in
 technological evolution. They introduced their own “ABCNIX,” named after the
-renowned ABC computer series. This system, alternatively known as D-NIX, wa
-even licensed or possibly rebranded as *Cromix* for Cromenco.[^D_NIX]
+renowned ABC computer series. This system, alternatively known as D-NIX, was
+even licensed or possibly just rebranded as *Cromix* for Cromenco.[^D_NIX]
 
 D-NIX was used in computers such as ABC1600[^ABC1600] and ABC9000[^ABC9000]
 introduced in 1984/1985.
 
 
 
+
+
 [^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
-
-
 [^ABC1600]: https://sv.wikipedia.org/wiki/ABC_1600
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
 
@@ -277,6 +277,73 @@ than Unix but more advanced than CP/M in terms of user interface and available c
 environments like Microsoft Windows, which started out as an add-on (graphical shell) to
 MS-DOS.
 
+
+#### Software and Ecosystem
+
+__CP/M__
+* Software: Had a significant library of early business and productivity software,
+including word processors, spreadsheets, and database programs.
+* Ecosystem: Dominated the early microcomputer market before being overtaken by MS-DOS.
+Limited networking and multiuser capabilities.
+
+__Unix__
+* Software: Known for its rich set of development tools, including compilers,
+text processing utilities, and networking tools. Early Unix also supported
+multiuser environments and networked operations.
+* Ecosystem: Widely used in academic, research, and enterprise environments.
+Unix systems contributed to the development of the Internet and networking protocols.
+
+__MS-DOS/IBM-DOS__
+* Software: Initially focused on providing a command-line interface and basic
+system utilities. Over time, MS-DOS amassed a significant library of applications
+including early versions of Microsoft Word and Excel, as well as various business
+and gaming software.
+* Ecosystem: Became dominant in the IBM PC-compatible market, eventually overtaking
+CP/M. MS-DOS lacked built-in networking and multiuser capabilities in its early
+versions, focusing primarily on single-user desktop computing.
+
+
+#### Networking and Multiuser Capabilities
+
+__CP/M__
+* Networking: Very limited networking capabilities. Primarily designed for standalone systems.
+* Multiuser: Not designed for multiuser operation. Single-tasking environment.
+
+__Unix__
+* Networking: Strong networking capabilities, supporting early development of TCP/IP and
+networked computing.
+* Multiuser: Designed from the ground up to support multiple users simultaneously.
+Included features like file permissions and process management to handle multiple users and tasks.
+
+__*MS-DOS/IBM-DOS*__:
+* Networking: Limited native networking capabilities in early versions. Networking support
+evolved over time with add-on software and later versions of DOS.
+* Multiuser: Designed as a single-user operating system, lacking inherent multiuser capabilities.
+Later versions of DOS (like MS-DOS 5.0 and later) included features for multitasking and enhanced
+memory management, but true multiuser support was __not__ a native feature.
+
+
+#### Portability and Adaptability
+
+__CP/M__
+* Portability: Required a custom BIOS for each hardware platform, which limited its adaptability
+to new systems.
+* Adaptability: Less portable compared to Unix. Each new hardware platform necessitated significant
+modifications.
+
+__Unix__
+* Portability: Highly portable due to being written in the C programming language. Unix could be
+adapted to run on a wide variety of hardware platforms.
+* Adaptability: Designed to be easily modified and extended. Unix’s modular architecture and use
+of C made it easier to port and adapt to different environments.
+
+__*MS-DOS/IBM-DOS*__
+* Portability: Relied heavily on hardware-specific drivers and configurations, tied closely to
+the IBM PC architecture. Compatibility across different hardware platforms was limited without
+significant modifications.
+* Adaptability: Adapted primarily through OEM versions tailored for specific hardware configurations.
+Microsoft allowed OEMs to customize MS-DOS for their hardware, contributing to its widespread adoption
+on various PC clones. (Not unlike their experience with portability of MSBASIC.)
 
 
 ## References
