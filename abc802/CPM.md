@@ -223,13 +223,13 @@ Intel x86 processors, aimed at personal and business users.
 
 __*CP/M*__: Simple, single-tasking operating system with a command-line interface.
 
-a.) __File System__: Utilised a flat file system with an 8.3 filename convention (eight
+* __File System__: Utilised a flat file system with an 8.3 filename convention (eight
 characters for the name, three for the extension).
 
-b.) __Memory Management__: Limited to 64 KB of RAM, reflecting the hardware constraints
+* __Memory Management__: Limited to 64 KB of RAM, reflecting the hardware constraints
 of early microcomputers.
 
-c.) __Modularity__: Relied on a system BIOS to handle hardware-specific functions,
+* __Modularity__: Relied on a system BIOS to handle hardware-specific functions,
 requiring customization for different hardware.
 
 Unix: Multiuser, multitasking operating system with a hierarchical file system.
