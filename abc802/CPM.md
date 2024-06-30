@@ -1,5 +1,5 @@
 
-![Emulated CP/M](assets/images/cpm.png)
+![Emulated CP/M](../assets/images/cpm.png)
 
 # CP/M
 
