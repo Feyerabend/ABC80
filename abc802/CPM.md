@@ -123,12 +123,13 @@ to MS-DOS, but the pricing for CP/M was significantly higher. The saying
 'You couldn't go wrong with buying an IBM,' originally used when considering
 mainframes, underscored the reliability and growing popularity of the IBM PC.
 Even though PC-DOS (IBM's version of MS-DOS) was built on a 'clone' of CP/M,
-it evolved and laid the foundation for a large developer market. This shift
-created a competitive software market for the PC, where previously individual
-computer brands / computers, had fought for dominance.
+it evolved and laid the foundation for a large developer market.
+
+*This shift created a competitive software market for the PC, where previously
+individual computer brands / computers, had fought for dominance.*
 
 
-## New alternative?
+### Alternative routes
 
 Computer manufacturers faced critical decisions about their future direction.
 The importance of the PC was evident, but the extent of its impact and the
@@ -157,39 +158,41 @@ Companies like Compaq successfully adopted this strategy, becoming significant
 players in the market by offering reliable IBM PC clones.
 
 But there was at least one group more: they bet on *UNIX* as the future.
-Note: among them were in fact Micorsoft with Xenix.
+Note: among them were in fact Micorsoft with *Xenix*.
 
 
 ### UNIX
 
 Unix was developed in the late 1960s and early 1970s at AT&T's Bell Labs by
-Ken Thompson, Dennis Ritchie, and some others. Initially, it was a small,
-flexible operating system for the prevalent and current *minicomputers* (most
-famously the PDP/11). Unix quickly gained popularity in academic and research
-institutions due to its portability, powerful features, and the availability
-of its source code for educational purposes.
+Ken Thompson, Dennis Ritchie, and some others. That is years before CP/M.
+Initially, it was a small, flexible operating system for the prevalent and
+current *minicomputers* (most famously the PDP/11). Thus it was aimed at
+significantly different computers than CP/M. But Unix quickly gained popularity
+in academic and research institutions due to its portability, powerful
+features, and the availability of its source code for educational purposes.
 
 In the late 1970s, AT&T began licensing Unix to commercial vendors, which
 led to a proliferation of Unix versions. Different vendors developed their
-own variants, leading to extreme fragmentation.
+own variants, leading to extreme *fragmentation*.
 
 One significant variant was the Berkeley Software Distribution (BSD),
 developed at the University of California, Berkeley. BSD introduced many
 enhancements and became a foundation for later Unix systems. But they also
 had license fees to be paid to AT&T for some Unix software.
 
-In the years to come, overcoming fragmentation was a significant issue,
+In the years to come, overcoming *fragmentation* was a significant issue,
 perhaps the largest of them all. Besides technological challenges, licensing
 restrictions and the use of the Unix brand also hindered companies, development,
 and market expansion.
 
 
-## ABCNIX, D-NIX, ..
+### The proliferation of standards: ABCNIX, D-NIX, ..
 
 The people behind the ABC802 (and its relatives) at DIAB AB, also had the idea
-that creating a Unix-version was the future answer of where the evolution is
-heading. They made their own ABCNIX playing on the known ABC-line of computers.
-It was also called D-NIX and even a version was sold to Cromenco as Cromix.[^D_NIX]
+that creating a Unix-version was the future answer of where the evolution was
+heading. They made their own "ABCNIX" playing on the well-known ABC-line of
+computers. It was also called *D-NIX* and even a version (or was it the same?)
+was sold to Cromenco as *Cromix*.[^D_NIX]
 
 
 [^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
