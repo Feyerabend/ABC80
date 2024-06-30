@@ -76,23 +76,25 @@ varied development of the personal computer market.*
 
 ### Decline
 
-The rise of CP/M and the S-100 bus standard occurred roughly in the same time span, creating a
-synergistic environment where microcomputer users could benefit from a standardised software
-platform *CP/M* and a standardised hardware interface *S-100*. This combination contributed
-to the growth of the personal computer industry by making it somewhat easier for users to expand
-and customise their systems and for developers to create compatible hardware and software.
+The rise of CP/M and the S-100 bus standard occurred roughly in the same time span,
+creating a synergistic environment where microcomputer users could benefit from a
+standardised software platform *CP/M* and a standardised hardware interface *S-100*.
+This combination contributed to the growth of the personal computer industry by making
+it somewhat easier for users to expand and customise their systems and for developers
+to create compatible hardware and software.
 
-But eventually these standards had their drawbacks, as time progressed. The S-100 bus large
-and complex backplanes and cards made systems bulky and costly to design and maintain. The parallel
-bus architecture was prone to electrical noise and signal integrity issues, leading to potential
-data corruption and system instability, as more cards were added. High power consumption due
-to its wide range of supported voltages required robust power supplies and cooling solutions,
-further increasing costs. Despite being a standard, variations in implementation among manufacturers
-caused compatibility issues. The bus also suffered from relatively slow data transfer speeds,
-becoming a performance bottleneck. Additionally, the connectors were not robust, leading to
-mechanical issues and the need for frequent maintenance. As newer, more efficient bus standards
-like the ISA (internal 16-bit of IBM PC/AT) emerged, the S-100 bus quickly became outdated,
-struggling to keep up with evolving hardware capabilities.
+But eventually these standards had their drawbacks, as time progressed. The S-100 bus
+large and complex backplanes and cards made systems bulky and costly to design and maintain.
+The parallel bus architecture was prone to electrical noise and signal integrity issues,
+leading to potential data corruption and system instability, as more cards were added.
+High power consumption due to its wide range of supported voltages required robust power
+supplies and cooling solutions, further increasing costs. Despite being a standard,
+variations in implementation among manufacturers caused compatibility issues. The bus
+also suffered from relatively slow data transfer speeds, becoming a performance bottleneck.
+Additionally, the connectors were not robust, leading to mechanical issues and the need
+for frequent maintenance. As newer, more efficient bus standards like the ISA (internal
+16-bit of IBM PC/AT) emerged, the S-100 bus quickly became outdated, struggling to keep
+up with evolving hardware capabilities.
 
 CP/M, originally designed for 8-bit microprocessors, had several drawbacks that limited its
 effectiveness as computing technology advanced. Its memory management capabilities were
@@ -112,14 +114,85 @@ variations of CP/M created by different hardware manufacturers led to compatibil
 with software written for one version often not running correctly on another. These limitations
 collectively contributed to CP/M's decline as a previous dominant operating system.
 
+#### Summary
 
+IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M. IBM PCs quickly
+became the industry standard, and MS-DOS emerged as the dominant operating system.
+It is important to note that IBM also offered CP/M and UCSD Pascal as alternatives
+to MS-DOS, but the pricing for CP/M was significantly higher. The saying
+'You couldn't go wrong with buying an IBM,' originally used when considering
+mainframes, underscored the reliability and growing popularity of the IBM PC.
+Even though PC-DOS (IBM's version of MS-DOS) was built on a 'clone' of CP/M,
+it evolved and laid the foundation for a large developer market. This shift
+created a competitive software market for the PC, where previously individual
+computer brands / computers, had fought for dominance.
+
+
+## New alternative?
+
+Computer manufacturers faced critical decisions about their future direction.
+The importance of the PC was evident, but the extent of its impact and the
+direction of the market were uncertain. Key questions included: Where was
+the technology heading? How crucial was legacy support?
+
+*Business as Usual*: Some manufacturers adopted a "business as usual" approach,
+assuming that their customers would remain satisfied with whatever they produced
+and innovated. This group often targeted the low-end market, where affordability
+and entertainment, such as gaming, were key factors. They produced cheaper
+computers that fit well within this (rather large) niche.
+
+*Partial Compatibility*: Another group chose to create "clones" of the IBM PC with
+a twist. These manufacturers, including local and national companies like Nokia
+and Ericsson, made PCs that were not fully compatible with the original IBM PC.
+They aimed to offer a superior product by adding unique features or improvements,
+hoping for customer loyalty. However, they often miscalculated the market risks
+and faced high costs, which led to their decline within a few years.
+
+*Full Compatibility*: The third group understood the critical importance of full
+compatibility with the IBM PC. They focused on reverse engineering, including
+replicating the BIOS, to ensure that their PCs were entirely compatible with
+IBM PCs. This approach allowed them to capitalize on the existing software
+ecosystem and meet the demands of users who required seamless compatibility.
+Companies like Compaq successfully adopted this strategy, becoming significant
+players in the market by offering reliable IBM PC clones.
+
+But there was at least one group more: they bet on *UNIX* as the future.
+Note: among them were in fact Micorsoft with Xenix.
+
+
+### UNIX
+
+Unix was developed in the late 1960s and early 1970s at AT&T's Bell Labs by
+Ken Thompson, Dennis Ritchie, and some others. Initially, it was a small,
+flexible operating system for the prevalent and current *minicomputers* (most
+famously the PDP/11). Unix quickly gained popularity in academic and research
+institutions due to its portability, powerful features, and the availability
+of its source code for educational purposes.
+
+In the late 1970s, AT&T began licensing Unix to commercial vendors, which
+led to a proliferation of Unix versions. Different vendors developed their
+own variants, leading to extreme fragmentation.
+
+One significant variant was the Berkeley Software Distribution (BSD),
+developed at the University of California, Berkeley. BSD introduced many
+enhancements and became a foundation for later Unix systems. But they also
+had license fees to be paid to AT&T for some Unix software.
+
+In the years to come, overcoming fragmentation was a significant issue,
+perhaps the largest of them all. Besides technological challenges, licensing
+restrictions and the use of the Unix brand also hindered companies, development,
+and market expansion.
 
 
 ## ABCNIX, D-NIX, ..
 
-Cromix ...
+The people behind the ABC802 (and its relatives) at DIAB AB, also had the idea
+that creating a Unix-version was the future answer of where the evolution is
+heading. They made their own ABCNIX playing on the known ABC-line of computers.
+It was also called D-NIX and even a version was sold to Cromenco as Cromix.[^D_NIX]
 
-https://sv.wikipedia.org/wiki/D-NIX
+
+[^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
 
 
 ## References
