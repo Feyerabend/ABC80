@@ -207,7 +207,7 @@ was sold to Cromenco as *Cromix*.[^D_NIX]
 ## Technical comparation
 
 
-### Target audience
+#### Target audience
 
 __CP/M__: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
 aimed at hobbyists, small businesses, and early personal computer users.
@@ -220,7 +220,7 @@ __MS-DOS/IBM-DOS__: Designed for IBM PCs and compatible microcomputers using
 Intel x86 processors, aimed at personal and business users.
 
 
-### Architecture and Design
+#### Architecture and Design
 
 __*CP/M*__: Simple, single-tasking operating system with a command-line interface.
 * __File System__: Utilised a flat file system with an 8.3 filename convention (eight
@@ -248,7 +248,7 @@ enhancements for extended and expanded memory.
 MS-DOS was designed to run on IBM PCs and compatible with a standard BIOS interface.
 
 
-### User Interface and Usability
+#### User Interface and Usability
 
 __*CP/M*__: Command-line interface (CLI) with a simple set of commands.
 * __Usability__: Geared towards users with some technical knowledge, but less complex
