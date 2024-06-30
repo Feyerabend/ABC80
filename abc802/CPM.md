@@ -307,7 +307,7 @@ What would be gained from this approach?
   and less fragmented.
 
 
-## Technical comparation  CP/M, Unix, MS-DOS/IBM-DOS
+## Technical comparation  CP/M, Unix, MS-DOS/PC-DOS
 
 #### Target audience
 
@@ -318,7 +318,7 @@ __Unix__: Initially designed for minicomputers and mainframes used by researcher
 academics, and enterprise environments. Early Unix required more powerful
 hardware compared to CP/M.
 
-__MS-DOS/IBM-DOS__: Designed for IBM PCs and compatible microcomputers using
+__MS-DOS/PC-DOS__: Designed for IBM PCs and compatible microcomputers using
 Intel x86 processors, aimed at personal and business users.
 
 
@@ -341,7 +341,7 @@ of RAM and virtual memory.
 * __Modularity__: Designed to be highly portable across different hardware platforms.
 Unix was written in C, which facilitated easier adaptation to various systems.
 
-__*MS-DOS/IBM-DOS*__: Single-tasking operating system with a command-line interface.
+__*MS-DOS/PC-DOS*__: Single-tasking operating system with a command-line interface.
 * __File System__: Initially used the FAT12 file system, which also had an 8.3 filename
 convention. Later versions supported FAT16 and FAT32.
 * __Memory Management__: Initially limited to 640 KB of conventional memory, with later
@@ -364,10 +364,10 @@ rich set of command-line tools and utilities.
 * __GUI__: Some systems had some (propriatary) graphical interfaces, like D-NIX.
 Later on not uncommon with X-Windows.
 
-__*MS-DOS/IBM-DOS*__: Command-line interface (CLI) with a straightforward set of commands.
+__*MS-DOS/PC-DOS*__: Command-line interface (CLI) with a straightforward set of commands.
 * __Usability__: Designed to be user-friendly for business and personal use, simpler
 than Unix but more advanced than CP/M in terms of user interface and available commands.
-* __GUI__: MS-DOS/IBM-DOS itself did not include a GUI, but it could run graphical
+* __GUI__: MS-DOS/PC-DOS itself did not include a GUI, but it could run graphical
 environments like Microsoft Windows, which started out as an add-on (graphical shell) to
 MS-DOS.
 
@@ -387,7 +387,7 @@ multiuser environments and networked operations.
 * __Ecosystem__: Widely used in academic, research, and enterprise environments.
 Unix systems contributed to the development of the Internet and networking protocols.
 
-__*MS-DOS/IBM-DOS*__
+__*MS-DOS/PC-DOS*__
 * __Software__: Initially focused on providing a command-line interface and basic
 system utilities. Over time, MS-DOS amassed a significant library of applications
 including early versions of Microsoft Word and Excel, as well as various business
@@ -411,7 +411,7 @@ networked computing.
 Included features like file permissions and process management to handle multiple users
 and tasks.
 
-__*MS-DOS/IBM-DOS*__
+__*MS-DOS/PC-DOS*__
 * __Networking__: Limited native networking capabilities in early versions. Networking
 support evolved over time with add-on software and later versions of DOS.
 * __Multiuser__: Designed as a single-user operating system, lacking inherent multiuser
@@ -434,7 +434,7 @@ Unix could be adapted to run on a wide variety of hardware platforms.
 * __Adaptability__: Designed to be easily modified and extended. Unix’s modular
 architecture and use of C made it easier to port and adapt to different environments.
 
-__*MS-DOS/IBM-DOS*__
+__*MS-DOS/PC-DOS*__
 * __Portability__: Relied heavily on hardware-specific drivers and configurations,
 tied closely to the IBM PC architecture. Compatibility across different hardware
 platforms was limited without significant modifications.
