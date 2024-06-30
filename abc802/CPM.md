@@ -103,16 +103,17 @@ networking capabilities hindered its usefulness in networked environments, becom
 significant limitation as businesses and individuals began connecting computers in local
 area networks (LANs) and using modems for remote communication -- although there were
 applications running e.g. terminal emulations. CP/M's command-line interface,
-though functional, was basic and started to feel outdated as graphical user interfaces like
-those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering more intuitive
-and visually appealing experiences. Additionally, CP/M struggled to support emerging hardware
-technologies such as high-resolution graphics, advanced sound systems, and sophisticated input
-devices, making it less appealing for multimedia applications. Its single-tasking nature,
-which allowed only *one program to run at a time*, became a significant drawback as multitasking
-grew in importance for productivity and user convenience. Furthermore, the existence of many
-variations of CP/M created by different hardware manufacturers led to compatibility issues,
-with software written for one version often not running correctly on another. These limitations
-collectively contributed to CP/M's decline as a previous dominant operating system.
+though functional, was basic and started to feel outdated as graphical user interfaces
+like those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering
+more intuitive and visually appealing experiences. Additionally, CP/M struggled to support
+emerging hardware technologies such as high-resolution graphics, advanced sound systems,
+and sophisticated input devices, making it less appealing for multimedia applications.
+Its single-tasking nature, which allowed only *one program to run at a time*, became a
+significant drawback as multitasking grew in importance for productivity and user
+convenience. Furthermore, the existence of many variations of CP/M created by different
+hardware manufacturers led to compatibility issues, with software written for one version
+often not running correctly on another. These limitations collectively contributed to
+CP/M's decline as a previous dominant operating system.
 
 #### Summary
 
@@ -122,8 +123,8 @@ It is important to note that IBM also offered CP/M and UCSD Pascal as alternativ
 to MS-DOS, but the pricing for CP/M was significantly higher. The saying
 'You couldn't go wrong with buying an IBM,' originally used when considering
 mainframes, underscored the reliability and growing popularity of the IBM PC.
-Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M,
-it evolved and laid the foundation for a large developer market.
+Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M, it evolved and laid the
+foundation for a large developer market.
 
 *This shift created a competitive software market for the PC which stood
 for a standard in hardware and software, where previously proprietary individual
@@ -159,7 +160,7 @@ Companies like Compaq successfully adopted this strategy, becoming significant
 players in the market by offering reliable IBM PC clones.
 
 But there was at least one group more: they bet on *UNIX* as the future.[^Xenix]
-[^Xenix]:]Among them were in fact Micorsoft with *Xenix*.
+[^Xenix]: Among them were in fact Micorsoft with *Xenix*.
 
 
 ### UNIX
@@ -191,20 +192,34 @@ and market expansion.
 
 
 
-### The proliferation of standards: ABCNIX, D-NIX, ..
+### The proliferation of standards, ABCNIX or D-NIX, among them
 
 The rise of multiple standards, derivations of Unix in a lot of *nix,
 exemplifies a trend towards diverse platforms as well as fragmentation.
 The creators of ABC802 and its variants at DIAB AB believed that
 developing a Unix-based system was the next logical step in
-technological evolution. They introduced their own “ABCNIX,” named after the
-renowned ABC computer series. This system, alternatively known as D-NIX, was
-even licensed or possibly just rebranded as *Cromix* for Cromenco.[^D_NIX]
-
+technological evolution. In this they were not alone. They further
+introduced their own “ABCNIX,” named after the renowned ABC computer series.
+This system, alternatively known as D-NIX, was even licensed or possibly
+just rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX was used in computers such as ABC1600[^ABC1600] and ABC9000[^ABC9000]
 introduced in 1984/1985.
 
+Here somewhere the start of what to become the "Unix wars" started, a period
+of competition and fragmentation continuing into the 1990s. This era was
+characterized by disputes among various Unix vendors and standards bodies,
+leading to the proliferation of different Unix variants and standards.
 
+In addition to the fragmentation and proliferation of incompatible Unix
+flavors, there were some achievements in standardization efforts such as
+POSIX and somewhat of the Single UNIX Specification (SUS). However,
+rivalry among vendors, intense competition, legal disputes over licensing,
+and ongoing compatibility issues continued to pose significant challenges.
+Competition often led to proprietary extensions, which further contributed
+to fragmentation.
+
+That history is, however, far beyond the lifespan of ideas around ABC802,
+and its relatives.
 
 
 
@@ -212,8 +227,11 @@ introduced in 1984/1985.
 [^ABC1600]: https://sv.wikipedia.org/wiki/ABC_1600
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
 
-## Technical comparation
 
+
+
+
+## Technical comparation
 
 #### Target audience
 
@@ -329,24 +347,25 @@ native feature.
 #### Portability and Adaptability
 
 __*CP/M*__
-* __Portability__: Required a custom BIOS for each hardware platform, which limited its adaptability
-to new systems.
-* __Adaptability__: Less portable compared to Unix. Each new hardware platform necessitated significant
-modifications.
+* __Portability__: Required a custom BIOS for each hardware platform, which limited its
+adaptability to new systems.
+* __Adaptability__: Less portable compared to Unix. Each new hardware platform necessitated
+significant modifications.
 
 __*Unix*__
-* __Portability__: Highly portable due to being written in the C programming language. Unix could be
-adapted to run on a wide variety of hardware platforms.
-* __Adaptability__: Designed to be easily modified and extended. Unix’s modular architecture and use
-of C made it easier to port and adapt to different environments.
+* __Portability__: Highly portable due to being written in the C programming language.
+Unix could be adapted to run on a wide variety of hardware platforms.
+* __Adaptability__: Designed to be easily modified and extended. Unix’s modular
+architecture and use of C made it easier to port and adapt to different environments.
 
 __*MS-DOS/IBM-DOS*__
-* __Portability__: Relied heavily on hardware-specific drivers and configurations, tied closely to
-the IBM PC architecture. Compatibility across different hardware platforms was limited without
-significant modifications.
-* __Adaptability__: Adapted primarily through OEM versions tailored for specific hardware configurations.
-Microsoft allowed OEMs to customize MS-DOS for their hardware, contributing to its widespread adoption
-on various PC clones. (Not unlike their experience with adaptability of MSBASIC.)
+* __Portability__: Relied heavily on hardware-specific drivers and configurations,
+tied closely to the IBM PC architecture. Compatibility across different hardware
+platforms was limited without significant modifications.
+* __Adaptability__: Adapted primarily through OEM versions tailored for specific
+hardware configurations. Microsoft allowed OEMs to customize MS-DOS for their hardware,
+contributing to its widespread adoption on various PC clones. (Not unlike their experience
+with adaptability of MSBASIC.)
 
 
 ## References
