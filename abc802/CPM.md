@@ -193,9 +193,10 @@ and market expansion.
 
 ### The proliferation of standards: ABCNIX, D-NIX, ..
 
-The rise of multiple standards, such as ABCNIX and D-NIX, exemplifies a trend
-towards diverse platforms. The creators of ABC802 and its variants at DIAB AB
-believed that developing a Unix-based system was the next logical step in
+The rise of multiple standards, derivations of Unix in a lot of *nix,
+exemplifies a trend towards diverse platforms as well as fragmentation.
+The creators of ABC802 and its variants at DIAB AB believed that
+developing a Unix-based system was the next logical step in
 technological evolution. They introduced their own “ABCNIX,” named after the
 renowned ABC computer series. This system, alternatively known as D-NIX, wa
 even licensed or possibly rebranded as *Cromix* for Cromenco.[^D_NIX]
