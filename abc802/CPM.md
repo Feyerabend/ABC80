@@ -187,27 +187,46 @@ restrictions and the use of the Unix brand also hindered companies, development,
 and market expansion.
 
 
+
+
+
+
+### The proliferation of standards: ABCNIX, D-NIX, ..
+
+The people behind the ABC802 (and its relatives) at DIAB AB, also had the idea
+that creating a Unix-version was the future answer of where the evolution was
+heading. They made their own "ABCNIX" playing on the well-known ABC-line of
+computers. It was also called *D-NIX* and even a version (or was it the same?)
+was sold to Cromenco as *Cromix*.[^D_NIX]
+
+
+[^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
+
+
+
+## Technical comparation
+
 1. Target audience
 
-CP/M: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
+__CP/M__: Designed for microcomputers using Intel 8080 or Zilog Z80 processors,
 aimed at hobbyists, small businesses, and early personal computer users.
 
-Unix: Initially designed for minicomputers and mainframes used by researchers,
+__Unix__: Initially designed for minicomputers and mainframes used by researchers,
 academics, and enterprise environments. Early Unix required more powerful
 hardware compared to CP/M.
 
-MS-DOS/IBM-DOS: Designed for IBM PCs and compatible microcomputers using
+__MS-DOS/IBM-DOS__: Designed for IBM PCs and compatible microcomputers using
 Intel x86 processors, aimed at personal and business users.
 
 
 2. Architecture and Design
 
-CP/M: Simple, single-tasking operating system with a command-line interface.
-File System: Utilised a flat file system with an 8.3 filename convention (eight
+__*CP/M*__: Simple, single-tasking operating system with a command-line interface.
+__File System__: Utilised a flat file system with an 8.3 filename convention (eight
 characters for the name, three for the extension).
-Memory Management: Limited to 64 KB of RAM, reflecting the hardware constraints
+__Memory Management__: Limited to 64 KB of RAM, reflecting the hardware constraints
 of early microcomputers.
-Modularity: Relied on a system BIOS to handle hardware-specific functions,
+__Modularity__: Relied on a system BIOS to handle hardware-specific functions,
 requiring customization for different hardware.
 
 Unix: Multiuser, multitasking operating system with a hierarchical file system.
@@ -251,22 +270,6 @@ GUI: MS-DOS/IBM-DOS itself did not include a GUI, but it could run graphical
 environments like Microsoft Windows,
 which started as an add-on to MS-DOS.
 
-
-
-
-
-
-
-### The proliferation of standards: ABCNIX, D-NIX, ..
-
-The people behind the ABC802 (and its relatives) at DIAB AB, also had the idea
-that creating a Unix-version was the future answer of where the evolution was
-heading. They made their own "ABCNIX" playing on the well-known ABC-line of
-computers. It was also called *D-NIX* and even a version (or was it the same?)
-was sold to Cromenco as *Cromix*.[^D_NIX]
-
-
-[^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
 
 
 ## References
