@@ -15,8 +15,8 @@ bundled software like WordStar and SuperCalc, and the Kaypro II. These
 integrations highlighted CP/M's versatility and widespread adoption during
 that era.
 
-Not to be unfashionable, the *ABC802* did also came prepared for a possible
-extension of running CP/M.[^cpm]
+*Not to be unfashionable, the ABC802 did also came prepared for a possible
+extension of running CP/M.*[^cpm]
 
 [^cpm]: Almost the same computer, CP/M for ABC800:
 https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
