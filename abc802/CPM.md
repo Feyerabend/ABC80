@@ -72,8 +72,11 @@ database management dBASE II[^dbase] became very popular software
 ported to CP/M. Microsoft's MS-DOS, later on became the standard operating
 system for IBM PCs, was heavily influenced by CP/M. The initial version of
 MS-DOS (also known as 86-DOS or QDOS) was even designed to be 'compatible'
-with (legacy) CP/M software, facilitating an easier transition for users and
-developers. Its interactive command-line featured many familiar commands.
+with (legacy) CP/M-86 software, facilitating an easier transition for users
+and developers. Its interactive command-line featured many familiar commands.
+Portability was easier when APIs were close enough for a smoother transition.
+This included compatibility with CP/M’s BIOS and BDOS (Basic Disk Operating
+System) calls, which were mapped to equivalent functions in MS-DOS.
 
 On the hardware side, there was also a similar standardisation development.
 The S-100 bus,[^s100] originally known as the Altair bus, was introduced
