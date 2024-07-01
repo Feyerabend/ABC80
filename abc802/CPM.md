@@ -72,25 +72,32 @@ MS-DOS (also known as 86-DOS or QDOS) was even designed to be compatible
 with (legacy) CP/M software, facilitating an easier transition for users and
 developers.
 
-On the hardware side, there was also a development. The S-100 bus,[^s100] originally
-known as the Altair bus, was introduced in 1974 with the MITS Altair 8800, one of
-the first commercially successful personal computers. Initially designed for the
-Intel 8080 microprocessor, it was later adapted for other processors, including the
-Zilog Z80 and the Intel 8085. The bus consisted of a 100-pin edge connector, providing
-a standardised interface for attaching CPU, memory, and peripheral cards. Users could
-easily add or replace components to upgrade their systems, which promoted a thriving
-third-party hardware market. The standardisation of the bus allowed components from
-different manufacturers to work together.
+On the hardware side, there was also a similar standardisation development.
+The S-100 bus,[^s100] originally known as the Altair bus, was introduced
+in 1974 with the MITS Altair 8800,[^altair] one of the first commercially
+successful personal computers. Initially designed for the Intel 8080
+microprocessor, it was later adapted for other processors, including
+the Zilog Z80 and the Intel 8085. The bus consisted of a 100-pin edge
+connector, providing a standardised interface for attaching CPU, memory,
+and peripheral cards. Users could easily add or replace components to
+upgrade their systems, which promoted a thriving third-party hardware
+market. The standardisation of the bus allowed components from different
+manufacturers to work together.
 
-*It is important to note that CP/M and the S-100 bus were not dependent on each other.
-They were separate standards, each contributing independently to the diverse and
-varied development of the personal computer market.*
+*It is important to note that CP/M and the S-100 bus were not dependent
+on each other. They were separate standards, each contributing independently
+to the diverse and varied development of the personal computer market.
+These unifications pointed into the direction of the importance of a
+common ground. The way to find where that intersection were and how to
+get there, was still an unknown.*
+
 
 [^kildall]: https://en.wikipedia.org/wiki/Gary_Kildall
 [^bios]: https://en.wikipedia.org/wiki/BIOS
 [^dbase]: https://en.wikipedia.org/wiki/DBase
 [^dri]: https://en.wikipedia.org/wiki/Digital_Research
 [^s100]: https://en.wikipedia.org/wiki/S-100_bus
+[^altair]: https://en.wikipedia.org/wiki/Altair_8800
 
 
 ### Decline
@@ -151,9 +158,18 @@ for a standard in hardware and software, where previously proprietary individual
 computer brands / computers with proprietary solutions, had fought for dominance.
 The de facto standards could only help so much.*
 
+
 ### DataBoard 4680
 
+The designer of the basis for the ABC-line of computers was Lars Karlsson.
+A self-tought engineer, he early on realised the importance of the "bus"[^bus]
+but also the abstraction or generalisation of the "bus".
+..
+Dataindustrier AB, alternatively called DIAB later,
+..
 [PENDING ..]
+
+[^bus]: https://en.wikipedia.org/wiki/Bus_(computing)
 
 
 ### Alternative routes
