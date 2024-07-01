@@ -255,7 +255,7 @@ introduced their own “ABCNIX,” named after the renowned ABC computer series.
 This system, alternatively known as D-NIX, was even licensed or possibly
 just rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX was used in computers such as ABC1600[^ABC1600] and ABC9000[^ABC9000]
-introduced in 1984/1985.
+introduced in 1984/1985.[^bro]
 
 Here somewhere the start of what to become the "Unix wars"[^war] started,
 a period of competition and fragmentation continuing into the 1990s.
@@ -277,6 +277,7 @@ surrounding the ABC802 and its relatives.
 [^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
 [^ABC1600]: https://sv.wikipedia.org/wiki/ABC_1600
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
+[^bro]: Image above taken from: https://www.abc80.net/archive/luxor/ABC1600/1986-System-ABC-1600-och-ABC-9000.pdf
 [^war]: https://en.wikipedia.org/wiki/Unix_wars
 
 
