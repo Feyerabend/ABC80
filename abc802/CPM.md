@@ -280,9 +280,11 @@ surrounding the ABC802 and its relatives.
 [^bro]: Image above taken from: https://www.abc80.net/archive/luxor/ABC1600/1986-System-ABC-1600-och-ABC-9000.pdf
 [^war]: https://en.wikipedia.org/wiki/Unix_wars
 
+![ABC1600 & ABC9000](../assets/images/sv-unix.png)
 
 
-## Technical comparation: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
+
+## Appendix: Technical comparation: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
 
 #### Target audience
 
@@ -419,6 +421,7 @@ contributing to its widespread adoption on various PC clones. (Not unlike their 
 with adaptability of MSBASIC.)
 
 [^chatgpt]: This chapter has been derived from chatting with ChatGPT and other current LLMs.
+We chatted and came to this reasonable conclusion and summary of facts.
 
 
 ## References
