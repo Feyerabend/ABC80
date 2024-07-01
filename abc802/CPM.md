@@ -153,10 +153,10 @@ mainframes, underscored the reliability and growing popularity of the IBM PC.
 Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M, it evolved and laid the
 foundation for a large developer market.
 
-*This shift created a competitive software market for the PC which stood
-for a standard in hardware and software, where previously proprietary individual
-computer brands / computers with proprietary solutions, had fought for dominance.
-The de facto standards could only help so much.*
+*TThis shift fostered a competitive software market for PCs, which established
+a standard in both hardware and software. Previously, proprietary computer
+brands with unique solutions had competed for dominance. While de facto
+standards provided some cohesion, their impact was limited.*
 
 
 ### DataBoard 4680
