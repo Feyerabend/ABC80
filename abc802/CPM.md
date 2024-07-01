@@ -241,6 +241,8 @@ restrictions and the use of the Unix brand also hindered companies, development,
 and market expansion.
 
 
+![ABC1600 & ABC9000](../assets/images/abc1600.png)
+
 
 ### The proliferation of standards, ABCNIX or D-NIX, among them
 
