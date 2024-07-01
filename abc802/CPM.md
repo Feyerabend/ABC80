@@ -45,7 +45,7 @@ systems for personal computers.
 
 In the pre-CP/M era, early microcomputers lacked standardised operating
 systems. Probably it could not be fitted in them, often low on memory.
-Sometimes they had though "monitors", early basic communications
+Sometimes they had though "monitors," early basic communications
 with the system for debugging, status etc. Users often had to write
 their own software to interact more directly with the hardware,
 which was naturally a significant barrier to wider adoption and usability.
@@ -63,16 +63,17 @@ was a crucial factor in its widespread use. CP/M utilised a BIOS[^bios]
 (Basic Input/Output System) to handle hardware-specific operations.
 This abstraction layer enabled the operating system to run on different
 machines with minimal modifications, enhancing its portability and flexibility.
-The BIOS is also one of the features that translated well to the future MS-DOS era.
+The BIOS is also one of the features that translated well to the future MS-DOS
+era.
 
 CP/M fostered a rich ecosystem of software applications and development tools.
 Popular software like WordStar was first developed for CP/M, and a successful
 database management dBASE II[^dbase] became very popular software
 ported to CP/M. Microsoft's MS-DOS, later on became the standard operating
 system for IBM PCs, was heavily influenced by CP/M. The initial version of
-MS-DOS (also known as 86-DOS or QDOS) was even designed to be compatible
+MS-DOS (also known as 86-DOS or QDOS) was even designed to be 'compatible'
 with (legacy) CP/M software, facilitating an easier transition for users and
-developers.
+developers. Its interactive command-line featured many familiar commands.
 
 On the hardware side, there was also a similar standardisation development.
 The S-100 bus,[^s100] originally known as the Altair bus, was introduced
@@ -104,32 +105,36 @@ an unresolved challenge.*
 
 ### Decline
 
-The rise of CP/M and the S-100 bus standard occurred roughly in the same time span,
-creating a synergistic environment where microcomputer users could benefit from a
-standardised software platform *CP/M* and a standardised hardware interface *S-100*.
-This combination contributed to the growth of the personal computer industry by making
-it somewhat easier for users to expand and customise their systems and for developers
-to create compatible hardware and software.
+The rise of CP/M and the S-100 bus standard occurred roughly in the same
+time span, creating a synergistic environment where microcomputer users
+could benefit from a standardised software platform *CP/M* and a standardised
+hardware interface *S-100*. This combination contributed to the growth of
+the personal computer industry by making it somewhat easier for users to
+expand and customise their systems and for developers to create compatible
+hardware and software.
 
-But eventually these standards had their drawbacks, as time progressed. The S-100 bus
-large and complex backplanes and cards made systems bulky and costly to design and maintain.
-The parallel bus architecture was prone to electrical noise and signal integrity issues,
-leading to potential data corruption and system instability, as more cards were added.
-High power consumption due to its wide range of supported voltages required robust power
-supplies and cooling solutions, further increasing costs. Despite being a standard,
-variations in implementation among manufacturers caused compatibility issues. The bus
-also suffered from relatively slow data transfer speeds, becoming a performance bottleneck.
-Additionally, the connectors were not robust, leading to mechanical issues and the need
-for frequent maintenance. As newer, more efficient bus standards like the ISA (internal
-16-bit of IBM PC/AT) emerged, the S-100 bus quickly became outdated, struggling to keep
+But eventually these standards had their drawbacks, as time progressed.
+The S-100 bus large and complex backplanes and cards made systems bulky
+and costly to design and maintain. The parallel bus architecture was prone
+to electrical noise and signal integrity issues, leading to potential data
+corruption and system instability, as more cards were added. High power
+consumption due to its wide range of supported voltages required robust power
+supplies and cooling solutions, further increasing costs. Despite being a
+standard, variations in implementation among manufacturers caused compatibility
+issues. The bus also suffered from relatively slow data transfer speeds, becoming
+a performance bottleneck. Additionally, the connectors were not robust, leading
+to mechanical issues and the need for frequent maintenance. As newer, more
+efficient bus standards like the ISA (internal 16-bit of IBM PC/AT) emerged,
+the S-100 bus quickly became outdated, struggling to keep
 up with evolving hardware capabilities.
 
-CP/M, originally designed for 8-bit microprocessors, had several drawbacks that limited its
-effectiveness as computing technology advanced. Its memory management capabilities were
-restricted, allowing it to address only up to 64KB of memory. The absence of built-in
-networking capabilities hindered its usefulness in networked environments, becoming a
-significant limitation as businesses and individuals began connecting computers in local
-area networks (LANs) and using modems for remote communication -- although there were
+CP/M, originally designed for 8-bit microprocessors, had several drawbacks
+that limited its effectiveness as computing technology advanced. Its memory
+management capabilities were restricted, allowing it to address only up to
+64KB of memory. The absence of built-in networking capabilities hindered its
+usefulness in networked environments, becoming a significant limitation as
+businesses and individuals began connecting computers in local area networks
+(LANs) and using modems for remote communication -- although there were
 applications running e.g. terminal emulations. CP/M's command-line interface,
 though functional, was basic and started to feel outdated as graphical user interfaces
 like those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering
