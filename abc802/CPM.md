@@ -235,7 +235,7 @@ the ABC802 and its relatives.
 
 
 
-## Technical comparation  CP/M, Unix, MS-DOS/PC-DOS
+## Technical comparation: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
 
 #### Target audience
 
@@ -370,6 +370,8 @@ platforms was limited without significant modifications.
 hardware configurations. Microsoft allowed OEMs to customize MS-DOS for their hardware,
 contributing to its widespread adoption on various PC clones. (Not unlike their experience
 with adaptability of MSBASIC.)
+
+[^chatgpt]: This chapter has been derived from chatting with ChatGPT and other current LLMs.
 
 
 ## References
