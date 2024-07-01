@@ -84,12 +84,12 @@ upgrade their systems, which promoted a thriving third-party hardware
 market. The standardisation of the bus allowed components from different
 manufacturers to work together.
 
-*It is important to note that CP/M and the S-100 bus were not dependent
-on each other. They were separate standards, each contributing independently
-to the diverse and varied development of the personal computer market.
-These unifications pointed into the direction of the importance of a
-common ground. The way to find where that intersection were and how to
-get there, was still an unknown.*
+*It is important to note that CP/M and the S-100 bus were __not__
+dependent on each other. They were distinct standards, each contributing
+independently to the diverse and evolving personal computer market. These
+unifications highlighted the significance of a common ground. However,
+identifying where that intersection lay and how to achieve it remained
+an unresolved challenge.*
 
 
 [^kildall]: https://en.wikipedia.org/wiki/Gary_Kildall
