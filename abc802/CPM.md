@@ -8,8 +8,8 @@ expanded their proprietary solutions by incorporating CP/M[^cpmwiki] capabilitie
 either through add-on cards or by redesigning their machines. This trend
 emerged as CP/M gained market traction. For instance, the Apple II could
 run CP/M software using third-party Z80 processor cards, such as the Microsoft
-SoftCard[^softcard]. Similarly, the Commodore 128 included a Z80 processor, enabling
-it to run CP/M alongside its native operating systems.[^commodore128]
+SoftCard[^softcard]. Similarly, the Commodore 128 included a Z80 processor,
+enabling it to run CP/M alongside its native operating systems.[^commodore128]
 
 Additionally, some systems came with CP/M pre-installed from the start.
 Notable examples include the Osborne 1[^osborne], an early portable computer that
@@ -28,47 +28,51 @@ extension of running CP/M.*[^cpmabc800]
 [^supercalc]: SuperCalc: https://en.wikipedia.org/wiki/SuperCalc.
 [^kaypro]: Kaypro: https://en.wikipedia.org/wiki/Kaypro
 [^cpmabc800]: Almost the same computer, CP/M for ABC800:
-https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf
+https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf.
 
 
 ### De facto standardisation
 
-Developed by Gary Kildall (Digital Research Inc.), CP/M (Control Program
-for Microcomputers, Control Program / Monitor) is one of the seminal operating
-systems in the history of personal computing. CP/M began in 1973 when Gary
-Kildall wrote the initial version to run on Intel 8080/85-based microcomputers.
-Officially released in 1974, CP/M quickly became one of the first widely
-used de facto operating systems for personal computers.
+Developed by Gary Kildall[^kildall] (Digital Research Inc.)[^dri], CP/M
+(Control Program for Microcomputers, Control Program / Monitor) is one
+of the seminal operating systems in the history of personal computing.
+CP/M began in 1973 when Gary Kildall wrote the initial version to run
+on Intel 8080/85-based microcomputers. Officially released in 1974,
+CP/M quickly became one of the first widely used de facto operating
+systems for personal computers.
 
 In the pre-CP/M era, early microcomputers lacked standardised operating
-systems. Probably it could not be fitted in them. Sometimes they had though
-"monitors", early basic communications with the system for debugging, status etc.
-Users often had to write their own software to interact more directly with
-the hardware, which was a significant barrier to wider adoption and usability.
-By providing a de facto standardised operating system that could run on various
-hardware platforms, CP/M played a pivotal role in the growth of the personal
-computer market during the late 1970s and early 1980s. It enabled software
-developers to write programs that could be distributed widely and run on a
-variety of machines, paving the way for a burgeoning software industry.
+systems. Probably it could not be fitted in them, often low on memory.
+Sometimes they had though "monitors", early basic communications
+with the system for debugging, status etc. Users often had to write
+their own software to interact more directly with the hardware,
+which was naturally a significant barrier to wider adoption and usability.
+By providing a de facto standardised operating system that could run
+on various hardware platforms, CP/M played a pivotal role in the growth
+of the personal computer market during the late 1970s and early 1980s.
+It enabled software developers to write programs that could be distributed
+widely and run on a variety of machines, paving the way for a burgeoning
+software industry.
 
 CP/M featured a simple, yet effective file system and command-line interface,
 which was user-friendly for its time. One significant strength was its design,
-which made it easily adaptable to various hardware platforms. This portability
-was a crucial factor in its widespread use. CP/M utilised a BIOS
+which made it easily adaptable to various hardware platforms. This *portability*
+was a crucial factor in its widespread use. CP/M utilised a BIOS[^bios]
 (Basic Input/Output System) to handle hardware-specific operations.
 This abstraction layer enabled the operating system to run on different
 machines with minimal modifications, enhancing its portability and flexibility.
 The BIOS is also one of the features that translated well to the future MS-DOS era.
 
 CP/M fostered a rich ecosystem of software applications and development tools.
-Popular software like WordStar (word processing) and dBASE II (database management)
-were first developed for CP/M. Microsoft's MS-DOS, which became the standard
-operating system for IBM PCs, was heavily influenced by CP/M. The initial version
-of MS-DOS (also known as 86-DOS or QDOS) was even designed to be compatible with
-(legacy) CP/M software, facilitating an easier transition for users and developers.
+Popular software like WordStar was first developed for CP/M, and a successful
+database management dBASE II[^dbase] became very popular software
+ported to CP/M. Microsoft's MS-DOS, later on became the standard operating
+system for IBM PCs, was heavily influenced by CP/M. The initial version of
+MS-DOS (also known as 86-DOS or QDOS) was even designed to be compatible
+with (legacy) CP/M software, facilitating an easier transition for users and
+developers.
 
-
-On the hardware side, there was also a development. The S-100 bus, originally
+On the hardware side, there was also a development. The S-100 bus,[^s100] originally
 known as the Altair bus, was introduced in 1974 with the MITS Altair 8800, one of
 the first commercially successful personal computers. Initially designed for the
 Intel 8080 microprocessor, it was later adapted for other processors, including the
@@ -81,6 +85,12 @@ different manufacturers to work together.
 *It is important to note that CP/M and the S-100 bus were not dependent on each other.
 They were separate standards, each contributing independently to the diverse and
 varied development of the personal computer market.*
+
+[^kildall]: https://en.wikipedia.org/wiki/Gary_Kildall
+[^bios]: https://en.wikipedia.org/wiki/BIOS
+[^dbase]: https://en.wikipedia.org/wiki/DBase
+[^dri]: https://en.wikipedia.org/wiki/Digital_Research
+[^s100]: https://en.wikipedia.org/wiki/S-100_bus
 
 
 ### Decline
@@ -124,6 +134,7 @@ hardware manufacturers led to compatibility issues, with software written for on
 often not running correctly on another. These limitations collectively contributed to
 CP/M's decline as a previous dominant operating system.
 
+
 #### Summary
 
 IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M. IBM PCs quickly
@@ -139,6 +150,10 @@ foundation for a large developer market.
 for a standard in hardware and software, where previously proprietary individual
 computer brands / computers with proprietary solutions, had fought for dominance.
 The de facto standards could only help so much.*
+
+### DataBoard 4680
+
+[PENDING ..]
 
 
 ### Alternative routes
@@ -185,12 +200,14 @@ features, and the availability of its source code for educational purposes.
 
 In the late 1970s, AT&T began licensing Unix to commercial vendors, which
 led to a proliferation of Unix versions. Different vendors developed their
-own variants, leading to extreme *fragmentation*.
+own variants, leading to extreme fragmentation.
 
 One significant variant was the Berkeley Software Distribution (BSD),
 developed at the University of California, Berkeley. BSD introduced many
 enhancements and became a foundation for later Unix systems. But they also
-had license fees to be paid to AT&T for some Unix software.
+had license fees to be paid to AT&T for some Unix software. A significant
+difference at the start was that important networking such as TCP/IP was
+supported on BSD, but only later added to the AT&T versions.
 
 In the years to come, overcoming *fragmentation* was a significant issue,
 perhaps the largest of them all. Besides technological challenges, licensing
