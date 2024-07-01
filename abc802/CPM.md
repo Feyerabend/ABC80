@@ -284,7 +284,7 @@ surrounding the ABC802 and its relatives.
 
 
 
-## Appendix: Technical comparation: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
+## Appendix: Technical comparation of CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
 
 #### Target audience
 
