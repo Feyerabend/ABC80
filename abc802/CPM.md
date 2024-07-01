@@ -4,18 +4,19 @@
 # CP/M
 
 In the late 1970s and early 1980s, many contemporary computer manufacturers
-expanded their proprietary solutions by incorporating CP/M[^cpmwiki] capabilities,
-either through add-on cards or by redesigning their machines. This trend
-emerged as CP/M gained market traction. For instance, the Apple II could
-run CP/M software using third-party Z80 processor cards, such as the Microsoft
-SoftCard[^softcard]. Similarly, the Commodore 128 included a Z80 processor,
-enabling it to run CP/M alongside its native operating systems.[^commodore128]
+expanded their proprietary solutions by incorporating CP/M[^cpmwiki]
+capabilities, either through add-on cards or by redesigning their machines.
+This trend emerged as CP/M gained market traction. For instance, the Apple II
+could run CP/M software using third-party Z80 processor cards, such as the
+Microsoft SoftCard.[^softcard] Similarly, the Commodore 128 included a Z80
+processor, enabling it to run CP/M alongside its native operating
+systems.[^commodore128]
 
 Additionally, some systems came with CP/M pre-installed from the start.
-Notable examples include the Osborne 1[^osborne], an early portable computer that
-bundled software like WordStar[^wordstar] and SuperCalc[^supercalc], and the
-Kaypro II[^kaypro]. These integrations highlighted CP/M's versatility and
-widespread adoption during that era.
+Notable examples include the Osborne 1[^osborne], an early portable computer
+that bundled software like WordStar[^wordstar] and SuperCalc[^supercalc],
+and the Kaypro II[^kaypro]. These integrations highlighted CP/M's versatility
+and widespread adoption during that era.
 
 *Not to be unfashionable, the ABC802 did also came prepared for a possible
 extension of running CP/M.*[^cpmabc800]
@@ -29,6 +30,7 @@ extension of running CP/M.*[^cpmabc800]
 [^kaypro]: Kaypro: https://en.wikipedia.org/wiki/Kaypro
 [^cpmabc800]: Almost the same computer, CP/M for ABC800:
 https://www.abc80.net/archive/luxor/sw/CPM/MYAB-Bruksanvisning-for-cpm-pa-ABC800.pdf.
+Although here it was an addition, instead of pre-built harware.
 
 
 ### De facto standardisation
@@ -245,10 +247,11 @@ just rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX was used in computers such as ABC1600[^ABC1600] and ABC9000[^ABC9000]
 introduced in 1984/1985.
 
-Here somewhere the start of what to become the "Unix wars" started, a period
-of competition and fragmentation continuing into the 1990s. This era was
-characterized by disputes among various Unix vendors and standards bodies,
-leading to the proliferation of different Unix variants and standards.
+Here somewhere the start of what to become the "Unix wars"[^war] started,
+a period of competition and fragmentation continuing into the 1990s.
+This era was characterized by disputes among various Unix vendors and
+standards bodies, leading to the proliferation of different Unix variants
+and standards.
 
 In addition to the fragmentation and proliferation of incompatible Unix
 flavors, there were some achievements in standardization efforts such as
@@ -258,13 +261,13 @@ and ongoing compatibility issues continued to pose significant challenges.
 Competition often led to proprietary extensions, which further contributed
 to fragmentation.
 
-That history, however, extends far beyond the lifespan of the ideas surrounding
-the ABC802 and its relatives.
+That history, however, extends far beyond the lifespan of the ideas
+surrounding the ABC802 and its relatives.
 
 [^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
 [^ABC1600]: https://sv.wikipedia.org/wiki/ABC_1600
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
-
+[^war]: https://en.wikipedia.org/wiki/Unix_wars
 
 
 
