@@ -175,20 +175,21 @@ In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
 was designed with support for three microprocessors: Intel 4004, Motorola 6800,
 and Intel 8080. Other additional processors were initially considered for use, and
 also cards were built, but ultimately, the Z80 became the predominant choice.
-This system consisted of a CPU card, and separate cards for RAM and EPROM
-for software. The 4680 bus featured a 16-bit address bus and an 8-bit data bus,
-allowing it to directly address 64 KB of memory.
+This original system consisted of a CPU card, and separate cards for RAM and
+EPROM for software. The 4680 bus featured a 16-bit address bus and an 8-bit data
+bus, allowing it to directly address 64 KB of memory.
 
-It was used in various applications such as a diagnostic machine for brain tumors
-at a prominent hospital, the printing process at a major newspaper, or a control system
-for an industrial manufacturer in collaboration with an automation company.
+The modular system was used in various applications such as a diagnostic machine
+for brain tumors at a prominent hospital, the printing process at a major newspaper,
+or a control system for an industrial manufacturer in collaboration with an automation
+company.
 
 
 PENDING
 
 
 The designer of the basis for the ABC-line of computers was Lars Karlsson.
-A self-tought engineer, he early on realised the importance of the "bus"[^bus]
+A self-taught engineer, he early on realised the importance of the "bus"[^bus]
 but also the abstraction or generalisation of the "bus".
 
 PENDING
