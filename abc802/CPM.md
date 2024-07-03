@@ -171,6 +171,11 @@ standards provided some cohesion, their impact was limited.*
 
 ### DataBoard 4680
 
+In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
+was designed with support for three microprocessors: Intel 4004, Motorola 6800,
+and Zilog Z80. There were other processors added to the list, but eventually
+really only Z80 was ever used mainly.
+
 PENDING
 
 The designer of the basis for the ABC-line of computers was Lars Karlsson.
@@ -179,9 +184,6 @@ but also the abstraction or generalisation of the "bus".
 
 PENDING
 
-
-In 1974, the Data Board 4680 system was designed with support for
-three microprocessors: Intel 4004, Motorola 6800, and Zilog Z80.
 
 In 1977, the 7S (Seven S) debuted as a combined monochrome terminal
 and computer utilizing the Data Board 4680 bus and powered by the Z80
