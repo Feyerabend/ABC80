@@ -244,24 +244,37 @@ and market expansion.
 ![ABC1600 & ABC9000](../assets/images/abc1600.png)
 
 
-### The proliferation of standards, ABCNIX or D-NIX, among them
+### The proliferation of standards, ABCenix or D-NIX, among them
 
-The rise of multiple standards, derivations of Unix in a lot of *nix,
+The rise of multiple standards, derivations of Unix in a lot of *NIX,
 exemplifies a trend towards diverse platforms as well as fragmentation.
-The creators of ABC802 and its variants at DIAB AB believed that
-developing a Unix-based system was the next logical step in
-technological evolution. In this they were not alone. They further
-introduced their own “ABCNIX,” named after the renowned ABC computer series.
-This system, alternatively known as D-NIX, was even licensed or possibly
-just rebranded as *Cromix* for Cromenco.[^D_NIX]
-D-NIX was used in computers such as ABC1600[^ABC1600] and ABC9000[^ABC9000]
-introduced in 1984/1985.[^bro]
+
+In 1983, same year as Luxor introduced ABC802, DIAB developed its first
+UNIX-compatible machine, the DIAB DS90, using the Motorola 68000 CPU.
+They initially used a UNIX System V license from AT&T, but being an
+industrial automation company, DIAB required a real-time operating system.
+To meet this need, they replaced the AT&T-supplied UNIX kernel with their
+own real-time variant. Over time, DIAB also developed their own versions
+of UNIX standard tools, eventually eliminating any code derived from UNIX.
+This allowed DIAB to deploy their machines independently, without needing
+an AT&T UNIX license. But not being able to use the UNIX brand,
+of course,
+
+Two years later, DIAB continued enhancing the DS90 computer series,
+incorporating newer Motorola CPUs such as the 68010,
+68020, 68030, and the 68040. Luxor was offered to sell a DS90
+as they rebranded "ABC9000", and the operating *NIX called D-NIX,
+was instead rebranded as "ABCenix".[^ABC9000] Also a smaller model called
+ABC1600 run the same OS.[^ABC1600] This latter system D-NIX was even
+licensed or possibly only rebranded as *Cromix* for Cromenco.[^D_NIX]
+D-NIX and the computers from DIAB continued to live under a
+new ownership of Bull in the 90s.
 
 Here somewhere the start of what to become the "Unix wars"[^war] started,
-a period of competition and fragmentation continuing into the 1990s.
-This era was characterized by disputes among various Unix vendors and
-standards bodies, leading to the proliferation of different Unix variants
-and standards.
+a period of competition and fragmentation continuing from the mid 80s into
+the 1990s. This era was characterized by disputes among various Unix
+vendors and standards bodies, leading to the proliferation of different Unix
+variants and standards.
 
 In addition to the fragmentation and proliferation of incompatible Unix
 flavors, there were some achievements in standardization efforts such as
