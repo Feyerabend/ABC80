@@ -154,14 +154,15 @@ CP/M's decline as a previous dominant operating system.
 
 #### Summary
 
-IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M. IBM PCs quickly
-became the industry standard, and MS-DOS emerged as the dominant operating system.
-It is important to note that IBM also offered CP/M and UCSD Pascal as alternatives
-to MS-DOS, but the pricing for CP/M was significantly higher. The saying
-'You couldn't go wrong with buying an IBM,' originally used when considering
-mainframes, underscored the reliability and growing popularity of the IBM PC.
-Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M, it evolved and laid the
-foundation for a large developer market.
+*IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M.*
+IBM PCs quickly became the industry standard, and MS-DOS emerged
+as the dominant operating system. It is important to note that IBM also
+offered CP/M and UCSD Pascal as alternatives to MS-DOS, but the pricing
+for CP/M was significantly higher. The saying 'You couldn't go wrong with buying an IBM,'
+originally used when considering mainframes, underscored the reliability
+and growing popularity of the IBM PC. Even though PC-DOS / MS-DOS
+was built on a 'clone' of CP/M, it evolved and laid the foundation for a large
+developer market.
 
 *This shift fostered a competitive software market for PCs, which established
 a standard in both hardware and software. Previously, proprietary computer
@@ -322,7 +323,7 @@ licensed or possibly only rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX and the computers from DIAB continued to live under a
 new ownership of Bull in the 1990s.
 
-Here somewhere the start of what to become the "Unix wars"[^war] started,
+Here somewhere in the mid 1980s the start of what to become the "Unix wars"[^war] started,
 a period of competition and fragmentation continuing from the mid 80s into
 the 1990s. This era was characterized by disputes among various Unix
 vendors and standards bodies, leading to the proliferation of different Unix
