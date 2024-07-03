@@ -198,13 +198,14 @@ ABC 800, offering 64 KB of RAM, with 32 KB designated for use as a RAM disk.
 Or the alternative use: as a 64 KB CP/M machine.
 Further enhancing the lineup was the ABC 806, which featured
 160 KB of RAM, with 128 KB allocated as a RAM disk. Also
-with enhanced graphics. All of these were in fact based on the Data Board
-4680 bus.
+with enhanced graphics. All of these computers were in fact based on the
+Data Board 4680 bus.
 
-Data board 4680 represented more of a niche approach to microcomputer
+But Data board 4680 represented more of a niche approach to microcomputer
 design, focusing on specific industrial and computing needs rather than
 aiming for broad consumer appeal. Its influence was felt in specialized
-applications but did not have the same widespread impact as the S-100.
+applications but obviously did not have the same widespread impact as
+the S-100.
 
 Data Board 4680 was employed in embedded control applications.
 This could include industrial automation, where precise timing and
@@ -294,7 +295,6 @@ and market expansion.
 
 ![ABC1600 & ABC9000](../assets/images/abc1600.png)
 
-
 ### The proliferation of standards, ABCenix or D-NIX, among them
 
 The rise of multiple standards, derivations of Unix in a lot of *NIX,
@@ -348,7 +348,7 @@ surrounding the ABC802 and its relatives.
 
 
 
-## Appendix: Technical comparation of CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
+## Appendix: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
 
 #### Target audience
 
@@ -402,7 +402,7 @@ Unix systems used shells like the Bourne shell (sh).
 * __Usability__: More complex commands and utilities, providing greater power and
 flexibility but requiring more technical expertise. Unix systems often included a
 rich set of command-line tools and utilities.
-* __GUI__: Some systems had some (propriatary) graphical interfaces, like D-NIX.
+* __GUI__: Some systems had some (proprietary) graphical interfaces, like D-NIX.
 Later on not uncommon with X-Windows.
 
 __*MS-DOS/PC-DOS*__: Command-line interface (CLI) with a straightforward set of commands.
