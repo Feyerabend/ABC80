@@ -172,28 +172,18 @@ standards provided some cohesion, their impact was limited.*
 ### DataBoard 4680
 
 In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
-was designed with support for three microprocessors: Intel 4004, Motorola 6800,
-and Intel 8080. Other additional processors were initially considered for use, and
-also cards were built, but ultimately, the Z80 became the predominant choice.
-This original system consisted of a CPU card, and separate cards for RAM and
-EPROM for software. The 4680 bus featured a 16-bit address bus and an 8-bit data
-bus, allowing it to directly address 64 KB of memory.
+was designed by Dataindustrier AB[^diab] with support for three microprocessors:
+Intel 4004, Motorola 6800, and Intel 8080. Other additional processors
+were initially considered for use, and also cards were built, but ultimately,
+the Z80 became the predominant choice. This original system consisted of a
+CPU card, and separate cards for RAM and EPROM for software.
+The 4680 bus featured a 16-bit address bus and an 8-bit data bus,
+allowing it to directly address 64 KB of memory.
 
 The modular system was used in various applications such as a diagnostic machine
 for brain tumors at a prominent hospital, the printing process at a major newspaper,
 or a control system for an industrial manufacturer in collaboration with an automation
 company.
-
-
-PENDING
-
-
-The designer of the basis for the ABC-line of computers was Lars Karlsson.
-A self-taught engineer, he early on realised the importance of the "bus"[^bus]
-but also the abstraction or generalisation of the "bus".
-
-PENDING
-
 
 In 1977, the 7S (Seven S) debuted as a combined monochrome terminal
 and computer utilizing the Data Board 4680 bus and powered by the Z80
@@ -218,29 +208,37 @@ applications but did not have the same widespread impact as the S-100.
 
 Data Board 4680 was employed in embedded control applications.
 This could include industrial automation, where precise timing and
-control were necessary, leveraging the capabilities of primarily
-the Z80 processor.
+control were necessary, leveraging the capabilities of primarily the Z80 processor.
 In educational and experimental settings, the Data Board 4680 provided
 a platform for early computing enthusiasts and hobbyists to explore different
-microprocessor architectures.
-Certain specialized computing tasks, such as data acquisition
-systems or specific instrument control applications, benefited from
-the versatility. Engineers and scientists could customize systems
+microprocessor architectures. Certain specialized computing tasks,
+such as data acquisition systems or specific instrument control applications,
+benefited from the versatility. Engineers and scientists could customize systems
 based on their specific requirements.
 
-Dataindustrier AB, alternatively called DIAB later,
-..
-[PENDING ..]
+The designer of the basis for the ABC-line of computers and the Data Board 4680,
+was in the main Lars Karlsson, together with a group of engineers.
+A self-taught engineer, Karlsson early on realise the importance of the "bus"[^bus]
+but also the abstraction or generalisations of the "bus". But as technology progressed,
+the bus also had to change. When 16-bit  processors came along, and Unix
+became a topic of interest, the bus also had to adapt.
+Dataindustrier AB, alternatively called DIAB AB later, started by Karlsson in 1971,
+became one of Swedens primary designer for microcomputers. No other company
+nationally made such a success in this market. Lars Karlsson left Sweden for USA
+in 1983, to focus on Data Board 4680, and also then sold shares of his company.
 
+[^diab]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 [^bus]: https://en.wikipedia.org/wiki/Bus_(computing)
 
 
 ### Alternative routes
 
-Computer manufacturers faced critical decisions about their future direction.
-The importance of the PC was evident, but the extent of its impact and the
-direction of the market were uncertain. Key questions included: Where was
-the technology heading? How crucial was legacy support?
+Computer manufacturers in the beginning of 1980s faced critical decisions
+about their future direction. The importance of the 1981 IBM PC was evident,
+but the extent of its impact and the direction of the market were uncertain.
+Key questions included: Where was the technology heading? How crucial
+was legacy support? How could the company stay relevant in the changing
+technological landscape?
 
 *Business as Usual*: Some manufacturers adopted a "business as usual" approach,
 assuming that their customers would remain satisfied with whatever they produced
