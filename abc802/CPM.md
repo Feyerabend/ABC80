@@ -166,8 +166,8 @@ developer market.
 
 *This shift fostered a competitive software market for PCs, which established
 a standard in both hardware and software. Previously, proprietary computer
-brands with unique solutions had competed for dominance. While de facto
-standards provided some cohesion, their impact was limited.*
+brands with unique solutions had competed for dominance. While early de facto
+standards here provided some cohesion, their future impact was limited.*
 
 
 ### DataBoard 4680
