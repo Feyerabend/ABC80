@@ -173,8 +173,8 @@ standards provided some cohesion, their impact was limited.*
 
 In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
 was designed with support for three microprocessors: Intel 4004, Motorola 6800,
-and Zilog Z80. There were other processors added to the list, but eventually
-really only Z80 was ever used mainly.
+and Zilog Z80. Other additional processors were initially considered for use, but
+ultimately, the Z80 became the predominant choice.
 
 PENDING
 
