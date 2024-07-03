@@ -320,7 +320,7 @@ was instead rebranded as "ABCenix".[^ABC9000] Also a smaller model called
 ABC1600 run the same OS.[^ABC1600] This latter system D-NIX was even
 licensed or possibly only rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX and the computers from DIAB continued to live under a
-new ownership of Bull in the 90s.
+new ownership of Bull in the 1990s.
 
 Here somewhere the start of what to become the "Unix wars"[^war] started,
 a period of competition and fragmentation continuing from the mid 80s into
