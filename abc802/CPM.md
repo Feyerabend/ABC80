@@ -226,8 +226,8 @@ became a topic of interest, the bus also had to adapt.
 Dataindustrier AB, alternatively called DIAB AB later, started by Karlsson in 1971,
 became one of Swedens primary designer for microcomputers. No other company
 nationally made such a success in this market with their own design. Lars Karlsson
-left Sweden for USA in 1983, to focus on Data Board 4680, and also then sold
-shares of the company he once started.
+left Sweden for USA in 1983, to focus on Data Board 4680 and the future,
+but also then sold shares of the company he once started.
 
 [^diab]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 [^bus]: https://en.wikipedia.org/wiki/Bus_(computing)
