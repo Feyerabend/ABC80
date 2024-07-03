@@ -1,6 +1,20 @@
 
 ![Emulated CP/M](../assets/images/cpm.png)
 
+#### A note on context
+
+The following primarily focuses on technological developments in
+microcomputer operating systems from the late 70s to the mid-80s,
+excluding larger systems like workstations and contemporary
+minicomputers. In retrospect, PC-DOS / MS-DOS emerged
+victorious, with the IBM PC becoming the new de facto standard 
+in this market. The well-documented story of how and why this
+happened is widely known. However, in the periphery, intriguing
+developments were stifled, potentially escaping broader historical
+narratives. Some examples here will shed light on traces of that
+overlooked story.
+
+
 # CP/M
 
 In the late 1970s and early 1980s, many contemporary computer manufacturers
@@ -346,6 +360,13 @@ surrounding the ABC802 and its relatives.
 [^war]: https://en.wikipedia.org/wiki/Unix_wars
 
 ![ABC1600 & ABC9000](../assets/images/sv-unix.png)
+
+
+#### A note on context
+
+This time there is not so much context added beside comments
+on how the technology in some cases had their ups and downs.
+
 
 
 
