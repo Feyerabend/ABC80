@@ -323,14 +323,13 @@ licensed or possibly only rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX and the computers from DIAB continued to live under a
 new ownership of Bull in the 1990s.
 
-Here somewhere in the mid 1980s the start of what to become the "Unix wars"[^war] started,
-a period of competition and fragmentation continuing from the mid 80s into
-the 1990s. This era was characterized by disputes among various Unix
-vendors and standards bodies, leading to the proliferation of different Unix
-variants and standards.
+Here somewhere in the mid 1980s was the beginning of what to become
+the "Unix wars."[^war]. It was a period of competition and fragmentation
+continuing from the mid 80s into the 1990s. This era was characterized
+by disputes among various Unix vendors and standards bodies,
+leading to the proliferation of different Unix variants and standards.
 
-In addition to the fragmentation and proliferation of incompatible Unix
-flavors, there were some achievements in standardization efforts such as
+But there were some achievements in standardization efforts such as
 POSIX and somewhat of the Single UNIX Specification (SUS). However,
 rivalry among vendors, intense competition, legal disputes over licensing,
 and ongoing compatibility issues continued to pose significant challenges.
