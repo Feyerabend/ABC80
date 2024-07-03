@@ -171,10 +171,55 @@ standards provided some cohesion, their impact was limited.*
 
 ### DataBoard 4680
 
+PENDING
+
 The designer of the basis for the ABC-line of computers was Lars Karlsson.
 A self-tought engineer, he early on realised the importance of the "bus"[^bus]
 but also the abstraction or generalisation of the "bus".
-..
+
+PENDING
+
+
+In 1974, the Data Board 4680 system was designed with support for
+three microprocessors: Intel 4004, Motorola 6800, and Zilog Z80.
+
+In 1977, the 7S (Seven S) debuted as a combined monochrome terminal
+and computer utilizing the Data Board 4680 bus and powered by the Z80
+processor. Following this, in 1978, the ABC 80 was introduced as a Z80-based
+monochrome home computer, also with a variation as the "ABC-bus", which
+could connect to Data Board 4680.
+
+By 1981, the ABC 800 emerged as an enhanced model for both office
+and home use, equipped with 32 KB of RAM and featuring color graphics.
+And as we know, in 1983 the ABC 802 was launched as a variant of the
+ABC 800, offering 64 KB of RAM, with 32 KB designated for use as a RAM disk.
+Or the alternative use: as a 64 KB CP/M machine.
+Further enhancing the lineup was the ABC 806, which featured
+160 KB of RAM, with 128 KB allocated as a RAM disk. Also
+with enhanced graphics.
+
+All of these were in fact based on the Data Board 4680 bus.
+
+The S-100 bus was really supportive of Intel 8080 and later Intel 8085,
+as Data Board 4680 limited itself to Z80.
+
+Data board 4680 represented more of a niche approach to microcomputer
+design, focusing on specific industrial and computing needs rather than
+aiming for broad consumer appeal. Its influence was felt in specialized
+applications but did not have the same widespread impact as the S-100.
+
+Data Board 4680 was employed in embedded control applications.
+This could include industrial automation, where precise timing and
+control were necessary, leveraging the capabilities of primarily
+the Z80 processor.
+In educational and experimental settings, the Data Board 4680 provided
+a platform for early computing enthusiasts and hobbyists to explore different
+microprocessor architectures.
+Certain specialized computing tasks, such as data acquisition
+systems or specific instrument control applications, benefited from
+the versatility. Engineers and scientists could customize systems
+based on their specific requirements.
+
 Dataindustrier AB, alternatively called DIAB later,
 ..
 [PENDING ..]
@@ -211,7 +256,7 @@ Companies like Compaq successfully adopted this strategy, becoming significant
 players in the market by offering reliable IBM PC clones.
 
 But there was at least one group more: they bet on *UNIX* as the future.[^Xenix]
-[^Xenix]: Among them were in fact Micorsoft with *Xenix*.
+[^Xenix]: Among them were in fact Microsoft with *Xenix*.
 
 
 ### UNIX
