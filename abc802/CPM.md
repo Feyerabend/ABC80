@@ -362,13 +362,6 @@ surrounding the ABC802 and its relatives.
 ![ABC1600 & ABC9000](../assets/images/sv-unix.png)
 
 
-#### A note on context
-
-This time there is not so much context added beside comments
-on how the technology in some cases had their ups and downs.
-
-
-
 
 ## Appendix: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
 
