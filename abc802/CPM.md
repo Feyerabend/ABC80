@@ -173,10 +173,19 @@ standards provided some cohesion, their impact was limited.*
 
 In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
 was designed with support for three microprocessors: Intel 4004, Motorola 6800,
-and Zilog Z80. Other additional processors were initially considered for use, but
-ultimately, the Z80 became the predominant choice.
+and Intel 8080. Other additional processors were initially considered for use, and
+also cards were built, but ultimately, the Z80 became the predominant choice.
+This system consisted of a CPU card, and separate cards for RAM and EPROM
+for software. The 4680 bus featured a 16-bit address bus and an 8-bit data bus,
+allowing it to directly address 64 KB of memory.
+
+It was used in various applications such as a diagnostic machine for brain tumors
+at a prominent hospital, the printing process at a major newspaper, or a control system
+for an industrial manufacturer in collaboration with an automation company.
+
 
 PENDING
+
 
 The designer of the basis for the ABC-line of computers was Lars Karlsson.
 A self-tought engineer, he early on realised the importance of the "bus"[^bus]
@@ -198,12 +207,8 @@ ABC 800, offering 64 KB of RAM, with 32 KB designated for use as a RAM disk.
 Or the alternative use: as a 64 KB CP/M machine.
 Further enhancing the lineup was the ABC 806, which featured
 160 KB of RAM, with 128 KB allocated as a RAM disk. Also
-with enhanced graphics.
-
-All of these were in fact based on the Data Board 4680 bus.
-
-The S-100 bus was really supportive of Intel 8080 and later Intel 8085,
-as Data Board 4680 limited itself to Z80.
+with enhanced graphics. All of these were in fact based on the Data Board
+4680 bus.
 
 Data board 4680 represented more of a niche approach to microcomputer
 design, focusing on specific industrial and computing needs rather than
