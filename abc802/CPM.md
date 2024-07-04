@@ -153,22 +153,23 @@ usefulness in networked environments, becoming a significant limitation as
 businesses and individuals began connecting computers in local area networks
 (LANs) and using modems for remote communication -- although there were
 applications running e.g. terminal emulations. CP/M's command-line interface,
-though functional, was basic and started to feel outdated as graphical user interfaces
-like those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering
-more intuitive and visually appealing experiences. Additionally, CP/M struggled to support
-emerging hardware technologies such as high-resolution graphics, advanced sound systems,
-and sophisticated input devices, making it less appealing for multimedia applications.
-Its single-tasking nature, which allowed only *one program to run at a time*, became a
-significant drawback as multitasking grew in importance for productivity and user
-convenience. Furthermore, the existence of many variations of CP/M created by different
+though functional, was basic and started to feel outdated as graphical user
+interfaces like those in e.g. the Apple Macintosh and later Microsoft Windows
+emerged, offering more intuitive and visually appealing experiences.
+Additionally, CP/M struggled to support emerging hardware technologies such
+as high-resolution graphics, advanced sound systems, and sophisticated input
+devices, making it less appealing for multimedia applications. Its single-tasking
+nature, which allowed only *one program to run at a time*, became a significant
+drawback as multitasking grew in importance for productivity and user convenience.
+Furthermore, the existence of many variations of CP/M created by different
 hardware manufacturers led to compatibility issues, with software written for one version
 often not running correctly on another. These limitations collectively contributed to
 CP/M's decline as a previous dominant operating system.
 
 
-#### Summary
+#### Comment
 
-*IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M.*
+__IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M.__
 IBM PCs quickly became the industry standard, and MS-DOS emerged
 as the dominant operating system. It is important to note that IBM also
 offered CP/M and UCSD Pascal as alternatives to MS-DOS, but the pricing
@@ -313,9 +314,6 @@ and market expansion.
 
 ### The proliferation of standards, ABCenix or D-NIX, among them
 
-The rise of multiple standards, derivations of Unix in a lot of *NIX,
-exemplifies a trend towards diverse platforms as well as fragmentation.
-
 In 1983, same year as Luxor introduced ABC802, DIAB developed its first
 UNIX-compatible machine, the DIAB DS90, using the Motorola 68000 CPU.
 They initially used a UNIX System V license from AT&T, but being an
@@ -335,7 +333,8 @@ was instead rebranded as "ABCenix".[^ABC9000] Also a smaller model called
 ABC1600 run the same OS.[^ABC1600] This latter system D-NIX was even
 licensed or possibly only rebranded as *Cromix* for Cromenco.[^D_NIX]
 D-NIX and the computers from DIAB continued to live under a
-new ownership of Bull in the 1990s.
+new ownership of Bull in the 1990s. They sold OEM solutions to other
+companies, e.g. Norsk Data.
 
 Here somewhere in the mid 1980s was the beginning of what to become
 the "Unix wars."[^war]. It was a period of competition and fragmentation
