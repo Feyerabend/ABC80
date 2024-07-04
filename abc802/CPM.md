@@ -1,6 +1,20 @@
 
 ![Emulated CP/M](../assets/images/cpm.png)
 
+#### A note on context
+
+The following primarily focuses on technological developments in
+microcomputer operating systems from the late 70s to the mid-80s,
+excluding larger systems like workstations and contemporary
+minicomputers. In retrospect, PC-DOS / MS-DOS emerged
+victorious, with the IBM PC becoming the new de facto standard 
+in this market. The well-documented story of how and why this
+happened is widely known. However, in the periphery, intriguing
+developments were stifled, potentially escaping broader historical
+narratives. Some examples here will shed light on traces of that
+overlooked story.
+
+
 # CP/M
 
 In the late 1970s and early 1980s, many contemporary computer manufacturers
@@ -139,57 +153,109 @@ usefulness in networked environments, becoming a significant limitation as
 businesses and individuals began connecting computers in local area networks
 (LANs) and using modems for remote communication -- although there were
 applications running e.g. terminal emulations. CP/M's command-line interface,
-though functional, was basic and started to feel outdated as graphical user
-interfaces like those in e.g. the Apple Macintosh and later Microsoft Windows
-emerged, offering more intuitive and visually appealing experiences.
-Additionally, CP/M struggled to support emerging hardware technologies
-such as high-resolution graphics, advanced sound systems, and sophisticated
-input devices, making it less appealing for multimedia applications. Its
-single-tasking nature, which allowed only *one program to run at a time*,
-became a significant drawback as multitasking grew in importance for productivity
-and user convenience. Furthermore, the existence of many variations of CP/M
-created by different hardware manufacturers led to compatibility issues,
-with software written for one version often not running correctly on another.
-These limitations collectively contributed to CP/M's decline as a previous
-dominant operating system.
+though functional, was basic and started to feel outdated as graphical user interfaces
+like those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering
+more intuitive and visually appealing experiences. Additionally, CP/M struggled to support
+emerging hardware technologies such as high-resolution graphics, advanced sound systems,
+and sophisticated input devices, making it less appealing for multimedia applications.
+Its single-tasking nature, which allowed only *one program to run at a time*, became a
+significant drawback as multitasking grew in importance for productivity and user
+convenience. Furthermore, the existence of many variations of CP/M created by different
+hardware manufacturers led to compatibility issues, with software written for one version
+often not running correctly on another. These limitations collectively contributed to
+CP/M's decline as a previous dominant operating system.
 
 
 #### Summary
 
-IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M. IBM PCs quickly
-became the industry standard, and MS-DOS emerged as the dominant operating system.
-It is important to note that IBM also offered CP/M and UCSD Pascal as alternatives
-to MS-DOS, but the pricing for CP/M was significantly higher. The saying
-'You couldn't go wrong with buying an IBM,' originally used when considering
-mainframes, underscored the reliability and growing popularity of the IBM PC.
-Even though PC-DOS / MS-DOS was built on a 'clone' of CP/M, it evolved and laid the
-foundation for a large developer market.
+*IBM’s decision to use MS-DOS for its PCs was a major blow to CP/M.*
+IBM PCs quickly became the industry standard, and MS-DOS emerged
+as the dominant operating system. It is important to note that IBM also
+offered CP/M and UCSD Pascal as alternatives to MS-DOS, but the pricing
+for CP/M was significantly higher. The saying 'You couldn't go wrong with buying an IBM,'
+originally used when considering mainframes, underscored the reliability
+and growing popularity of the IBM PC. Even though PC-DOS / MS-DOS
+was built on a 'clone' of CP/M, it evolved and laid the foundation for a large
+developer market.
 
 *This shift fostered a competitive software market for PCs, which established
 a standard in both hardware and software. Previously, proprietary computer
-brands with unique solutions had competed for dominance. While de facto
-standards provided some cohesion, their impact was limited.*
+brands with unique solutions had competed for dominance. While early de facto
+standards here provided some cohesion, their future impact was limited.*
 
 
 ### DataBoard 4680
 
-The designer of the basis for the ABC-line of computers was Lars Karlsson.
-A self-tought engineer, he early on realised the importance of the "bus"[^bus]
-but also the abstraction or generalisation of the "bus".
-..
-Dataindustrier AB, alternatively called DIAB later,
-..
-[PENDING ..]
+In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
+was designed by Dataindustrier AB[^diab] with support for three microprocessors:
+Intel 4004, Motorola 6800, and Intel 8080. Other additional processors
+were initially considered for use, and also cards were built, but ultimately,
+the Z80 became the predominant choice. This original system consisted of a
+CPU card, and separate cards for RAM and EPROM for software.
+The 4680 bus featured a 16-bit address bus and an 8-bit data bus,
+allowing it to directly address 64 KB of memory.
 
+The modular system was used in various applications such as a diagnostic machine
+for brain tumors at a prominent hospital, the printing process at a major newspaper,
+or a control system for an industrial manufacturer in collaboration with an automation
+company.
+
+In 1977, the 7S (Seven S) debuted as a combined monochrome terminal
+and computer utilizing the Data Board 4680 bus and powered by the Z80
+processor. Following this, in 1978, the ABC 80 was introduced as a Z80-based
+monochrome home computer, also with a variation as the "ABC-bus", which
+could connect to Data Board 4680.
+
+By 1981, the ABC 800 emerged as an enhanced model for both office
+and home use, equipped with 32 KB of RAM and featuring color graphics.
+And as we know, in 1983 the ABC 802 was launched as a variant of the
+ABC 800, offering 64 KB of RAM, with 32 KB designated for use as a RAM disk.
+Or the alternative use: as a 64 KB CP/M machine.
+Further enhancing the lineup was the ABC 806, which featured
+160 KB of RAM, with 128 KB allocated as a RAM disk. Also
+with enhanced graphics. All of these computers were in fact based on the
+Data Board 4680 bus.
+
+But Data board 4680 represented more of a niche approach to microcomputer
+design, focusing on specific industrial and computing needs rather than
+aiming for broad consumer appeal. Its influence was felt in specialized
+applications but obviously did not have the same widespread impact as
+the S-100.
+
+Data Board 4680 was employed in embedded control applications.
+This could include industrial automation, where precise timing and
+control were necessary, leveraging the capabilities of primarily the Z80 processor.
+In educational and experimental settings, the Data Board 4680 provided
+a platform for early computing enthusiasts and hobbyists to explore different
+microprocessor architectures. Certain specialized computing tasks,
+such as data acquisition systems or specific instrument control applications,
+benefited from the versatility. Engineers and scientists could customize systems
+based on their specific requirements.
+
+The designer of the basis for the ABC-line of computers and the Data Board 4680,
+was in the main Lars Karlsson, together with a group of engineers.
+A self-taught engineer, Karlsson early on realise the importance of the "bus"[^bus]
+but also the abstraction or generalisations of the "bus". But as technology progressed,
+the bus also had to change. When 16-bit  processors came along, and Unix
+became a topic of interest, the bus also had to adapt.
+Dataindustrier AB, alternatively called DIAB AB later, started by Karlsson in 1971,
+became one of Swedens primary designer for microcomputers. No other company
+nationally made such a success in this market with their own design. Lars Karlsson
+left Sweden for USA in 1983, to focus on Data Board 4680 and the future,
+but also then sold shares of the company he once started.
+
+[^diab]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 [^bus]: https://en.wikipedia.org/wiki/Bus_(computing)
 
 
 ### Alternative routes
 
-Computer manufacturers faced critical decisions about their future direction.
-The importance of the PC was evident, but the extent of its impact and the
-direction of the market were uncertain. Key questions included: Where was
-the technology heading? How crucial was legacy support?
+Computer manufacturers in the beginning of 1980s faced critical decisions
+about their future direction. The importance of the 1981 IBM PC was evident,
+but the extent of its impact and the direction of the market were uncertain.
+Key questions included: Where was the technology heading? How crucial
+was legacy support? How could the company stay relevant in the changing
+technological landscape?
 
 *Business as Usual*: Some manufacturers adopted a "business as usual" approach,
 assuming that their customers would remain satisfied with whatever they produced
@@ -213,7 +279,7 @@ Companies like Compaq successfully adopted this strategy, becoming significant
 players in the market by offering reliable IBM PC clones.
 
 But there was at least one group more: they bet on *UNIX* as the future.[^Xenix]
-[^Xenix]: Among them were in fact Micorsoft with *Xenix*.
+[^Xenix]: Among them were in fact Microsoft with *Xenix*.
 
 
 ### UNIX
@@ -245,33 +311,44 @@ and market expansion.
 
 ![ABC1600 & ABC9000](../assets/images/abc1600.png)
 
+### The proliferation of standards, ABCenix or D-NIX, among them
 
-### The proliferation of standards, ABCNIX or D-NIX, among them
-
-The rise of multiple standards, derivations of Unix in a lot of *nix,
+The rise of multiple standards, derivations of Unix in a lot of *NIX,
 exemplifies a trend towards diverse platforms as well as fragmentation.
-The creators of ABC802 and its variants at DIAB AB believed that
-developing a Unix-based system was the next logical step in
-technological evolution. In this they were not alone. They further
-introduced their own “ABCNIX,” named after the renowned ABC computer series.
-This system, alternatively known as D-NIX, was even licensed or possibly
-just rebranded as *Cromix* for Cromenco.[^D_NIX]
-D-NIX was used in computers such as ABC1600[^ABC1600] and ABC9000[^ABC9000]
-introduced in 1984/1985.[^bro]
 
-Here somewhere the start of what to become the "Unix wars"[^war] started,
-a period of competition and fragmentation continuing into the 1990s.
-This era was characterized by disputes among various Unix vendors and
-standards bodies, leading to the proliferation of different Unix variants
-and standards.
+In 1983, same year as Luxor introduced ABC802, DIAB developed its first
+UNIX-compatible machine, the DIAB DS90, using the Motorola 68000 CPU.
+They initially used a UNIX System V license from AT&T, but being an
+industrial automation company, DIAB required a real-time operating system.
+To meet this need, they replaced the AT&T-supplied UNIX kernel with their
+own real-time variant. Over time, DIAB also developed their own versions
+of UNIX standard tools, eventually eliminating any code derived from UNIX.
+This allowed DIAB to deploy their machines independently, without needing
+an AT&T UNIX license. But not being able to use the UNIX brand,
+of course,
 
-In addition to the fragmentation and proliferation of incompatible Unix
-flavors, there were some achievements in standardization efforts such as
-POSIX[^posix] and somewhat of the Single UNIX Specification (SUS).[^sus]
-However, rivalry among vendors, intense competition, legal disputes over
-licensing, and ongoing compatibility issues continued to pose significant
-challenges. Competition often led to proprietary extensions, which further
-contributed to fragmentation.
+Two years later, DIAB continued enhancing the DS90 computer series,
+incorporating newer Motorola CPUs such as the 68010,
+68020, 68030, and the 68040. Luxor was offered to sell a DS90
+as they rebranded "ABC9000", and the operating *NIX called D-NIX,
+was instead rebranded as "ABCenix".[^ABC9000] Also a smaller model called
+ABC1600 run the same OS.[^ABC1600] This latter system D-NIX was even
+licensed or possibly only rebranded as *Cromix* for Cromenco.[^D_NIX]
+D-NIX and the computers from DIAB continued to live under a
+new ownership of Bull in the 1990s.
+
+Here somewhere in the mid 1980s was the beginning of what to become
+the "Unix wars."[^war]. It was a period of competition and fragmentation
+continuing from the mid 80s into the 1990s. This era was characterized
+by disputes among various Unix vendors and standards bodies,
+leading to the proliferation of different Unix variants and standards.
+
+But there were some achievements in standardization efforts such as
+POSIX and somewhat of the Single UNIX Specification (SUS). However,
+rivalry among vendors, intense competition, legal disputes over licensing,
+and ongoing compatibility issues continued to pose significant challenges.
+Competition often led to proprietary extensions, which further contributed
+to fragmentation.
 
 That history, however, extends far beyond the lifespan of the ideas
 surrounding the ABC802 and its relatives.
@@ -281,16 +358,12 @@ surrounding the ABC802 and its relatives.
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
 [^bro]: Image above taken from: https://www.abc80.net/archive/luxor/ABC1600/1986-System-ABC-1600-och-ABC-9000.pdf
 [^war]: https://en.wikipedia.org/wiki/Unix_wars
-[^posix]: https://en.wikipedia.org/wiki/POSIX
-[^sus]: https://en.wikipedia.org/wiki/Single_UNIX_Specification and
-https://en.wikipedia.org/wiki/X/Open#X/Open_Portability_Guide
-
 
 ![ABC1600 & ABC9000](../assets/images/sv-unix.png)
 
 
 
-## Appendix: Technical comparation of CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
+## Appendix: CP/M, Unix, MS-DOS/PC-DOS[^chatgpt]
 
 #### Target audience
 
@@ -344,7 +417,7 @@ Unix systems used shells like the Bourne shell (sh).
 * __Usability__: More complex commands and utilities, providing greater power and
 flexibility but requiring more technical expertise. Unix systems often included a
 rich set of command-line tools and utilities.
-* __GUI__: Some systems had some (propriatary) graphical interfaces, like D-NIX.
+* __GUI__: Some systems had some (proprietary) graphical interfaces, like D-NIX.
 Later on not uncommon with X-Windows.
 
 __*MS-DOS/PC-DOS*__: Command-line interface (CLI) with a straightforward set of commands.
