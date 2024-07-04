@@ -139,17 +139,19 @@ usefulness in networked environments, becoming a significant limitation as
 businesses and individuals began connecting computers in local area networks
 (LANs) and using modems for remote communication -- although there were
 applications running e.g. terminal emulations. CP/M's command-line interface,
-though functional, was basic and started to feel outdated as graphical user interfaces
-like those in e.g. the Apple Macintosh and later Microsoft Windows emerged, offering
-more intuitive and visually appealing experiences. Additionally, CP/M struggled to support
-emerging hardware technologies such as high-resolution graphics, advanced sound systems,
-and sophisticated input devices, making it less appealing for multimedia applications.
-Its single-tasking nature, which allowed only *one program to run at a time*, became a
-significant drawback as multitasking grew in importance for productivity and user
-convenience. Furthermore, the existence of many variations of CP/M created by different
-hardware manufacturers led to compatibility issues, with software written for one version
-often not running correctly on another. These limitations collectively contributed to
-CP/M's decline as a previous dominant operating system.
+though functional, was basic and started to feel outdated as graphical user
+interfaces like those in e.g. the Apple Macintosh and later Microsoft Windows
+emerged, offering more intuitive and visually appealing experiences.
+Additionally, CP/M struggled to support emerging hardware technologies
+such as high-resolution graphics, advanced sound systems, and sophisticated
+input devices, making it less appealing for multimedia applications. Its
+single-tasking nature, which allowed only *one program to run at a time*,
+became a significant drawback as multitasking grew in importance for productivity
+and user convenience. Furthermore, the existence of many variations of CP/M
+created by different hardware manufacturers led to compatibility issues,
+with software written for one version often not running correctly on another.
+These limitations collectively contributed to CP/M's decline as a previous
+dominant operating system.
 
 
 #### Summary
@@ -265,11 +267,11 @@ and standards.
 
 In addition to the fragmentation and proliferation of incompatible Unix
 flavors, there were some achievements in standardization efforts such as
-POSIX and somewhat of the Single UNIX Specification (SUS). However,
-rivalry among vendors, intense competition, legal disputes over licensing,
-and ongoing compatibility issues continued to pose significant challenges.
-Competition often led to proprietary extensions, which further contributed
-to fragmentation.
+POSIX[^posix] and somewhat of the Single UNIX Specification (SUS).[^sus]
+However, rivalry among vendors, intense competition, legal disputes over
+licensing, and ongoing compatibility issues continued to pose significant
+challenges. Competition often led to proprietary extensions, which further
+contributed to fragmentation.
 
 That history, however, extends far beyond the lifespan of the ideas
 surrounding the ABC802 and its relatives.
@@ -279,6 +281,10 @@ surrounding the ABC802 and its relatives.
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
 [^bro]: Image above taken from: https://www.abc80.net/archive/luxor/ABC1600/1986-System-ABC-1600-och-ABC-9000.pdf
 [^war]: https://en.wikipedia.org/wiki/Unix_wars
+[^posix]: https://en.wikipedia.org/wiki/POSIX
+[^sus]: https://en.wikipedia.org/wiki/Single_UNIX_Specification and
+https://en.wikipedia.org/wiki/X/Open#X/Open_Portability_Guide
+
 
 ![ABC1600 & ABC9000](../assets/images/sv-unix.png)
 
