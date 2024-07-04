@@ -185,6 +185,8 @@ brands with unique solutions had competed for dominance. While early de facto
 standards here provided some cohesion, their future impact was limited.*
 
 
+![DataBoard 4680](../assets/images/databoard.png)
+
 ### DataBoard 4680
 
 In 1974, i.e. the same year of birth as the S-100, the Data Board 4680 system
