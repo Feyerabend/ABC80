@@ -4,15 +4,20 @@
 #### A note on context
 
 The following primarily focuses on technological developments in
-microcomputer operating systems from the late 70s to the mid-80s,
+microcomputer *operating systems* from the late 70s to the mid-80s,
 excluding larger systems like workstations and contemporary
-minicomputers. Another topic is the external computer bus in
+minicomputers. Another topic is the *external computer bus* in
 this era. If operating systems was the departure point for
 third party vendors of software, the bus could be cosidered
 as the primary hardware interface to the computer.
 Yes, there were parallel and serial interfaces, but the bus was
 more fundamental as you could build "anything" from the bus,
 even construct cards for serial and parallel ports.
+
+What is not reflected upon here are contemporary processors,
+and their entangled history. Other neglected stories are
+economical considerations, the market and its changes,
+strategical decisions, and so forth in the wider context.
 
 In retrospect, PC-DOS / MS-DOS emerged victorious, with the IBM PC
 becoming the new de facto standard  in this market. The
