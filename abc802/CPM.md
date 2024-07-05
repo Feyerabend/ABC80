@@ -6,13 +6,20 @@
 The following primarily focuses on technological developments in
 microcomputer operating systems from the late 70s to the mid-80s,
 excluding larger systems like workstations and contemporary
-minicomputers. In retrospect, PC-DOS / MS-DOS emerged
-victorious, with the IBM PC becoming the new de facto standard 
-in this market. The well-documented story of how and why this
-happened is widely known. However, in the periphery, intriguing
-developments were stifled, potentially escaping broader historical
-narratives. Some examples here will shed light on traces of that
-overlooked story.
+minicomputers. Another topic is the external computer bus in
+this era. If operating systems was the departure point for
+third party vendors of software, the bus could be cosidered
+as the primary hardware interface to the computer.
+Yes, there were parallel and serial interfaces, but the bus was
+more fundamental as you could build "anything" from the bus,
+even construct cards for serial and parallel ports.
+
+In retrospect, PC-DOS / MS-DOS emerged victorious, with the IBM PC
+becoming the new de facto standard  in this market. The
+well-documented story of how and why this happened is widely known.
+However, in the periphery, intriguing developments were stifled,
+potentially escaping broader historical narratives. Some examples
+here will shed light on traces of that overlooked story.
 
 
 # CP/M
@@ -205,16 +212,16 @@ company.
 
 In 1977, the 7S (Seven S) debuted as a combined monochrome terminal
 and computer utilizing the Data Board 4680 bus and powered by the Z80
-processor. Following this, in 1978, the ABC 80 was introduced as a Z80-based
+processor. Following this, in 1978, the ABC80 was introduced as a Z80-based
 monochrome home computer, also with a variation as the "ABC-bus", which
 could connect to Data Board 4680.
 
-By 1981, the ABC 800 emerged as an enhanced model for both office
+By 1981, the ABC800 emerged as an enhanced model for both office
 and home use, equipped with 32 KB of RAM and featuring color graphics.
-And as we know, in 1983 the ABC 802 was launched as a variant of the
+And as we know, in 1983 the ABC802 was launched as a variant of the
 ABC 800, offering 64 KB of RAM, with 32 KB designated for use as a RAM disk.
 Or the alternative use: as a 64 KB CP/M machine.
-Further enhancing the lineup was the ABC 806, which featured
+Further enhancing the lineup was the ABC806, which featured
 160 KB of RAM, with 128 KB allocated as a RAM disk. Also
 with enhanced graphics. All of these computers were in fact based on the
 Data Board 4680 bus.
@@ -241,11 +248,12 @@ A self-taught engineer, Karlsson early on realise the importance of the "bus"[^b
 but also the abstraction or generalisations of the "bus". But as technology progressed,
 the bus also had to change. When 16-bit  processors came along, and Unix
 became a topic of interest, the bus also had to adapt.
-Dataindustrier AB, alternatively called DIAB AB later, started by Karlsson in 1971,
-became one of Swedens primary designer for microcomputers. No other company
-nationally made such a success in this market with their own design. Lars Karlsson
-left Sweden for USA in 1983, to focus on Data Board 4680 and the future,
-but also then sold shares of the company he once started.
+Dataindustrier AB, alternatively called by the acronym DIAB AB later,
+started by Karlsson in 1971, became one of Swedens primary designer for
+microcomputers. No other company nationally made such a success in this
+market with their own design. Lars Karlsson left Sweden for USA in 1983,
+to focus on Data Board 4680 and the future, but also then sold shares of
+the company he once started.
 
 [^diab]: https://sv.wikipedia.org/wiki/Dataindustrier_AB
 [^bus]: https://en.wikipedia.org/wiki/Bus_(computing)
