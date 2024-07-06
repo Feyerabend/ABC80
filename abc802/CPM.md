@@ -155,7 +155,7 @@ a performance bottleneck. Additionally, the connectors were not robust, leading
 to mechanical issues and the need for frequent maintenance. As newer, more
 efficient bus standards like the ISA (internal 16-bit of IBM PC/AT) emerged,
 the S-100 bus quickly became outdated, struggling to keep
-up with evolving hardware capabilities.
+up with evolving hardware capabilities.[^buses]
 
 CP/M, originally designed for 8-bit microprocessors, had several drawbacks
 that limited its effectiveness as computing technology advanced. Its memory
@@ -177,6 +177,9 @@ Furthermore, the existence of many variations of CP/M created by different
 hardware manufacturers led to compatibility issues, with software written for one version
 often not running correctly on another. These limitations collectively contributed to
 CP/M's decline as a previous dominant operating system.
+
+[^buses]: Some technical principals of the contemporary bus and some
+of its problems can be read at: https://en.wikipedia.org/wiki/Bus_(computing)#Minis_and_micros
 
 
 #### Comment
