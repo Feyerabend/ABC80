@@ -226,9 +226,9 @@ could connect to Data Board 4680.
 
 By 1981, the ABC800 emerged as an enhanced model for both office
 and home use, equipped with 32 KB of RAM and featuring color graphics.
-And as we know, in 1983 the ABC802 was launched as a variant of the
+__And as we know, in 1983 the ABC802 was launched as a variant of the
 ABC 800, offering 64 KB of RAM, with 32 KB designated for use as a RAM disk.
-Or the alternative use: as a 64 KB CP/M machine.
+Or the alternative use: as a 64 KB CP/M machine.__
 Further enhancing the lineup was the ABC806, which featured
 160 KB of RAM, with 128 KB allocated as a RAM disk. Also
 with enhanced graphics. All of these computers were in fact based on the
@@ -306,7 +306,7 @@ But there was at least one group more: they bet on *UNIX* as the future.[^Xenix]
 Unix was developed in the late 1960s and early 1970s at AT&T's Bell Labs by
 Ken Thompson, Dennis Ritchie, and some others. That is years before CP/M.
 Initially, it was a small, flexible operating system for the prevalent and
-current *minicomputers* (most famously the PDP/11). Thus it was aimed at
+current *minicomputers* (most famously the PDP-11). Thus it was aimed at
 significantly different computers than CP/M. But Unix quickly gained popularity
 in academic and research institutions due to its portability, powerful
 features, and the availability of its source code for educational purposes.
