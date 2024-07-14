@@ -373,6 +373,9 @@ surrounding the ABC802 and its relatives.
 [^D_NIX]: https://sv.wikipedia.org/wiki/D-NIX
 [^ABC1600]: https://sv.wikipedia.org/wiki/ABC_1600
 [^ABC9000]: https://sv.wikipedia.org/wiki/DIAB_Serie_90
+https://www.abc80.net/archive/luxor/DS90/reklam/8506-DIAB-DS90-Multi-user-16-32-bit-supermicro-computer.pdf
+&
+https://www.abc80.net/archive/luxor/DS90/Ett-helt-nytt-systemt%c3%a4nkande-fr%c3%a5n-dataindustrier.pdf
 [^bro]: Image above taken from: https://www.abc80.net/archive/luxor/ABC1600/1986-System-ABC-1600-och-ABC-9000.pdf
 [^war]: https://en.wikipedia.org/wiki/Unix_wars
 
