@@ -522,9 +522,9 @@ with adaptability of MSBASIC.)
 [^chatgpt]: This chapter has been derived from chatting with ChatGPT and other current LLMs.
 We chatted and came to this reasonable conclusion and summary of facts.
 Also some sources:
-https://en.wikipedia.org/wiki/CP/M,
-https://en.wikipedia.org/wiki/History_of_Unix,
-and https://en.wikipedia.org/wiki/MS-DOS & https://en.wikipedia.org/wiki/IBM_PC_DOS.
+CP/M https://en.wikipedia.org/wiki/CP/M & CP/M-86 https://en.wikipedia.org/wiki/CP/M-86,
+UNIX https://en.wikipedia.org/wiki/History_of_Unix,
+and MS-DOS https://en.wikipedia.org/wiki/MS-DOS & IBM PC DOS https://en.wikipedia.org/wiki/IBM_PC_DOS.
 
 
 ## References
