@@ -461,5 +461,5 @@ this respect had reached a dead end.
 - Lundgren, Jan & Thornell, Sören, *BASIC II boken*, 1. uppl., Emmdata, Umeå, 1982.
 - Lundgren, Jan & Thornell, Sören, *BASIC II boken för ABC 802*, 1. uppl., Emmdata, Umeå, 1983.
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978 [URL](https://www.abc80.org/docs/Mikrodatorns_ABC.pdf).
-- Sjöström, Roland, Positionering under strategisk osäkerhet Vol. 1 En studie av positionering i en ny bransch, Unitr., Linköping, 1996.
-- Sjöström, Roland, Positionering under strategisk osäkerhet Vol. 2 Luxor datorer och persondatorbranschen, Unitr., Linköping, 1996.
+- Sjöström, Roland, *Positionering under strategisk osäkerhet Vol. 1 En studie av positionering i en ny bransch*, Unitr., Linköping, 1996.
+- Sjöström, Roland, *Positionering under strategisk osäkerhet Vol. 2 Luxor datorer och persondatorbranschen*, Unitr., Linköping, 1996.
