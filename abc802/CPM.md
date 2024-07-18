@@ -528,3 +528,4 @@ We chatted and came to this reasonable conclusion and summary of facts.
 - *Bit för bit med ABC 800*, Luxor datorer, Motala, 1984.
 - Lundgren, Jan & Thornell, Sören, *BASIC II boken*, 1. uppl., Emmdata, Umeå, 1982.
 - Lundgren, Jan & Thornell, Sören, *BASIC II boken för ABC 802*, 1. uppl., Emmdata, Umeå, 1983.
+- Zaks, Rodnay, *CP/M handboken med MP/M*, Pagina, Stockholm, 1982.
