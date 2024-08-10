@@ -368,6 +368,8 @@ computer in these regards. In certain versions they can do better
 graphics, though.
 [^bbcs]: http://forum.6502.org/viewtopic.php?f=1&t=6323
 
+![ABC802](../assets/images/basic2.png)
+
 
 ## Concluding remarks
 
