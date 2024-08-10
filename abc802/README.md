@@ -44,6 +44,9 @@ number types in trade-off between speed and precision. Thus making it versatile 
 http://www.roylongbottom.org.uk/classic.htm
 
 
+![Benchmarks from Mikrodatorn](../assets/images/bench1.png)
+
+
 ### ABC802
 
 Some relevant specs, ABC802 was introduced in Feb. 1983:
