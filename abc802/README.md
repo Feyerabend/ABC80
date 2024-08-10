@@ -1,5 +1,6 @@
 
-![ABC802](../assets/images/abc802-front.jpg)
+![Benchmarks from Mikrodatorn](../assets/images/bench1.png)
+
 
 # BENCHMARKS
 
@@ -44,7 +45,7 @@ number types in trade-off between speed and precision. Thus making it versatile 
 http://www.roylongbottom.org.uk/classic.htm
 
 
-![Benchmarks from Mikrodatorn](../assets/images/bench1.png)
+![ABC802](../assets/images/abc802-front.jpg)
 
 
 ### ABC802
