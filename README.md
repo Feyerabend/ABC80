@@ -561,6 +561,8 @@ Most simple sample we could come up with that made it to the presentation.
 - Finnved, Johan, *Programvaran i persondatorn i ABC80*, manuskript, Inst. för tillämpad elektronik, Kungl. Tekniska Högskolan, 1979.
 - Hugg, Steven, *Making Games for the Atari 2600: An 8bitworkshop Book*, CreateSpace Independent Publishing Platform, 2016
 - Isaksson, Anders & Kärrsgård, Örjan, *Avancerad programmering på ABC80*, Studentlitt., Lund, 1980
+- Johansson, Magnus, *Smart, fast and beautiful: on rhetoric of technology and computing discourse in Sweden 1955-1995*,
+  Second edition, Linköping University, Department of Technology and Social Change - Tema T, Diss. Linköping : Linköpings universitet, 1997,Linköping, 1997 http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-4695
 - Markesjö, Gunnar, *Mikrodatorns ABC: elektroniken i ett mikrodatorsystem*, 1. uppl., Esselte studium, Stockholm, 1978
 - Montfort, Nick & Bogost, Ian, *Racing the beam: the Atari Video computer system*, MIT Press, Cambridge, Mass., 2009
 - Wolf, Mark J. P. (red.), *The video game explosion: a history from Pong to Playstation and beyond*, Greenwood Press, Westport, Conn., 2008
