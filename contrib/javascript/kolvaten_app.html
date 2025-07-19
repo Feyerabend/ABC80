@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kolväten - Kemisk Nomenklatur</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 20, 40, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .header p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .structure-panel {
+            flex: 2;
+            background: rgba(30, 60, 120, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+        }
+        
+        .control-panel {
+            flex: 1;
+            background: rgba(60, 30, 120, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #9C27B0;
+        }
+        
+        #moleculeCanvas {
+            border: 2px solid #333;
+            background: #fff;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #9C27B0;
+            box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
+        }
+        
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        button {
+            padding: 12px 20px;
+            margin: 8px 4px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:hover {
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .help-button {
+            background: linear-gradient(45deg, #9C27B0, #7B1FA2);
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .help-button:hover {
+            background: linear-gradient(45deg, #7B1FA2, #9C27B0);
+        }
+        
+        .answer {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            min-height: 20px;
+        }
+        
+        .answer.correct {
+            background: rgba(76, 175, 80, 0.4);
+            color: #4CAF50;
+        }
+        
+        .answer.incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+            color: #f44336;
+        }
+        
+        .info-panel {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid #FFC107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .rules {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .rules h3 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+        
+        .rules ol {
+            padding-left: 20px;
+        }
+        
+        .rules li {
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            #moleculeCanvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KOLVÄTEN</h1>
+            <p>Interaktiv kemisk nomenklatur - Claude.AI 2025</p>
+            <p>Datorn konstruerar slumpmässigt olika kolväten för dig att namnge!</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="structure-panel">
+                <h3 style="color: #4CAF50; text-align: center;">Molekylstruktur</h3>
+                <canvas id="moleculeCanvas" width="600" height="400"></canvas>
+                
+                <div class="input-group">
+                    <label for="guess">Din gissning på namnet:</label>
+                    <input type="text" id="guess" placeholder="t.ex. 2-metylpropan">
+                </div>
+                
+                <div class="answer" id="answer"></div>
+                
+                <div style="text-align: center;">
+                    <button onclick="checkAnswer()">Kontrollera Svar</button>
+                    <button onclick="generateNewMolecule()">Ny Molekyl</button>
+                    <button onclick="showAnswer()">Visa Svar</button>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <h3 style="color: #9C27B0;">Hjälpfunktioner</h3>
+                
+                <button class="help-button" onclick="showChainLength()">LÄN - Kedjelängd</button>
+                <button class="help-button" onclick="showRadicals()">RAD - Radikaler</button>
+                <button class="help-button" onclick="toggleRules()">REG - Regler</button>
+                
+                <div class="info-panel" id="helpInfo">
+                    Tryck på knapparna ovan för hjälp!
+                </div>
+                
+                <div class="info-panel">
+                    <strong>Namnsystem:</strong><br>
+                    1 C: Metan<br>
+                    2 C: Etan<br>
+                    3 C: Propan<br>
+                    4 C: Butan<br>
+                    5 C: Pentan<br>
+                    6 C: Hexan<br>
+                    7 C: Heptan<br>
+                    8 C: Oktan
+                </div>
+            </div>
+        </div>
+        
+        <div class="rules" id="rules" style="display: none;">
+            <h3>Nomenklaturregler för Kolväten</h3>
+            <ol>
+                <li><strong>Stamkolväte:</strong> Utgå från den längsta ogrenade kolkedjan i föreningens strukturformel. Namnge detta stamkolväte.</li>
+                <li><strong>Numrering:</strong> Numrera kolatomerna i stamkolvätet med början i den ände som har det kortaste avståndet till en sidokedja. Läget av sidokedjorna anges med numren på de kolatomer till vilka de är bundna.</li>
+                <li><strong>Antal grupper:</strong> Ange med förstavelserna di-, tri-, tetra- osv. hur många likadana grupper som binds till stamkolvätet.</li>
+                <li><strong>Alfabetisk ordning:</strong> De grupper som binds till stamkolvätet anges i bokstavsordning.</li>
+            </ol>
+            
+            <h4>Grekiska räkneord:</h4>
+            <p>2: DI, 3: TRI, 4: TETRA, 5: PENTA, 6: HEXA, 7: HEPTA, 8: OKTA, 9: NONA</p>
+        </div>
+    </div>
+
+    <script>
+        let currentMolecule = null;
+        let correctAnswer = "";
+        
+        const alkaneNames = ["metan", "etan", "propan", "butan", "pentan", "hexan", "heptan", "oktan", "nonan", "dekan"];
+        const radicalNames = {1: "metyl", 2: "etyl", 3: "propyl", 4: "butyl"};
+        const prefixes = {2: "di", 3: "tri", 4: "tetra", 5: "penta", 6: "hexa", 7: "hepta", 8: "okta", 9: "nona"};
+        
+        class HydrocarbonGenerator {
+            constructor() {
+                this.canvas = document.getElementById('moleculeCanvas');
+                this.ctx = this.canvas.getContext('2d');
+            }
+            
+            generateMolecule() {
+                // Generera slumpmässig kolvätestruktur
+                const chainLength = 3 + Math.floor(Math.random() * 6); // 3-8 kolatomer
+                const structure = [];
+                
+                // Huvudkedja
+                for (let i = 0; i < chainLength; i++) {
+                    structure.push({
+                        x: 80 + i * 60,
+                        y: 200,
+                        radicals: []
+                    });
+                }
+                
+                // Lägg till sidokedjor slumpmässigt
+                for (let i = 1; i < chainLength - 1; i++) {
+                    if (Math.random() < 0.3) { // 30% chans för sidokedja
+                        const radicalSize = 1 + Math.floor(Math.random() * 2); // 1-2 kolatomer
+                        const position = Math.random() < 0.5 ? 'up' : 'down';
+                        structure[i].radicals.push({
+                            size: radicalSize,
+                            position: position
+                        });
+                    }
+                }
+                
+                return {
+                    structure: structure,
+                    chainLength: chainLength
+                };
+            }
+            
+            drawMolecule(molecule) {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = '#f8f9fa';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                const structure = molecule.structure;
+                
+                // Rita huvudkedjan
+                for (let i = 0; i < structure.length; i++) {
+                    const carbon = structure[i];
+                    
+                    // Rita bindning till nästa kolatom
+                    if (i < structure.length - 1) {
+                        this.ctx.strokeStyle = '#333';
+                        this.ctx.lineWidth = 3;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(carbon.x + 15, carbon.y);
+                        this.ctx.lineTo(structure[i + 1].x - 15, structure[i + 1].y);
+                        this.ctx.stroke();
+                    }
+                    
+                    // Rita kolatom
+                    this.ctx.fillStyle = '#444';
+                    this.ctx.beginPath();
+                    this.ctx.arc(carbon.x, carbon.y, 18, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                    
+                    // Rita C-märkning
+                    this.ctx.fillStyle = '#fff';
+                    this.ctx.font = 'bold 14px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.fillText('C', carbon.x, carbon.y);
+                    
+                    // Rita positionsnummer
+                    this.ctx.fillStyle = '#666';
+                    this.ctx.font = '12px Arial';
+                    this.ctx.fillText((i + 1).toString(), carbon.x, carbon.y - 35);
+                    
+                    // Rita sidokedjor
+                    carbon.radicals.forEach(radical => {
+                        const yOffset = radical.position === 'up' ? -60 : 60;
+                        const radicalY = carbon.y + yOffset;
+                        
+                        // Rita bindning till sidokedja
+                        this.ctx.strokeStyle = '#333';
+                        this.ctx.lineWidth = 2;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(carbon.x, carbon.y + (radical.position === 'up' ? -18 : 18));
+                        this.ctx.lineTo(carbon.x, radicalY + (radical.position === 'up' ? 15 : -15));
+                        this.ctx.stroke();
+                        
+                        // Rita sidokedjans kolatomer
+                        for (let j = 0; j < radical.size; j++) {
+                            const radicalX = carbon.x + j * 40;
+                            const currentRadicalY = radicalY + (j > 0 ? 0 : 0);
+                            
+                            if (j > 0) {
+                                // Rita bindning mellan kolatomer i sidokedja
+                                this.ctx.beginPath();
+                                this.ctx.moveTo(radicalX - 25, currentRadicalY);
+                                this.ctx.lineTo(radicalX - 15, currentRadicalY);
+                                this.ctx.stroke();
+                            }
+                            
+                            // Rita kolatom i sidokedja
+                            this.ctx.fillStyle = '#666';
+                            this.ctx.beginPath();
+                            this.ctx.arc(radicalX, currentRadicalY, 12, 0, 2 * Math.PI);
+                            this.ctx.fill();
+                            
+                            this.ctx.fillStyle = '#fff';
+                            this.ctx.font = '10px Arial';
+                            this.ctx.fillText('C', radicalX, currentRadicalY + 1);
+                        }
+                    });
+                }
+            }
+            
+            generateName(molecule) {
+                const structure = molecule.structure;
+                const chainLength = molecule.chainLength;
+                
+                // Samla alla sidokedjor med deras positioner
+                const radicalGroups = {};
+                
+                structure.forEach((carbon, index) => {
+                    carbon.radicals.forEach(radical => {
+                        const radicalName = radicalNames[radical.size];
+                        const position = index + 1;
+                        
+                        if (!radicalGroups[radicalName]) {
+                            radicalGroups[radicalName] = [];
+                        }
+                        radicalGroups[radicalName].push(position);
+                    });
+                });
+                
+                // Bygg namnet
+                let name = "";
+                
+                // Sortera radikaler alfabetiskt
+                const sortedRadicals = Object.keys(radicalGroups).sort();
+                
+                sortedRadicals.forEach(radicalName => {
+                    const positions = radicalGroups[radicalName].sort((a, b) => a - b);
+                    
+                    if (positions.length > 1) {
+                        const prefix = prefixes[positions.length];
+                        name += positions.join(",") + "-" + prefix + radicalName;
+                    } else {
+                        name += positions[0] + "-" + radicalName;
+                    }
+                });
+                
+                // Lägg till huvudkedjan
+                name += alkaneNames[chainLength - 1];
+                
+                return name || alkaneNames[chainLength - 1];
+            }
+        }
+        
+        const generator = new HydrocarbonGenerator();
+        
+        function generateNewMolecule() {
+            currentMolecule = generator.generateMolecule();
+            correctAnswer = generator.generateName(currentMolecule);
+            generator.drawMolecule(currentMolecule);
+            
+            document.getElementById('guess').value = '';
+            document.getElementById('answer').textContent = '';
+            document.getElementById('answer').className = 'answer';
+        }
+        
+        function checkAnswer() {
+            const guess = document.getElementById('guess').value.toLowerCase().trim();
+            const answerDiv = document.getElementById('answer');
+            
+            if (!currentMolecule) {
+                answerDiv.textContent = 'Generera först en molekyl!';
+                answerDiv.className = 'answer incorrect';
+                return;
+            }
+            
+            if (!guess) {
+                answerDiv.textContent = 'Skriv in din gissning först!';
+                answerDiv.className = 'answer incorrect';
+                return;
+            }
+            
+            if (guess === correctAnswer.toLowerCase()) {
+                answerDiv.textContent = 'Rätt! Bra jobbat!';
+                answerDiv.className = 'answer correct';
+            } else {
+                answerDiv.textContent = `Fel. Rätt svar: ${correctAnswer}`;
+                answerDiv.className = 'answer incorrect';
+            }
+        }
+        
+        function showAnswer() {
+            const answerDiv = document.getElementById('answer');
+            if (!currentMolecule) {
+                answerDiv.textContent = 'Generera först en molekyl!';
+                answerDiv.className = 'answer incorrect';
+                return;
+            }
+            
+            answerDiv.textContent = `Rätt svar: ${correctAnswer}`;
+            answerDiv.className = 'answer';
+        }
+        
+        function showChainLength() {
+            const helpDiv = document.getElementById('helpInfo');
+            if (!currentMolecule) {
+                helpDiv.innerHTML = '<strong>Kedjelängd:</strong><br>Generera först en molekyl för att se kedjelängden!';
+                return;
+            }
+            
+            const chainLength = currentMolecule.chainLength;
+            helpDiv.innerHTML = `<strong>Kedjelängd:</strong><br>Huvudkedjan har ${chainLength} kolatomer.<br>Detta ger grundnamnet: ${alkaneNames[chainLength - 1]}`;
+        }
+        
+        function showRadicals() {
+            const helpDiv = document.getElementById('helpInfo');
+            if (!currentMolecule) {
+                helpDiv.innerHTML = '<strong>Radikaler:</strong><br>Generera först en molekyl för att se radikalerna!';
+                return;
+            }
+            
+            let radicalInfo = '<strong>Sidokedjor (Radikaler):</strong><br>';
+            let hasRadicals = false;
+            
+            currentMolecule.structure.forEach((carbon, index) => {
+                carbon.radicals.forEach(radical => {
+                    hasRadicals = true;
+                    const radicalName = radicalNames[radical.size];
+                    const position = index + 1;
+                    radicalInfo += `Position ${position}: ${radicalName}<br>`;
+                });
+            });
+            
+            if (!hasRadicals) {
+                radicalInfo += 'Inga sidokedjor i denna molekyl.';
+            }
+            
+            helpDiv.innerHTML = radicalInfo;
+        }
+        
+        function toggleRules() {
+            const rulesDiv = document.getElementById('rules');
+            if (rulesDiv.style.display === 'none') {
+                rulesDiv.style.display = 'block';
+            } else {
+                rulesDiv.style.display = 'none';
+            }
+        }
+        
+        // Starta med en molekyl när sidan laddas
+        generateNewMolecule();
+        
+        // Lägg till Enter-tangent support för input-fältet
+        document.getElementById('guess').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    </script>
+</body>
+</html>
