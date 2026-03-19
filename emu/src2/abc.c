@@ -294,7 +294,7 @@ static bool try_file_command(void) {
         fwrite(m + prog_start, 1, prog_end - prog_start, f);
         fclose(f);
         char msg[48];
-        snprintf(msg, sizeof(msg), "SAVED  %u BYTES", (unsigned)(prog_end - prog_start));
+        snprintf(msg, sizeof(msg), "SAVED %u BYTES", (unsigned)(prog_end - prog_start));
         screen_msg(msg);
 
     } else {
@@ -401,9 +401,11 @@ static const char * abc80_to_utf8(uint8_t c) {
         case 0x5B: return "\xC3\x84";  // Ä
         case 0x5C: return "\xC3\x96";  // Ö
         case 0x5D: return "\xC3\x85";  // Å
+        case 0x5E: return "\xC3\x9C";  // Ü
         case 0x7B: return "\xC3\xA4";  // ä
         case 0x7C: return "\xC3\xB6";  // ö
         case 0x7D: return "\xC3\xA5";  // å
+        case 0x7E: return "\xC3\xBC";  // ü
         case 0x60: return "\xC3\xA9";  // é
         default:   return NULL;        // plain ASCII, use mvaddch
     }
