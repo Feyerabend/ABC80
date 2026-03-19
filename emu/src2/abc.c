@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <locale.h>
 #include <signal.h>
+#include <unistd.h>
 #include <time.h>
 #include <ncurses.h>
 
@@ -49,6 +50,7 @@ static const uint16_t rowstart[24] = {
 
 #define KB_PORT     0x38
 #define KB_INT_VEC  0x34
+#define IEC_PORT    0x3A   // cassette / IEC serial bus
 
 #define STROBE_HZ          50
 #define STEPS_PER_STROBE   (3000000 / STROBE_HZ)
@@ -141,8 +143,9 @@ static uint8_t read_key(void) {
             getch(); getch(); getch();  // discard three continuation bytes
             return 0;
 
-        // case KEY_LEFT:  return 0x0?;  // cursor left  (not resolved yet)
-        // case KEY_RIGHT: return 0x0?;  // cursor right  -"-
+        // as far as I remeber the editing ..
+        case KEY_LEFT:  return 0x08;  // cursor left (erasing)
+        case KEY_RIGHT: return 0x09;  // cursor right (brings characters "out")
 
         default:
             if (ch >= 0x20 && ch <= 0x7E)
@@ -168,7 +171,8 @@ static uint8_t read_key(void) {
 // (Not sure how close it is to the real situation.)
 
 // Read the current input row from screen RAM into buf.
-// Strips bit 7 (ABC80 attribute), removes trailing spaces, null-terminates.
+// Strips bit 7 (ABC80 attribute), removes trailing spaces,
+// null-terminates.
 static void read_screen_line(char *buf, int buflen) {
     uint8_t row = m[0xFDF3];
     if (row >= 24) { buf[0] = 0; return; }
@@ -187,8 +191,8 @@ static void read_screen_line(char *buf, int buflen) {
 // Display a status message in response to one of our intercepted commands.
 //
 // The ABC80 line input routine maintains 2 parallel buffers:
-//   - Screen RAM   (non-linear, via rowstart[]) - what is visible on screen (BUF1?)
-//   - $FE40-$FEB7  (flat, 120-byte)             - what BASIC tokenises on CR (BUF2)
+//  - Screen RAM  (non-linear, via rowstart[]) - what is visible on screen (BUF1?)
+//  - $FE40-$FEB7 (flat, 120-byte)             - what BASIC tokenises on CR (BUF2)
 //
 //   1. Write the message into screen RAM at the CURRENT cursor row,
 //      overwriting the command the user typed. Immediately visible.
@@ -357,28 +361,36 @@ static void keyboard_poll(void) {
     m[0xFDF5] = pending_key;
 }
 
-// PENDING: add polling 56 or was it 58?
 u8 port_in(u8 port) {
-    if (port != KB_PORT)
-        return 0;
-
-    if (key_reads <= 0)
-        return 0;
-
-    uint8_t val = pending_key;
-    if (--key_reads == 0) {
-        pending_key = 0;
-        m[0xFDF5]   = 0;
+    // INP(56)
+    if (port == KB_PORT) {
+        if (key_reads <= 0)
+            return 0;
+        uint8_t val = pending_key;
+        if (--key_reads == 0) {
+            pending_key = 0;
+            m[0xFDF5]   = 0;
+        }
+        return val;
     }
-    return val;
+
+    // IEC/cassette bus: all lines idle-high = no device connected.
+    // Returning 0 would hold every line low, locking up the bus handshake.
+    // INP(58)
+    if (port == IEC_PORT)
+        return 0xFF;
+
+    return 0;
 }
 
-// PENDING: add bell
 void port_out(u8 port, u8 val) {
-    if (port == 6 && val == 131) {
-        putchar('\a');
-        fflush(stdout);
-    }
+    if (port != 6) return;
+    // ROM writes to port 6 for sound:
+    //   $00 = silence/reset  (first half of BEL sequence, ignore)
+    //   $83 = BEL tone       (second half of BEL: OUT 6,$00 then OUT 6,$83)
+    //   $80 = break/STOP sound (keyboard ISR when Ctrl-C/break is detected)
+    if (val == 0x83 || val == 0x80)
+        write(STDOUT_FILENO, "\a", 1);
 }
 
 // Map ABC80 character codes to printable UTF-8 for screen display.
