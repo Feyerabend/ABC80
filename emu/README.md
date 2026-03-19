@@ -31,6 +31,17 @@ Create a folder `build` in parallel to (same parent as) `src`. From the
 > bin/abc
 ```
 
+Now there is a second version, which can load and save programs directly
+to the desktop/laptop, on the additional commands: `ESAVE`, `ELOAD` and
+look at the current folder for programs `ELIB`. Assume `ncurses` already
+installed ..
+
+```sh
+> cd src2
+> make
+> ./abc80
+```
+
 
 ## License
 
