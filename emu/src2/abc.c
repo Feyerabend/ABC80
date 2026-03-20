@@ -1,5 +1,13 @@
 #define _DEFAULT_SOURCE
 // ABC80 emulator
+// This emulator has only been tested on macOS with ncurses installed.
+// There are here many different ways of interacting with the BASIC
+// interpreter. Many of them either intercepts commands from the
+// terminal keboard, before they reach the interpreter. Others catch
+// the output buffers before they reach the screen. Another is to fake
+// a device to grab the listing of a program for saving.
+// Emulation is not pretty, but somehow it just may work.
+// No command yet exists for loading a listed program (.BAS).
 
 #include <stdio.h>
 #include <string.h>
@@ -58,6 +66,10 @@ static const uint16_t rowstart[24] = {
 static uint8_t pending_key = 0;
 static int     key_reads   = 0;
 static bool    done        = false;
+
+// ELIST capture state.
+// list_out is non-NULL while a listing is being captured.
+static FILE *list_out = NULL;
 
 static long long now_ns(void) {
     struct timespec ts;
@@ -245,8 +257,9 @@ static bool try_file_command(void) {
     bool is_save  = (strncasecmp(line, "ESAVE", 5) == 0);
     bool is_load  = (strncasecmp(line, "ELOAD", 5) == 0);
     bool is_list  = (strncasecmp(line, "ELIB", 5) == 0);
+    bool is_elist = (strncasecmp(line, "ELIST", 5) == 0);
 
-    if (!is_save && !is_load && !is_list)
+    if (!is_save && !is_load && !is_list && !is_elist)
         return false;
 
     uint16_t prog_start = (uint16_t)(m[0xFE1C] | (m[0xFE1D] << 8));
@@ -274,6 +287,33 @@ static bool try_file_command(void) {
             closedir(dir);
         }
         screen_msg(pos > 0 ? listbuf : "NO FILES");
+        return true;
+    }
+
+    if (is_elist) {
+        // ELIST <filename> -- capture the output of BASIC's LIST command to a
+        // plain-text file.  We open the file here, then patch the input buffer
+        // so BASIC sees "LIST" (instead of "ELIST ..") and runs it normally.
+        // The run() loop intercepts each output line via a PC hook at 0x0B79.
+        char fname[40];
+        if (!extract_filename(line, 5, fname, sizeof(fname))) {
+            screen_msg("FILENAME MISSING");
+            return true;
+        }
+        // extract_filename adds .BAC by default; we want .BAS instead.
+        char *dot = strrchr(fname, '.');
+        if (dot && strcasecmp(dot, ".BAC") == 0)
+            strcpy(dot, ".BAS");
+
+        if (list_out) fclose(list_out);
+        list_out = fopen(fname, "w");
+        if (!list_out) { screen_msg("CANNOT CREATE FILE"); return true; }
+
+        // Rewrite $FE40 so BASIC sees LIST"E" (device mode).
+        // The quoted argument triggers the non-interactive device path in the
+        // ROM: every line is output without pausing to wait for keypresses.
+        m[0xFE40]='L'; m[0xFE41]='I'; m[0xFE42]='S'; m[0xFE43]='T';
+        m[0xFE44]='"'; m[0xFE45]='E'; m[0xFE46]='"'; m[0xFE47]=0x0D;
         return true;
     }
 
@@ -466,6 +506,35 @@ static void run(void) {
     unsigned int steps       = 0;
 
     while (!done) {
+        // ELIST capture — device mode hooks (all checked before step()).
+        //
+        // PC=0x0B74: ROM is about to execute CALL 0x0896 (device output).
+        //   BC = byte count of the detokenised line in m[0xFE40..0xFE40+BC-1].
+        //   We capture it here and skip the CALL by advancing PC to 0x0B77
+        //   (the JR that follows), so no IEC bus I/O happens.
+        if (list_out && pc == 0x0B74) {
+            uint16_t count = ((uint16_t)b << 8) | c;
+            for (uint16_t i = 0; i < count; i++) {
+                uint8_t ch = m[0xFE40 + i];
+                const char *utf8 = abc80_to_utf8(ch);
+                if (utf8)            fputs(utf8, list_out);
+                else if (ch == 0x0A) fputc('\n', list_out);
+                else if (ch >= 0x20) fputc((char)ch, list_out);
+            }
+            pc = 0x0B77;  // skip CALL 0x0896; step() will run JR-->0x0B7C
+        }
+
+        // PC=0x0B9D: ROM is about to execute CALL NZ,0x087F (device close).
+        //   This is reached only when the last program line has been listed.
+        //   We close our file here and skip the device-close CALL so no IEC
+        //   bus I/O is attempted.
+        if (list_out && pc == 0x0B9D) {
+            fclose(list_out);
+            list_out = NULL;
+            screen_msg("LISTING SAVED");
+            pc = 0x0BA0;  // skip CALL NZ,0x087F; step() runs frame teardown
+        }
+
         step();
         steps++;
 
