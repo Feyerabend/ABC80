@@ -49,6 +49,7 @@ a recommended reading in this case is:
 - Markesjö, (1978) G. *Mikrodatorns ABC: Elektroniken i ett mikrodatorsystem.*
   Esselte Studium.
 
+![New Emu](./../assets/images/ABCv2.png)
 
 ## License
 
