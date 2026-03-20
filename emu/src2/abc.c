@@ -7,7 +7,6 @@
 // the output buffers before they reach the screen. Another is to fake
 // a device to grab the listing of a program for saving.
 // Emulation is not pretty, but somehow it just may work.
-// No command yet exists for loading a listed program (.BAS).
 
 #include <stdio.h>
 #include <string.h>
@@ -56,9 +55,13 @@ static const uint16_t rowstart[24] = {
     0x7C50, 0x7CD0, 0x7D50, 0x7DD0, 0x7E50, 0x7ED0, 0x7F50, 0x7FD0
 };
 
-#define KB_PORT     0x38
+#define KB_PORT     0x38   // data port A + 0x.. ctrl port A -> keyboard
 #define KB_INT_VEC  0x34
-#define IEC_PORT    0x3A   // PIO B
+#define IEC_PORT    0x3A   // data port B
+
+// A strobe signal is send every 50ms from the real keyboard
+// If you do not emulate this, the interpreter will be acting up,
+// scrolling by itself, uncontrolled
 #define STROBE_HZ          50
 #define STEPS_PER_STROBE   (3000000 / STROBE_HZ)
 #define STEPS_PER_REFRESH  5000
@@ -68,8 +71,23 @@ static int     key_reads   = 0;
 static bool    done        = false;
 
 // ELIST capture state.
+// This time we go through the device list in the implementation.
 // list_out is non-NULL while a listing is being captured.
 static FILE *list_out = NULL;
+
+// ETEXT inject state.
+// We feed each line back to BASIC one character at a time, exactly as
+// if the user had typed it.  BASIC's keyboard ISR then echoes each char,
+// builds m[0xFE40], and tokenises the line on the final CR — same path
+// as real keyboard input, so no tokenizer hacks needed.
+static FILE    *etext_file = NULL;
+static uint8_t  etext_buf[128]; // current line in ABC80 codes, CR-terminated
+static int      etext_pos  = 0; // next char index to inject from etext_buf
+static int      etext_len  = 0; // total chars including final CR
+static int      etext_delay = 0;
+#define ETEXT_LINE_DELAY 100000 // ~33 ms after CR: time for BASIC to tokenise+store
+
+
 
 static long long now_ns(void) {
     struct timespec ts;
@@ -89,6 +107,7 @@ static uint8_t read_key(void) {
     // Now we know what (if anything) followed it.
     if (esc_pending) {
         esc_pending = false;
+
         if (ch == ERR) {
             // Nothing followed the ESC -> it was a real bare ESC key -> quit.
             done = true;
@@ -112,10 +131,10 @@ static uint8_t read_key(void) {
             esc_pending = true;
             return 0;
 
-        case 0x7F:                           // DEL
-        case 0x08:  return 0x08;             // backspace
-        case 0x0A:                           // LF
-        case 0x0D:  return 0x0D;             // CR -> BASIC expects CR
+        case 0x7F:                   // DEL
+        case 0x08:  return 0x08;     // backspace
+        case 0x0A:                   // LF
+        case 0x0D:  return 0x0D;     // CR -> BASIC expects CR
 
         // UTF-8 lead byte 0xC2 (U+0080..U+00BF): ¤ and friends.
         case 0xC2: {
@@ -143,8 +162,8 @@ static uint8_t read_key(void) {
             }
         }
 
-        // Silently consume any other multi-byte UTF-8 lead bytes (e.g. 0xE2
-        // for €) so stray continuation bytes don't pollute later reads.
+        // Silently consume any other multi-byte UTF-8 lead bytes
+        // (e.g. 0xE2 for €) so stray continuation bytes don't pollute later reads.
         case 0xE2: case 0xE3: case 0xE4: case 0xE5: case 0xE6: case 0xE7:
         case 0xE8: case 0xE9: case 0xEA: case 0xEB: case 0xEC: case 0xED:
         case 0xEE: case 0xEF:
@@ -168,10 +187,9 @@ static uint8_t read_key(void) {
 
 // ELOAD / ESAVE / ELIB -- host file I/O for BASIC programs
 // -----------------------------------------------------------
-// The ABC80 line input buffer in screen RAM. The current input row
-// is m[0xFDF3] (index into rowstart[]). On CR we read that row,
-// check for our commands and handle them in C before BASIC
-// sees the line.
+// The ABC80 line input buffer IS the screen RAM. The current input row
+// is m[0xFDF3] (index into rowstart[]). On CR we read that row, check
+// for our commands and handle them in C before BASIC sees the line.
 //
 // BASIC program memory (from ROM analysis):
 //   m[0xFE1C..1D] = program start address (set by RAM test at boot)
@@ -179,7 +197,8 @@ static uint8_t read_key(void) {
 //   m[0xFE20..21] = end of variable area / start of free space
 //
 // We save/load the raw tokenised bytes [start, end) as a flat .BAC file.
-// (Not sure how close it is to the real situation.)
+// (Not sure how close this is to the real situation, but it works
+// locally at least.)
 
 // Read the current input row from screen RAM into buf.
 // Strips bit 7 (ABC80 attribute), removes trailing spaces,
@@ -258,8 +277,9 @@ static bool try_file_command(void) {
     bool is_load  = (strncasecmp(line, "ELOAD", 5) == 0);
     bool is_list  = (strncasecmp(line, "ELIB", 5) == 0);
     bool is_elist = (strncasecmp(line, "ELIST", 5) == 0);
+    bool is_etext = (strncasecmp(line, "ETEXT", 5) == 0);
 
-    if (!is_save && !is_load && !is_list && !is_elist)
+    if (!is_save && !is_load && !is_list && !is_elist && !is_etext)
         return false;
 
     uint16_t prog_start = (uint16_t)(m[0xFE1C] | (m[0xFE1D] << 8));
@@ -314,6 +334,27 @@ static bool try_file_command(void) {
         // ROM: every line is output without pausing to wait for keypresses.
         m[0xFE40]='L'; m[0xFE41]='I'; m[0xFE42]='S'; m[0xFE43]='T';
         m[0xFE44]='"'; m[0xFE45]='E'; m[0xFE46]='"'; m[0xFE47]=0x0D;
+        return true;
+    }
+
+    if (is_etext) {
+        // ETEXT <filename> -- read a plain-text BASIC listing back into the
+        // interpreter line by line.  We open the file here; the run() loop
+        // injects each line into $FE40 and delivers a CR so BASIC tokenises
+        // and stores it exactly as if the user had typed it.
+        char fname[40];
+        if (!extract_filename(line, 5, fname, sizeof(fname))) {
+            screen_msg("FILENAME MISSING");
+            return true;
+        }
+        char *dot = strrchr(fname, '.');
+        if (dot && strcasecmp(dot, ".BAC") == 0) strcpy(dot, ".BAS");
+
+        if (etext_file) { fclose(etext_file); etext_file = NULL; }
+        etext_file = fopen(fname, "r");
+        if (!etext_file) { screen_msg("FILE NOT FOUND"); return true; }
+        etext_delay = ETEXT_LINE_DELAY;
+        screen_msg("LOADING..");
         return true;
     }
 
@@ -521,7 +562,7 @@ static void run(void) {
                 else if (ch == 0x0A) fputc('\n', list_out);
                 else if (ch >= 0x20) fputc((char)ch, list_out);
             }
-            pc = 0x0B77;  // skip CALL 0x0896; step() will run JR-->0x0B7C
+            pc = 0x0B77;  // skip CALL 0x0896; step() will run JR→0x0B7C
         }
 
         // PC=0x0B9D: ROM is about to execute CALL NZ,0x087F (device close).
@@ -537,6 +578,74 @@ static void run(void) {
 
         step();
         steps++;
+
+        // ETEXT injection: feed characters one at a time to BASIC's keyboard ISR.
+        // After the final CR we pause (etext_delay) so BASIC can tokenise and
+        // store the line before the next one arrives.
+        if (etext_delay > 0) etext_delay--;
+
+        if (etext_file && etext_delay == 0 && pending_key == 0) {
+            if (etext_pos < etext_len) {
+                // Deliver the next character of the current line.
+                uint8_t ch  = etext_buf[etext_pos++];
+                pending_key = ch | 0x80;
+                key_reads   = 2;
+                m[0xFDF5]   = pending_key;
+                // After CR give BASIC time to tokenise; normal chars need no delay.
+                if (ch == 0x0D)
+                    etext_delay = ETEXT_LINE_DELAY;
+            } else {
+                // Current line exhausted — load the next one.
+                char rawbuf[128];
+                int rlen = 0;
+                while (!rlen && fgets(rawbuf, sizeof(rawbuf), etext_file)) {
+                    rlen = (int)strlen(rawbuf);
+                    while (rlen > 0 && (rawbuf[rlen-1]=='\n' || rawbuf[rlen-1]=='\r'))
+                        rawbuf[--rlen] = 0;
+                }
+                if (rlen > 0) {
+                    // Translate UTF-8 → ABC80 codes into etext_buf.
+                    int out = 0;
+                    for (int i = 0; rawbuf[i] && out < 118; ) {
+                        unsigned char c  = (unsigned char)rawbuf[i];
+                        unsigned char c2 = (unsigned char)rawbuf[i+1];
+                        if (c == 0xC2 && c2) {
+                            if (c2==0xA4){etext_buf[out++]=0x24;i+=2;continue;}
+                            i++; continue;
+                        }
+                        if (c == 0xC3 && c2) {
+                            switch (c2) {
+                                case 0xA4:etext_buf[out++]=0x7B;i+=2;continue; // ä
+                                case 0xB6:etext_buf[out++]=0x7C;i+=2;continue; // ö
+                                case 0xA5:etext_buf[out++]=0x7D;i+=2;continue; // å
+                                case 0x84:etext_buf[out++]=0x5B;i+=2;continue; // Ä
+                                case 0x96:etext_buf[out++]=0x5C;i+=2;continue; // Ö
+                                case 0x85:etext_buf[out++]=0x5D;i+=2;continue; // Å
+                                case 0xA9:etext_buf[out++]=0x60;i+=2;continue; // é
+                                case 0x9C:etext_buf[out++]=0x5E;i+=2;continue; // Ü
+                                case 0xBC:etext_buf[out++]=0x7E;i+=2;continue; // ü
+                                default:  i++;continue;
+                            }
+                        }
+                        if (c >= 0x20) etext_buf[out++] = c;
+                        i++;
+                    }
+                    etext_buf[out++] = 0x0D;
+                    etext_len = out;
+                    etext_pos = 0;
+                } else {
+                    fclose(etext_file);
+                    etext_file = NULL;
+                    screen_msg("TEXT LOADED");
+                    // Deliver a bare CR so BASIC processes the empty line
+                    // (m[0xFE40]=0x0D set by screen_msg) and ..
+                    pending_key = 0x0D | 0x80;
+                    key_reads   = 2;
+                    m[0xFDF5]   = pending_key;
+                    screen_msg("ABC80"); // fake prompt
+                }
+            }
+        }
 
         keyboard_poll();
 
