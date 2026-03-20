@@ -50,8 +50,7 @@ static const uint16_t rowstart[24] = {
 
 #define KB_PORT     0x38
 #define KB_INT_VEC  0x34
-#define IEC_PORT    0x3A   // cassette / IEC serial bus? or V24? on PIO B?
-
+#define IEC_PORT    0x3A   // PIO B
 #define STROBE_HZ          50
 #define STEPS_PER_STROBE   (3000000 / STROBE_HZ)
 #define STEPS_PER_REFRESH  5000
