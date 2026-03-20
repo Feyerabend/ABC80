@@ -42,9 +42,10 @@ We assume `ncurses` already installed ..
 > ./abc80
 ```
 
-There are many quirks when making an emulator/simulator. Adapting fake hardware
-to present software, may not always make sense. To get deeper into the abyss,
-a recommended reading in this case is:
+There are many quirks when building an emulator or simulator.
+Trying to adapt “fake hardware” to satisfy real software doesn’t
+always make sense, and can introduce its own inconsistencies.
+If you want to go further down that rabbit hole, a good place to start is:
 
 - Markesjö, (1978) G. *Mikrodatorns ABC: Elektroniken i ett mikrodatorsystem.*
   Esselte Studium.
