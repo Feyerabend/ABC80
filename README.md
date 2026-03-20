@@ -23,7 +23,7 @@ is [KOL.TXT](KOL.TXT), of which remain only some fragments, it's not complete.)
 Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 ![Atari VCS/2600](assets/images/Atari-2600.jpg)
-
+ 
 ## Background and intro
 
 But we will return to this program later. Keeping to my own dictum from around the
