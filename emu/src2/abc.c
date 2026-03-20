@@ -546,7 +546,9 @@ static void run(void) {
     long long    next_strobe = now_ns() + strobe_ns;
     unsigned int steps       = 0;
 
+    
     while (!done) {
+
         // ELIST capture — device mode hooks (all checked before step()).
         //
         // PC=0x0B74: ROM is about to execute CALL 0x0896 (device output).
@@ -562,7 +564,7 @@ static void run(void) {
                 else if (ch == 0x0A) fputc('\n', list_out);
                 else if (ch >= 0x20) fputc((char)ch, list_out);
             }
-            pc = 0x0B77;  // skip CALL 0x0896; step() will run JR→0x0B7C
+            pc = 0x0B77;  // skip CALL 0x0896; step() will run JR-->0x0B7C
         }
 
         // PC=0x0B9D: ROM is about to execute CALL NZ,0x087F (device close).
@@ -604,7 +606,7 @@ static void run(void) {
                         rawbuf[--rlen] = 0;
                 }
                 if (rlen > 0) {
-                    // Translate UTF-8 → ABC80 codes into etext_buf.
+                    // Translate UTF-8 --> ABC80 codes into etext_buf.
                     int out = 0;
                     for (int i = 0; rawbuf[i] && out < 118; ) {
                         unsigned char c  = (unsigned char)rawbuf[i];
@@ -642,7 +644,7 @@ static void run(void) {
                     pending_key = 0x0D | 0x80;
                     key_reads   = 2;
                     m[0xFDF5]   = pending_key;
-                    screen_msg("ABC80"); // fake prompt
+                    screen_msg("ABC80"); // ..fake prompt
                 }
             }
         }
