@@ -31,9 +31,9 @@ Create a folder `build` in parallel to (same parent as) `src`. From the
 > bin/abc
 ```
 
-Now there is a second version, which can load and save programs directly
-to the desktop/laptop, on the additional commands: `ESAVE`, `ELOAD` and
-look at the current folder for programs `ELIB`. Assume `ncurses` already
+Now there is a __second version__, which can load and save programs directly
+to the desktop/laptop, on the additional commands: `ESAVE`, `ELOAD`, `ELIST`
+and look at the current folder for programs `ELIB`. We assume `ncurses` already
 installed ..
 
 ```sh
@@ -41,6 +41,13 @@ installed ..
 > make
 > ./abc80
 ```
+
+There are many quirks when making an emulator/simulator. Adapting fake hardware
+to present software, may not always make sense. To get deeper into the abyss,
+a recommended reading in this case is:
+
+- Markesjö, (1978) G. *Mikrodatorns ABC: Elektroniken i ett mikrodatorsystem.*
+  Esselte Studium.
 
 
 ## License
