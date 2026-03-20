@@ -373,7 +373,7 @@ u8 port_in(u8 port) {
         return val;
     }
 
-    // IEC/cassette bus: all lines idle-high = no device connected.
+    // PIO B: all lines idle-high = no device connected.
     // Returning 0 would hold every line low, locking up the bus handshake.
     // INP(58)
     if (port == IEC_PORT)
