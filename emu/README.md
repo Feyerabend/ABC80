@@ -32,7 +32,7 @@ Create a folder `build` in parallel to (same parent as) `src`. From the
 ```
 
 Now there is a __second version__, which can load and save programs directly
-to the desktop/laptop, on the additional commands: `ESAVE`, `ELOAD`, `ELIST`,
+to the desktop/laptop. Use the additional commands: `ESAVE`, `ELOAD`, `ELIST`,
 `ETEXT` and look at the current folder for programs `ELIB`.
 We assume `ncurses` already installed ..
 
