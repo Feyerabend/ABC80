@@ -64,7 +64,7 @@
 64 OUT 6,0 : OUT 6,157
 65 IF I1%=3% THEN ; CUR(11,19); : GET Ö¤
 66 ; CHR¤(12); : NEXT I1%
-67 REM *** VAL AV TID/PO[NG-BEG. ***
+67 REM *** VAL AV TID/POÄNG-BEG. ***
 68 IF ö¤='P' OR ö¤='P' THEN D1%=10% : D%=100% : D3%=1% : T5%=0% : T6%=0% : GOTO 100
 69 IF ö¤='T' OR ö¤='T' THEN D1%=-1% : D%=0% : D3%=-1% : T5%=2% : T6%=0% : GOTO 100
 70 ; CUR(20,11);'SVARA MED'
@@ -141,7 +141,7 @@
 141 IF H%(N%)>22% THEN H%(N%)=0%
 142 IF L%(N%)<1% THEN L%(N%)=37%
 143 IF L%(N%)>37% THEN L%(N%)=1%
-144 ; CUR(H1%(N%),L1%(N%);'  '; 
+144 ; CUR(H1%(N%)),L1%(N%);'  '; 
 145 ; CUR(H%(N%),L%(N%));P¤(N%,F%(N%));
 146 OUT 58%,N%*8%
 147 B%=INP(58%) AND 7%
