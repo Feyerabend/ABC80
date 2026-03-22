@@ -1,7 +1,7 @@
 # Barely functional emulator for ABC80
 
 There are naturally several emulators for ABC80. But this one
-may be the simplest, although barely functional.
+may be the simplest, although [barely functional](./src/).
 It lacks most features, graphics, sound etc. but it shows how
 simple programs (text based) can work. Starting from a simple
 Z80 emulator, the program copies what is in the screen memory
@@ -31,7 +31,7 @@ Create a folder `build` in parallel to (same parent as) `src`. From the
 > bin/abc
 ```
 
-Now there is a __second version__, which can load and save programs directly
+Now there is a [__second version__](./src2/), which can load and save programs directly
 to the desktop/laptop. Use the additional commands: `ESAVE`, `ELOAD`, `ELIST`,
 `ETEXT` and look at the current folder for programs `ELIB`.
 We assume `ncurses` already installed ..
@@ -52,7 +52,7 @@ If you want to go further down that rabbit hole, a good place to start is:
 
 ![New Emu](./../assets/images/ABCv2.png)
 
-A __third version__ to reflect the graphics better. It is made for the
+A [__third version__](./abc_pico/) to reflect the graphics better. It is made for the
 Raspberry Pi Pico, with a display attached: Pimoroni Display Pack 2.0.
 
 ![ABC Pico](./../assets/images/picoabc.png)
