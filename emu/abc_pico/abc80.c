@@ -1,3 +1,15 @@
+
+/*
+0002H   CONSI. Hämtar ett tecken från tangentbordet till A. Jfr. GET
+
+0005H   RDCONS. Hämtar en rad från tangentbordet inklusive eko och backspace-processing. Anropa med:
+                Pekare till var man vill ha strängn i HL. Max längd i C.
+
+000BH   WRCONS. Skriver på skärmen. Anropa med:
+                Pekare till data att skriva i HL. Antal bytes i BC.
+
+*/
+
 // ABC80 machine core for Raspberry Pi Pico 2W
 //
 // Derived from emu/abc.c.  All ncurses and host-filesystem code has been
@@ -105,6 +117,17 @@ void abc80_step(void) {
 }
 
 void abc80_strobe(void) {
+    // Mimic the ROM's NMI handler (ABC80: VSYNC -> NMI @ 50 Hz?).
+    // The handler uses DJNZ on m[0xFDF0]: decrement, fall through to outer
+    // 16-bit counter at m[0xFDF1-2] only when m[0xFDF0] transitions 1 -> 0.
+    if (m[0xFDF0] == 1) {
+        uint16_t outer = (uint16_t)m[0xFDF1] | ((uint16_t)m[0xFDF2] << 8);
+        if (outer > 0) outer--;
+        m[0xFDF1] = outer & 0xFF;
+        m[0xFDF2] = outer >> 8;
+    }
+    m[0xFDF0]--;   // wraps 0 -> 255 naturally, matching DJNZ wrap behaviour
+
     gen_int(KB_INT_VEC);
 }
 
