@@ -78,11 +78,15 @@ static void screen_refresh(void) {
 
             if (graphics) {
                 // Map character to mosaic pattern per ABC80 video hardware:
+                //   0x40-0x5F: uppercase alpha – displayed as text even in graphics mode.
                 //   bit5 must be set for a visible block; otherwise blank.
                 //   pattern = (ch & 0x1F) | ((ch & 0x40) >> 1)  → 0..63
                 //   charRom index = 0xA0 + pattern
                 uint8_t ch = cell & 0x7F;
-                if (ch & 0x20) {
+                if (ch >= 0x40 && ch <= 0x5F) {
+                    // Uppercase letters always shown as text characters
+                    fb_draw_char(framebuffer, col * 8, row * 10, (char)ch, ABC_FG, ABC_BG);
+                } else if (ch & 0x20) {
                     uint8_t pat = (ch & 0x1F) | ((ch & 0x40) >> 1);
                     fb_draw_char(framebuffer, col * 8, row * 10, (char)(0xA0 + pat), ABC_FG, ABC_BG);
                 } else {
