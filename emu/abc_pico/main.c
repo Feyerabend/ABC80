@@ -6,9 +6,12 @@
 
 #include "pico/stdlib.h"
 #include "hardware/timer.h"
+#include <stdio.h>
+#include <string.h>
 
 #include "display.h"
 #include "abc80.h"
+#include "monitor.h"
 
 // ---------------------------------------------------------------------------
 // White-on-black colour scheme (classic ABC80 monitor look).
@@ -16,10 +19,10 @@
 #define ABC_FG  COLOR_WHITE
 #define ABC_BG  COLOR_BLACK
 
+// ---------------------------------------------------------------------------
 // Display refresh target: ~30 fps
 #define FRAME_US  33333ULL
 
-// ---------------------------------------------------------------------------
 // CPU-side framebuffer: filled by the CPU, then pushed to the LCD via DMA.
 static uint16_t framebuffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
 
@@ -124,36 +127,57 @@ int main(void) {
     uint64_t last_frame = time_us_64();
 
     while (true) {
-        // 1. On each 50 Hz strobe: deliver the keyboard interrupt.
-        if (strobe_pending) {
-            strobe_pending = false;
-            abc80_strobe();
+        if (!monitor_is_active()) {
+            // --- Normal ABC80 operation ---
+
+            // 1. On each 50 Hz strobe: deliver the keyboard interrupt.
+            if (strobe_pending) {
+                strobe_pending = false;
+                abc80_strobe();
+            }
+
+            // 2. Poll keyboard every ~500 steps.
+            static unsigned poll_div;
+            if (++poll_div >= 500) {
+                poll_div = 0;
+                abc80_keyboard_poll();
+            }
+
+            // 3. Execute one Z80 instruction.
+            abc80_step();
+        } else {
+            // --- Monitor mode: Z80 frozen, serial goes to monitor ---
+            static unsigned mon_poll_div;
+            if (++mon_poll_div >= 500) {
+                mon_poll_div = 0;
+                monitor_serial_poll();
+            }
         }
 
-        // 2. Poll keyboard every ~500 steps.  getchar_timeout_us(0) disables
-        //    ARM interrupts briefly; calling it millions of times/sec would
-        //    starve the USB interrupt.  500-step cadence ~ 120 polls/20ms
-        //    strobe -> worst-case ~4 ms key-detection latency, imperceptible.
-        static unsigned poll_div;
-        if (++poll_div >= 500) {
-            poll_div = 0;
-            abc80_keyboard_poll();
-        }
-
-        // 3. Execute one Z80 instruction.
-        abc80_step();
-
-        // 3. Refresh the display at ~30 fps.
-        // Reset last_frame AFTER the blit so the next frame starts from
-        // now, not from before a potentially blocking refresh.
+        // Refresh display at ~30 fps.
         uint64_t now = time_us_64();
         if (now - last_frame >= FRAME_US) {
-            screen_refresh();
+            if (monitor_is_active()) {
+                monitor_render(framebuffer);
+                display_wait_for_dma();
+                display_blit_full(framebuffer);
+            } else {
+                screen_refresh();
+            }
             buttons_update();
             last_frame = time_us_64();
 
-            // Button Y: reset the Z80/ABC80 (useful when BASIC hangs).
-            if (button_just_pressed(BUTTON_Y)) {
+            // Button X: toggle monitor mode.
+            if (button_just_pressed(BUTTON_X)) {
+                if (monitor_is_active()) {
+                    monitor_exit();
+                } else {
+                    monitor_enter();
+                }
+            }
+
+            // Button Y: reset the Z80/ABC80 (only in normal mode).
+            if (!monitor_is_active() && button_just_pressed(BUTTON_Y)) {
                 abc80_init();
                 strobe_pending = false;
             }

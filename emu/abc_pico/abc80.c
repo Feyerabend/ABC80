@@ -198,3 +198,18 @@ void abc80_keyboard_poll(void) {
 uint8_t abc80_screen_char(int row, int col) {
     return m[rowstart[row] + col];
 }
+
+void abc80_get_regs(abc80_regs_t *r) {
+    r->a  = a;  r->b = b;  r->c = c;  r->d = d;
+    r->e  = e;  r->h = h;  r->l = l;
+    r->pc = pc; r->sp = sp; r->ix = ix; r->iy = iy;
+    r->im = im; r->iff1 = iff1; r->iff2 = iff2;
+    r->f  = (uint8_t)(((uint8_t)sf << 7) | ((uint8_t)zf << 6) |
+                      ((uint8_t)yf << 5) | ((uint8_t)hf << 4) |
+                      ((uint8_t)xf << 3) | ((uint8_t)pf << 2) |
+                      ((uint8_t)nf << 1) |  (uint8_t)cf);
+}
+
+uint8_t abc80_read_mem(uint16_t addr) {
+    return m[addr];
+}

@@ -39,7 +39,7 @@ static bool buttons_initialized = false;
 
 /* Staging buffer for DMA-driven solid fills - pre-filled with one colour,
  * then streamed in 512-byte (256-pixel) chunks to avoid a full-screen
- * intermediate allocation.                                               */
+ * intermediate allocation. */
 static uint8_t dma_fill_buffer[512];
 
 // Button pin mapping
@@ -933,7 +933,7 @@ void fb_apply_color_transform_rect(uint16_t *fb, const fb_color_transform_t *cx,
  *   |------|------|
  *   | bit4 | bit5 |  <- 3px
  *   +-------------+
- *    4 px   4 px
+ *     4 px   4 px
  *
  * pattern is a 6-bit value (0-63); a set bit fills its block with fg,
  * a clear bit fills it with bg (contiguous mode -- no gaps).
