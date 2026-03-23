@@ -30,6 +30,7 @@ pico_sdk_init()
 add_executable(abc_pico
     main.c
     monitor.c
+    disasm.c
     abc80.c
     z80.c
     display.c
