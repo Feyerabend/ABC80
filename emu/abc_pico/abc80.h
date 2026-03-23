@@ -22,3 +22,14 @@ void abc80_strobe(void);
 //   bit 7 of the return value = cursor attribute (show as reverse video)
 //   bits 6-0 = ABC80 character code (SIS 662241, 7-bit)
 uint8_t abc80_screen_char(int row, int col);
+
+// Monitor support: read Z80 registers and memory without running the CPU.
+typedef struct {
+    uint8_t  a, b, c, d, e, h, l, f;
+    uint16_t pc, sp, ix, iy;
+    uint8_t  im;
+    bool     iff1, iff2;
+} abc80_regs_t;
+
+void    abc80_get_regs(abc80_regs_t *r);
+uint8_t abc80_read_mem(uint16_t addr);
