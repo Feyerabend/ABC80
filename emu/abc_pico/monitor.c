@@ -11,6 +11,7 @@
 #include "display.h"
 #include "abc80.h"
 #include "abc80errors.h"
+#include "disasm.h"
 #include "monitor.h"
 
 #define MON_FG      0x67EC          // amber
@@ -298,6 +299,27 @@ static void mon_exec(const char *cmd) {
             if (count == 0) mon_print("(no variables)");
         }
 
+    } else if (ch == 'U') {
+        // U (addr) — unassemble 16 instructions
+        cmd++;
+        while (*cmd == ' ') cmd++;
+        if (*cmd) mon_addr = parse_hex(cmd);
+        for (int i = 0; i < 16; i++) {
+            char mnem[32];
+            int len = z80_disasm(mon_addr, mnem, (int)sizeof(mnem));
+            // Build hex bytes string (up to 4 bytes)
+            char hex[13]; int hp = 0;
+            for (int j = 0; j < len && j < 4; j++)
+                hp += snprintf(hex+hp, (int)sizeof(hex)-hp, "%02X ",
+                               abc80_read_mem((uint16_t)(mon_addr+j)));
+            while (hp < 12) hex[hp++] = ' ';
+            hex[12] = '\0';
+            char line[41];
+            snprintf(line, sizeof(line), "%04X %s%s", mon_addr, hex, mnem);
+            mon_print(line);
+            mon_addr = (uint16_t)(mon_addr + len);
+        }
+
     } else if (ch == '?' || ch == 'H') {
         cmd++;
         while (*cmd == ' ') cmd++;
@@ -314,6 +336,7 @@ static void mon_exec(const char *cmd) {
             mon_print(line);
         } else {
             mon_print("D (addr)  hex dump 64 bytes");
+            mon_print("U (addr)  unassemble 16 instrs");
             mon_print("R         Z80 register");
             mon_print("S         BASIC status/minne");
             mon_print("V         variable list");
