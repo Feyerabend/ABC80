@@ -1,15 +1,4 @@
 
-/*
-0002H   CONSI. Hämtar ett tecken från tangentbordet till A. Jfr. GET
-
-0005H   RDCONS. Hämtar en rad från tangentbordet inklusive eko och backspace-processing. Anropa med:
-                Pekare till var man vill ha strängn i HL. Max längd i C.
-
-000BH   WRCONS. Skriver på skärmen. Anropa med:
-                Pekare till data att skriva i HL. Antal bytes i BC.
-
-*/
-
 // ABC80 machine core for Raspberry Pi Pico 2W
 //
 // Derived from emu/abc.c.  All ncurses and host-filesystem code has been
