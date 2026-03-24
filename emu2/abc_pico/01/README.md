@@ -197,6 +197,18 @@ Flash by holding BOOTSEL, connecting USB, then copying the `.uf2`:
 cp abc_pico.uf2 /Volumes/RP2350/
 ```
 
+#### Run
+
+On macOS you can connect through:
+```bash
+screen /dev/tty.usbmodem* 115200
+```
+
+On a Linux system, often:
+```bash
+screen /dev/ttyACM0 115200
+```
+
 #### Flash and RAM usage
 
 | Region | Used | Available |
