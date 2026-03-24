@@ -224,3 +224,6 @@ Z80 address space (64 KB).  About 296 KB of RAM remains free as of this.
 - [sarnau/Z80DisAssembler](https://github.com/sarnau/Z80DisAssembler) - basis for `disasm.c`
 - [Raspberry Pi Pico SDK](https://github.com/raspberrypi/pico-sdk)
 - [Pimoroni Display Pack 2.0](https://shop.pimoroni.com/products/pico-display-pack-2-0)
+
+![ABC Pico](./../../../assets/images/abcpico1.png)
+![ABC Pico](./../../../assets/images/abcpico2.png)
