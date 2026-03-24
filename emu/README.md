@@ -52,11 +52,6 @@ If you want to go further down that rabbit hole, a good place to start is:
 
 ![New Emu](./../assets/images/ABCv2.png)
 
-A [__third version__](./abc_pico/) to reflect the graphics better. It is made for the
-Raspberry Pi Pico 2/2W, with a display attached: Pimoroni Display Pack 2.0.
-
-![ABC Pico](./../assets/images/picoabc.png)
-
 
 ## License
 
