@@ -3,7 +3,7 @@
 
 An ABC80 home computer emulator running on a Raspberry Pi Pico 2W with a
 Pimoroni Display Pack 2.0.  The ABC80 was a Swedish 8-bit computer sold
-1978–1983 by Luxor, built around a Z80 CPU and a interpreter by DIAB AB
+1978–1983 by Luxor, built around a Z80 CPU and an interpreter by DIAB AB
 (Johan Finnved/KTH).
 
 
