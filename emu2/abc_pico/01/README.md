@@ -222,7 +222,7 @@ Z80 address space (64 KB).  About 296 KB of RAM remains free as of this.
 
 - *Avancerad programmering för ABC80*
 - *Mikrodatorns ABC*
-- J. Finnved, [Examensarbete] (https://dflund.se/~triad/diab/archive/ABC%2080/1979%20Johan%20Finnved%20Examensarbete.pdf)
+- J. Finnved, [Examensarbete](https://dflund.se/~triad/diab/archive/ABC%2080/1979%20Johan%20Finnved%20Examensarbete.pdf)
 - [sarnau/Z80DisAssembler](https://github.com/sarnau/Z80DisAssembler) - basis for `disasm.c`
 - [Raspberry Pi Pico SDK](https://github.com/raspberrypi/pico-sdk)
 - [Pimoroni Display Pack 2.0](https://shop.pimoroni.com/products/pico-display-pack-2-0)
