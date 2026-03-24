@@ -1,5 +1,7 @@
 // Z80 disassembler — adapted from TurboDis Z80 by Markus Fritze (sarnau).
 // Original: https://github.com/sarnau/Z80DisAssembler  (freeware)
+// Fritzes restriction on distribution:
+// "This program is freeware. It is not allowed to be used as a base for a commercial product!"
 // Stripped to OpcodeLen + Disassemble only; reads via abc80_read_mem().
 
 #include <stdint.h>
