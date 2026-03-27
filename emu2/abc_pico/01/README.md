@@ -242,3 +242,4 @@ Z80 address space (64 KB).  About 296 KB of RAM remains free as of this.
 
 ![ABC Pico](./../../../assets/images/abcpico1.png)
 ![ABC Pico](./../../../assets/images/abcpico2.png)
+![ABC Pico](./../../../assets/images/abcpico4.png)
