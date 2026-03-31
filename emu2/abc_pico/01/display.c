@@ -951,6 +951,7 @@ void mosaic_clear(void) {
     memset(mosaic_buf, 0, sizeof(mosaic_buf));
 }
 
+/* THIS IS WAY WRONG .. 
 void setdot(int x, int y) {
     if ((unsigned)x >= MOSAIC_DOT_COLS || (unsigned)y >= MOSAIC_DOT_ROWS) return;
     int bit = (y % 3) * 2 + (x % 2);
@@ -961,7 +962,7 @@ void clrdot(int x, int y) {
     if ((unsigned)x >= MOSAIC_DOT_COLS || (unsigned)y >= MOSAIC_DOT_ROWS) return;
     int bit = (y % 3) * 2 + (x % 2);
     mosaic_buf[(y / 3) * MOSAIC_CELL_COLS + (x / 2)] &= (uint8_t)~(1u << bit);
-}
+}*/
 
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg) {
     for (int row = 0; row < MOSAIC_CELL_ROWS; row++) {
