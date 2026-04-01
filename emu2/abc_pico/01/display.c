@@ -964,6 +964,15 @@ void clrdot(int x, int y) {
     mosaic_buf[(y / 3) * MOSAIC_CELL_COLS + (x / 2)] &= (uint8_t)~(1u << bit);
 }*/
 
+int get_dot_mask(int lx, int ly) {
+    static const int map[3][2] = {
+        { 1,  2},
+        { 4,  8},
+        {16, 64}
+    };
+    return (ly < 3 && lx < 2) ? map[ly][lx] : 0;
+}
+
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg) {
     for (int row = 0; row < MOSAIC_CELL_ROWS; row++) {
         for (int col = 0; col < MOSAIC_CELL_COLS; col++) {
