@@ -973,6 +973,22 @@ int get_dot_mask(int lx, int ly) {
     return (ly < 3 && lx < 2) ? map[ly][lx] : 0;
 }
 
+/* setdot
+ * Sets a single dot in the mosaic at (x, y) with the given colour (white).
+ * This is a bit more complex than just setting bits in the mosaic buffer
+ * because we need to handle Teletext attributes and ensure proper rendering.
+ *
+ * Steps:
+ * 1. Determine the active colour for the cell by scanning left for attributes.
+ * 2. If the active colour differs from the desired colour, place an attribute
+ *    in the preceding cell to change the colour.
+ * 3. Update the mosaic character in the current cell by setting the appropriate
+ *    bit for the dot position, while preserving existing bits and attributes.
+ */
+void setdot(int x, int y, int color) {
+    return; // DISABLED FOR NOW - NEEDS REWORK
+}
+
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg) {
     for (int row = 0; row < MOSAIC_CELL_ROWS; row++) {
         for (int col = 0; col < MOSAIC_CELL_COLS; col++) {
