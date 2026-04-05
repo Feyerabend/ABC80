@@ -53,12 +53,12 @@ static bool strobe_callback(repeating_timer_t *rt) {
 // abcfont.h already contains the authentic ABC80 character ROM, so Swedish
 // characters (ä ö å Ä Ö Å é ü Ü ¤) render correctly without any translation.
 static void screen_refresh(void) {
-    // Blink state: toggle every 500 ms (check?) so bit-7 cells alternate
+    // Blink state: toggle every 330 ms (check?) so bit-7 cells alternate
     // between reverse-video and normal, giving the cursor/blink effect.
     static uint64_t blink_last = 0;
     static bool     blink_on   = true;
     uint64_t now_us = time_us_64();
-    if (now_us - blink_last >= 500000ULL) {
+    if (now_us - blink_last >= 330000ULL) {
         blink_last = now_us;
         blink_on   = !blink_on;
     }
