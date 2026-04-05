@@ -15,11 +15,12 @@ screen layout, and 50 Hz interrupt behaviour.
 - Exact 40×24 character screen (320×240) with correct glyph rendering and graphics (mosaic) mode
 - 50 Hz hardware strobe interrupt — essential for BASIC to work properly
 - Real-time clock (`TIME` variable) working correctly
-- USB CDC serial keyboard — works with any terminal (minicom, screen, PuTTY, etc.) at any baud rate
+- USB CDC serial keyboard — works with any terminal (minicom, screen, PuTTY, etc.) at any baud rate[^term]
 - Proper handling of Swedish letters via UTF-8
 - Arrow keys and common meta-key combinations supported
 - Built-in powerful **monitor / debugger / assembler**
 
+[^term]: Tried connecting through WiFi, but the lag made it not work.
 
 #### Hardware Controls
 - *Button X* — Toggle monitor mode
