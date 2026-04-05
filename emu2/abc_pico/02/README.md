@@ -13,12 +13,12 @@ screen layout, and 50 Hz interrupt behaviour.
 - Accurate Z80 CPU emulation
 - Original ABC80 ROM with full Swedish character support (å ä ö Å Ä Ö é ü Ü ¤)
 - Exact 40×24 character screen (320×240) with correct glyph rendering and graphics (mosaic) mode
-- 50 Hz hardware strobe interrupt — essential for BASIC to work properly
-- Real-time clock (`TIME` variable) working correctly
+- 50 Hz hardware strobe interrupt — essential for this ABC80/BASIC to work properly
+- Real-time clock working correctly
 - USB CDC serial keyboard — works with any terminal (minicom, screen, PuTTY, etc.) at any baud rate[^term]
 - Proper handling of Swedish letters via UTF-8
 - Arrow keys and common meta-key combinations supported
-- Built-in powerful **monitor / debugger / assembler**
+- Built-in powerful *monitor / debugger / assembler*
 
 [^term]: Tried connecting through WiFi, but the lag made it not work.
 
@@ -36,7 +36,7 @@ Press *Button X* to enter the monitor:
 - `D [addr]` — Hex dump 64 bytes
 - `U [addr]` — Disassemble 16 instructions
 - `R`        — Show Z80 registers and flags
-- `S`        — BASIC memory status (BOFA, EOFA, HEAP, free memory…)
+- `S`        — BASIC memory status (BOFA, EOFA, HEAP, free memory...)
 - `V`        — List all variables with current values
 - `E`        — Show device list (`enhetslistan`)
 - `? N`      — Show error message for ABC80 error code N
