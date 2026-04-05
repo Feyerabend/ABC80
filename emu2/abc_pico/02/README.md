@@ -72,7 +72,7 @@ AS 8000
 Switch back to ABC80 mode and run it ..
 
 ```basic
-CALL 32768
+; CALL 32768
 ```
 
 
