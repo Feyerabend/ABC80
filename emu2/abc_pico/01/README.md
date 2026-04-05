@@ -1,5 +1,5 @@
 
-## ABC80 for Ants: ABC80 Emulator for Raspberry Pi Pico 2W
+## ABC80 for Ants: Emulator for Raspberry Pi Pico 2W
 
 An ABC80 home computer emulator running on a Raspberry Pi Pico 2W with a
 Pimoroni Display Pack 2.0.  The ABC80 was a Swedish 8-bit computer sold
