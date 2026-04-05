@@ -51,12 +51,12 @@ static bool strobe_callback(repeating_timer_t *rt) {
 // abcfont.h already contains the authentic ABC80 character ROM, so Swedish
 // characters (ä ö å Ä Ö Å é ü Ü ¤) render correctly without any translation.
 static void screen_refresh(void) {
-    // Blink state: toggle every 500 ms so bit-7 cells alternate
+    // Blink state: toggle every 330 ms so bit-7 cells alternate
     // between reverse-video and normal, giving the cursor/blink effect.
     static uint64_t blink_last = 0;
     static bool     blink_on   = true;
     uint64_t now_us = time_us_64();
-    if (now_us - blink_last >= 500000ULL) {
+    if (now_us - blink_last >= 330000ULL) {
         blink_last = now_us;
         blink_on   = !blink_on;
     }
@@ -83,7 +83,7 @@ static void screen_refresh(void) {
                 // Map character to mosaic pattern per ABC80 video hardware:
                 //   0x40-0x5F: uppercase alpha – displayed as text even in graphics mode.
                 //   bit5 must be set for a visible block; otherwise blank.
-                //   pattern = (ch & 0x1F) | ((ch & 0x40) >> 1)  → 0..63
+                //   pattern = (ch & 0x1F) | ((ch & 0x40) >> 1)  --> 0..63
                 //   charRom index = 0xA0 + pattern
                 uint8_t ch = cell & 0x7F;
                 if (ch >= 0x40 && ch <= 0x5F) {
@@ -98,7 +98,7 @@ static void screen_refresh(void) {
             } else {
                 bool    inverse = (cell & 0x80) && blink_on;
                 char    c       = (char)(cell & 0x7F);
-                if (c < 0x20) c = ' ';   // control codes → blank
+                if (c < 0x20) c = ' ';   // control codes --> blank
                 uint16_t fg = inverse ? ABC_BG : ABC_FG;
                 uint16_t bg = inverse ? ABC_FG : ABC_BG;
                 fb_draw_char(framebuffer, col * 8, row * 10, c, fg, bg);
