@@ -251,7 +251,6 @@ on power-up. A hardware watchdog restarts it if the server hangs.
 │-- CMakeLists.txt
 ```
 
-![Save/Load](./../../../assets/images/saveload.jpeg)
-
-![Monitor Help](./../../../assets/images/monitorhelp.jpeg)
+![Save/Load](./../../assets/images/saveload.jpeg)
+![Monitor Help](./../../assets/images/monitorhelp.jpeg)
 
