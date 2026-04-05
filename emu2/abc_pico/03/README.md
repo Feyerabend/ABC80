@@ -250,3 +250,8 @@ on power-up. A hardware watchdog restarts it if the server hangs.
 │-- fs/                 MicroPython firmware for the SD-Pico
 │-- CMakeLists.txt
 ```
+
+![Save/Load](./../../../assets/images/saveload.jpeg)
+
+![Monitor Help](./../../../assets/images/monitorhelp.jpeg)
+
