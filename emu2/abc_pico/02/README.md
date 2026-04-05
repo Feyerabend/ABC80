@@ -1,5 +1,5 @@
 
-## ABC80 for Ants
+## ABC80 for Ants: Enhanced Computer
 
 *A (somewhat) faithful ABC80 emulator running on the Raspberry Pi Pico 2W + Pimoroni Display Pack 2.0*
 
