@@ -13,4 +13,4 @@ See more on these kinds of solutions at
 [cc/ch04/sec4.4/storage/file](https://github.com/Feyerabend/cc/tree/main/ch04/sec4.4/storage/file).
 
 
-
+![Test Client](./../../../assets/images/picoconnect.png)
