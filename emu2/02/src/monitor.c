@@ -15,6 +15,7 @@
 #include "monitor.h"
 #include "z80asm.h"
 #include "snake_asm.h"
+#include "wifi_client.h"
 
 #define MON_FG      0x67EC          // amber
 #define MON_BG      COLOR_BLACK
@@ -549,6 +550,282 @@ static void cmd_snake(const char *args) {
 }
 
 // ---------------------------------------------------------------------------
+// File commands — F-family (talk to PicoFS over WiFi)
+//
+// FL [path]      list directory (default: root /)
+// FD path        delete file or directory (recursive)
+// FK path        create directory (mkdir)
+// FM src dst     move / rename a file or directory
+// FI             disk info + WiFi status
+
+// Shared response buffer for HTTP bodies.
+#define FMON_BUF_SIZE 2048
+static uint8_t fmon_buf[FMON_BUF_SIZE];
+
+// Simple JSON array scanner for /ls response: [{"n":"name","t":"f","s":1234},...]
+// Prints each entry through mon_print.  No malloc, no full JSON parser.
+//
+// Approach: for each object {…} find the boundaries, then search for each
+// field independently within those bounds.  This is order-independent and
+// immune to name-length or key-order issues.
+static void print_ls_response(const uint8_t *buf, uint16_t len) {
+    const char *p   = (const char *)buf;
+    const char *end = p + len;
+    int count = 0;
+
+    while (p < end) {
+        // Find start of next object
+        while (p < end && *p != '{') p++;
+        if (p >= end) break;
+        const char *obj = p;         // points to '{'
+
+        // Find matching '}'  (objects from /ls are flat, no nesting)
+        while (p < end && *p != '}') p++;
+        if (p >= end) break;
+        const char *clos = p;        // points to '}'
+        p++;                         // advance past '}'
+
+        char name[17] = {0};
+        char type = '\0';
+        int  size = -1;
+
+        // --- extract "n":"..." ---
+        const char *f = obj;
+        while (f + 4 <= clos) {
+            if (f[0]=='"' && f[1]=='n' && f[2]=='"' && f[3]==':') {
+                f += 4;
+                while (f < clos && (*f == ' ' || *f == '\t')) f++;
+                if (f < clos && *f == '"') {
+                    f++;
+                    int vi = 0;
+                    while (f < clos && *f != '"' && vi < 16) name[vi++] = *f++;
+                    name[vi] = '\0';
+                }
+                break;
+            }
+            f++;
+        }
+
+        // --- extract "t":"d" or "t":"f" ---
+        f = obj;
+        while (f + 4 <= clos) {
+            if (f[0]=='"' && f[1]=='t' && f[2]=='"' && f[3]==':') {
+                f += 4;
+                while (f < clos && (*f == ' ' || *f == '\t')) f++;
+                if (f < clos && *f == '"' && f + 1 < clos) type = f[1];
+                break;
+            }
+            f++;
+        }
+
+        // --- extract "s":digits ---
+        f = obj;
+        while (f + 4 <= clos) {
+            if (f[0]=='"' && f[1]=='s' && f[2]=='"' && f[3]==':') {
+                f += 4;
+                while (f < clos && (*f == ' ' || *f == '\t')) f++;
+                if (f < clos && *f >= '0' && *f <= '9') {
+                    size = 0;
+                    while (f < clos && *f >= '0' && *f <= '9')
+                        size = size * 10 + (*f++ - '0');
+                }
+                break;
+            }
+            f++;
+        }
+
+        if (!*name) continue;
+        char line[41];
+        if (type == 'd') {
+            snprintf(line, sizeof(line), "  %-13s <DIR>", name);
+        } else if (size >= 0) {
+            if (size < 1024)
+                snprintf(line, sizeof(line), "  %-13s %d B", name, size);
+            else if (size < 1048576)
+                snprintf(line, sizeof(line), "  %-13s %d K", name, size / 1024);
+            else
+                snprintf(line, sizeof(line), "  %-13s %d M", name, size / 1048576);
+        } else {
+            snprintf(line, sizeof(line), "  %s", name);
+        }
+        mon_print(line);
+        count++;
+    }
+    if (count == 0) mon_print("  (empty)");
+}
+
+// Build a percent-encoded query string path parameter into out (max outlen).
+// Only encodes space → %20; all other printable ASCII passed through.
+static void url_encode_path(const char *path, char *out, int outlen) {
+    int i = 0;
+    for (; *path && i < outlen - 3; path++) {
+        if (*path == ' ') { out[i++] = '%'; out[i++] = '2'; out[i++] = '0'; }
+        else              out[i++] = *path;
+    }
+    out[i] = '\0';
+}
+
+// FL [path] — list a directory.
+static void cmd_file_list(const char *args) {
+    if (!wifi_ready()) { mon_print("no WiFi"); return; }
+
+    char enc[80];
+    const char *path = (*args) ? args : "/";
+    url_encode_path(path, enc, sizeof(enc));
+
+    char qry[100];
+    snprintf(qry, sizeof(qry), "/ls?path=%s", enc);
+
+    uint16_t rlen = 0;
+    int rc = http_get(qry, fmon_buf, FMON_BUF_SIZE - 1, &rlen);
+    if (rc == HTTP_OK) {
+        fmon_buf[rlen] = '\0';
+        char hdr[41];
+        snprintf(hdr, sizeof(hdr), "DIR %s", path);
+        mon_print(hdr);
+        print_ls_response(fmon_buf, rlen);
+    } else if (rc == HTTP_NOT_FOUND) {
+        mon_print("not found");
+    } else {
+        char msg[41];
+        snprintf(msg, sizeof(msg), "error %d", rc);
+        mon_print(msg);
+    }
+}
+
+// FD path — delete file or directory (server does recursive rmdir).
+static void cmd_file_delete(const char *args) {
+    if (!*args) { mon_print("usage: FD path"); return; }
+    if (!wifi_ready()) { mon_print("no WiFi"); return; }
+
+    char enc[80];
+    url_encode_path(args, enc, sizeof(enc));
+    char qry[100];
+    snprintf(qry, sizeof(qry), "/rm?path=%s", enc);
+
+    int rc = http_delete(qry);
+    if (rc == HTTP_OK)        mon_print("deleted");
+    else if (rc == HTTP_NOT_FOUND) mon_print("not found");
+    else { char m[41]; snprintf(m, sizeof(m), "error %d", rc); mon_print(m); }
+}
+
+// FK path — create directory.
+static void cmd_file_mkdir(const char *args) {
+    if (!*args) { mon_print("usage: FK path"); return; }
+    if (!wifi_ready()) { mon_print("no WiFi"); return; }
+
+    char enc[80];
+    url_encode_path(args, enc, sizeof(enc));
+    char qry[100];
+    snprintf(qry, sizeof(qry), "/mkdir?path=%s", enc);
+
+    int rc = http_post(qry, NULL, 0, fmon_buf, FMON_BUF_SIZE - 1, NULL);
+    if (rc == HTTP_OK)  mon_print("created");
+    else { char m[41]; snprintf(m, sizeof(m), "error %d", rc); mon_print(m); }
+}
+
+// FM src dst — rename/move file or directory via server /rename endpoint.
+static void cmd_file_move(const char *args) {
+    // Split on first space
+    const char *sp = args;
+    while (*sp && *sp != ' ') sp++;
+    if (!*args || !*sp) { mon_print("usage: FM src dst"); return; }
+    if (!wifi_ready()) { mon_print("no WiFi"); return; }
+
+    char src[64], dst[64];
+    int slen = (int)(sp - args);
+    if (slen >= (int)sizeof(src)) slen = (int)sizeof(src) - 1;
+    memcpy(src, args, (size_t)slen); src[slen] = '\0';
+    while (*sp == ' ') sp++;
+    snprintf(dst, sizeof(dst), "%s", sp);
+    if (!*src || !*dst) { mon_print("usage: FM src dst"); return; }
+
+    char esrc[80], edst[80], qry[180];
+    url_encode_path(src, esrc, sizeof(esrc));
+    url_encode_path(dst, edst, sizeof(edst));
+    snprintf(qry, sizeof(qry), "/rename?src=%s&dst=%s", esrc, edst);
+
+    int rc = http_post(qry, NULL, 0, fmon_buf, FMON_BUF_SIZE - 1, NULL);
+    if (rc == HTTP_OK)  mon_print("renamed");
+    else { char m[41]; snprintf(m, sizeof(m), "error %d", rc); mon_print(m); }
+}
+
+// FC — connect (or reconnect) to PicoFS.
+static void cmd_file_connect(const char *args) {
+    (void)args;
+    char line[41];
+    snprintf(line, sizeof(line), "WiFi: %s -> connecting...", wifi_state_str());
+    mon_print(line);
+    if (wifi_connect()) {
+        mon_print("WiFi: connected");
+    } else {
+        snprintf(line, sizeof(line), "WiFi: failed (%s)", wifi_state_str());
+        mon_print(line);
+    }
+}
+
+// FX — disconnect from PicoFS.
+static void cmd_file_disconnect(const char *args) {
+    (void)args;
+    wifi_disconnect();
+    char line[41];
+    snprintf(line, sizeof(line), "WiFi: %s", wifi_state_str());
+    mon_print(line);
+}
+
+// FI — WiFi + disk status.
+static void cmd_file_info(const char *args) {
+    (void)args;
+    char line[41];
+
+    snprintf(line, sizeof(line), "WiFi: %s", wifi_state_str());
+    mon_print(line);
+
+    if (!wifi_ready()) return;
+
+    // Ping PicoFS
+    uint16_t rlen = 0;
+    int rc = http_get("/ping", fmon_buf, FMON_BUF_SIZE - 1, &rlen);
+    if (rc == HTTP_OK) {
+        fmon_buf[rlen < FMON_BUF_SIZE ? rlen : FMON_BUF_SIZE - 1] = '\0';
+        // Trim to first newline for display
+        for (int i = 0; i < (int)rlen; i++)
+            if (fmon_buf[i] == '\n' || fmon_buf[i] == '\r') { fmon_buf[i] = '\0'; break; }
+        snprintf(line, sizeof(line), "ping: %.34s", (char *)fmon_buf);
+        mon_print(line);
+    } else {
+        snprintf(line, sizeof(line), "ping: error %d", rc);
+        mon_print(line);
+        return;
+    }
+
+    // Disk info
+    rlen = 0;
+    rc = http_get("/disk", fmon_buf, FMON_BUF_SIZE - 1, &rlen);
+    if (rc != HTTP_OK) {
+        snprintf(line, sizeof(line), "disk: error %d", rc);
+        mon_print(line);
+        return;
+    }
+    fmon_buf[rlen] = '\0';
+
+    // Parse {"t":N,"f":N}
+    long total = 0, free_b = 0;
+    const char *p = (const char *)fmon_buf;
+    const char *t = strstr(p, "\"t\":");
+    const char *f = strstr(p, "\"f\":");
+    if (t) { t += 4; while (*t >= '0' && *t <= '9') total  = total  * 10 + (*t++ - '0'); }
+    if (f) { f += 4; while (*f >= '0' && *f <= '9') free_b = free_b * 10 + (*f++ - '0'); }
+
+    if (total > 0)
+        snprintf(line, sizeof(line), "SD: total=%ld K  free=%ld K",
+                 total / 1024, free_b / 1024);
+    else
+        snprintf(line, sizeof(line), "SD: no info");
+    mon_print(line);
+}
+
+// ---------------------------------------------------------------------------
 // Command dispatch table
 
 typedef struct {
@@ -576,6 +853,9 @@ static void cmd_help(void) {
     mon_print("A n text  set asm line n / A n = delete");
     mon_print("AL (n)    list from line n  AC=clear");
     mon_print("AL n m    list lines n to m  AS addr=asm");
+    mon_print("FC=connect FX=disconnect FI=info");
+    mon_print("FL (path) list dir  FK path=mkdir");
+    mon_print("FD path=delete  FM src dst=move");
     mon_print("H         this help");
     mon_print("Q         quit monitor");
 }
@@ -587,6 +867,23 @@ static void mon_exec(const char *cmd) {
 
     if (ch == '\0') return;   // empty line — do nothing
     if (ch == 'H') { cmd_help(); return; }
+
+    /* F-family: FL, FD, FK, FM, FI */
+    if (ch == 'F') {
+        char sub = *cmd;
+        if (sub >= 'a' && sub <= 'z') sub = (char)(sub - 32);
+        cmd++;
+        while (*cmd == ' ') cmd++;
+        if      (sub == 'L') { cmd_file_list(cmd);       return; }
+        else if (sub == 'D') { cmd_file_delete(cmd);     return; }
+        else if (sub == 'K') { cmd_file_mkdir(cmd);      return; }
+        else if (sub == 'M') { cmd_file_move(cmd);       return; }
+        else if (sub == 'I') { cmd_file_info(cmd);       return; }
+        else if (sub == 'C') { cmd_file_connect(cmd);    return; }
+        else if (sub == 'X') { cmd_file_disconnect(cmd); return; }
+        else { mon_print("F: L=list D=del K=mkdir M=move");
+               mon_print("   I=info FC=connect FX=disconnect"); return; }
+    }
 
     /* A-family: A n text, AS, AL, AC */
     if (ch == 'A') {
@@ -632,6 +929,8 @@ void monitor_enter(void) {
     char info[41];
     snprintf(info, sizeof(info), "Stopped at PC=%04X SP=%04X", r.pc, r.sp);
     mon_print(info);
+    snprintf(info, sizeof(info), "WiFi: %s", wifi_state_str());
+    mon_print(info);
 }
 
 void monitor_exit(void) {
@@ -670,6 +969,13 @@ void monitor_render(uint16_t *fb) {
     // Title bar: amber background, black text
     fb_fill_rect(fb, 0, 1, DISPLAY_WIDTH, 9, MON_FG);
     fb_draw_string(fb, 0, 0, " ABC80 MONITOR", COLOR_BLACK, MON_FG);
+    // WiFi state indicator in the middle of the title bar
+    {
+        const char *ws = wifi_state_str();
+        char wlabel[8];
+        snprintf(wlabel, sizeof(wlabel), "W:%-4s", ws);
+        fb_draw_string(fb, 15 * 8, 0, wlabel, COLOR_BLACK, MON_FG);
+    }
     fb_draw_string(fb, 24 * 8, 0, "X/Q=EXIT H=HELP", COLOR_BLACK, MON_FG);
 
     for (int i = 0; i < mon_nout; i++)
