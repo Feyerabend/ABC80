@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PicoFS</title>
+<style>
+    :root {
+        --bg: #1a1a2e;
+        --card: #0f1221;
+        --text: #ddd;
+        --accent: #4ecdc4;
+        --danger: #e74c3c;
+        --success: #2ecc71;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+        font-family: monospace;
+        background: var(--bg);
+        color: var(--text);
+        padding: 1rem;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.4;
+    }
+    h2 { color: #7eb8f7; margin-bottom: 0.8rem; }
+    input, button, textarea {
+        font-family: monospace;
+        padding: 0.4rem 0.6rem;
+        border-radius: 4px;
+    }
+    input[type=text] {
+        background: #0a0d1f;
+        border: 1px solid #444;
+        color: white;
+        width: 280px;
+    }
+    button {
+        background: #1c2a4a;
+        border: 1px solid #3a4a70;
+        color: #ccd6f6;
+        cursor: pointer;
+        margin: 2px;
+    }
+    button:hover { background: #2a3a6a; }
+    button.success { border-color: #2e6b2e; color: var(--success); }
+    button.danger  { border-color: #6b1c1c; color: var(--danger); }
+    button.accent  { border-color: #2e6b6b; color: var(--accent); }
+
+    #controls { margin: 1rem 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    #files {
+        background: var(--card);
+        border: 1px solid #333;
+        border-radius: 6px;
+        min-height: 100px;
+        overflow: hidden;
+    }
+    .frow {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        border-bottom: 1px solid #1e2130;
+        gap: 8px;
+    }
+    .frow:hover { background: #1c2540; }
+    .fname { flex: 1; cursor: pointer; color: var(--accent); }
+    .fsz   { color: #777; font-size: 0.9em; width: 80px; text-align: right; }
+    .actions button { font-size: 0.85em; padding: 2px 6px; }
+
+    #prog {
+        height: 6px;
+        background: #333;
+        border-radius: 3px;
+        margin: 0.6rem 0;
+        display: none;
+        overflow: hidden;
+    }
+    #progf {
+        height: 100%;
+        background: var(--success);
+        width: 0%;
+        transition: width 0.15s;
+    }
+
+    #log {
+        background: #0a0d1f;
+        border: 1px solid #333;
+        padding: 0.6rem;
+        font-size: 12px;
+        height: 120px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        margin-top: 1rem;
+    }
+
+    /* Editor */
+    #edoverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    #edoverlay.open { display: flex; }
+    #edbox {
+        background: #12182e;
+        border: 1px solid #445;
+        border-radius: 8px;
+        width: 94vw;
+        max-width: 760px;
+        max-height: 92vh;
+        display: flex;
+        flex-direction: column;
+    }
+    #edtitle {
+        padding: 0.8rem 1rem;
+        background: #1a2238;
+        font-weight: bold;
+        color: #7eb8f7;
+        border-bottom: 1px solid #334;
+    }
+    #edta {
+        flex: 1;
+        background: #080c18;
+        color: #c8ffc8;
+        border: none;
+        padding: 0.8rem;
+        font-size: 13px;
+        line-height: 1.5;
+        resize: vertical;
+        min-height: 300px;
+        font-family: monospace;
+        overflow: auto;
+    }
+    #edbar {
+        padding: 0.6rem 1rem;
+        background: #1a2238;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #edinfo { font-size: 12px; color: #888; }
+</style>
+</head>
+<body>
+
+<h2>PicoFS</h2>
+
+<div id="controls">
+    <input type="text" id="base" value="http://192.168.4.1" placeholder="http://...">
+    <button class="success" onclick="ping()">Ping</button>
+    <button onclick="ls()">Refresh</button>
+    <button onclick="disk()">Disk</button>
+    <button onclick="newFolder()">New Folder</button>
+    <button onclick="newBasFile()">New .BAS</button>
+</div>
+
+<div id="prog"><div id="progf"></div></div>
+
+<div id="files"></div>
+
+<hr>
+
+<b>Upload files</b><br>
+<input type="file" id="ufile" multiple> 
+<button class="success" onclick="upload()">Upload</button>
+
+<div id="log"></div>
+
+<!-- BAS Editor -->
+<div id="edoverlay">
+    <div id="edbox">
+        <div id="edtitle">Editor</div>
+        <textarea id="edta" spellcheck="false"></textarea>
+        <div id="edbar">
+            <span id="edinfo"></span>
+            <div>
+                <button class="success" onclick="edSave()">Save to SD</button>
+                <button onclick="edReload()">Reload</button>
+                <button onclick="edClose()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// CONFIGS & HELPERS
+const CHUNK = 2048;
+let cwd = '/';
+let edPath = '';
+
+const base = () => document.getElementById('base').value.replace(/\/$/, '');
+
+function log(msg) {
+    const el = document.getElementById('log');
+    el.textContent += new Date().toLocaleTimeString('sv-SE') + '  ' + msg + '\n';
+    el.scrollTop = el.scrollHeight;
+}
+
+function prog(show, percent = 0) {
+    const p = document.getElementById('prog');
+    const f = document.getElementById('progf');
+    p.style.display = show ? 'block' : 'none';
+    f.style.width = percent + '%';
+}
+
+function fmt(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n/1024).toFixed(1) + ' KB';
+    return (n/1048576).toFixed(1) + ' MB';
+}
+
+// ABC80 character translation
+const A80_TO_UNI = {0x40:'É',0x5B:'Ä',0x5C:'Ö',0x5D:'Å',0x5E:'Ü',0x60:'é',0x7B:'ä',0x7C:'ö',0x7D:'å',0x7E:'ü',0xA4:'¤'};
+const UNI_TO_A80 = {};
+Object.entries(A80_TO_UNI).forEach(([k,v]) => UNI_TO_A80[v] = parseInt(k));
+
+function abc80Decode(bytes) {
+    return [...bytes].map(b => A80_TO_UNI[b] || String.fromCharCode(b)).join('');
+}
+function abc80Encode(str) {
+    return new Uint8Array([...str].map(ch => UNI_TO_A80[ch] ?? (ch.charCodeAt(0) < 128 ? ch.charCodeAt(0) : 63)));
+}
+
+// NETWORK
+async function api(method, url, body = null) {
+    const res = await fetch(base() + url, {
+        method,
+        headers: body ? {'Content-Type': 'application/octet-stream'} : {},
+        body,
+        signal: AbortSignal.timeout(10000)
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res;
+}
+
+async function readAll(path) {
+    let off = 0, bufs = [];
+    while (true) {
+        const r = await api('GET', `/read?path=${encodeURIComponent(path)}&off=${off}&n=${CHUNK}`);
+        const chunk = new Uint8Array(await r.arrayBuffer());
+        if (!chunk.length) break;
+        bufs.push(chunk);
+        off += chunk.length;
+        if (chunk.length < CHUNK) break;
+    }
+    const total = bufs.reduce((a,b)=>a+b.length,0);
+    const out = new Uint8Array(total);
+    let pos = 0;
+    for (const b of bufs) { out.set(b, pos); pos += b.length; }
+    return out;
+}
+
+async function writeAll(path, bytes) {
+    for (let off = 0; off < bytes.length; off += CHUNK) {
+        const slice = bytes.slice(off, off + CHUNK);
+        await api('POST', `/write?path=${encodeURIComponent(path)}&off=${off}`, slice);
+        prog(true, Math.round(((off + slice.length) / bytes.length) * 100));
+    }
+}
+
+// FILE OPERATIONS
+async function ls(path = cwd) {
+    try {
+        const r = await api('GET', `/ls?path=${encodeURIComponent(path)}`);
+        const entries = await r.json();
+        cwd = path;
+        renderFiles(entries, path);
+    } catch(e) { log('ls failed: ' + e.message); }
+}
+
+function renderFiles(entries, path) {
+    const el = document.getElementById('files');
+    let html = '';
+
+    for (const e of entries) {
+        const isDir = e.t === 'd';
+        const full = (path + '/' + e.n).replace(/\/\//g, '/');
+        const name = isDir ? e.n + '/' : e.n;
+
+        html += `<div class="frow">
+            <span class="fname" onclick="${isDir ? `ls('${full}')` : (e.n.toLowerCase().endsWith('.bas') ? `edOpen('${full}','${e.n}')` : `dl('${full}','${e.n}')`)}">
+                ${isDir ? '📁' : (e.n.toLowerCase().endsWith('.bas') ? '📝' : '📄')} ${name}
+            </span>
+            <span class="fsz">${isDir ? '' : fmt(e.s)}</span>
+            <span class="actions">
+                ${e.n.toLowerCase().endsWith('.bas') ? `<button onclick="edOpen('${full}','${e.n}')" class="accent">edit</button>` : ''}
+                <button onclick="downloadItem('${full}','${e.n}')" title="Download">↓</button>
+                <button onclick="renameItem('${full}','${e.n}')" title="Rename">✎</button>
+                <button class="danger" onclick="deleteItem('${full}','${e.n}')" title="Delete">×</button>
+            </span>
+        </div>`;
+    }
+
+    el.innerHTML = html || '<div class="frow" style="color:#555; justify-content:center">— empty directory —</div>';
+}
+
+async function downloadItem(path, name) {
+    log('Downloading ' + name + '...');
+    try {
+        const bytes = await readAll(path);
+        const blob = new Blob([bytes]);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        log(`Downloaded ${name} (${fmt(bytes.length)})`);
+    } catch(e) { log('Download failed: ' + e.message); }
+}
+
+async function deleteItem(path, name) {
+    if (!confirm(`Delete "${name}" ?`)) return;
+    try {
+        await api('DELETE', `/rm?path=${encodeURIComponent(path)}`);
+        log(`Deleted: ${name}`);
+        ls();
+    } catch(e) { log('Delete failed: ' + e.message); }
+}
+
+async function renameItem(oldPath, oldName) {
+    const newName = prompt(`Rename "${oldName}" to:`, oldName);
+    if (!newName || newName === oldName) return;
+
+    const newPath = (cwd + '/' + newName).replace(/\/\//g, '/');
+
+    try {
+        await api('POST', `/rename?src=${encodeURIComponent(oldPath)}&dst=${encodeURIComponent(newPath)}`);
+        log(`Renamed ${oldName} → ${newName}`);
+        ls();
+    } catch(e) { log('Rename failed: ' + e.message); }
+}
+
+// UPLOAD & CREATE
+async function upload() {
+    const files = document.getElementById('ufile').files;
+    if (!files.length) return log('No file selected');
+
+    for (const f of files) {
+        const path = (cwd + '/' + f.name).replace(/\/\//g, '/');
+        log(`Uploading ${f.name} (${fmt(f.size)})...`);
+        try {
+            const buf = await f.arrayBuffer();
+            await writeAll(path, new Uint8Array(buf));
+            log(`Uploaded ${f.name}`);
+        } catch(e) { log(`Upload failed: ${e.message}`); }
+    }
+    document.getElementById('ufile').value = '';
+    ls();
+}
+
+async function newFolder() {
+    const name = prompt('New folder name:');
+    if (!name) return;
+    const path = (cwd + '/' + name).replace(/\/\//g, '/');
+    try {
+        await api('POST', `/mkdir?path=${encodeURIComponent(path)}`);
+        log(`Created folder: ${name}`);
+        ls();
+    } catch(e) { log('Create folder failed: ' + e.message); }
+}
+
+async function newBasFile() {
+    const name = prompt('New .BAS filename (e.g. program.bas):', 'newfile.bas');
+    if (!name) return;
+    const path = (cwd + '/' + name).replace(/\/\//g, '/');
+    try {
+        // Create empty file by writing 0 bytes
+        await writeAll(path, new Uint8Array(0));
+        log(`Created ${name}`);
+        ls();
+        // Open in editor
+        setTimeout(() => edOpen(path, name), 300);
+    } catch(e) { log('Create .BAS failed: ' + e.message); }
+}
+
+// BAS EDITOR
+async function edOpen(path, name) {
+    edPath = path;
+    document.getElementById('edtitle').textContent = 'Editing: ' + name;
+    document.getElementById('edinfo').textContent = 'Loading..';
+    document.getElementById('edta').value = '';
+    document.getElementById('edoverlay').classList.add('open');
+
+    try {
+        const bytes = await readAll(path);
+        const text = abc80Decode(bytes);
+        document.getElementById('edta').value = text;
+        document.getElementById('edinfo').textContent = `${bytes.length} bytes | ${text.split('\n').length} lines`;
+    } catch(e) {
+        document.getElementById('edinfo').textContent = 'Load failed';
+        log('Editor load failed: ' + e.message);
+    }
+}
+
+async function edSave() {
+    if (!edPath) return;
+    const text = document.getElementById('edta').value;
+    const bytes = abc80Encode(text);
+
+    document.getElementById('edinfo').textContent = 'Saving...';
+    try {
+        await writeAll(edPath, bytes);
+        document.getElementById('edinfo').textContent = `${bytes.length} bytes saved`;
+        log(`Saved ${edPath}`);
+        ls();
+    } catch(e) {
+        document.getElementById('edinfo').textContent = 'Save failed';
+        log('Save failed: ' + e.message);
+    }
+}
+
+async function edReload() {
+    if (!edPath) return;
+    const name = edPath.split('/').pop();
+    await edOpen(edPath, name);
+}
+
+function edClose() {
+    document.getElementById('edoverlay').classList.remove('open');
+    edPath = '';
+}
+
+// TOP LEVEL
+async function ping() {
+    try {
+        const r = await api('GET', '/ping');
+        log(await r.text());
+    } catch(e) { log('Ping failed: ' + e.message); }
+}
+
+async function disk() {
+    try {
+        const r = await api('GET', '/disk');
+        const d = await r.json();
+        log(`Disk → Total: ${fmt(d.t)}   Free: ${fmt(d.f)}`);
+    } catch(e) { log('Disk info failed: ' + e.message); }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('edoverlay');
+        if (overlay.classList.contains('open')) edClose();
+    }
+});
+
+// Initial load
+log('PicoFS client ready — set base URL and click Ping or Refresh');
+ls('/');
+</script>
+</body>
+</html>
