@@ -951,21 +951,15 @@ void mosaic_clear(void) {
     memset(mosaic_buf, 0, sizeof(mosaic_buf));
 }
 
-/* No don't think so 34:199 */
-/*
-void setdot(int x, int y) {
-    if ((unsigned)x >= MOSAIC_DOT_COLS || (unsigned)y >= MOSAIC_DOT_ROWS) return;
-    int bit = (y % 3) * 2 + (x % 2);
-    mosaic_buf[(y / 3) * MOSAIC_CELL_COLS + (x / 2)] |= (uint8_t)(1u << bit);
-}*/
-
-/* No don't think so 34:207 */
-/*
-void clrdot(int x, int y) {
-    if ((unsigned)x >= MOSAIC_DOT_COLS || (unsigned)y >= MOSAIC_DOT_ROWS) return;
-    int bit = (y % 3) * 2 + (x % 2);
-    mosaic_buf[(y / 3) * MOSAIC_CELL_COLS + (x / 2)] &= (uint8_t)~(1u << bit);
-}*/
+// DEAD CODE: setdot/clrdot below write to mosaic_buf[], which is a separate buffer
+// that is never read by screen_refresh() in main.c.  screen_refresh() reads directly
+// from Z80 screen RAM (m[]), so these C functions have no visible effect.
+// The ABC80 BASIC ROM's SETDOT/CLRDOT write to screen RAM directly and are the
+// only working path.  Left here for reference; do not uncomment without also
+// wiring mosaic_render() into the display pipeline or redirecting writes to m[].
+//
+// void setdot(int x, int y) { ... }   // dead — writes mosaic_buf, not screen RAM
+// void clrdot(int x, int y) { ... }   // dead — writes mosaic_buf, not screen RAM
 
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg) {
     for (int row = 0; row < MOSAIC_CELL_ROWS; row++) {

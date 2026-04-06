@@ -83,17 +83,21 @@ static void screen_refresh(void) {
             }
 
             if (graphics) {
-                // Map character to mosaic pattern per ABC80 video hardware:
-                //   0x40-0x5F: uppercase alpha – displayed as text even in graphics mode.
-                //   bit5 must be set for a visible block; otherwise blank.
-                //   pattern = (ch & 0x1F) | ((ch & 0x40) >> 1)  → 0..63
-                //   charRom index = 0xA0 + pattern
-                uint8_t ch = cell & 0x7F;
-                if (ch >= 0x40 && ch <= 0x5F) {
-                    // Uppercase letters always shown as text characters
-                    fb_draw_char(framebuffer, col * 8, row * 10, (char)ch, ABC_FG, ABC_BG);
-                } else if (ch & 0x20) {
-                    uint8_t pat = (ch & 0x1F) | ((ch & 0x40) >> 1);
+                // ABC80 mosaic encoding in screen RAM (verified from ROM SETDOT/CLRDOT disassembly):
+                //   bit7 = TR  (top-right)   — doubles as cursor attribute in text mode
+                //   bit6 = TL  (top-left)
+                //   bit5 = 1   (graphics flag, always set in any mosaic cell)
+                //   bit3 = BR  (bot-right)
+                //   bit2 = BL  (bot-left)
+                //   bit1 = MR  (mid-right)
+                //   bit0 = ML  (mid-left)
+                //
+                // Font pattern index (char - 0xA0, 0-63):
+                //   bit5=BR  bit4=BL  bit3=MR  bit2=ML  bit1=TR  bit0=TL
+                //
+                // Mapping: pat = TL,TR from bits 6,7  +  ML,MR,BL,BR from bits 0-3
+                if (cell & 0x20) {
+                    uint8_t pat = ((cell & 0xC0) >> 6) | ((cell & 0x0F) << 2);
                     fb_draw_char(framebuffer, col * 8, row * 10, (char)(0xA0 + pat), ABC_FG, ABC_BG);
                 } else {
                     fb_draw_char(framebuffer, col * 8, row * 10, ' ', ABC_FG, ABC_BG);
