@@ -100,7 +100,10 @@ static void screen_refresh(void) {
                     uint8_t pat = ((cell & 0xC0) >> 6) | ((cell & 0x0F) << 2);
                     fb_draw_char(framebuffer, col * 8, row * 10, (char)(0xA0 + pat), ABC_FG, ABC_BG);
                 } else {
-                    fb_draw_char(framebuffer, col * 8, row * 10, ' ', ABC_FG, ABC_BG);
+                    // No graphics flag — render as text (e.g. uppercase letters 0x40-0x5F)
+                    char c = (char)(cell & 0x7F);
+                    if (c < 0x20) c = ' ';
+                    fb_draw_char(framebuffer, col * 8, row * 10, c, ABC_FG, ABC_BG);
                 }
             } else {
                 bool    inverse = (cell & 0x80) && blink_on;
