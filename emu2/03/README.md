@@ -263,8 +263,10 @@ A horrible or entertaining game for the ants ..*
 Load snake_dot.asm in the monitor (P), assemble with AS 8000, run with G 8000.                                
 Controls: W/S/A/D to steer, Ctrl-C to quit.                                                                   
 
-The snake is rendered as a thin single-dot trail; food appears as a single pixel
-in a different corner of its cell. Both use the ABC80 mosaic dot API (SETDOT/CLRDOT)
-writing directly to screen RAM.
+The snake is a thin single-dot trail; food is a single pixel in a different corner
+of its cell. The mosaic dot encoding was verified by disassembling the ABC80 ROM at
+22C5h, but SETDOT/CLRDOT are reimplemented from scratch--the ROM versions use RST 38h
+(BASIC interpreter trap) and cannot be called from standalone Z80 code. You would get
+trapped.
 
 ![Snake](./../../assets/images/ants_dots.png)
