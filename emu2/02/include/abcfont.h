@@ -291,6 +291,8 @@ static const uint8_t charRom[256][7] = {
 // Bit encoding: bit 7 = col 0 (leftmost), same as charRom.
 // All unlisted entries default to {0x00, 0x00} (line-spacing gap).
 static const uint8_t descRom[256][2] = {
+    [','] = {0x40, 0x00},  /* tail curls left             */
+    [';'] = {0x40, 0x00},  /* tail curls left             */
     ['g'] = {0x04, 0x38},  /* right stem down, hook left  */
     ['j'] = {0x10, 0x70},  /* stem continues, wide hook   */
     ['p'] = {0x40, 0x40},  /* left stem below circle      */
