@@ -174,6 +174,38 @@ Then `AS 8000` assembles it and `G 8000` runs it.
 Controls: `W`/`A`/`S`/`D` for direction, `Ctrl-C` to quit.
 
 
+##### Example
+
+You can write Z80 assembly directly in the monitor:
+
+```asm
+A 10     LD HL,42
+A 20     LD (HL),A
+A 30     RET
+```
+
+Commands:
+- `A n text`  — Add or replace line `n`
+- `A n`       — Delete line `n`
+- `AL`        — List all lines
+- `AL 10 50`  — List lines 10 to 50
+- `AC`        — Clear all assembler lines
+- `AS 8000`   — Assemble the program to address 8000h
+- `P`         — Load the built-in *SNAKE* demo game source
+
+After assembling ..
+
+```asm
+AS 8000
+```
+
+Switch back to ABC80 mode and run it ..
+
+```basic
+; CALL 32768
+```
+
+
 #### File / WiFi commands (F-family)
 
 All F-commands require an active WiFi connection. Use `FC` to connect first.
