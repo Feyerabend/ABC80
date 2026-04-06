@@ -1,5 +1,5 @@
 
-![SD Card](./../../../../assets/images/store.png)
+![SD Card](./../../../assets/images/store.png)
 
 ## A Standalone File Server in Micropython
 
@@ -12,5 +12,7 @@ A modest file server.
 See more on these kinds of solutions at
 [cc/ch04/sec4.4/storage/file](https://github.com/Feyerabend/cc/tree/main/ch04/sec4.4/storage/file).
 
+A test client in JS/HTML, might show and respond to interactions (much depend on the browser/OS it is
+running on, some allow and some disallow these kind of poor security networking).
 
 ![Test Client](./../../../assets/images/picoconnect.png)
