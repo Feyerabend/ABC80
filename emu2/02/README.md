@@ -184,16 +184,7 @@ A 20     LD (HL),A
 A 30     RET
 ```
 
-Commands:
-- `A n text`  — Add or replace line `n`
-- `A n`       — Delete line `n`
-- `AL`        — List all lines
-- `AL 10 50`  — List lines 10 to 50
-- `AC`        — Clear all assembler lines
-- `AS 8000`   — Assemble the program to address 8000h
-- `P`         — Load the built-in *SNAKE* demo game source
-
-After assembling ..
+After assembling with ..
 
 ```asm
 AS 8000
