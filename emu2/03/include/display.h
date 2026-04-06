@@ -155,8 +155,10 @@ void fb_apply_color_transform_rect(uint16_t *fb, const fb_color_transform_t *cx,
 #define MOSAIC_DOT_ROWS  72   /* (DISPLAY_HEIGHT / FONT_CELL_H) * 3 */
 
 void mosaic_clear(void);
-void setdot(int x, int y);
-void clrdot(int x, int y);
+// DEAD CODE: setdot/clrdot write to mosaic_buf[], not to Z80 screen RAM.
+// screen_refresh() reads screen RAM directly, so these have no visible effect.
+// void setdot(int x, int y);
+// void clrdot(int x, int y);
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg);
 
 // Convenient preset transforms
