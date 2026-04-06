@@ -257,8 +257,8 @@ on power-up. A hardware watchdog restarts it if the server hangs.
 
 #### Snake (dot graphics)                                                                                          
 
-Do ants like snakes? Or do snakes even eat ants?
-A horrible or entertaining game for the ants ..
+*Do ants like snakes? Or do snakes even eat ants?
+A horrible or entertaining game for the ants ..*
 
 Load snake_dot.asm in the monitor (P), assemble with AS 8000, run with G 8000.                                
 Controls: W/S/A/D to steer, Ctrl-C to quit.                                                                   
@@ -267,3 +267,4 @@ The snake is rendered as a thin single-dot trail; food appears as a single pixel
 in a different corner of its cell. Both use the ABC80 mosaic dot API (SETDOT/CLRDOT)
 writing directly to screen RAM.
 
+![Snake](./../../assets/images/ants_dots.png)
