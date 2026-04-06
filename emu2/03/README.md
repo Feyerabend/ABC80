@@ -19,7 +19,7 @@ strobe, keeping the BASIC input loop well-behaved and the display scrolling corr
 
 ### What's New in This Version
 
-The main addition is a two-Pico file system. A second Raspberry Pi Pico 2W runs a
+The main addition is a two-Pico [file system](./fs). A second Raspberry Pi Pico 2W runs a
 small MicroPython HTTP server (*PicoFS*) and manages an SD card. The main Pico
 connects (ABC80) to PicoFS over WiFi and uses it as a storage device--visible inside
 ABC80 as the `SD:` device. This means you can do things like:
