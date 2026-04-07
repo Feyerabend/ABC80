@@ -16,6 +16,14 @@ USB port works as the keyboard--baud rate is irrelevant for USB CDC.
 A 50 Hz hardware timer fires a repeating interrupt that generates the Z80 keyboard
 strobe, keeping the BASIC input loop well-behaved and the display scrolling correctly.
 
+As early as 1978, DIAB chose a forward-looking technology for the ABC80’s font and
+character set, which included the use of mosaic patterns. They viewed this as an
+emerging standard with significant potential, particularly for communication technologies.
+In Sweden, this standard was notably adopted—with the addition of color—for
+"[Text-TV](./TEXTTV.md)." While the original ABC80 lacked colour support, later models
+like the ABC806 incorporated it. At the time, "national variations" of these standards
+became common, as European languages varies.
+
 
 ### What's New in This Version
 
