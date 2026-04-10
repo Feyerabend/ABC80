@@ -1,12 +1,13 @@
 
 ## The Origins: Efficiency in the Blank Space
 
-Maybe contrary to what is often told, Teletext wasn't born out of a desire for a digital newspaper;
-it was born out of a desire to save space. In the early 1970s, engineers at the *BBC* were looking
-for a way to provide closed captioning for the hearing impaired.
-
-They realised that television signals contained "hidden" lines of data in
-the *Vertical Blanking Interval*--the brief pause between the end of one frame and the start of the next. 
+Contrary to popular belief, Teletext wasn’t born out of a desire for a
+digital newspaper; it was born out of a desire to utilize 'wasted' signal
+space. In the early 1970s, BBC engineers were searching for a way to provide
+closed captioning for the hearing impaired. They realised that the Vertical
+Blanking Interval--the brief pause between the end of one frame and the start
+of the next—contained 'hidden' lines that could be used to transmit digital
+data without interfering with the broadcast picture.
 
 
 ### Key Milestones
@@ -39,7 +40,8 @@ somewhat clinical efficiency.
 
 #### Why was it so popular in Sweden?
 
-1. *Trust:* SVT’s newsroom treated Text-TV with the same journalistic rigour as their main broadcasts.
+1. *Trust:* SVT’s newsroom treated Text-TV with the same journalistic
+   rigour as their main broadcasts.
 2. *The "Slow" Internet:* Even as the web grew in the 90s, Sweden’s infrastructure meant
    Text-TV was often faster to load than a 56k modem connection.
 3. A maybe: *Minimalism* in the Swedish aesthetic favored the clean, distraction-free delivery
