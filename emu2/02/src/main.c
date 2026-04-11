@@ -96,9 +96,13 @@ static void screen_refresh(void) {
                 //   bit5=BR  bit4=BL  bit3=MR  bit2=ML  bit1=TR  bit0=TL
                 //
                 // Mapping: pat = TL,TR from bits 6,7  +  ML,MR,BL,BR from bits 0-3
+
+                // THIS IS NOT CORRECT, AND WE WILL HAVE TO DO MAPPING INSTEAD
+                // STAY TUNED ..
                 if (cell & 0x20) {
                     uint8_t pat = ((cell & 0xC0) >> 6) | ((cell & 0x0F) << 2);
                     fb_draw_char(framebuffer, col * 8, row * 10, (char)(0xA0 + pat), ABC_FG, ABC_BG);
+
                 } else {
                     // No graphics flag — render as text (e.g. uppercase letters 0x40-0x5F)
                     char c = (char)(cell & 0x7F);
