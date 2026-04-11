@@ -32,7 +32,7 @@ running on the silicon that started it all.
 
 To begin, we must acknowledge the inherent limitations. This is not merely
 an exercise in pushing hardware to its absolute breaking point--though,
-in a sense, it is—but rather a historical experiment in "what could have been."
+in a sense, it is--but rather a historical experiment in "what could have been."
 We are exploring a counterfactual past, testing whether the symbolic power
 of Lisp could have survived within the spartan constraints of 1980s
 microcomputing if we had possessed the architectural tools we have today.
