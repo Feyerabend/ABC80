@@ -1,4 +1,4 @@
-# abclisp
+## abclisp
 
 A small Lisp/Scheme interpreter written in portable C, designed from the ground
 up to be transpiled to Z80 assembly — the kind of Lisp that could have lived in
@@ -6,12 +6,12 @@ the ROM of an 80s home computer.
 
 The experiment has two parts that work together:
 
-1. **A self-contained Lisp interpreter** (`lisp.c`) that compiles source text to
+1. __A self-contained Lisp interpreter__ (`lisp.c`) that compiles source text to
    a simple bytecode and runs it.  Every data structure fits in 16-bit values
    (one Z80 register pair); the VM is a trampoline dispatch loop that maps
    directly onto Z80 jump tables.
 
-2. **A Z80 proof** (`test_vm.c`) that re-implements the same VM in real Z80
+2. __A Z80 proof__ (`test_vm.c`) that re-implements the same VM in real Z80
    assembly, assembled and executed inside a Z80 emulator, and shows that both
    VMs produce identical results for the same programs.
 
@@ -23,9 +23,9 @@ The experiment has two parts that work together:
 (the answer is 720)
 ```
 
----
 
-## Why this is interesting
+
+### Why this is interesting
 
 Most Lisp-to-Z80 stories end at "here is a design sketch."  This one ends with
 a running proof: the C compiler emits bytecode, the Z80 VM executes it, and both
@@ -34,21 +34,21 @@ fully traced and tested.
 
 A few deliberate constraints make the result credible on real hardware:
 
-- **12-bit integers** — values wrap at 2047, mirroring Z80 register-pair
+- __12-bit integers__ — values wrap at 2047, mirroring Z80 register-pair
   arithmetic.  There is no silent promotion to a wider type.
-- **Fixed-size pools** — no `malloc`, no heap fragmentation.  Every pool is a
+- __Fixed-size pools__ — no `malloc`, no heap fragmentation.  Every pool is a
   static array; the total RAM footprint is under 4 KB.
-- **One-jump dispatch** — the VM loop indexes an opcode table and jumps directly
+- __One-jump dispatch__ — the VM loop indexes an opcode table and jumps directly
   to the handler, no comparison chain.  On Z80 this is four instructions.
-- **Tail-call optimisation** — self-tail-calls reuse the existing environment
+- __Tail-call optimisation__ — self-tail-calls reuse the existing environment
   frame.  `(count 500)` stays at stack depth 1.
 
 See [TRANSPILE.md](TRANSPILE.md) for the full phase-by-phase build-up, from
 "does a HALT assemble?" through environment lookup, closures, and cross-checks.
 
----
 
-## Building and running
+
+### Building and running
 
 No dependencies beyond a C11 compiler.
 
@@ -74,14 +74,14 @@ cc -std=c11 -O2 -Wno-unused-function -o test_vm test_vm.c
 bash tests/run_tests.sh
 ```
 
----
 
-## The language
+
+### The language
 
 abclisp is Scheme-flavoured.  Every expression returns a value; the REPL prints
 non-nil results automatically.
 
-### Literals
+#### Literals
 
 | Form | Type | Example |
 |------|------|---------|
@@ -94,7 +94,7 @@ non-nil results automatically.
 
 Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
 
-### Core forms
+#### Core forms
 
 ```scheme
 (define x 42)                        ; variable
@@ -111,7 +111,7 @@ Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
 (begin e1 e2 ... eN)
 ```
 
-### Arithmetic and comparison
+#### Arithmetic and comparison
 
 ```scheme
 (+ a b)   (- a b)   (* a b)         ; no division — Z80 has none
@@ -119,7 +119,7 @@ Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
 (not x)
 ```
 
-### Lists
+#### Lists
 
 ```scheme
 (cons 1 2)  (car lst)  (cdr lst)
@@ -129,14 +129,14 @@ Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
 (apply f (list a b))
 ```
 
-### Tail-call optimisation
+#### Tail-call optimisation
 
 ```scheme
 (define (count n) (if (= n 0) 'done (count (- n 1))))
 (count 500)    ; → done  (stack depth stays at 1)
 ```
 
-### I/O
+#### I/O
 
 ```scheme
 (display x)    ; print without quoting
@@ -146,9 +146,9 @@ Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
 (error n)      ; print E:N and halt
 ```
 
----
 
-## How the Z80 proof works
+
+### How the Z80 proof works
 
 The proof lives in `test_vm.c`.  It is a single C file that:
 
@@ -175,13 +175,13 @@ PASS  (+ 3 4) → INT(7) [Z80 VM]
 PASS  (+ 3 4) → INT(7) [C==Z80]
 ```
 
-### Memory layout
+#### Memory layout
 
 All addresses are defined in `vm_config.h` and can be changed to retarget the
 VM to a different machine:
 
-| Address | Contents |
-|---------|----------|
+| Address  | Contents |
+|----------|----------|
 | `0x0000` | VM code (fetch-dispatch loop + opcode handlers) |
 | `0x0200` | Subroutines (ENV_ADDR, ENV_NEW, ENV_DEF, ENV_GET, FUN_ADDR) |
 | `0x03A0` | PUTCHAR (port variant: `OUT (0),A`) |
@@ -195,12 +195,12 @@ VM to a different machine:
 | `0x4900` | Bytecode opcode stream |
 | `0x4A00` | Bytecode operand stream (2 B each) |
 
-### Val encoding
+#### Val encoding
 
 Every Lisp value is a 16-bit word — one Z80 register pair:
 
 ```
- 15 14 13 12 | 11 10  9  8  7  6  5  4  3  2  1  0
+ 15 14 13 12 |  11 10  9  8  7  6  5  4  3  2  1  0  |  
  +-----------+---------------------------------------+
  |    tag    |              payload (12 bits)        |
  +-----------+---------------------------------------+
@@ -208,16 +208,16 @@ Every Lisp value is a 16-bit word — one Z80 register pair:
 
 | Tag | Type | Payload |
 |-----|------|---------|
-| 0 | NIL | — |
-| 1 | INT | 12-bit signed integer |
-| 2 | SYM | symbol table index |
-| 3 | PAIR | heap cell index |
-| 4 | FUN | function record index |
-| 5 | BOOL | 0 = #f, 1 = #t |
-| 6 | CHAR | ASCII code |
-| 7 | STR | string pool index |
+| 0   | NIL  | —       |
+| 1   | INT  | 12-bit signed integer |
+| 2   | SYM  | symbol table index |
+| 3   | PAIR | heap cell index |
+| 4   | FUN  | function record index |
+| 5   | BOOL | 0 = #f, 1 = #t |
+| 6   | CHAR | ASCII code |
+| 7   | STR  | string pool index |
 
-### Opcode dispatch
+#### Opcode dispatch
 
 The fetch loop loads the opcode, indexes the jump table, and jumps — no
 `switch`, no comparisons:
@@ -239,11 +239,11 @@ fetch:
   JP   (HL)            ; one jump to handler
 ```
 
----
 
-## What is proven, what is not
 
-**Proven** (78 tests, all passing):
+### What is proven, what is not
+
+__Proven__ (78 tests, all passing):
 
 - Val tag/payload encoding and extraction on Z80
 - Lisp stack push/pop via IY
@@ -255,25 +255,25 @@ fetch:
 - Full end-to-end cross-check: C compiler → Z80 VM, for `(+ 3 4)`, `(* 6 7)`,
   `(- 10 3)`, `(if #t 1 2)`, `(if #f 1 2)`, `(let ...)`, `((lambda ...) ...)`
 
-**Not yet proven on Z80** (C VM handles these; Z80 handlers are stubs):
+__Not yet proven on Z80__ (C VM handles these; Z80 handlers are stubs):
 
 - `=`, `<`, `not`, `and`, `or` (comparison and boolean ops)
 - `cons`, `car`, `cdr`, `list`, `pair?`, `null?`, `append` (list ops)
 - `OP_TAILCALL` (tail recursion — implemented in C VM, Z80 stub)
 - `OP_NEWLINE`, `OP_READ`, `OP_WRITE` (more I/O)
 
----
 
-## Going further
+
+### Going further
 
 The logical next steps, in order:
 
-1. **OP\_EQ / OP\_LT / OP\_NOT** — straightforward Z80 flag comparisons.
-2. **OP\_TAILCALL** — reuse the existing env frame for self-calls; the
+1. __OP\_EQ / OP\_LT / OP\_NOT__ — straightforward Z80 flag comparisons.
+2. __OP\_TAILCALL__ — reuse the existing env frame for self-calls; the
    call-stack pop and IP redirect are already sketched in the subroutines.
-3. **List ops** — cons/car/cdr on the heap cells already defined in `lisp.c`.
-4. **Full cross-check suite** — run the Lisp test suite against the Z80 VM.
-5. **ROM image** — assemble the VM to a flat binary, load it into an ABC80 or
+3. __List ops__ — cons/car/cdr on the heap cells already defined in `lisp.c`.
+4. __Full cross-check suite__ — run the Lisp test suite against the Z80 VM.
+5. __ROM image__ — assemble the VM to a flat binary, load it into an ABC80 or
    ZX Spectrum emulator, and type Lisp at the keyboard.
 
 The assembler (`z80asm.c`) and disassembler (`disasm.c`) are already present and
@@ -282,9 +282,9 @@ used by the test harness — no additional tooling needed for steps 1–4.
 To retarget to a different machine, edit `vm_config.h` and swap in a new
 PUTCHAR/GETCHAR subroutine string.
 
----
 
-## File map
+
+### File map
 
 | File | Role |
 |------|------|
@@ -298,13 +298,13 @@ PUTCHAR/GETCHAR subroutine string.
 | `TRANSPILE.md` | Phase-by-phase design and implementation notes |
 | `tests/run_tests.sh` | Full test suite (REPL + Z80 proof) |
 
----
 
-## Known limitations
 
-- **No garbage collection.**  Pools fill up over a long session; restart to reset.
-- **No floating point.**  12-bit integer arithmetic with silent wrap.
-- **No division.**  Z80 has no `DIV` instruction.
-- **Integers are 12-bit signed.**  Maximum value: 2047.
-- **No `define-syntax` or macros.**  Quasiquote covers the common case.
-- **Single-line REPL input.**  Each line must be a complete s-expression.
+### Known limitations
+
+- __No garbage collection.__  Pools fill up over a long session; restart to reset.
+- __No floating point.__  12-bit integer arithmetic with silent wrap.
+- __No division.__  Z80 has no `DIV` instruction.
+- __Integers are 12-bit signed.__  Maximum value: 2047.
+- __No `define-syntax` or macros.__  Quasiquote covers the common case.
+- __Single-line REPL input.__  Each line must be a complete s-expression.
