@@ -1,9 +1,9 @@
 1 REM UNTESTED .. JUST UPLOADED .. ERASE THIS AFTER TEST AND ADJUSTMENTS
 10 REM -- CONFIG --
-20 A%=40% : REM width
+20 A%=36% : REM width
 30 B%=20% : REM height
 40 REM -- INIT STATE --
-50 DIM C%(1000%), D%(1000%) : REM snake x/y arrays
+50 DIM C%(1000%),D%(1000%) : REM snake x/y arrays
 60 E%=5% : REM start length of snake
 70 FOR L%=1% TO E%
 80 C%(L%)=INT(A%/2%)-L%
@@ -35,11 +35,11 @@
 2080 NEXT L%
 2090 RETURN
 3000 REM -- INPUT --
-3010 M% = INP(56%) AND 7% : REM input key (this right?)
-3020 IF M% = "w" AND G%<>1% THEN F%=0% : G%=-1%
-3030 IF M% = "s" AND G%<>-1% THEN F%=0% : G%=1%
-3040 IF M% = "a" AND F%<>1% THEN F%=-1% : G%=0%
-3050 IF M% = "d" AND F%<>-1% THEN F%=1% : G%=0%
+3010 M%=INP(56%) AND 7% : REM input key (this right?)
+3020 IF M%=119% AND G%<>1% THEN F%=0% : G%=-1%
+3030 IF M%=115% AND G%<>-1% THEN F%=0% : G%=1%
+3040 IF M%=97% AND F%<>1% THEN F%=-1% : G%=0%
+3050 IF M%=100% AND F%<>-1% THEN F%=1% : G%=0%
 3060 RETURN
 4000 REM -- UPDATE --
 4010 H%=C%(1%)+F%
