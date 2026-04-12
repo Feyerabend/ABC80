@@ -20,7 +20,7 @@
 1000 REM -- PLACE FOOD --
 1010 J%=INT(RND*(A%-2%))+2% : REM food pos x
 1020 K%=INT(RND*(B%-2%))+2% : REM food pos y
-1030 FOR L%=1% TO E%
+1030 FOR L%=1% TO E% : REM recalc if pos collide w/ snake
 1040 IF C%(L%)=J% AND D%(L%)=K% THEN GOTO 1010
 1050 NEXT L%
 1060 RETURN
