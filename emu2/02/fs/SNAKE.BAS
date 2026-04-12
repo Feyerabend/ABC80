@@ -48,7 +48,7 @@
 4040 FOR L%=1% TO E%
 4050 IF C%(L%)=H% AND D%(L%)=I% THEN GOTO 9000
 4060 NEXT L%
-4070 FOR L%=E% TO 2% STEP -1%
+4070 FOR L%=E% TO 2% STEP -1% : REM "move" snake
 4080 C%(L%)=C%(L%-1%)
 4090 D%(L%)=D%(L%-1%)
 4100 NEXT L%
