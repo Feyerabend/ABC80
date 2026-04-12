@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <assert.h>
+#include "vm_config.h"
 
 /* -----------------------------------------------------------------------
  * Pull in the Z80 emulator.
@@ -1405,7 +1406,7 @@ static void test_env_chain(void)
 
 static const char *p8_env_addr =
     "  ORG  0x0200\n"
-    "ENV_ADDR:\n"          /* A=frame_idx → HL = 0x4000 + A*32 */
+    "ENV_ADDR:\n"          /* A=frame_idx → HL = ENV_BASE + A*32 */
     "  LD   L, A\n"
     "  LD   H, 0\n"
     "  ADD  HL, HL\n"      /* ×2  */
@@ -1413,7 +1414,7 @@ static const char *p8_env_addr =
     "  ADD  HL, HL\n"      /* ×8  */
     "  ADD  HL, HL\n"      /* ×16 */
     "  ADD  HL, HL\n"      /* ×32 */
-    "  LD   DE, 0x4000\n"
+    "  LD   DE, " XSTR(CFG_ENV_BASE) "\n"
     "  ADD  HL, DE\n"
     "  RET\n";
 
@@ -1553,13 +1554,13 @@ static const char *p8_env_get =
 
 static const char *p8_fun_addr =
     "  ORG  0x0380\n"
-    "FUN_ADDR:\n"           /* A=fid → HL = 0x4400 + A*8 */
+    "FUN_ADDR:\n"           /* A=fid → HL = FUN_BASE + A*8 */
     "  LD   L, A\n"
     "  LD   H, 0\n"
     "  ADD  HL, HL\n"       /* ×2 */
     "  ADD  HL, HL\n"       /* ×4 */
     "  ADD  HL, HL\n"       /* ×8 */
-    "  LD   DE, 0x4400\n"
+    "  LD   DE, " XSTR(CFG_FUN_BASE) "\n"
     "  ADD  HL, DE\n"
     "  RET\n";
 
@@ -1578,15 +1579,15 @@ static const char *p8_fun_addr =
 
 /* PUTCHAR port variant: OUT (0), A  — one byte to port 0 */
 static const char *p9_putchar_port =
-    "  ORG  0x03A0\n"
+    "  ORG  " XSTR(CFG_PUTCHAR) "\n"
     "PUTCHAR:\n"
     "  OUT  (0), A\n"
     "  RET\n";
 
 /* PUTCHAR memory-mapped variant: append A to buffer pointed to by
- * MMIO_OUT_PTR (0x45F0); advance pointer.                               */
+ * MMIO_OUT_PTR (CFG_MMIO_OUT_PTR); advance pointer.                     */
 static const char *p9_putchar_mem =
-    "  ORG  0x03A0\n"
+    "  ORG  " XSTR(CFG_PUTCHAR) "\n"
     "PUTCHAR:\n"
     "  PUSH HL\n"
     "  LD   HL, (0x45F0)\n" /* load output-write pointer */
@@ -1634,15 +1635,15 @@ static const char *p9_getchar_mem =
 static const char *p8_vm =
     "  ORG  0x0000\n"
     /* entry: init IY (Lisp stack), hardware SP, vm_ip */
-    "  LD   IY, 0x4600\n"   /* STK_BASE */
-    "  LD   SP, 0xFE00\n"
+    "  LD   IY, " XSTR(CFG_STK_BASE) "\n"
+    "  LD   SP, " XSTR(CFG_HW_SP) "\n"
     "  LD   B, 0\n"
     "  JP   fetch\n"
 
     /* ---- fetch ---- */
     "fetch:\n"
     /* opcode = ops[B] */
-    "  LD   HL, 0x4900\n"   /* OPS_BASE */
+    "  LD   HL, " XSTR(CFG_OPS_BASE) "\n"
     "  LD   E, B\n"
     "  LD   D, 0\n"
     "  ADD  HL, DE\n"
@@ -1651,18 +1652,18 @@ static const char *p8_vm =
     "  LD   L, B\n"
     "  LD   H, 0\n"
     "  ADD  HL, HL\n"       /* 2*B */
-    "  LD   DE, 0x4A00\n"   /* ARGS_BASE */
+    "  LD   DE, " XSTR(CFG_ARGS_BASE) "\n"
     "  ADD  HL, DE\n"
     "  LD   E, (HL)\n"
     "  INC  HL\n"
     "  LD   D, (HL)\n"      /* DE = vm_arg */
     "  INC  B\n"            /* B = vm_ip++ */
-    /* dispatch via jump table at 0x4700 */
+    /* dispatch via jump table */
     "  LD   L, A\n"
     "  LD   H, 0\n"
     "  ADD  HL, HL\n"       /* 2 * opcode */
     "  PUSH BC\n"
-    "  LD   BC, 0x4700\n"   /* OPTBL */
+    "  LD   BC, " XSTR(CFG_OPTBL) "\n"
     "  ADD  HL, BC\n"
     "  LD   C, (HL)\n"
     "  INC  HL\n"
@@ -1845,30 +1846,30 @@ static const char *p8_vm =
     "  CP   0x00\n"
     "  JR   NZ, odsp_nt_bool\n"
     "  LD   A, 0x28\n"         /* '(' */
-    "  CALL 0x03A0\n"
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  LD   A, 0x29\n"         /* ')' */
-    "  CALL 0x03A0\n"
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  JP   odsp_done\n"
     /* ---- BOOL (tag=5) → "#t" or "#f" ---- */
     "odsp_nt_bool:\n"
     "  CP   0x50\n"
     "  JR   NZ, odsp_nt_char\n"
     "  LD   A, 0x23\n"         /* '#' */
-    "  CALL 0x03A0\n"
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  LD   A, E\n"            /* payload: 0=#f, 1=#t */
     "  OR   A\n"
     "  LD   A, 0x66\n"         /* 'f' */
     "  JR   Z, odsp_nt_bch\n"
     "  LD   A, 0x74\n"         /* 't' */
     "odsp_nt_bch:\n"
-    "  CALL 0x03A0\n"
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  JP   odsp_done\n"
     /* ---- CHAR (tag=6) → print E directly ---- */
     "odsp_nt_char:\n"
     "  CP   0x60\n"
     "  JR   NZ, odsp_nt_str\n"
     "  LD   A, E\n"
-    "  CALL 0x03A0\n"
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  JP   odsp_done\n"
     /* ---- STR (tag=7) → print strs[E] from 0x4580 + E*16 ---- */
     "odsp_nt_str:\n"
@@ -1880,13 +1881,13 @@ static const char *p8_vm =
     "  ADD  HL, HL\n"          /* HL = E * 4 */
     "  ADD  HL, HL\n"          /* HL = E * 8 */
     "  ADD  HL, HL\n"          /* HL = E * 16 */
-    "  LD   DE, 0x4580\n"      /* STRS_BASE */
+    "  LD   DE, " XSTR(CFG_STRS_BASE) "\n"
     "  ADD  HL, DE\n"          /* HL = &strs[E] */
     "odsp_nt_sl:\n"
     "  LD   A, (HL)\n"
     "  OR   A\n"
     "  JP   Z, odsp_done\n"    /* null terminator */
-    "  CALL 0x03A0\n"
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  INC  HL\n"
     "  JR   odsp_nt_sl\n"
 
@@ -2130,7 +2131,7 @@ static const char *p8_vm =
     "  BIT  3, H\n"
     "  JR   Z, odsp_pos\n"
     "  LD   A, 0x2D\n"      /* '-' */
-    "  CALL 0x03A0\n"       /* PUTCHAR('-') */
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"       /* PUTCHAR('-') */
     /* Negate HL mod 2^12 */
     "  XOR  A\n"
     "  SUB  L\n"
@@ -2145,7 +2146,7 @@ static const char *p8_vm =
     "  OR   L\n"
     "  JR   NZ, odsp_nonz\n"
     "  LD   A, 0x30\n"      /* '0' */
-    "  CALL 0x03A0\n"       /* PUTCHAR('0') */
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"       /* PUTCHAR('0') */
     "  JR   odsp_done\n"
     "odsp_nonz:\n"
     /* Write digits LSB-first into scratch buffer at 0x45E0 via IX */
@@ -2190,15 +2191,15 @@ static const char *p8_vm =
     "  JR   Z, odsp_done\n"
     "  DEC  IX\n"
     "  LD   A, (IX+0)\n"
-    "  CALL 0x03A0\n"       /* PUTCHAR(digit) */
+    "  CALL " XSTR(CFG_PUTCHAR) "\n"       /* PUTCHAR(digit) */
     "  DEC  B\n"
     "  JR   odsp_pr\n"
     "odsp_done:\n"
     "  POP  BC\n"           /* restore vm_ip */
     "  JP   fetch\n"
 
-    /* ---- jump table at 0x4700 (37 entries × 2 bytes) ---- */
-    "  ORG  0x4700\n"
+    /* ---- jump table (37 entries × 2 bytes) ---- */
+    "  ORG  " XSTR(CFG_OPTBL) "\n"
     "  DEFW op_nop\n"       /* 0  NOP     */
     "  DEFW op_push\n"      /* 1  PUSH    */
     "  DEFW op_nop\n"       /* 2  POP     */
@@ -2364,10 +2365,10 @@ static void test_lambda_call(void)
  * ----------------------------------------------------------------------- */
 
 /* MMIO scratch pointers (must match p9_putchar_mem / p9_getchar_mem) */
-#define MMIO_OUT_PTR  0x45F0u
-#define MMIO_IN_PTR   0x45F2u
-#define MMIO_IN_END   0x45F4u
-#define MMIO_OUT_BUF  0x4800u
+#define MMIO_OUT_PTR  ((uint16_t)CFG_MMIO_OUT_PTR)
+#define MMIO_IN_PTR   ((uint16_t)CFG_MMIO_IN_PTR)
+#define MMIO_IN_END   ((uint16_t)CFG_MMIO_IN_END)
+#define MMIO_OUT_BUF  ((uint16_t)CFG_MMIO_OUT_BUF)
 
 /* Run PUSH val / DISPLAY / HALT using port-based PUTCHAR.
  * Characters land in out_buf via the port_out hook. */
@@ -2377,15 +2378,15 @@ static void run_display(uint16_t val)
     out_buf[0] = '\0'; out_pos = 0;
 
     asm_at(p8_vm,          0x0000);
-    asm_at(p9_putchar_port, 0x03A0);  /* port-based PUTCHAR at fixed address */
+    asm_at(p9_putchar_port, CFG_PUTCHAR);
 
     /* ops: PUSH(1), DISPLAY(36), HALT(23) */
-    m[0x4900] = 1;  m[0x4901] = 36; m[0x4902] = 23;
+    m[CFG_OPS_BASE + 0] = 1;  m[CFG_OPS_BASE + 1] = 36; m[CFG_OPS_BASE + 2] = 23;
     /* args: val word */
-    m[0x4A00] = (uint8_t)(val & 0xFF);
-    m[0x4A01] = (uint8_t)(val >> 8);
+    m[CFG_ARGS_BASE + 0] = (uint8_t)(val & 0xFF);
+    m[CFG_ARGS_BASE + 1] = (uint8_t)(val >> 8);
 
-    init(); pc = 0x0000; sp = 0xFE00; iy = 0x4600;
+    init(); pc = 0x0000; sp = CFG_HW_SP; iy = CFG_STK_BASE;
     for (int i = 0; i < 5000 && !halted; i++) step();
     out_buf[out_pos] = '\0';
 }
@@ -2397,18 +2398,18 @@ static void run_display_mmio(uint16_t val)
     memset(m, 0, sizeof m);
 
     asm_at(p8_vm,         0x0000);
-    asm_at(p9_putchar_mem, 0x03A0);   /* memory-mapped PUTCHAR at same address */
+    asm_at(p9_putchar_mem, CFG_PUTCHAR);
 
     /* initialise MMIO_OUT_PTR to point at the output buffer */
     m[MMIO_OUT_PTR + 0] = (uint8_t)(MMIO_OUT_BUF & 0xFF);
     m[MMIO_OUT_PTR + 1] = (uint8_t)(MMIO_OUT_BUF >> 8);
 
     /* ops: PUSH(1), DISPLAY(36), HALT(23) */
-    m[0x4900] = 1;  m[0x4901] = 36; m[0x4902] = 23;
-    m[0x4A00] = (uint8_t)(val & 0xFF);
-    m[0x4A01] = (uint8_t)(val >> 8);
+    m[CFG_OPS_BASE + 0] = 1;  m[CFG_OPS_BASE + 1] = 36; m[CFG_OPS_BASE + 2] = 23;
+    m[CFG_ARGS_BASE + 0] = (uint8_t)(val & 0xFF);
+    m[CFG_ARGS_BASE + 1] = (uint8_t)(val >> 8);
 
-    init(); pc = 0x0000; sp = 0xFE00; iy = 0x4600;
+    init(); pc = 0x0000; sp = CFG_HW_SP; iy = CFG_STK_BASE;
     for (int i = 0; i < 5000 && !halted; i++) step();
 
     /* null-terminate: MMIO_OUT_PTR now holds the end address */
@@ -2452,16 +2453,16 @@ static void test_display(void)
     run_display(0x6041);
     CHECK("display CHAR('A') → \"A\"",    strcmp(out_buf, "A")    == 0);
 
-    /* STR "hi": manually load string at strs[0] = m[0x4580], then push T_STR(0) */
+    /* STR "hi": manually load string at strs[0] = m[CFG_STRS_BASE], push T_STR(0) */
     {
         memset(m, 0, sizeof m);
         out_buf[0] = '\0'; out_pos = 0;
         asm_at(p8_vm, 0x0000);
-        asm_at(p9_putchar_port, 0x03A0);
-        m[0x4580] = 'h'; m[0x4581] = 'i'; m[0x4582] = 0; /* strs[0] = "hi" */
-        m[0x4900] = 1;  m[0x4901] = 36; m[0x4902] = 23;  /* PUSH, DISPLAY, HALT */
-        m[0x4A00] = 0x00; m[0x4A01] = 0x70;               /* T_STR(0) = 0x7000 */
-        init(); pc = 0x0000; sp = 0xFE00; iy = 0x4600;
+        asm_at(p9_putchar_port, CFG_PUTCHAR);
+        m[CFG_STRS_BASE + 0] = 'h'; m[CFG_STRS_BASE + 1] = 'i'; m[CFG_STRS_BASE + 2] = 0;
+        m[CFG_OPS_BASE  + 0] = 1;  m[CFG_OPS_BASE + 1] = 36; m[CFG_OPS_BASE + 2] = 23;
+        m[CFG_ARGS_BASE + 0] = 0x00; m[CFG_ARGS_BASE + 1] = 0x70; /* T_STR(0) = 0x7000 */
+        init(); pc = 0x0000; sp = CFG_HW_SP; iy = CFG_STK_BASE;
         for (int i = 0; i < 5000 && !halted; i++) step();
         out_buf[out_pos] = '\0';
     }
@@ -2596,32 +2597,31 @@ static void xc_load_vm(void)
  * into Z80 emulator memory at the standard layout addresses.               */
 static void xc_load_bytecode(void)
 {
-    /* ops[] at 0x4900, args[] (words) at 0x4A00 */
     for (int i = 0; i < ncode; i++) {
-        m[0x4900 + i] = ops[i];
-        m[0x4A00 + i*2    ] = (uint8_t)(args[i] & 0xFF);
-        m[0x4A00 + i*2 + 1] = (uint8_t)(args[i] >> 8);
+        m[CFG_OPS_BASE  + i      ] = ops[i];
+        m[CFG_ARGS_BASE + i*2    ] = (uint8_t)(args[i] & 0xFF);
+        m[CFG_ARGS_BASE + i*2 + 1] = (uint8_t)(args[i] >> 8);
     }
-    /* funs[] at 0x4400 (8 bytes each) */
+    /* funs[] */
     for (int f = 0; f < nfuns; f++) {
-        uint16_t base = (uint16_t)(0x4400u + (unsigned)f * 8u);
+        uint16_t base = (uint16_t)(CFG_FUN_BASE + (unsigned)f * 8u);
         m[base + 0] = funs[f].addr;
         m[base + 1] = funs[f].env;   /* 0xFF = no captured env */
         m[base + 2] = funs[f].argc;
         for (int k = 0; k < 4; k++) m[base + 3 + k] = funs[f].args[k];
     }
-    /* VM state scalars at 0x45A0 */
-    m[0x45A0] = 0;              /* CUR_ENV = 0  (root env) */
-    m[0x45A1] = 0xFF;           /* CUR_FID = none */
-    m[0x45A2] = 0;              /* CSP = 0 */
-    m[0x45A3] = (uint8_t)nfuns; /* NFUNS */
-    m[0x45A4] = 1;              /* NENVS = 1 (root env pre-allocated) */
-    /* root env[0] at 0x4000 + 0*32 */
-    m[0x4000 + 18] = 0;         /* n = 0 (no bindings) */
-    m[0x4000 + 19] = 0xFF;      /* parent = none */
-    /* strs[] at 0x4580 (16 bytes each) */
+    /* VM state scalars */
+    m[CFG_VM_STATE + 0] = 0;              /* CUR_ENV = 0  (root env) */
+    m[CFG_VM_STATE + 1] = 0xFF;           /* CUR_FID = none */
+    m[CFG_VM_STATE + 2] = 0;              /* CSP = 0 */
+    m[CFG_VM_STATE + 3] = (uint8_t)nfuns; /* NFUNS */
+    m[CFG_VM_STATE + 4] = 1;              /* NENVS = 1 (root env pre-allocated) */
+    /* root env[0] */
+    m[CFG_ENV_BASE + 18] = 0;             /* n = 0 (no bindings) */
+    m[CFG_ENV_BASE + 19] = 0xFF;          /* parent = none */
+    /* strs[] */
     for (int i = 0; i < nstrs; i++) {
-        uint16_t base = (uint16_t)(0x4580u + (unsigned)i * 16u);
+        uint16_t base = (uint16_t)(CFG_STRS_BASE + (unsigned)i * 16u);
         for (int k = 0; k < 16; k++) m[base + k] = (uint8_t)strs[i].s[k];
     }
 }
@@ -2630,7 +2630,7 @@ static void xc_load_bytecode(void)
 static uint16_t xc_run_z80(void)
 {
     out_buf[0] = '\0'; out_pos = 0;
-    init(); pc = 0x0000; sp = 0xFE00; iy = 0x4600;
+    init(); pc = 0x0000; sp = CFG_HW_SP; iy = CFG_STK_BASE;
     for (int i = 0; i < 50000 && !halted; i++) step();
     return (uint16_t)(m[0x8000] | ((uint16_t)m[0x8001] << 8));
 }

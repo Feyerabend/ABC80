@@ -1,10 +1,19 @@
+# abclisp
 
-## abclisp
+A small Lisp/Scheme interpreter written in portable C, designed from the ground
+up to be transpiled to Z80 assembly — the kind of Lisp that could have lived in
+the ROM of an 80s home computer.
 
-A small Lisp/Scheme interpreter written in C, designed from the ground up to be
-transpilable to Z80 assembly.  It illustrates the route an 80s home computer
-manufacturer *might have* taken to put a real Lisp in ROM--the kind of thing
-that existed on the MIT Lisp Machine or in Interlisp, but squeezed into 64 KB.
+The experiment has two parts that work together:
+
+1. **A self-contained Lisp interpreter** (`lisp.c`) that compiles source text to
+   a simple bytecode and runs it.  Every data structure fits in 16-bit values
+   (one Z80 register pair); the VM is a trampoline dispatch loop that maps
+   directly onto Z80 jump tables.
+
+2. **A Z80 proof** (`test_vm.c`) that re-implements the same VM in real Z80
+   assembly, assembled and executed inside a Z80 emulator, and shows that both
+   VMs produce identical results for the same programs.
 
 ```
 > (define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
@@ -14,493 +23,288 @@ that existed on the MIT Lisp Machine or in Interlisp, but squeezed into 64 KB.
 (the answer is 720)
 ```
 
+---
 
+## Why this is interesting
 
-### Building and running
+Most Lisp-to-Z80 stories end at "here is a design sketch."  This one ends with
+a running proof: the C compiler emits bytecode, the Z80 VM executes it, and both
+return the same value.  The path from `(+ 3 4)` to a Z80 `HALT` instruction is
+fully traced and tested.
+
+A few deliberate constraints make the result credible on real hardware:
+
+- **12-bit integers** — values wrap at 2047, mirroring Z80 register-pair
+  arithmetic.  There is no silent promotion to a wider type.
+- **Fixed-size pools** — no `malloc`, no heap fragmentation.  Every pool is a
+  static array; the total RAM footprint is under 4 KB.
+- **One-jump dispatch** — the VM loop indexes an opcode table and jumps directly
+  to the handler, no comparison chain.  On Z80 this is four instructions.
+- **Tail-call optimisation** — self-tail-calls reuse the existing environment
+  frame.  `(count 500)` stays at stack depth 1.
+
+See [TRANSPILE.md](TRANSPILE.md) for the full phase-by-phase build-up, from
+"does a HALT assemble?" through environment lookup, closures, and cross-checks.
+
+---
+
+## Building and running
+
+No dependencies beyond a C11 compiler.
 
 ```sh
+# Build the REPL
 cc -std=c11 -O2 -o lisp lisp.c
+
+# Start the interactive REPL
 ./lisp
-```
 
-No dependencies beyond a C11 compiler.  Type expressions at the `>` prompt.
-Press Ctrl-D to quit.
-
-```sh
-## Batch mode (one complete s-expression per line)
+# Batch mode (one complete s-expression per line)
 printf '(define (square n) (* n n))\n(square 7)\n' | ./lisp
 ```
 
-Run the test suite:
+```sh
+# Build and run the Z80 proof (78 tests)
+cc -std=c11 -O2 -Wno-unused-function -o test_vm test_vm.c
+./test_vm
+```
 
 ```sh
+# Full test suite (REPL tests + Z80 proof)
 bash tests/run_tests.sh
 ```
 
+---
 
+## The language
 
-### The language
+abclisp is Scheme-flavoured.  Every expression returns a value; the REPL prints
+non-nil results automatically.
 
-abclisp is a Scheme-flavoured Lisp.  Every expression returns a value.
-The REPL prints non-nil results automatically.
-
-#### Literals
+### Literals
 
 | Form | Type | Example |
 |------|------|---------|
-| `42`, `-7` | Integer (12-bit signed, −2048..2047) | `(+ 40 2)` --> `42` |
-| `#t`, `#f` | Boolean | `(not #f)` --> `#t` |
-| `nil`, `()` | Empty list / false-ish | `(null? nil)` --> `#t` |
-| `#\A`, `#\space`, `#\newline` | Character | `(char->int #\A)` --> `65` |
-| `"hello"` | String (up to 15 chars) | `(str-len "hello")` --> `5` |
-| `(quote x)`, `'x` | Quoted symbol/list | `'(a b c)` --> `(a b c)` |
+| `42`, `-7` | Integer (12-bit signed, −2048..2047) | `(+ 40 2)` → `42` |
+| `#t`, `#f` | Boolean | `(not #f)` → `#t` |
+| `nil`, `()` | Empty list / false-ish | `(null? nil)` → `#t` |
+| `#\A`, `#\space`, `#\newline` | Character | `(char->int #\A)` → `65` |
+| `"hello"` | String (up to 15 chars) | `(str-len "hello")` → `5` |
+| `(quote x)`, `'x` | Quoted symbol/list | `'(a b c)` → `(a b c)` |
 
 Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
-This is deliberate: it mirrors Z80 register-pair arithmetic.
 
-#### Defining things
-
-```scheme
-(define x 42)                       ; variable
-(define (square n) (* n n))         ; function (shorthand)
-(define square (lambda (n) (* n n))); same thing explicitly
-(set! x 100)                        ; update existing binding
-```
-
-#### Arithmetic and comparison
+### Core forms
 
 ```scheme
-(+ a b)   (- a b)   (* a b)        ; arithmetic (no division — Z80 has none)
-(= a b)   (< a b)                  ; comparison --> #t or #f
-(not x)                             ; logical not  (#f and nil are falsy)
-```
+(define x 42)                        ; variable
+(define (square n) (* n n))          ; function
+(set! x 100)                         ; update binding
 
-#### Conditionals
-
-```scheme
-(if test then)
 (if test then else)
+(cond ((= x 1) "one") (else "other"))
+(and expr ...) (or expr ...)         ; short-circuit
 
-(cond ((= x 1) "one")
-      ((= x 2) "two")
-      (else    "other"))
+(lambda (x y) (+ x y))
+(let ((x 3) (y 4)) (+ x y))
+(letrec ((fact (lambda (n) ...))) (fact 6))
+(begin e1 e2 ... eN)
 ```
 
-`and` and `or` short-circuit:
+### Arithmetic and comparison
 
 ```scheme
-(and #t expr)   ; evaluates expr only if first is true
-(or  #f expr)   ; evaluates expr only if first is false
+(+ a b)   (- a b)   (* a b)         ; no division — Z80 has none
+(= a b)   (< a b)                   ; → #t or #f
+(not x)
 ```
 
-#### Functions and closures
+### Lists
 
 ```scheme
-(lambda (x y) (+ x y))             ; anonymous function
-
-(define (make-adder n)              ; returns a closure
-  (lambda (x) (+ x n)))
-
-(define add5 (make-adder 5))
-(add5 10)                           ; --> 15
+(cons 1 2)  (car lst)  (cdr lst)
+(list 1 2 3)
+(pair? x)  (null? x)
+(append (list 1 2) (list 3 4))      ; → (1 2 3 4)
+(apply f (list a b))
 ```
 
-Each `lambda` instantiation gets its own captured environment, so multiple
-closures from the same definition are independent.
-
-#### Let and letrec
-
-```scheme
-(let ((x 3) (y 4)) (+ x y))         ; --> 7  (bindings evaluated in outer env)
-
-(letrec ((fact (lambda (n)          ; self-reference works
-           (if (= n 0) 1 (* n (fact (- n 1)))))))
-  (fact 6))                         ; --> 720
-```
-
-`letrec` pre-binds all names to `nil` before evaluating the inits, so
-mutually recursive functions work:
-
-```scheme
-(letrec ((even? (lambda (n) (if (= n 0) #t (odd?  (- n 1)))))
-         (odd?  (lambda (n) (if (= n 0) #f (even? (- n 1))))))
-  (even? 10))                       ; --> #t
-```
-
-#### Tail-call optimisation
-
-Tail calls do not grow the call stack.  Self-tail-calls reuse the existing
-environment frame — zero allocation, true iteration:
+### Tail-call optimisation
 
 ```scheme
 (define (count n) (if (= n 0) 'done (count (- n 1))))
-(count 500)                         ; --> done  (stack depth stays at 1)
-
-(define (sum n acc)
-  (if (= n 0) acc (sum (- n 1) (+ acc n))))
-(sum 100 0)                         ; --> 954  (= 5050 mod 2^12)
+(count 500)    ; → done  (stack depth stays at 1)
 ```
 
-#### Lists
+### I/O
 
 ```scheme
-(cons 1 2)                          ; --> (1 2)  — a cell
-(car (list 1 2 3))                  ; --> 1
-(cdr (list 1 2 3))                  ; --> (2 3)
-(pair? (list 1))                    ; --> #t
-(null? nil)                         ; --> #t
-(list 1 2 3)                        ; --> (1 2 3)
-(append (list 1 2) (list 3 4))      ; --> (1 2 3 4)
-(apply f (list a b))                ; call f with a b as arguments
+(display x)    ; print without quoting
+(write x)      ; print in read-back form
+(newline)
+(read)         ; read one expression from stdin
+(error n)      ; print E:N and halt
 ```
 
-Lists are represented as flat cells (up to 6 elements each), not
-traditional cons chains.  `car`/`cdr` work as expected; `cdr` of a 3+
-element list allocates a new shorter cell.
+---
 
-#### Characters
+## How the Z80 proof works
 
-```scheme
-(char? #\A)          ; --> #t
-(char->int #\A)      ; --> 65
-(int->char 65)       ; --> #\A  (use display to print as 'A')
-(display #\A)        ; prints:  A
-```
+The proof lives in `test_vm.c`.  It is a single C file that:
 
-#### Strings
+1. Pulls in a Z80 emulator (`z80.c`) and assembler (`z80asm.c`).
+2. Pulls in the Lisp interpreter (`lisp.c`) in embedded mode — the compiler and
+   bytecode arrays become available as C functions and globals.
+3. Assembles the Z80 VM (handler by handler) into the emulator's 64 KB RAM.
+4. Copies the compiled bytecode into the agreed memory layout.
+5. Runs the emulator and reads back the result Val.
 
-```scheme
-(str-len "hello")           ; --> 5
-(str-ref "hello" 1)         ; --> #\e
-(str-append "foo" "bar")    ; --> "foobar"
-(str=? "abc" "abc")         ; --> #t
-(num->str 42)               ; --> "42"
-(str->num "123")            ; --> 123
-(sym->str 'hello)           ; --> "hello"
-(str->sym "world")          ; --> world  (symbol)
-(string? "hi")              ; --> #t
-```
-
-Strings are pooled — maximum 15 characters, 32 slots total.
-
-#### Quasiquote
-
-``` `` ` `` `` ` `` is quasiquote; `,` is unquote — expand at parse time:
-
-```scheme
-(define x 42)
-`(the answer is ,x)                ; --> (the answer is 42)
-
-(define (greet name)
-  `(hello ,name you-are ,(str-len (sym->str name)) chars))
-(greet 'alice)                     ; --> (hello alice you-are 5 chars)
-```
-
-#### I/O
-
-```scheme
-(display x)     ; print without quoting — strings appear bare, chars as char
-(write x)       ; print in read-back form — strings quoted, chars as #\X
-(newline)       ; print a newline
-(read)          ; read one expression from stdin, return it as a value
-(error n)       ; print E:N and halt the current expression
-```
-
-`display` and `write` return `nil`; the REPL suppresses nil results, so
-side-effecting calls print cleanly.
-
-#### Begin
-
-```scheme
-(begin expr1 expr2 ... exprN)      ; evaluate in sequence, return last
-```
-
-
-
-
-### Sample programs
-
-#### Fibonacci
-
-```scheme
-(define (fib n)
-  (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
-(fib 10)                           ; --> 55
-```
-
-#### Map (manual, tail-recursive accumulator)
-
-```scheme
-(define (my-map f lst)
-  (if (null? lst)
-      nil
-      (cons (f (car lst)) (my-map f (cdr lst)))))
-(my-map (lambda (x) (* x x)) (list 1 2 3 4 5))
-; --> (1 4 9 16 25)
-```
-
-#### Simple object via closure
-
-```scheme
-(define (make-point x y)
-  (lambda (msg)
-    (cond ((= msg 0) x)
-          ((= msg 1) y)
-          (else nil))))
-
-(define p (make-point 3 4))
-(list (p 0) (p 1))                 ; --> (3 4)
-```
-
-#### Data-driven program with read
-
-```scheme
-(define n (read))      ; waits for input
-; user types: 7
-(define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
-(fact n)               ; --> 5040
-```
-
-
-
-### Architecture
+Each cross-check test compiles an expression, runs it on the C VM, runs it on
+the Z80 VM, and asserts both answers match:
 
 ```
-source text
-    │
-    v  parse_expr()
-  AST (heap cells — Val words in flat Cell arrays)
-    │
-    v  compile()
-  bytecode  ops[uint8_t]  +  args[uint16_t]
-    │
-    v  vm_run() — trampoline dispatch
-  result Val
+(+ 3 4)
+  ip  op  arg
+   0   1  0x1003   PUSH  INT(3)
+   1   1  0x1004   PUSH  INT(4)
+   2   6  0x0000   ADD
+   3  21  0x8000   STORE → m[0x8000]
+   4  23  0x0000   HALT
+PASS  (+ 3 4) → INT(7) [C VM]
+PASS  (+ 3 4) → INT(7) [Z80 VM]
+PASS  (+ 3 4) → INT(7) [C==Z80]
 ```
 
-#### Values — Val (uint16_t)
+### Memory layout
 
-Every Lisp value fits in 16 bits — one Z80 register pair:
+All addresses are defined in `vm_config.h` and can be changed to retarget the
+VM to a different machine:
+
+| Address | Contents |
+|---------|----------|
+| `0x0000` | VM code (fetch-dispatch loop + opcode handlers) |
+| `0x0200` | Subroutines (ENV_ADDR, ENV_NEW, ENV_DEF, ENV_GET, FUN_ADDR) |
+| `0x03A0` | PUTCHAR (port variant: `OUT (0),A`) |
+| `0x03C0` | GETCHAR |
+| `0x4000` | Environment frames (32 B × 32) |
+| `0x4400` | Function/closure records (8 B × 48) |
+| `0x4580` | String pool (16 B × 32) |
+| `0x45A0` | VM scalars: CUR\_ENV, CUR\_FID, CSP, NFUNS, NENVS |
+| `0x4600` | Lisp value stack (IY base, grows up) |
+| `0x4700` | Opcode dispatch table (2 B × 37 entries) |
+| `0x4900` | Bytecode opcode stream |
+| `0x4A00` | Bytecode operand stream (2 B each) |
+
+### Val encoding
+
+Every Lisp value is a 16-bit word — one Z80 register pair:
 
 ```
  15 14 13 12 | 11 10  9  8  7  6  5  4  3  2  1  0
- +-----------+------------------------------------+
- |    tag    |           payload (12 bits)        |
- +-----------+------------------------------------+
+ +-----------+---------------------------------------+
+ |    tag    |              payload (12 bits)        |
+ +-----------+---------------------------------------+
 ```
 
 | Tag | Type | Payload |
 |-----|------|---------|
 | 0 | NIL | — |
 | 1 | INT | 12-bit signed integer |
-| 2 | SYM | index into syms[] |
-| 3 | PAIR | index into heap[] |
-| 4 | FUN | index into funs[] |
-| 5 | BOOL | 0=#f, 1=#t |
-| 6 | CHAR | ASCII code (7-bit) |
-| 7 | STR | index into strs[] |
+| 2 | SYM | symbol table index |
+| 3 | PAIR | heap cell index |
+| 4 | FUN | function record index |
+| 5 | BOOL | 0 = #f, 1 = #t |
+| 6 | CHAR | ASCII code |
+| 7 | STR | string pool index |
 
-Extracting tag and payload on Z80:
+### Opcode dispatch
 
-```z80
-; HL = Val
-LD  A, H
-RRCA \ RRCA \ RRCA \ RRCA  ; A = tag (upper nibble --> lower nibble)
-AND  0x0F                   ; A = tag
-
-LD  A, H
-AND  0x0F                   ; A = high 4 bits of payload
-; L = low 8 bits of payload
-```
-
-#### Instruction encoding
-
-Instructions are stored in two parallel arrays:
-
-```c
-uint8_t  ops[255];    // opcode byte — one Z80 register indexes this
-uint16_t args[255];   // operand word — loaded as a register pair
-```
-
-`ip` is `uint8_t` — the program counter fits in a single Z80 register.
-`ncode` is also `uint8_t`; the code buffer holds up to 254 instructions
-per session (the REPL accumulates code as definitions are entered).
-
-#### Trampoline dispatch
-
-The VM loop:
-
-```c
-while (!vm_halt && vm_ip < ncode) {
-    vm_arg = args[vm_ip];
-    optbl[ops[vm_ip++]]();
-}
-```
-
-`optbl[]` is an array of function pointers — one per opcode.  On Z80 this
-maps to a JP-table: load opcode into a register, index the table, `JP (HL)`.
-No switch, no comparison chain — one jump to the handler.
+The fetch loop loads the opcode, indexes the jump table, and jumps — no
+`switch`, no comparisons:
 
 ```z80
 fetch:
-  LD   A, (DE)       ; fetch opcode (DE = ip pointer into ops[])
-  INC  DE
-  LD   L, A
-  LD   H, 0
-  ADD  HL, HL        ; × 2  (each table entry = 2-byte address)
-  LD   BC, optbl
+  LD   HL, 0x4900      ; OPS_BASE
+  LD   E, B
+  LD   D, 0
+  ADD  HL, DE
+  LD   A, (HL)         ; A = opcode
+  ...
+  LD   BC, 0x4700      ; OPTBL
   ADD  HL, BC
-  LD   A, (HL)
+  LD   C, (HL)
   INC  HL
   LD   H, (HL)
-  LD   L, A
-  JP   (HL)          ; dispatch — handler returns to fetch with JP fetch
+  LD   L, C
+  JP   (HL)            ; one jump to handler
 ```
 
-#### Environment model
+---
 
-Environments are linked frames in a fixed pool:
+## What is proven, what is not
 
-```c
-typedef struct {
-    uint8_t key[6];   // symbol indices
-    Val     val[6];   // corresponding values
-    uint8_t n;        // number of bindings
-    uint8_t parent;   // parent frame index (0xFF = none)
-} Env;
-```
+**Proven** (78 tests, all passing):
 
-Lookup walks the parent chain comparing `uint8_t` symbol indices — on Z80
-this is a `CP` instruction per slot, no string comparison.
+- Val tag/payload encoding and extraction on Z80
+- Lisp stack push/pop via IY
+- INT add, subtract, multiply (shift-and-add)
+- Conditional jump (OP\_JZ for `if`)
+- Environment lookup, definition, update across parent frames
+- Closure instantiation and call (including captured environment)
+- OP\_DISPLAY for INT, BOOL, NIL, CHAR, STR — both port and memory-mapped I/O
+- Full end-to-end cross-check: C compiler → Z80 VM, for `(+ 3 4)`, `(* 6 7)`,
+  `(- 10 3)`, `(if #t 1 2)`, `(if #f 1 2)`, `(let ...)`, `((lambda ...) ...)`
 
-#### Tail calls
+**Not yet proven on Z80** (C VM handles these; Z80 handlers are stubs):
 
-`OP_TAILCALL` pops a new call frame instead of pushing one.  For self-calls
-(`fid == cur_fid`) it rebinds arguments in the existing env frame — zero
-allocation, infinite recursion via iteration.
+- `=`, `<`, `not`, `and`, `or` (comparison and boolean ops)
+- `cons`, `car`, `cdr`, `list`, `pair?`, `null?`, `append` (list ops)
+- `OP_TAILCALL` (tail recursion — implemented in C VM, Z80 stub)
+- `OP_NEWLINE`, `OP_READ`, `OP_WRITE` (more I/O)
 
-#### Closure instantiation
+---
 
-`OP_MKCLOS` is executed at runtime each time a `lambda` form is evaluated.
-It allocates a fresh slot in `funs[]` copied from the compiled template, then
-captures `cur_env`:
+## Going further
 
-```
-template funs[0]  (code in ROM)   -->  instance funs[1]  (env captured at call time)
-                                  -->  instance funs[2]  (different env, different closure)
-```
+The logical next steps, in order:
 
-This means two calls to `(make-adder 5)` and `(make-adder 10)` produce two
-independent closures that do not interfere.
+1. **OP\_EQ / OP\_LT / OP\_NOT** — straightforward Z80 flag comparisons.
+2. **OP\_TAILCALL** — reuse the existing env frame for self-calls; the
+   call-stack pop and IP redirect are already sketched in the subroutines.
+3. **List ops** — cons/car/cdr on the heap cells already defined in `lisp.c`.
+4. **Full cross-check suite** — run the Lisp test suite against the Z80 VM.
+5. **ROM image** — assemble the VM to a flat binary, load it into an ABC80 or
+   ZX Spectrum emulator, and type Lisp at the keyboard.
 
+The assembler (`z80asm.c`) and disassembler (`disasm.c`) are already present and
+used by the test harness — no additional tooling needed for steps 1–4.
 
+To retarget to a different machine, edit `vm_config.h` and swap in a new
+PUTCHAR/GETCHAR subroutine string.
 
-### Memory map (RAM)
+---
 
-All pools are fixed-size global arrays — no `malloc`, no heap fragmentation:
+## File map
 
-| Pool | Size | Notes |
-|------|------|-------|
-| `ops[255]` | 255 B | Bytecode opcode stream |
-| `args[255]` | 510 B | Parallel operand stream |
-| `syms[64]` | 768 B | Symbol name table (12 B each) |
-| `strs[32]` | 512 B | String pool (16 B each) |
-| `heap[64]` | 832 B | Lisp cells (6 vals × 2 B + 1) |
-| `envs[32]` | 640 B | Environment frames |
-| `funs[48]` | 336 B | Function/closure records |
-| `stk[32]` | 64 B | Value stack |
-| `cs[16]` | 48 B | Call frame stack |
-| misc | ~150 B | read_buf, counters, globals |
-| **Total** | **~4165 B** | **~4 KB of 64 KB used** |
+| File | Role |
+|------|------|
+| `lisp.c` | Lisp interpreter: parser, compiler, C VM, REPL |
+| `test_vm.c` | Z80 proof: assembles VM, cross-checks C and Z80 results |
+| `vm_config.h` | Machine-specific layout constants (addresses, I/O port) |
+| `z80.c` / `z80.h` | Z80 emulator |
+| `z80asm.c` / `z80asm.h` | Z80 assembler (used by test harness) |
+| `disasm.c` / `disasm.h` | Z80 disassembler (used for debug dumps) |
+| `z80mem.h` | Glue header — declares `z80_read_mem()` for disasm |
+| `TRANSPILE.md` | Phase-by-phase design and implementation notes |
+| `tests/run_tests.sh` | Full test suite (REPL + Z80 proof) |
 
-The remaining ~60 KB is available for user-defined data and program storage.
+---
 
+## Known limitations
 
-
-### Error and warning codes
-
-| Code | Meaning |
-|------|---------|
-| `E:1` | Syntax / unexpected token |
-| `E:2` | Unbound variable |
-| `E:3` | Type error |
-| `E:4` | Stack overflow |
-| `E:5` | Out of memory |
-| `E:6` | Wrong number of arguments |
-| `W:1` | Heap cells low |
-| `W:2` | Env frames low |
-| `W:3` | Code slots low |
-| `W:4` | Symbol table low |
-| `W:5` | String pool low |
-
-`(error N)` raises a user-level error with code N, prints `E:N`, and halts
-the current expression.
-
-
-
-### Expanding the interpreter
-
-Adding a new primitive takes three steps:
-
-*1. Add an opcode* to the enum in the bytecode section:
-
-```c
-enum {
-    ...
-    OP_MY_OP    /* new opcode */
-};
-```
-
-**2. Write a handler** (one `void` function, all state via globals):
-
-```c
-static void op_my_op(void) {
-    Val a = POP();
-    /* ... */
-    PUSH(result);
-}
-```
-
-**3. Register it** in the dispatch table (must match enum order):
-
-```c
-static const OpFn optbl[] = {
-    ..., op_my_op
-};
-```
-
-Then wire it into the compiler the same way `display` is — either as a
-`UNOP`/`BINOP` macro entry, or as an explicit `if (IS_KW(head, K.xxx))` case.
-
-The K struct pre-interns all keyword names at startup (`k_init()`), so the
-compiler dispatches via a single `uint8_t` index comparison — one `CP`
-instruction on Z80.
-
-
-
-### Known limitations
-
-- *No garbage collection.*  Pools fill up over a long session.  The REPL
-  prints `W:N` warnings when a pool is near capacity.  Restart to reset.
-
-- *No floating point.*  Z80 has no FPU; implementing floats in software
-  would consume ~2 KB of ROM and ~1 KB of RAM — too expensive for a 64 KB
-  system.  Integer arithmetic with 12-bit wrap is the intended model.
-
-- *No division.*  Z80 has no `DIV` instruction.  Add it yourself as
-  `OP_DIV` using a subtraction loop if needed.
-
-- *No proper tail calls for cross-function calls via `apply`.*  `apply`
-  always pushes a call frame.
-- *Integers are 12-bit signed.*  Maximum value: 2047!  Values above this
-  wrap silently.  This is a deliberate Z80 trade-off, not a bug.
-
-- *No `define-syntax` or macros.*  Quasiquote covers the common case.
-
-- *Single-line REPL input.*  Each line must be a complete s-expression.
-  This mirrors the 80s BASIC model where you type one statement per line.
-
-- *Closure pool exhaustion.*  Each `lambda` instantiation allocates a slot
-  in `funs[]`.  With `MAX_FUN=48` you can create up to ~30 runtime closures
-  (the rest are compiler templates).  A future `gc_funs()` pass could reclaim
-  unreachable slots.
+- **No garbage collection.**  Pools fill up over a long session; restart to reset.
+- **No floating point.**  12-bit integer arithmetic with silent wrap.
+- **No division.**  Z80 has no `DIV` instruction.
+- **Integers are 12-bit signed.**  Maximum value: 2047.
+- **No `define-syntax` or macros.**  Quasiquote covers the common case.
+- **Single-line REPL input.**  Each line must be a complete s-expression.

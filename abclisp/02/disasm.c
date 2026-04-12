@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdio.h>
-#include "abc80.h"
+#include "z80mem.h"
 #include "disasm.h"
 
 // Read helpers — all memory accesses go through the Z80 address space.

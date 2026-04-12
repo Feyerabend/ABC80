@@ -1,4 +1,3 @@
-// PENDING: NOT FINISHED YET!!!
 /* vm_config.h — machine-specific layout constants for the abclisp Z80 VM.
  *
  * Change the values here to retarget the VM to a different machine.
@@ -9,19 +8,19 @@
  */
 #pragma once
 
-/* -----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
  * I/O
- * ----------------------------------------------------------------------- */
-#define CFG_PORT_IO    0       /* Z80 OUT/IN port number for character I/O */
-#define CFG_PUTCHAR    0x03A0  /* PUTCHAR subroutine address               */
-#define CFG_GETCHAR    0x03C0  /* GETCHAR subroutine address               */
+ * ---------------------------------------------------------------------- */
+#define CFG_PORT_IO    0        /* Z80 OUT/IN port number for character I/O */
+#define CFG_PUTCHAR    0x03A0   /* PUTCHAR subroutine address               */
+#define CFG_GETCHAR    0x03C0   /* GETCHAR subroutine address               */
 
-/* -----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
  * Z80 hardware stack
- * ----------------------------------------------------------------------- */
-#define CFG_HW_SP      0xFE00   /* Initial SP — top of scratch RAM         */
+ * ---------------------------------------------------------------------- */
+#define CFG_HW_SP      0xFE00   /* Initial SP — top of scratch RAM          */
 
-/* -----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
  * VM RAM layout
  *
  *   ENV_BASE   0x4000   environment frames  (32 B × 32 = 1 KB)
