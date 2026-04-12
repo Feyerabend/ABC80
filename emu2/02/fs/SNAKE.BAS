@@ -35,7 +35,7 @@
 2080 NEXT L%
 2090 RETURN
 3000 REM -- INPUT --
-3010 M%=INP(56%) AND 7% : REM input key (this right?)
+3010 M%=INP(56%) : REM input key (this right?)
 3020 IF M%=119% AND G%<>1% THEN F%=0% : G%=-1%
 3030 IF M%=115% AND G%<>-1% THEN F%=0% : G%=1%
 3040 IF M%=97% AND F%<>1% THEN F%=-1% : G%=0%
