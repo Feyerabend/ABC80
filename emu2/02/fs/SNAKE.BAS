@@ -26,12 +26,12 @@
 1060 RETURN
 2000 REM -- DRAW BORDERS --
 2010 FOR L%=1% TO A%
-2020 ; CUR(L%,1%);"#";
-2030 ; CUR(L%,B%);"#";
+2020 ; CUR(L%,1%)"#";
+2030 ; CUR(L%,B%)"#";
 2040 NEXT L%
 2050 FOR L%=1% TO B%
-2060 ; CUR(1%,L%);"#";
-2070 ; CUR(A%,L%);"#";
+2060 ; CUR(1%,L%)"#";
+2070 ; CUR(A%,L%)"#";
 2080 NEXT L%
 2090 RETURN
 3000 REM -- INPUT --
