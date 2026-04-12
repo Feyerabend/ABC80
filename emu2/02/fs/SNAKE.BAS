@@ -57,12 +57,12 @@
 4130 IF H%=J% AND I%=K% THEN E%=E%+1% : GOSUB 1000
 4140 RETURN
 5000 REM -- DRAW --
-5010 ; CUR(C%(E%),D%(E%));" ";
+5010 ; CUR(C%(E%),D%(E%))" ";
 5020 FOR L%=1% TO E%
 5030 U%=C%(L%) : V%=D%(L%)
-5040 IF L%=1% THEN ; CUR(U%,V%);"O"; ELSE ; CUR(U%,V%)"o";
+5040 IF L%=1% THEN ; CUR(U%,V%)"O"; ELSE ; CUR(U%,V%)"o";
 5050 NEXT L%
-5060 ; CUR(J%,K%);"*";
+5060 ; CUR(J%,K%)"*";
 5070 RETURN
 9000 REM -- GAME OVER --
 9010 ; CUR(INT(A%/2%)-5%,INT(B%/2%));"GAME OVER"
