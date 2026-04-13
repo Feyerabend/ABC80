@@ -97,10 +97,19 @@ static void screen_refresh(void) {
                 //
                 // Mapping: pat = TL,TR from bits 6,7  +  ML,MR,BL,BR from bits 0-3
 
-                // THIS IS NOT CORRECT, AND WE WILL HAVE TO DO MAPPING INSTEAD
-                // STAY TUNED ..
                 if (cell & 0x20) {
-                    uint8_t pat = ((cell & 0xC0) >> 6) | ((cell & 0x0F) << 2);
+                    // Map screen RAM byte -> font char (0xA0-0xDF).
+                    //
+                    // ABC80 graphics encoding (verified against MAME abc80_v.cpp):
+                    //   bit0=TL  bit1=TR  bit2=ML  bit3=MR  bit4=BL  bit6=BR
+                    //   bit5 unused for dots (always 1 as the "blank" base 0x20)
+                    //   bit7 = cursor attribute
+                    //
+                    // Font pattern index p = char - 0xA0:
+                    //   bit0=TL  bit1=TR  bit2=ML  bit3=MR  bit4=BL  bit5=BR
+                    //
+                    // Bits 0-4 map directly; bit6 (BR) shifts down to bit5.
+                    uint8_t pat = (cell & 0x1F) | ((cell & 0x40) >> 1);
                     fb_draw_char(framebuffer, col * 8, row * 10, (char)(0xA0 + pat), ABC_FG, ABC_BG);
 
                 } else {
