@@ -256,9 +256,67 @@ on power-up. A hardware watchdog restarts it if the server hangs.
 
 - Screen: 40 × 24 character cells at 8 × 10 px each → 320 × 240 px total
 - Character ROM: authentic ABC80 font (SIS 662241), including `ä ö å Ä Ö Å é ü Ü ¤`
-- Graphics mode: ABC80 mosaic graphics (2×3 dot blocks per cell)
+- Graphics mode: ABC80 mosaic graphics (2×3 dot blocks per cell) — see below
 - Cursor: bit-7 cells rendered as reverse video, blinking at ~330 ms
 - Framebuffer: CPU-side `uint16_t[320×240]`, pushed to the LCD via DMA at ~30 fps
+
+
+### Mosaic graphics
+
+The ABC80 divides each 8×10 character cell into a 2-column × 3-row grid of
+addressable *dots*, giving an effective dot resolution of 80×72 across the
+full 40×24 screen.
+
+#### Screen RAM encoding
+
+A graphics-mode cell is a plain byte in screen RAM.  The six dots map to
+individual bits; the hardware renders them directly without a font-ROM lookup
+(verified against MAME `src/mame/luxor/abc80_v.cpp`):
+
+```
+ bit  dot
+  0   TL  top-left
+  1   TR  top-right
+  2   ML  mid-left
+  3   MR  mid-right
+  4   BL  bot-left
+  6   BR  bot-right
+  5   (unused for dots — always 1 in practice; 0x20 is the blank-cell base)
+  7   cursor attribute (reverse-video blink, same as text mode)
+```
+
+The blank cell is `0x20` (space).  Setting a dot means ORing its bit into the
+cell byte.  Common values:
+
+| Byte  | Binary     | Meaning                     |
+|-------|------------|-----------------------------|
+| `20h` | 0010 0000  | blank (no dots)             |
+| `21h` | 0010 0001  | TL only  (`!`)              |
+| `22h` | 0010 0010  | TR only  (`"`)              |
+| `24h` | 0010 0100  | ML only  (`$`)              |
+| `60h` | 0110 0000  | BR only  (`` ` ``)          |
+| `7Fh` | 0111 1111  | all six dots (full block)   |
+
+The "blank" base byte `0x20` means that a single dot in the top-left corner
+produces `!` (0x21) — the next character after space in ASCII.
+
+#### Graphics-mode rows
+
+Column 0 of each row holds the control byte `0x97` (`CHR$(151)`) which the
+ABC80 attribute logic uses to switch that row into graphics mode.  Columns
+1–39 then hold cell bytes as above.  The `setdot`/`clrdot` C API installs
+this marker automatically.
+
+#### C API (`display.h`)
+
+```c
+setdot(int dot_x, int dot_y);   // dot_x 0-79, dot_y 0-71
+clrdot(int dot_x, int dot_y);
+uint8_t mosaic_cell_to_pat(uint8_t cell);  // screen byte → 6-bit font index
+```
+
+`mosaic_cell_to_pat` returns a value 0–63 in font-index order
+(bit0=TL … bit5=BR) useful for comparing or copying dot patterns.
 
 
 
@@ -286,18 +344,17 @@ on power-up. A hardware watchdog restarts it if the server hangs.
 ![Monitor Help](./../../assets/images/monitorhelp.jpeg)
 
 
-#### Snake (dot graphics)                                                                                          
+#### Snake (dot graphics)
 
 *Do ants like snakes? Or do snakes even eat ants?
 A horrible or entertaining game for the ants ..*
 
-Load snake_dot.asm in the monitor (P), assemble with AS 8000, run with G 8000.                                
-Controls: W/S/A/D to steer, Ctrl-C to quit.                                                                   
+Load snake_dot.asm in the monitor (P), assemble with AS 8000, run with G 8000.
+Controls: W/S/A/D to steer, Ctrl-C to quit.
 
-The snake is a thin single-dot trail; food is a single pixel in a different corner
-of its cell. The mosaic dot encoding was verified by disassembling the ABC80 ROM at
-22C5h, but SETDOT/CLRDOT are reimplemented from scratch--the ROM versions use RST 38h
-(BASIC interpreter trap) and cannot be called from standalone Z80 code. You would get
-trapped.
+The snake is a thin single-dot trail (ML dot, `$` = 0x24); food is a TR dot
+(`"` = 0x22) in the top-right corner of its cell; walls are full blocks (0x7F).
+SETDOT/CLRDOT are reimplemented from scratch — the ROM versions use RST 38h
+(BASIC interpreter trap) and cannot be called from standalone Z80 code.
 
 ![Snake](./../../assets/images/ants_dots.png)
