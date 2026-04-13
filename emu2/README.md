@@ -5,6 +5,8 @@
 
 A reconstruction of the ABC80 highlighting core elements such as files, screen, and keyboard.
 
+If you want to fully commit to emulation, consider exploring hardware-based solutions
+like MiSTer, or software options such as MAME. They also can peek at the ABC80.
 
 
 ##### License
