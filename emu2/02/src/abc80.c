@@ -212,6 +212,10 @@ uint8_t abc80_screen_char(int row, int col) {
     return m[rowstart[row] + col];
 }
 
+void abc80_screen_write(int row, int col, uint8_t val) {
+    m[rowstart[row] + col] = val;
+}
+
 void abc80_get_regs(abc80_regs_t *r) {
     r->a  = a;  r->b = b;  r->c = c;  r->d = d;
     r->e  = e;  r->h = h;  r->l = l;

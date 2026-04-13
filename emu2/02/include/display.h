@@ -155,10 +155,24 @@ void fb_apply_color_transform_rect(uint16_t *fb, const fb_color_transform_t *cx,
 #define MOSAIC_DOT_ROWS  72   /* (DISPLAY_HEIGHT / FONT_CELL_H) * 3 */
 
 void mosaic_clear(void);
-// DEAD CODE: setdot/clrdot write to mosaic_buf[], not to Z80 screen RAM.
-// screen_refresh() reads screen RAM directly, so these have no visible effect.
-// void setdot(int x, int y);
-// void clrdot(int x, int y);
+
+// Set / clear one dot in Z80 screen RAM.
+// Coordinates are in the dot grid (see MOSAIC_DOT_COLS / MOSAIC_DOT_ROWS above).
+// setdot also installs the graphics-mode marker (0x97) in col 0 of the row so
+// screen_refresh() renders the row as graphics.
+void setdot(int dot_x, int dot_y);
+void clrdot(int dot_x, int dot_y);
+
+// Reverse mapping: given a raw screen RAM byte, return the 6-bit dot pattern
+// in font order (bit0=TL, bit1=TR, bit2=ML, bit3=MR, bit4=BL, bit5=BR).
+//
+// ABC80 screen RAM: bit0=TL, bit1=TR, bit2=ML, bit3=MR, bit4=BL, bit6=BR
+// Font index p:     bit0=TL, bit1=TR, bit2=ML, bit3=MR, bit4=BL, bit5=BR
+// Bits 0-4 map directly; bit6 (BR) shifts down to bit5.
+static inline uint8_t mosaic_cell_to_pat(uint8_t cell) {
+    return (cell & 0x1F) | ((cell & 0x40) >> 1);
+}
+
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg);
 
 // Convenient preset transforms

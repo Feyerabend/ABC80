@@ -23,6 +23,10 @@ void abc80_strobe(void);
 //   bits 6-0 = ABC80 character code (SIS 662241, 7-bit)
 uint8_t abc80_screen_char(int row, int col);
 
+// Write one byte directly to ABC80 screen RAM (row 0-23, col 0-39).
+// Used by setdot/clrdot to update graphics cells without going through Z80.
+void abc80_screen_write(int row, int col, uint8_t val);
+
 // Monitor support: read Z80 registers and memory without running the CPU.
 typedef struct {
     uint8_t  a, b, c, d, e, h, l, f;
