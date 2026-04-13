@@ -285,8 +285,9 @@ individual bits; the hardware renders them directly without a font-ROM lookup
   7   cursor attribute (reverse-video blink, same as text mode)
 ```
 
-The blank cell is `0x20` (space).  Setting a dot means ORing its bit into the
-cell byte.  Common values:
+Every graphics cell starts as `0x20` (space — no dots lit).  Each dot has its
+own bit in that byte; switching a dot on means setting that bit, switching it
+off means clearing it.  Common values:
 
 | Byte  | Binary     | Meaning                     |
 |-------|------------|-----------------------------|
