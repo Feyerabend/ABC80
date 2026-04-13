@@ -26,20 +26,20 @@
 1060 RETURN
 2000 REM -- DRAW BORDERS --
 2010 FOR L%=1% TO A%
-2020 ; CUR(L%,1%);"#";
-2030 ; CUR(L%,B%);"#";
+2020 ; CUR(L%,1%)"#";
+2030 ; CUR(L%,B%)"#";
 2040 NEXT L%
 2050 FOR L%=1% TO B%
-2060 ; CUR(1%,L%);"#";
-2070 ; CUR(A%,L%);"#";
+2060 ; CUR(1%,L%)"#";
+2070 ; CUR(A%,L%)"#";
 2080 NEXT L%
 2090 RETURN
 3000 REM -- INPUT --
 3010 M% = INP(56%) AND 7% : REM input key (this right?)
-3020 IF M% = "w" AND G%<>1% THEN F%=0% : G%=-1%
-3030 IF M% = "s" AND G%<>-1% THEN F%=0% : G%=1%
-3040 IF M% = "a" AND F%<>1% THEN F%=-1% : G%=0%
-3050 IF M% = "d" AND F%<>-1% THEN F%=1% : G%=0%
+3020 IF M%=7% AND G%<>1% THEN F%=0% : G%=-1%
+3030 IF M%=3% AND G%<>-1% THEN F%=0% : G%=1%
+3040 IF M%=1% AND F%<>1% THEN F%=-1% : G%=0%
+3050 IF M%=4% AND F%<>-1% THEN F%=1% : G%=0%
 3060 RETURN
 4000 REM -- UPDATE --
 4010 H%=C%(1%)+F%
@@ -57,13 +57,13 @@
 4130 IF H%=J% AND I%=K% THEN E%=E%+1% : GOSUB 1000
 4140 RETURN
 5000 REM -- DRAW --
-5010 ; CUR(C%(E%),D%(E%));" ";
+5010 ; CUR(C%(E%),D%(E%))" ";
 5020 FOR L%=1% TO E%
 5030 U%=C%(L%) : V%=D%(L%)
-5040 IF L%=1% THEN ; CUR(U%,V%);"O"; ELSE ; CUR(U%,V%)"o";
+5040 IF L%=1% THEN ; CUR(U%,V%)"O"; ELSE ; CUR(U%,V%)"o";
 5050 NEXT L%
-5060 ; CUR(J%,K%);"*";
+5060 ; CUR(J%,K%)"*";
 5070 RETURN
 9000 REM -- GAME OVER --
-9010 ; CUR(INT(A%/2%)-5%,INT(B%/2%));"GAME OVER"
+9010 ; CUR(INT(A%/2%)-5%,INT(B%/2%))"GAME OVER";
 9030 END
