@@ -1,4 +1,5 @@
 #include "display.h"
+#include "abc80.h"
 #include "abcfont.h"
 #include "hardware/spi.h"
 #include "hardware/sync.h"
@@ -951,15 +952,50 @@ void mosaic_clear(void) {
     memset(mosaic_buf, 0, sizeof(mosaic_buf));
 }
 
-// DEAD CODE: setdot/clrdot below write to mosaic_buf[], which is a separate buffer
-// that is never read by screen_refresh() in main.c.  screen_refresh() reads directly
-// from Z80 screen RAM (m[]), so these C functions have no visible effect.
-// The ABC80 BASIC ROM's SETDOT/CLRDOT write to screen RAM directly and are the
-// only working path.  Left here for reference; do not uncomment without also
-// wiring mosaic_render() into the display pipeline or redirecting writes to m[].
+// Bit-mask table for SETDOT/CLRDOT.
+// ABC80 graphics encoding verified against MAME abc80_v.cpp draw_character():
+//   bit0=TL  bit1=TR  bit2=ML  bit3=MR  bit4=BL  bit6=BR  (bit5 unused for dots)
 //
-// void setdot(int x, int y) { ... }   // dead — writes mosaic_buf, not screen RAM
-// void clrdot(int x, int y) { ... }   // dead — writes mosaic_buf, not screen RAM
+// Index = (dot_y % 3) * 2 + (dot_x & 1):
+//   0 = TL (bit0=0x01)   1 = TR (bit1=0x02)
+//   2 = ML (bit2=0x04)   3 = MR (bit3=0x08)
+//   4 = BL (bit4=0x10)   5 = BR (bit6=0x40)   <- note: bit6, skips bit5
+static const uint8_t dmask_tab[6] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x40 };
+
+// Set one mosaic dot in Z80 screen RAM.
+// dot_x : 0 .. MOSAIC_DOT_COLS-1 (80)   dot_y : 0 .. MOSAIC_DOT_ROWS-1 (72)
+// Also installs the graphics-mode marker (0x97) in col 0 of the affected row
+// so screen_refresh() treats the row as graphics.
+void setdot(int dot_x, int dot_y) {
+    if ((unsigned)dot_x >= MOSAIC_DOT_COLS || (unsigned)dot_y >= MOSAIC_DOT_ROWS) return;
+
+    int char_row = dot_y / 3;
+    int char_col = dot_x / 2;
+    uint8_t mask = dmask_tab[(dot_y % 3) * 2 + (dot_x & 1)];
+
+    uint8_t cell = abc80_screen_char(char_row, char_col);
+    cell |= mask | 0x20;  // set dot bit + graphics base (0x20 = blank cell)
+    abc80_screen_write(char_row, char_col, cell);
+
+    // Ensure the graphics-mode marker is in col 0 so screen_refresh() enters
+    // graphics mode for this row.  Only do this for cols > 0; col 0 itself
+    // is reserved for the marker.
+    if (char_col > 0 && (abc80_screen_char(char_row, 0) & 0x7F) != 0x17)
+        abc80_screen_write(char_row, 0, 0x97);
+}
+
+// Clear one mosaic dot in Z80 screen RAM.
+void clrdot(int dot_x, int dot_y) {
+    if ((unsigned)dot_x >= MOSAIC_DOT_COLS || (unsigned)dot_y >= MOSAIC_DOT_ROWS) return;
+
+    int char_row = dot_y / 3;
+    int char_col = dot_x / 2;
+    uint8_t mask = dmask_tab[(dot_y % 3) * 2 + (dot_x & 1)];
+
+    uint8_t cell = abc80_screen_char(char_row, char_col);
+    cell = (cell & ~mask) | 0x20;  // clear dot bit, keep graphics base
+    abc80_screen_write(char_row, char_col, cell);
+}
 
 void mosaic_render(uint16_t *fb, uint16_t fg, uint16_t bg) {
     for (int row = 0; row < MOSAIC_CELL_ROWS; row++) {
