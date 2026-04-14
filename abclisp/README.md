@@ -5,12 +5,13 @@
 
 The transition from "hand-crafted code" to "architectural oversight" has
 fundamentally changed how we approach historical *counterfactuals*.
-In the early 1980s, the microcomputer revolution was defined by the accessibility
-of BASIC, leaving the sophisticated, symbolic power of Lisp machines locked
-away in expensive research labs. While the Jupiter ACE proved that alternative
-paradigms like Forth could fit into a Z80’s constrained memory, a consumer-grade
-Lisp machine remained a bridge too far. It wasn't necessarily due to hardware limits,
-but because the immense effort required to squeeze a high-level functional
+In the early 1980s, the microcomputer revolution was defined by the
+accessibility of BASIC, leaving the sophisticated, symbolic power of
+Lisp machines locked away in expensive research labs. While the Jupiter
+ACE proved that alternative paradigms like Forth could fit into a
+Z80's constrained memory, a consumer-grade Lisp machine remained a
+bridge too far. It wasn't necessarily due to hardware limits, but
+because the immense effort required to squeeze a high-level functional
 language into 64KB of RAM was economically and mentally prohibitive for a
 small team or a solo developer. Would it even gain traction? Who would
 actually use it? Well, no one perhaps. But we could explore how it could
@@ -37,17 +38,21 @@ But everything changed in 1975 with the arrival of the Altair 8800.
 The Altair, based on the Intel 8080, had no real software ecosystem--just
 switches and lights. Allen saw an opportunity immediately. He and Gates
 decided to build a version of BASIC, a high-level language, that could run
-on this tiny machine with extremely limited memory (as little as 4 KB).
+on this tiny machine with extremely limited memory (as little as 4 KB).[^BASIC]
 
-__The catch: they didn’t have an Altair.__
+[^BASIC]: https://en.wikipedia.org/wiki/Microsoft_BASIC.
+
+__The catch: they didn't have an Altair.__
 
 Instead, Gates wrote most of the code on a PDP-10 mainframe at Harvard,
-using an emulator that Allen built to simulate the 8080 CPU.[^off] This meant
+using an emulator that Allen built to simulate the 8080 CPU. This meant
 they were effectively cross-developing--writing code for a processor
-they couldn’t directly test on real hardware. The BASIC interpreter
+they couldn't directly test on real hardware. The BASIC interpreter
 itself had to be incredibly compact. Every byte mattered. They hand-optimised
 routines in assembly, carefully managing memory layout, tokenizing keywords,
-and reusing buffers wherever possible.
+and reusing buffers wherever possible.[^off]
+
+[^off]: Monte Davidoff wrote the important floating-point math routines.
 
 The core idea behind their implementation was a tokenized interpreter:
 when a user typed a BASIC program, keywords like `PRINT` or `GOTO` were
@@ -61,8 +66,6 @@ the small bit of code to tell the Altair how to read the paper tape.
 He wrote it by hand on a notepad during the flight.
 Arriving, it was the first time their code would run on a real Altair.
 Remarkably, it worked on the first try. The prompt appeared:
-
-[^off]: Monte Davidoff wrote floating-point math routines.
 
 ```
 READY
@@ -104,7 +107,7 @@ So, our project:
   prints `W:N` warnings when a pool is near capacity.  Restart to reset.
 
 - *No floating point.*  Z80 has no FPU; implementing floats in software
-  would consume ~2 KB of ROM and ~1 KB of RAM — too expensive for a 64 KB
+  would consume ~2 KB of ROM and ~1 KB of RAM--too expensive for a 64 KB
   system.  Integer arithmetic with 12-bit wrap is the intended model.
 
 - *No division.*  Z80 has no `DIV` instruction.  Add it yourself as
