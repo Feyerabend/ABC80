@@ -6,8 +6,13 @@
 A reconstruction of the ABC80 highlighting core elements such as files, screen, and keyboard.
 
 If you want to fully commit to emulation, consider exploring hardware-based solutions
-like MiSTer, or software options such as MAME. They also can peek at the ABC80, without
+like MiSTer, or software options such as MAME[^mame]. They also can peek at the ABC80, without
 resorting to the actual old hardware.
+
+[^mister]: Wikipedia: https://en.wikipedia.org/wiki/MiSTer
+
+[^mame]: ABC80: https://github.com/MisterTea/MAMEHub/blob/master/Sources/Emulator/src/mess/drivers/abc80.c,
+Wikipedia: https://en.wikipedia.org/wiki/MAME
 
 
 ##### License
