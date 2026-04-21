@@ -59,12 +59,14 @@ The ABC80 drives its SN76477 Complex Sound Generator via `OUT 6, val`.
 This emulator reproduces the chip's VCO, SLF oscillator, noise generator,
 one-shot envelope, and mixer in software, outputting PWM audio on GPIO 28.
 
-There are many inpirations for this combination of ideas here, software
-emulations, and even hardware (in Verilog). But the implementation here
-is not quite (if I remember) correct. But mostly so, or anyway,
-good enough.[^sounds]
+There are many sources of inspiration for this combination of ideas,
+including software emulations and even hardware implementations (in Verilog).
+However, the implementation here is not entirely correct,
+at least as far as I recall. That said, it is mostly accurate--or at
+least good enough.[^sounds]
 
-[^sounds]: Parts of the inspiration:
+[^sounds]: Some of the inspiration comes from the following,
+with many thanks to those involved:
 https://github.com/sasq64/abc80sim/blob/master/src/sound.c,
 https://github.com/mamedev/mame/blob/master/src/mame/luxor/abc80.cpp,
 https://github.com/gyurco/ABC80-FPGA,
