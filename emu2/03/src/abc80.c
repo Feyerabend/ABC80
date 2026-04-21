@@ -37,18 +37,14 @@ static const uint16_t rowstart[24] = {
 // 0xFDF5 (65013) — keyboard latch: pending key code (bit 7 always set when valid).
 //                  Pre-written here so the BASIC ISR fast-path (BIT 7,(ix+2))
 //                  fires immediately after the next strobe interrupt.
-//
-// 0xFDF7 (65031) — break flag: bit 7 is set by us when Ctrl-C is received.
-//                  Other code (e.g. the monitor or SD device) may poll this
-//                  to detect a user-requested abort.  Clear it after handling.
-#define BREAK_FLAG  0xFDF7u
 
 // SD: device code lives in sd_device.c / sd_device.h
 
 // ---------------------------------------------------------------------------
 // Keyboard state
-static uint8_t pending_key = 0;
-static int     key_reads   = 0;
+static uint8_t pending_key    = 0;
+static int     key_reads      = 0;
+static bool    break_pending  = false;  // set on Ctrl-C, read by abc80_check_break()
 
 // ESC sequence state for arrow-key decoding over serial.
 static int esc_state = 0;   // 0 = idle, 1 = saw ESC, 2 = saw ESC [
@@ -178,8 +174,8 @@ void abc80_keyboard_poll(void) {
     } else {
         switch (ch) {
             case 0x1B: esc_state = 1; return;
-            case 0x03: abc = 0x03;           // Ctrl-C -> ABC80 break
-                       m[BREAK_FLAG] |= 0x80; // signal break to other code
+            case 0x03: abc = 0x03;        // Ctrl-C -> ABC80 break
+                       break_pending = true;
                        break;
             case 0x7F:
             case 0x08: abc = 0x08; break;   // DEL/BS -> backspace
@@ -239,9 +235,9 @@ void abc80_keyboard_clear(void) {
 }
 
 bool abc80_check_break(void) {
-    if (!(m[BREAK_FLAG] & 0x80)) return false;
-    m[BREAK_FLAG] &= ~0x80u;   // clear immediately so ROM never sees it
-    return pc >= 0x8000;        // true only when running user code (snake etc.)
+    if (!break_pending) return false;
+    break_pending = false;
+    return pc >= 0x8000;   // true only when running user code (snake etc.)
 }
 
 

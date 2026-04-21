@@ -1,8 +1,7 @@
-/*
+/*---------------------------------------------------------------------------
  * FatFs configuration for ABC80 Pico (single-volume, no RTC, no threads)
- */
-
- #define FFCONF_DEF      80286   /* must match FF_DEFINED in ff.h */
+ *---------------------------------------------------------------------------*/
+#define FFCONF_DEF      80286   /* must match FF_DEFINED in ff.h */
 
 #define FF_FS_READONLY  0
 #define FF_FS_MINIMIZE  0
