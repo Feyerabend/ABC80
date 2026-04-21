@@ -31,20 +31,19 @@ terminal at any baud rate works.
 
 #### VGA GPIO mapping (fixed by the board)
 
-| GPIO | Signal |
-|------|--------|
-| 0–4 | Blue [4:0] |
-| 5–10 | Green [5:0] |
-| 11–15 | Red [4:0] |
-| 16 | H-Sync (active low) |
-| 17 | V-Sync (active low) |
+| GPIO   | Signal              |
+|--------|---------------------|
+| 0–4    | Blue [4:0]          |
+| 5–10   | Green [5:0]         |
+| 11–15  | Red [4:0]           |
+| 16     | H-Sync (active low) |
+| 17     | V-Sync (active low) |
 
 #### Buttons
 
 | Button | GPIO | Action |
 |--------|------|--------|
-| A      | 0    | __Broken__--GPIO 0 is pulled low through the 75 Ω VGA termination resistor on Blue[0];
-                  always reads as pressed.  Use `G 0` in the monitor to reset instead. |
+| A      | 0    | __Broken__--GPIO 0 is pulled low through the 75 Ω VGA termination resistor on Blue[0]; always reads as pressed.  Use `G 0` in the monitor to reset instead. |
 | B      | 6    | Toggle monitor mode |
 | C      | 11   | Unused |
 
@@ -105,7 +104,7 @@ ROM always writes `OUT 6, 0` immediately before writing the one-shot value.
 | Noise | 73 (0x49) | bit0+bit3+bit6 |
 | Pulsed noise | 97 (0x61) | bit0+bit5+bit6 |
 | Tremolo 640 Hz | 195 (0xC3) | alternating envelope |
-| **Bell** (CHR$ 7) | 131 (0x83) | preceded by OUT 6,0; one-shot 640 Hz tone |
+| __Bell__ (CHR$ 7) | 131 (0x83) | preceded by OUT 6,0; one-shot 640 Hz tone |
 | Bang (noise) | 137 (0x89) | preceded by OUT 6,0 |
 | Boom (VCO+noise) | 155 (0x9B) | preceded by OUT 6,0 |
 
