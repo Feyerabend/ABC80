@@ -4,6 +4,7 @@
 ## ABC80 for Ants
 
 A reconstruction of the ABC80 highlighting core elements such as files, screen, and keyboard.
+In the most recent revision, we also have sound.
 
 If you want to fully commit to emulation, consider exploring hardware-based solutions
 like MiSTer[^mister], or software options such as MAME[^mame]. They also can peek at
