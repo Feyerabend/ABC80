@@ -1,4 +1,7 @@
-## ABC80 Emulator — Raspberry Pi Pico 2 + Pimoroni VGA Demo Base
+
+![ABC80 for termites](./../../assets/images/abc80-vga.jpeg)
+
+## ABC80 for Termites: VGA and Sound
 
 An ABC80 emulator for the Raspberry Pi Pico 2 (RP2350), running on the
 Pimoroni Pico VGA Demo Base.  The Z80 core executes the original ABC80 ROM.
@@ -223,3 +226,6 @@ Flash `abc_pico.uf2` to the Pico in BOOTSEL mode.
 +-- include/            header files
 +-- CMakeLists.txt
 ```
+
+![Pimoroni Demo Board](./../../assets/images/demo-board.jpeg)
+
