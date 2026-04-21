@@ -140,6 +140,8 @@ int main(void) {
             }
 
             abc80_step();
+            if (abc80_check_break())
+                monitor_enter();
         } else {
             static unsigned mon_poll_div;
             if (++mon_poll_div >= 500) {

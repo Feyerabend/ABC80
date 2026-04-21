@@ -232,10 +232,13 @@ Z80 address space (64 KB).  About 296 KB of RAM remains free as of this.
 
 ### References
 
-- *Avancerad programmering för ABC80*
-- *Mikrodatorns ABC*
-- J. Finnved, [Examensarbete](https://dflund.se/~triad/diab/archive/ABC%2080/1979%20Johan%20Finnved%20Examensarbete.pdf)
-- Stockman, A. [Disassemblering ABC80](https://www.abc80.net/archive/luxor/ABC80/Programvaran-i-ABC80-disassemblering.pdf)
+
+- Isaksson, A. & Kärrsgård, Ö. (1980). Avancerad programmering på ABC80. Lund: Studentlitt.
+- Markesjö, G. (1978). Mikrodatorns ABC: elektroniken i ett mikrodatorsystem. 1. uppl. Stockholm: Esselte studium.
+- Finnved, J. (1979). Programvaran i persondatorn ABC80, Examensarbete vid inst. för tillämpad elektronik Kungl Tekniska Högskolan.
+[Examensarbete](https://dflund.se/~triad/diab/archive/ABC%2080/1979%20Johan%20Finnved%20Examensarbete.pdf)
+- Stockman, A. (1980). Programvaran i ABC80: Disassemblering med kommentarer. Examensarbete vid inst. för tillämpad elektronik Kungl Tekniska Högskolan. ABC-klubben, rapport nr 1.
+[Disassemblering ABC80](https://www.abc80.net/archive/luxor/ABC80/Programvaran-i-ABC80-disassemblering.pdf)
 - [sarnau/Z80DisAssembler](https://github.com/sarnau/Z80DisAssembler) - basis for `disasm.c`
 - [Raspberry Pi Pico SDK](https://github.com/raspberrypi/pico-sdk)
 - [Pimoroni Display Pack 2.0](https://shop.pimoroni.com/products/pico-display-pack-2-0)

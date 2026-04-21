@@ -238,4 +238,10 @@ void abc80_keyboard_clear(void) {
     esc_state   = 0;
 }
 
+bool abc80_check_break(void) {
+    if (!(m[BREAK_FLAG] & 0x80)) return false;
+    m[BREAK_FLAG] &= ~0x80u;   // clear immediately so ROM never sees it
+    return pc >= 0x8000;        // true only when running user code (snake etc.)
+}
+
 
