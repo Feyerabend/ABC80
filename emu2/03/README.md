@@ -6,7 +6,7 @@
 An ABC80 emulator for the Raspberry Pi Pico 2 (RP2350), running on the
 Pimoroni Pico VGA Demo Base.  The Z80 core executes the original ABC80 ROM.
 The 40×24 character display (including Swedish characters and mosaic graphics)
-is rendered to VGA at 320×240.  Keyboard input is over USB CDC serial — any
+is rendered to VGA at 320×240.  Keyboard input is over USB CDC serial--any
 terminal at any baud rate works.
 
 
@@ -14,13 +14,13 @@ terminal at any baud rate works.
 
 | Part | Detail |
 |------|--------|
-| MCU board | Raspberry Pi Pico 2 (RP2350) |
-| Carrier | Pimoroni Pico VGA Demo Base |
-| Display | VGA — 320×240 @ 60 Hz, resistor DAC, PIO-driven |
-| Audio | PWM on GPIO 28 (VGA Demo Base audio jack, left channel) |
-| Storage | SD card (MicroSD slot on VGA Demo Base) |
-| Input | USB CDC serial (keyboard) |
-| SDK | Pico SDK 2.2.0 + pico-extras (pico_scanvideo_dpi) |
+| MCU board | Raspberry Pi Pico 2 (RP2350)                            |
+| Carrier   | Pimoroni Pico VGA Demo Base                             |
+| Display   | VGA-320×240 @ 60 Hz, resistor DAC, PIO-driven           |
+| Audio     | PWM on GPIO 28 (VGA Demo Base audio jack, left channel) |
+| Storage   | SD card (MicroSD slot on VGA Demo Base)                 |
+| Input     | USB CDC serial (keyboard)                               |
+| SDK       | Pico SDK 2.2.0 + pico-extras (pico_scanvideo_dpi)       |
 
 #### Memory Used
 
@@ -43,15 +43,16 @@ terminal at any baud rate works.
 
 | Button | GPIO | Action |
 |--------|------|--------|
-| A | 0 | **Broken** — GPIO 0 is pulled low through the 75 Ω VGA termination resistor on Blue[0]; always reads as pressed.  Use `G 0` in the monitor to reset instead. |
-| B | 6 | Toggle monitor mode |
-| C | 11 | Unused |
+| A      | 0    | __Broken__--GPIO 0 is pulled low through the 75 Ω VGA termination resistor on Blue[0];
+                  always reads as pressed.  Use `G 0` in the monitor to reset instead. |
+| B      | 6    | Toggle monitor mode |
+| C      | 11   | Unused |
 
 #### SD card wiring (VGA Demo Base MicroSD socket)
 
 | Signal | GPIO | Note |
 |--------|------|------|
-| CLK | 5 | Shared with VGA Green[0] — claimed only during SD access |
+| CLK | 5 | Shared with VGA Green[0]--claimed only during SD access |
 | MOSI | 18 | SD CMD |
 | MISO | 19 | SD DAT0 |
 | CS | 22 | SD DAT3, active-low |
@@ -60,7 +61,7 @@ SD access uses bit-bang SPI.  GPIO 5 (CLK) is normally owned by the VGA PIO;
 it is briefly reclaimed for each SD operation and returned immediately after.
 
 
-### Sound — SN76477
+### Sound--SN76477
 
 The ABC80 drives its SN76477 Complex Sound Generator via `OUT 6, val`.
 This emulator reproduces the chip's VCO, SLF oscillator, noise generator,
@@ -78,7 +79,7 @@ https://github.com/sasq64/abc80sim/blob/master/src/sound.c,
 https://github.com/mamedev/mame/blob/master/src/mame/luxor/abc80.cpp,
 https://github.com/gyurco/ABC80-FPGA,
 https://github.com/nocoolnicksleft/SN76477,
-and many more.
+and many others.
 
 #### Port 6 bit mapping
 
@@ -109,7 +110,7 @@ ROM always writes `OUT 6, 0` immediately before writing the one-shot value.
 | Boom (VCO+noise) | 155 (0x9B) | preceded by OUT 6,0 |
 
 
-### Storage — SD: device
+### Storage--SD: device
 
 `sd_device.c` injects a fake `SD:` device into the ABC80 *enhetslista*
 at boot by patching a ROM entry point.  The underlying file system is
@@ -120,7 +121,7 @@ From the ABC80 BASIC prompt you can use SD: like any other device:
 ```
 SAVE SD:PROGRAM
 LOAD SD:PROGRAM
-RUN SD:PROGRAM
+ RUN SD:PROGRAM
 ```
 
 The driver uses a PC-trap mechanism: `abc80_step()` checks the Z80 program
@@ -140,7 +141,7 @@ PREPARE (create/truncate), CLOSE, INPUT (text line read), BL_IN / BL_UT
 - Character ROM: authentic ABC80 font (SIS 662241), including `ä ö å Ä Ö Å é ü Ü ¤`
 - Cursor: bit-7 cells rendered as reverse video, blinking at ~330 ms
 
-#### Known limitation — screen brightness sag
+#### Known limitation--screen brightness sag
 
 The VGA Demo Base uses a resistor DAC.  When many pixels are white (all 15
 color GPIOs driven high simultaneously), the combined current through the DAC
@@ -174,7 +175,7 @@ clrdot(int dot_x, int dot_y);
 
 ### Monitor
 
-Press **Button B** to enter the monitor.  The display turns amber.
+Press __Button B__ to enter the monitor.  The display turns amber.
 The Z80 is frozen while the monitor is active.  Press B again to return
 to ABC80.  Type `H` for the full command list.
 
