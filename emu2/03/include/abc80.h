@@ -41,3 +41,10 @@ uint8_t abc80_read_mem(uint16_t addr);
 // Flush any pending key and ESC state — call when entering the monitor
 // so that stale keyboard state cannot block input after returning to ABC80.
 void abc80_keyboard_clear(void);
+
+// Check whether Ctrl-C was pressed while running user code (PC >= 0x8000).
+// Clears the internal break flag regardless of the return value.
+// Returns true only when PC is in user RAM — i.e. the snake or other
+// standalone Z80 programs.  Returns false when PC is in BASIC ROM so that
+// BASIC can handle the break key itself without entering the monitor.
+bool abc80_check_break(void);

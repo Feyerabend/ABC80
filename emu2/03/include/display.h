@@ -25,6 +25,12 @@
 #define DISPLAY_HEIGHT 240
 
 #define COLOR_BLACK     0x0000u
+/* COLOR_WHITE is full RGB565 (0xFFFF).
+ * Note: driving all 15 color GPIOs high simultaneously at full brightness
+ * overloads the resistor DAC on the Pimoroni VGA Demo Base — a screen full
+ * of white pixels causes visible voltage sag on the VGA output.
+ * This is a hardware limitation (DAC current into 75 Ω termination); no
+ * purely software fix exists without reducing perceived brightness. */
 #define COLOR_WHITE     0xFFFFu
 #define COLOR_RED       0xF800u
 #define COLOR_GREEN     0x07E0u
