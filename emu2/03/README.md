@@ -22,6 +22,13 @@ terminal at any baud rate works.
 | Input | USB CDC serial (keyboard) |
 | SDK | Pico SDK 2.2.0 + pico-extras (pico_scanvideo_dpi) |
 
+#### Memory Used
+
+| Used | Free | Total |
+|------|------|-------|
+| Flash | 174 KB | 3,822 KB | 4,096 KB |
+| RAM | 483 KB | 37 KB | 520 KB |
+
 #### VGA GPIO mapping (fixed by the board)
 
 | GPIO | Signal |
