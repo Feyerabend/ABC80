@@ -12,8 +12,8 @@ terminal at any baud rate works.
 
 ### Hardware
 
-| Part | Detail |
-|------|--------|
+| Part      | Detail                                                  |
+|-----------|---------------------------------------------------------|
 | MCU board | Raspberry Pi Pico 2 (RP2350)                            |
 | Carrier   | Pimoroni Pico VGA Demo Base                             |
 | Display   | VGA-320×240 @ 60 Hz, resistor DAC, PIO-driven           |
@@ -148,6 +148,10 @@ resistors into the 75 Ω VGA termination causes a measurable voltage sag and
 visible dimming.  This is a hardware limitation; there is no software fix
 that does not reduce brightness unconditionally.
 
+> [!WARNING]
+> As the current is too low for the display to light up white pixels, this
+> version of the emulator is __not__ recommended for displaying many dots
+> at once, such as in games for example.
 
 ### Mosaic graphics
 
