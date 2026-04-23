@@ -112,6 +112,36 @@ endgame.asm     winner screen, play-again prompt
 ;   Returns Z set if string length is zero.
 ```
 
+In PROM:
+
+Address 65031 Bit 7=1 indicates that CTRL-C been pressed.
+Ends program, return to BASIC.
+
+```
+* 0002H INCHAR
+Read a character from keyboard into A. No echo.
+DE and IX changes.
+
+* 0005H INLINE
+Read a line from keyboard. When calling HL must point
+to the area in memory where the result is stored.
+BC contains the maximum number of characters that are
+accepted. The line is echoed.
+
+* О00BH OUTSTR
+Prints text to where the cursor is standing. When
+calling HL should be pointing to the text that
+will be printed, and BC contains its length.
+Position the cursor by starting with <ESC> and "=".
+<ESC> is no. 27. After these two bytes with coordinates
+x + 32, y + 32. Then the text.
+
+* CURXY (≈ 0293H) First bytes should be E5H 2AH F3Н
+Calculates the address in the memory for the screen.
+Before calling X (row) should be in 65011, and Y
+(column) in 65012. Returns the address in DE.
+(Collision check.)
+```
 
 
 ### Joystick Module
