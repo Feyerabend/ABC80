@@ -17,7 +17,7 @@ SCREEN_ROWS     equ  24
 SCREEN_COLS     equ  40
 
 CHAR_CLEAR      equ  12    ; clears screen (form feed)
-CHAR_BLOCK      equ  23    ; the same as 151?, do not think it is solid block character
+CHAR_BLOCK      equ  23    ; 151 = 128 +23 (not solid block char, but sets graph mode)
 CHAR_BELL       equ   7
 CHAR_ATTR_INV   equ 151    ; mosaic or graphic characters / attribute on  (CHR$(151))
 CHAR_ATTR_NRM   equ 135    ; normal (mosaic attribute off)                (CHR$(135))
@@ -86,8 +86,8 @@ endgame.asm     winner screen, play-again prompt
 ;   Sends CHAR_CLEAR to output; resets cursor to 0,0.
 
 ; draw_border(first_row: B, last_row: C)
-;   Fills each row from first_row to last_row with set graphics mode (CHAR_BLOCK)
-;   (or should we use 151 here? do not actually remeber)
+;   Fills each row from first_row to last_row with set graphics mode
+;   here called: CHAR_BLOCK.
 ;   Original: FOR G%=first TO last : CUR(G%,0) : CHR$(23) : NEXT
 ```
 
@@ -161,7 +161,7 @@ accepted. The line is echoed.
 ;   Returns the 3-bit value: bit0=left, bit1=right, bit2=fire
 ```
 
-May be the hardest to replicate, so we might use keyboard
+May be the hardest to replicate for ports, so we might use keyboard
 instead.
 
 
@@ -192,7 +192,7 @@ instead.
 All string literals are collected here, referenced by label.
 
 ```asm
-; INTRO / LOGO STRINGS (displayed as overlapping segments to compose the logo)
+; INTRO / LOGO STRINGS (displayed as overlapping segments to compose the "logo")
 ; Each entry: (row, col, string)
 STR_LOGO_0      db  0, 10, "É&DJ#IH#)H#IH#I", 0
 STR_LOGO_1      db  1, 10, "J#KJ#IJ ÉH#IJ J", 0
