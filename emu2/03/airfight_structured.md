@@ -107,6 +107,9 @@ Calculates the address in the memory for the screen.
 Before calling X (row) should be in 65011, and Y
 (column) in 65012. Returns the address in DE.
 (Collision check.)
+
+* CLEAR (≈ 0276H) First byte should be JEH 18H DDH
+Clears screen. Destroys values in IX, D E and A.
 ```
 
 
