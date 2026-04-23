@@ -17,10 +17,10 @@ SCREEN_ROWS     equ  24
 SCREEN_COLS     equ  40
 
 CHAR_CLEAR      equ  12    ; clears screen (form feed)
-CHAR_BLOCK      equ  23    ; solid block character used for border
+CHAR_BLOCK      equ  23    ; the same as 151?, do not think it is solid block character
 CHAR_BELL       equ   7
-CHAR_ATTR_INV   equ 151    ; inverse/color attribute on  (CHR$(151))
-CHAR_ATTR_NRM   equ 135    ; normal attribute off        (CHR$(135))
+CHAR_ATTR_INV   equ 151    ; mosaic or graphic characters / attribute on  (CHR$(151))
+CHAR_ATTR_NRM   equ 135    ; normal (mosaic attribute off)                (CHR$(135))
 
 SOUND_OFF       equ   0
 SOUND_INTRO     equ 135
@@ -86,9 +86,27 @@ endgame.asm     winner screen, play-again prompt
 ;   Sends CHAR_CLEAR to output; resets cursor to 0,0.
 
 ; draw_border(first_row: B, last_row: C)
-;   Fills each row from first_row to last_row with CHAR_BLOCK
-;   (or should we have 151 here?)
+;   Fills each row from first_row to last_row with set graphics mode (CHAR_BLOCK)
+;   (or should we use 151 here? do not actually remeber)
 ;   Original: FOR G%=first TO last : CUR(G%,0) : CHR$(23) : NEXT
+```
+
+PROM:
+
+```
+* О00BH OUTSTR
+Prints text to where the cursor is currently positioned.
+When calling HL should be pointing to address of the text
+that will be printed, and BC should contain its length.
+Position the cursor by starting with <ESC> and "=".
+<ESC> is no. 27. After these two bytes with coordinates
+x + 32, y + 32. Then the text.
+
+* CURXY (≈ 0293H) First bytes should be E5H 2AH F3Н
+Calculates the address in the memory for the screen.
+Before calling X (row) should be in 65011, and Y
+(column) in 65012. Returns the address in DE.
+(Collision check.)
 ```
 
 
@@ -127,20 +145,6 @@ Read a line from keyboard. When calling HL must point
 to the area in memory where the result is stored.
 BC contains the maximum number of characters that are
 accepted. The line is echoed.
-
-* О00BH OUTSTR
-Prints text to where the cursor is currently positioned.
-When calling HL should be pointing to address of the text
-that will be printed, and BC should contain its length.
-Position the cursor by starting with <ESC> and "=".
-<ESC> is no. 27. After these two bytes with coordinates
-x + 32, y + 32. Then the text.
-
-* CURXY (≈ 0293H) First bytes should be E5H 2AH F3Н
-Calculates the address in the memory for the screen.
-Before calling X (row) should be in 65011, and Y
-(column) in 65012. Returns the address in DE.
-(Collision check.)
 ```
 
 
@@ -154,6 +158,8 @@ Before calling X (row) should be in 65011, and Y
 ;   Returns the 3-bit value: bit0=left, bit1=right, bit2=fire
 ```
 
+May be the hardest to replicate, so we might use keyboard
+instead.
 
 
 ### Sound Module
