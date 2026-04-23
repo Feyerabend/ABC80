@@ -129,9 +129,9 @@ BC contains the maximum number of characters that are
 accepted. The line is echoed.
 
 * О00BH OUTSTR
-Prints text to where the cursor is standing. When
-calling HL should be pointing to the text that
-will be printed, and BC contains its length.
+Prints text to where the cursor is currently positioned.
+When calling HL should be pointing to address of the text
+that will be printed, and BC should contain its length.
 Position the cursor by starting with <ESC> and "=".
 <ESC> is no. 27. After these two bytes with coordinates
 x + 32, y + 32. Then the text.
@@ -233,7 +233,7 @@ STR_INSTR_2_7   db "   SPAKEN KAN EJ FÖRAS I", 0
 STR_INSTR_2_8   db "   VERTIKAL RIKTNING !!!", 0
 
 ; MODE SELECTION SCREEN  (7 lines starting at row I%*2 + 3)
-STR_MODE_0      db "VILL NI HA POÄNG BEGRÄNSING (10P)", 0
+STR_MODE_0      db "VILL NI HA POÄNG BEGRÄNSNING (10P)", 0
 STR_MODE_1      db "          ELLER", 0
 STR_MODE_2      db "TIDS-BEGRÄNSNING (2 MIN.)?", 0
 STR_MODE_3      db "SVARA MED : ", 0
