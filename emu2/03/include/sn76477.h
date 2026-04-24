@@ -23,7 +23,7 @@ void sn76477_write(uint8_t data);
   ── Always-on envelope (bit6=1) ───────────────────────────────────────
   Tone 640 Hz loud                  67   0x43  bit0+bit1+bit6
   Tone ~6400 Hz (high) loud         65   0x41  bit0+bit6
-  Wow-wow (SLF→VCO) loud           69   0x45  bit0+bit2+bit6
+  Wow-wow (SLF→VCO) loud            69   0x45  bit0+bit2+bit6
   Noise loud                        73   0x49  bit0+bit3+bit6
   VCO+noise 640 Hz loud             91   0x5B  bit0+bit1+bit3+bit4+bit6
   Pulsed noise ~4 Hz loud           97   0x61  bit0+bit5+bit6
@@ -34,7 +34,9 @@ void sn76477_write(uint8_t data);
   ── One-shot  (first: OUT 6,0  then immediately:) ─────────────────────
   BELL  640 Hz                     131   0x83  bit0+bit1+bit7  (CHR$ 7)
   Pew!  640 Hz tone+decay          131   0x83
+  Oi!   SLF→VCO glide (varies)     135   0x87  bit0+bit1+bit2+bit7  SLF-phase varies → different pitch/sweep each time
   Bang  noise                      137   0x89  bit0+bit3+bit7
   Boom  VCO+noise                  155   0x9B  bit0+bit1+bit3+bit4+bit7
+  Oi!   noise burst (varies)       157   0x9D  bit0+bit2+bit3+bit7  noise-LFSR varies → different texture each time
   Burst pulsed-noise               161   0xA1  bit0+bit5+bit7
 */
