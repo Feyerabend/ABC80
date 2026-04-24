@@ -161,8 +161,8 @@ accepted. The line is echoed.
 ;   Returns the 3-bit value: bit0=left, bit1=right, bit2=fire
 ```
 
-May be the hardest to replicate for ports, so we might use keyboard
-instead.
+May be the hardest to replicate for porting essentially software,
+so we might use keyboard instead.
 
 
 ### Sound Module
