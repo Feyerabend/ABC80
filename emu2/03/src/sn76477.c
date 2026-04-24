@@ -18,11 +18,11 @@
 //   bit 0 : enable inverted — 1=chip on, 0=chip off (silence)
 //   bit 1 : vco_voltage     — 0=0V→~6400 Hz (high), 1=~2V→640 Hz (low)
 //   bit 2 : vco_w           — 0=external voltage (fixed tone), 1=SLF drives VCO (wow-wow)
-//   bit 3 : mixer_b (pin25) ─┐
-//   bit 4 : mixer_a (pin26) ─┼─ mixer_mode = (bit5<<2)|(bit3<<1)|bit4
-//   bit 5 : mixer_c (pin27) ─┘
-//   bit 6 : envelope_2 ─┐ envelope_mode = (bit6<<1)|bit7
-//   bit 7 : envelope_1 ─┘
+//   bit 3 : mixer_b (pin25) -┐
+//   bit 4 : mixer_a (pin26) -┼- mixer_mode = (bit5<<2)|(bit3<<1)|bit4
+//   bit 5 : mixer_c (pin27) -┘
+//   bit 6 : envelope_2 -┐ envelope_mode = (bit6<<1)|bit7
+//   bit 7 : envelope_1 -┘
 //
 // Mixer modes (CBA = bit5,bit3,bit4):
 //   0=VCO  1=SLF  2=Noise  3=VCO+Noise  4=SLF+Noise  5=SLF+VCO+Noise  6=SLF+VCO  7=Inhibit
@@ -30,6 +30,7 @@
 
 #include "sn76477.h"
 #include "pico/stdlib.h"
+#include "pico/rand.h"
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
 #include "hardware/clocks.h"
@@ -41,7 +42,7 @@
 #define AUDIO_GPIO   28
 #define SAMPLE_RATE  22050
 
-// ── Voltage thresholds (empirical, from MAME / nocoolnicksleft source) ──────
+// -- Voltage thresholds (empirical, from MAME / nocoolnicksleft source) ------
 #define ONE_SHOT_V_MIN   0.0f
 #define ONE_SHOT_V_MAX   2.5f
 #define ONE_SHOT_V_RANGE 2.5f
@@ -64,7 +65,7 @@
 #define OUT_HI_CLIP      3.51f
 #define OUT_LO_CLIP      0.715f
 
-// ── ABC80 fixed component values ─────────────────────────────────────────────
+// -- ABC80 fixed component values ---------------------------------------------
 #define R_NOISE_CLK    47000.0f
 #define R_NOISE_FILT   330000.0f
 #define C_NOISE_FILT   390e-12f
@@ -80,7 +81,7 @@
 #define C_ONESHOT      0.1e-6f
 #define R_ONESHOT      330000.0f
 
-// ── Envelope gain tables (empirical measurements from real chip) ─────────────
+// -- Envelope gain tables (empirical measurements from real chip) -------------
 static const float out_pos_gain[45] = {
     0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.00f, 0.01f,
     0.03f, 0.11f, 0.15f, 0.19f, 0.21f, 0.23f, 0.26f, 0.29f, 0.31f, 0.33f,
@@ -96,7 +97,7 @@ static const float out_neg_gain[45] = {
     -0.76f, -0.78f, -0.81f, -0.84f, -0.85f
 };
 
-// ── Chip state ────────────────────────────────────────────────────────────────
+// -- Chip state ----------------------------------------------------------------
 typedef struct {
     // Set by sn76477_write() — all 32-bit, atomic on RP2350
     uint32_t enable;          // 0=sound on
@@ -147,7 +148,7 @@ static bool audio_cb(repeating_timer_t *rt) {
     (void)rt;
     sn_t *s = &s_sn;
 
-    // ── One-shot ──────────────────────────────────────────────────────────────
+    // -- One-shot --------------------------------------------------------------
     if (s->one_shot_ff) {
         s->one_shot_v += s->one_shot_charge;
         if (s->one_shot_v >= ONE_SHOT_V_MAX) {
@@ -159,7 +160,7 @@ static bool audio_cb(repeating_timer_t *rt) {
         if (s->one_shot_v < ONE_SHOT_V_MIN) s->one_shot_v = ONE_SHOT_V_MIN;
     }
 
-    // ── SLF triangle oscillator ───────────────────────────────────────────────
+    // -- SLF triangle oscillator -----------------------------------------------
     if (!s->slf_ff) {
         s->slf_v += s->slf_charge;
         if (s->slf_v >= SLF_V_MAX) { s->slf_v = SLF_V_MAX; s->slf_ff = 1; }
@@ -168,7 +169,7 @@ static bool audio_cb(repeating_timer_t *rt) {
         if (s->slf_v <= SLF_V_MIN) { s->slf_v = SLF_V_MIN; s->slf_ff = 0; }
     }
 
-    // ── VCO ───────────────────────────────────────────────────────────────────
+    // -- VCO -------------------------------------------------------------------
     // External: higher pin-16 voltage → lower frequency (SN76477 datasheet).
     //   0V (bit1=0) → ~6400 Hz max;  ~2V (bit1=1) → 640 Hz minimum.
     // SLF: triangle wave sweeps vco_top → wow-wow.
@@ -198,7 +199,7 @@ static bool audio_cb(repeating_timer_t *rt) {
         if (s->vco_v <= VCO_V_MIN) { s->vco_v = VCO_V_MIN; s->vco_ff = 0; }
     }
 
-    // ── Noise LFSR ────────────────────────────────────────────────────────────
+    // -- Noise LFSR ------------------------------------------------------------
     s->noise_acc += s->noise_freq;
     while (s->noise_acc >= (uint32_t)SAMPLE_RATE) {
         s->noise_acc -= (uint32_t)SAMPLE_RATE;
@@ -217,7 +218,7 @@ static bool audio_cb(repeating_timer_t *rt) {
     if      (s->noise_filt_v >= NOISE_HI_THOLD) s->noise_filt_ff = 0;
     else if (s->noise_filt_v <= NOISE_LO_THOLD) s->noise_filt_ff = 1;
 
-    // ── Envelope attack / decay ───────────────────────────────────────────────
+    // -- Envelope attack / decay -----------------------------------------------
     int charging;
     switch (s->envelope_mode) {
         case 0:  charging = (int)s->vco_ff; break;
@@ -234,7 +235,7 @@ static bool audio_cb(repeating_timer_t *rt) {
         if (s->ad_v < AD_V_MIN) s->ad_v = AD_V_MIN;
     }
 
-    // ── Mixer → output voltage ────────────────────────────────────────────────
+    // -- Mixer → output voltage ------------------------------------------------
     float voltage_out;
     if (!s->enable) {
         uint32_t out;
@@ -262,7 +263,7 @@ static bool audio_cb(repeating_timer_t *rt) {
         voltage_out = OUT_CENTER;   // chip disabled → DC → filtered away
     }
 
-    // ── PWM-DAC: map voltage to 8-bit duty cycle ──────────────────────────────
+    // -- PWM-DAC: map voltage to 8-bit duty cycle ------------------------------
     float norm = (voltage_out - OUT_LO_CLIP) / (OUT_HI_CLIP - OUT_LO_CLIP);
     if (norm < 0.0f) norm = 0.0f;
     if (norm > 1.0f) norm = 1.0f;
@@ -283,15 +284,22 @@ void sn76477_init(void) {
     sn_t *s = &s_sn;
     *s = (sn_t){0};
     s->enable = 1;         // start silent
-    s->rng    = 0xACE1u;
     s->ad_v   = AD_V_MAX;  // envelope_mode=2 starts at full amplitude
+
+    // Seed the noise LFSR and SLF phase from the hardware TRNG so that
+    // sounds 135 and 157 ("Oi..." effects) genuinely vary each power-on,
+    // mirroring the real SN76477 which runs continuously from power-on.
+    uint32_t seed = get_rand_32();
+    s->rng    = seed | 1u;   // LFSR must never be 0
+    s->slf_v  = SLF_V_MIN + SLF_V_RANGE * ((float)((seed >> 8) & 0xFF) / 255.0f);
+    s->slf_ff = (seed >> 16) & 1u;
 
     // Precompute per-sample charging steps
     s->one_shot_charge    = ONE_SHOT_V_RANGE / (0.8024f * R_ONESHOT * C_ONESHOT + 0.002079f) / SAMPLE_RATE;
-    s->one_shot_discharge = ONE_SHOT_V_RANGE / (854.7f  * C_ONESHOT + 0.00001795f)            / SAMPLE_RATE;
-    s->slf_charge         = SLF_V_RANGE / (0.5885f * R_SLF * C_SLF + 0.001300f)              / SAMPLE_RATE;
-    s->slf_discharge      = SLF_V_RANGE / (0.5413f * R_SLF * C_SLF + 0.001343f)              / SAMPLE_RATE;
-    s->vco_step           = 0.64f * 2.0f * VCO_V_RANGE / (R_VCO * C_VCO)                    / SAMPLE_RATE;
+    s->one_shot_discharge = ONE_SHOT_V_RANGE / (854.7f  * C_ONESHOT + 0.00001795f) / SAMPLE_RATE;
+    s->slf_charge         = SLF_V_RANGE / (0.5885f * R_SLF * C_SLF + 0.001300f) / SAMPLE_RATE;
+    s->slf_discharge      = SLF_V_RANGE / (0.5413f * R_SLF * C_SLF + 0.001343f) / SAMPLE_RATE;
+    s->vco_step           = 0.64f * 2.0f * VCO_V_RANGE / (R_VCO * C_VCO) / SAMPLE_RATE;
     s->noise_filt_charge  = NOISE_V_RANGE / (0.1571f * R_NOISE_FILT * C_NOISE_FILT + 0.00001430f) / SAMPLE_RATE;
     s->noise_filt_discharge = NOISE_V_RANGE / (0.1331f * R_NOISE_FILT * C_NOISE_FILT + 0.00001734f) / SAMPLE_RATE;
     s->attack_step        = AD_V_RANGE / (R_ATTACK * C_AD) / SAMPLE_RATE;
