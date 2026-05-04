@@ -70,7 +70,7 @@ There are many sources of inspiration for this combination of ideas,
 including software emulations and even hardware implementations (in Verilog).
 However, the implementation here is not entirely correct,
 at least as far as I recall. That said, it is mostly accurate--or at
-least good enough.[^sounds]
+least good enough.[^sounds][^BYTE]
 
 [^sounds]: Some of the inspiration comes from the following,
 with many thanks to those involved:
@@ -81,6 +81,8 @@ https://github.com/nocoolnicksleft/SN76477,
 and many others.
 
 ![sn76477N](./../../assets/images/sn76477N.png)
+
+[^BYTE]: BYTE Magazine, December 1978, p. 222.
 
 #### Port 6 bit mapping
 
