@@ -80,15 +80,17 @@ https://github.com/gyurco/ABC80-FPGA,
 https://github.com/nocoolnicksleft/SN76477,
 and many others.
 
+![sn76477N](./../../assets/images/sn76477N.png)
+
 #### Port 6 bit mapping
 
-| Bits | Function |
-|------|----------|
-| 0 | 1 = chip on, 0 = silence |
-| 1 | VCO pitch: 0 = ~6400 Hz, 1 = ~640 Hz |
-| 2 | VCO source: 0 = external (fixed tone), 1 = SLF (wow-wow sweep) |
-| 5:3 | Mixer: 000=VCO 001=Noise 010=SLF 011=VCO+Noise 100=SLF+Noise 101=SLF+VCO 110=SLF+VCO+Noise 111=Inhibit |
-| 7:6 | Envelope: 00=VCO-gated 01=always-on 10=one-shot 11=alternating |
+| Bits | Function                                                                                               |
+|------|--------------------------------------------------------------------------------------------------------|
+| 0    | 1 = chip on, 0 = silence                                                                               |
+| 1    | VCO pitch: 0 = ~6400 Hz, 1 = ~640 Hz                                                                   |
+| 2    | VCO source: 0 = external (fixed tone), 1 = SLF (wow-wow sweep)                                         |
+| 5:3  | Mixer: 000=VCO 001=Noise 010=SLF 011=VCO+Noise 100=SLF+Noise 101=SLF+VCO 110=SLF+VCO+Noise 111=Inhibit |
+| 7:6  | Envelope: 00=VCO-gated 01=always-on 10=one-shot 11=alternating                                         |
 
 One-shot sounds (bell, bang, boom) fire on a 0→1 edge on bit 0, so the
 ROM always writes `OUT 6, 0` immediately before writing the one-shot value.
