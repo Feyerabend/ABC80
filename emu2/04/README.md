@@ -11,9 +11,6 @@
 
 > *Bundled game: AIRFIGHT*
 
-
-## AIRFIGHT
-
 A two-player dogfight game for the ABC80, originally written in BASIC by
 Kristian Lidberg and Set Lonnert in 1981.  This version is a Z80 assembly
 port of kind, pre-assembled on the host at build time and embedded directly
