@@ -3,7 +3,7 @@
 
 ## ABC80 Emulator: AIRFIGHT returns ..
 
-> ![NOTE]
+> [!NOTE]
 > *Work in progress: this is an early sketch, not a finished project.*
 > The emulator core is functional but several features are incomplete or
 > known to have bugs.  The bundled AIRFIGHT game in particular is still
