@@ -1795,6 +1795,14 @@ DIR_NAMES:
 ; 
 ; Original BASIC line 274: DATA 20,45, 20,45, 40,45, 50,32, 60,23, 130,13
 ; Pairs: (outer_count, inner_delay) -- ascending count, descending delay = rising pitch
+; 264 FOR U%=1% TO 6%
+; 265 READ A0%,A1% : A1%=A1%+10%    -- probably adjustment after the fact
+; 266 FOR I%=1% TO A0%              -- repeats
+; 267 OUT 6%,121% -- same tune      -- delays
+; 268 FOR J%=1% TO A1% : NEXT J%
+; 269 OUT 6%,0% : NEXT I%
+; 270 FOR T=1 TO 10 : NEXT T
+; 271 NEXT U%
 TUNE_DATA:
         DEFB  20, 55         ; note 1: 20 reps, delay 55
         DEFB  20, 55         ; note 2: 20 reps, delay 55
