@@ -18,7 +18,7 @@ in the Pico firmware.
 
 ### Running
 
-1. Press **Button B** to enter the monitor (screen turns amber).
+1. Press __Button B__ to enter the monitor (screen turns amber).
 2. Type `P` - loads the AIRFIGHT binary into Z80 RAM at address `8000H`.
 3. Type `G` (or `G 8000`) - jumps to the game entry point.
 
@@ -45,16 +45,16 @@ Controls are read over USB CDC serial (the same terminal used for BASIC).
 ### Intro screen
 
 The title screen uses ABC80 mosaic (teletext) graphics to draw the original
-1981 logo.  Rows 0-13 contain the logo; rows 9-13 hold a decorative border.
-After the logo, the game asks whether the players have played before - if yes,
-the instruction screen is skipped.
+1981 logo (large letters).  Rows 0-13 contain the logo; rows 9-13 hold a
+decorative border. After the logo, the game asks whether the players have
+played before - if yes, the instruction screen is skipped.
 
 ### Screen layout
 
 ```
 Row  0        graphics border (col 0 = 0x97, enables mosaic mode for row)
 Rows 1-19     play area (20 rows x 38 cols, planes and bullets move here)
-Row 20        HUD: P1 score | P2 score | timer (time mode only)
+Row  20       HUD: P1 score | P2 score | timer (time mode only)
 Rows 21-23    messages, prompts, winner announcement
 ```
 
@@ -124,7 +124,7 @@ src/airfight.asm  -->  z80asm_host  -->  airfight.bin  -->  xxd  -->  airfight_b
   ABC80 BASIC interpreter speed.  Pitch is wrong. Game crash.
 - *Logo rows 6-8*: currently blank (gap between upper and lower logo halves).
   Not to worry.
-
+- Not finished ..
 
 
 ### Building
