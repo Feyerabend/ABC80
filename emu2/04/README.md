@@ -201,13 +201,13 @@ After `P`, type `G` (or `G 8000`) to start AIRFIGHT.
 ## AIRFIGHT
 
 A two-player dogfight game for the ABC80, originally written in BASIC by
-Kristian Lidberg and Set Lonnert in 1981.  This version is a full Z80
-assembly port, pre-assembled on the host at build time and embedded directly
-in the Pico firmware.
+Kristian Lidberg and Set Lonnert in 1981.  This version is an interpretation
+of the original game to a Z80 assembly port, pre-assembled on the host at
+build time and embedded directly in the Pico firmware.
 
 ### Running
 
-1. Press **Button B** to enter the monitor (screen turns amber).
+1. Press __Button B__ to enter the monitor (screen turns amber).
 2. Type `P` - loads the AIRFIGHT binary into Z80 RAM at address `8000H`.
 3. Type `G` (or `G 8000`) - jumps to the game entry point.
 
@@ -219,8 +219,8 @@ positions; press any key to begin.
 When the game ends - either by time running out or one player reaching the
 score limit - a full-screen announcement plays with sound effects, followed
 by a mosaic trophy for the winner (or `OAVGJORT` for a draw).  Then
-`SPELA IGEN? (J/N)` is shown: **J** restarts immediately with the same names
-and mode; **N** returns to the intro for new names and mode.
+`SPELA IGEN? (J/N)` is shown: __J__ restarts immediately with the same names
+and mode; __N__ returns to the intro for new names and mode.
 
 ### Controls
 
@@ -282,13 +282,13 @@ with a ~1.5 s pause before play resumes.
 
 ### End-of-game sequence
 
-1. **Announcement** - screen clears, `SOUND_WIN` plays over a `* SPELET SLUT *`
+1. *Announcement* - screen clears, `SOUND_WIN` plays over a `* SPELET SLUT *`
    box for ~1 s, then `SOUND_INTRO` plays as the screen fades (~2.5 s).
-2. **Winner** - `VINNARE BLEV...` appears at the top of a fresh screen;
+2. *Winner* - `VINNARE BLEV...` appears at the top of a fresh screen;
    rows 10-18 switch to graphics mode and a mosaic trophy cup is drawn.
    After ~1.8 s the winner's name is shown and the victory tune plays.
-3. **Draw** - `OAVGJORT` is shown instead; no trophy, no tune.
-4. **Play again** - `SPELA IGEN? (J/N)` at row 22.
+3. *Draw* - `OAVGJORT` is shown instead; no trophy, no tune.
+4. *Play again* - `SPELA IGEN? (J/N)` at row 22.
 
 ### Sounds
 
