@@ -84,9 +84,12 @@ TIME_MIN    EQU 2       ; Starting minutes in time mode
 DIR_CNT     EQU 8       ; Number of compass directions (N..NW)
 BUL_STEPS   EQU 3       ; Cells a bullet travels per game tick
 TURN_DELAY  EQU 3       ; Frames player must wait after turning (blocks double-fire)
-TUNE_SCALE  EQU 20      ; PLY_TUNE inner waste loop: compensates for Z80 vs BASIC speed.
-                        ; Original ABC80 BASIC ~8000 int-iters/s vs Z80 tight loop.
-                        ; Increase = lower pitch/longer; decrease = higher pitch/shorter?
+TUNE_SCALE  EQU 200     ; PLY_TUNE: float FOR-NEXT speed (FOR T=1 TO 10: NEXT T in BASIC line 270).
+                        ; Calibrated: float loop ~1000 iters/s; 200x2x2.5us = 1ms per step.
+INT_SCALE   EQU 62      ; PLY_TUNE: integer FOR-NEXT speed (FOR J%=1% TO A1%: NEXT J%, line 268).
+                        ; PTLP_INNER loop body = 18 + 16*INT_SCALE T-states/step at 3 MHz.
+                        ; 62 → 1010 T-states ≈ 337 µs/step ≈ 2970 steps/s ≈ BASIC ~3000 int-iters/s.
+                        ; Raise INT_SCALE if pitch sounds too high; lower if too low.
 
 
 ; VARIABLE BLOCK  (256 bytes at 8F00H, above game code)
@@ -123,7 +126,7 @@ MODE_TDIR   EQU VAR_BASE+54  ; Time mode flag (1=active)
 TMIN_V      EQU VAR_BASE+56  ; Remaining minutes
 TSEC_V      EQU VAR_BASE+58  ; Remaining seconds (0..59)
 
-WINNER_V    EQU VAR_BASE+60  ; Index of winning player (0 or 1)
+WINNER_V    EQU VAR_BASE+60  ; Result: 0=P1 wins, 1=P2 wins, 0xFF=draw
 PLAYED_V    EQU VAR_BASE+62  ; 1 if players have played before
 
 NAME_P1     EQU VAR_BASE+64  ; Player 1 name string (32 bytes, null-term)
@@ -169,6 +172,7 @@ COLD_START:
 ; --- Phase 9: game setup ---
 RESTART_GAME:            ; PLAY_AGAIN "J" re-enters here (same mode/names)
         CALL GAME_INIT
+        CALL SHOW_READY      ; show names + planes, wait for keypress
 ; --- Phase 10: run game loop (DI: BASIC ISR must not steal key reads) ---
         DI
         JP MAIN_LOOP
@@ -410,15 +414,22 @@ GAME_INIT:
         LD (P_COL+2), A
         LD (P_PCOL+2), A
 
-        ; Clear scores, bullets, seconds counter, turn cooldowns
+        ; Clear scores, bullets, timer, turn cooldowns
         XOR A
         LD (P_SCORE), A
         LD (P_SCORE+2), A
         LD (B_ACTIVE), A
         LD (B_ACTIVE+1), A
         LD (TSEC_V), A
+        LD (TMIN_V), A       ; clear first so TIME_MIN load below is always safe
         LD (P_TDELAY), A     ; P1 turn cooldown = 0
         LD (P_TDELAY+2), A   ; P2 turn cooldown = 0
+        LD A, (MODE_TDIR)    ; restore minutes only in time mode
+        OR A
+        JR Z, GI_NO_TMIN
+        LD A, TIME_MIN
+        LD (TMIN_V), A
+GI_NO_TMIN:
         LD A, 10
         LD (J_PREV), A       ; frame counter: 10 frames x 100ms = 1 second
 
@@ -427,6 +438,95 @@ GAME_INIT:
         CALL PLN_DRAW        ; draw P1 at starting position
         LD B, 1
         CALL PLN_DRAW        ; draw P2 at starting position
+        RET
+
+
+; SHOW_READY -- pre-game name/plane presentation
+; Planes are already at starting positions (drawn by GAME_INIT).
+; Layout in game area (col 0 = 0x97 border marker, untouched throughout):
+;   Row  6: 0x87 "A/D/X <P1 name>" 0x97
+;   Row  9: 0x87 "REDO! TRYCK VALFRI TANGENT" 0x97   (centred, col 7)
+;   Row 12: 0x87 "J/L/M <P2 name>" 0x97
+; Two blank rows between each line for visual spacing.
+; 0x87 = CHR(135) turns graphics OFF; 0x97 = CHR(151) turns graphics ON.
+; Cleanup writes spaces to cols 1-39 (no need to restore col 0).
+; Clobbers: A, B, C, D, E, H, L
+;
+SHOW_READY:
+        ; --- 2.5 s pause: planes visible, no text yet ---
+        LD HL, 125
+        CALL DLYLOOP
+
+        ; --- Row 7: P1 keys + name ---
+        LD B, 7
+        LD C, 1
+        CALL CSRSET
+        LD A, 087H           ; CHR135: open text window
+        CALL PRTCHR
+        LD HL, TXT_P1KEYS    ; "A/D/X "
+        CALL PRTSTR
+        LD HL, NAME_P1
+        LD D, 24
+        CALL PRTNAME
+        LD A, SCR_GFXMK      ; CHR151: close text window
+        CALL PRTCHR
+
+        ; --- Row 10: REDO! centred (starts at col 7, 26 chars) ---
+        LD B, 10
+        LD C, 6
+        CALL CSRSET
+        LD A, 087H
+        CALL PRTCHR
+        LD HL, TXT_READY     ; "REDO! TRYCK VALFRI TANGENT"
+        CALL PRTSTR
+        LD A, SCR_GFXMK
+        CALL PRTCHR
+
+        ; --- Row 13: P2 keys + name ---
+        LD B, 13
+        LD C, 1
+        CALL CSRSET
+        LD A, 087H
+        CALL PRTCHR
+        LD HL, TXT_P2KEYS    ; "J/L/M "
+        CALL PRTSTR
+        LD HL, NAME_P2
+        LD D, 24
+        CALL PRTNAME
+        LD A, SCR_GFXMK
+        CALL PRTCHR
+
+        ; --- Drain any held key, then wait for a fresh press ---
+SR_DRAIN:
+        IN A, (PORT_KB)
+        AND 07FH
+        JR NZ, SR_DRAIN
+        CALL INKEY
+
+        ; --- Cleanup: overwrite cols 1-39 with spaces; col 0 untouched ---
+        LD B, 7
+        CALL CLRGFXROW
+        LD B, 10
+        CALL CLRGFXROW
+        LD B, 13
+        CALL CLRGFXROW
+        RET
+
+
+; CLRGFXROW -- clear cols 1-39 of a graphics row with spaces
+; Leaves col 0 (SCR_GFXMK border marker) untouched.
+; In:  B = row (0..19)
+; Clobbers: A, C, D, E, H, L  (B preserved by PUTCHR)
+;
+CLRGFXROW:
+        LD C, 1
+CLRGFX_LP:
+        LD A, SCR_BLANK
+        CALL PUTCHR
+        INC C
+        LD A, C
+        CP 40
+        JR NZ, CLRGFX_LP
         RET
 
 
@@ -1048,13 +1148,11 @@ TIMER_TICK:
 TTICK_MIN:
         LD A, (TMIN_V)
         OR A
-        JR Z, TTICK_GAMEOVER ; already 0:00 -- hold there (Phase 12 stub)
+        JR Z, TTICK_GAMEOVER ; already 0:00 -- time up
         DEC A
         LD (TMIN_V), A
-        OR A
-        JR Z, TTICK_GAMEOVER ; just reached 0 minutes -- show 0:00
         LD A, 59
-        LD (TSEC_V), A       ; start next minute countdown from :59
+        LD (TSEC_V), A       ; count down from :59 into the new minute
         JR TTICK_HUD
 
 TTICK_GAMEOVER:
@@ -1100,7 +1198,7 @@ BUL_HIT:
         LD (INBUF+3), A      ; save shooter index (B clobbered by BUL_OFF)
         CALL BUL_OFF         ; erase bullet
 
-        ; print debris across opponent's 2-cell sprite position
+        ; locate opponent's 2-cell sprite position
         LD A, (INBUF+3)
         XOR 001H             ; opp index = shooter XOR 1
         ADD A, A             ; opp_poff2 = opp_index * 2
@@ -1112,16 +1210,35 @@ BUL_HIT:
         LD HL, P_COL
         ADD HL, DE
         LD C, (HL)           ; C = opp left col
+        LD A, B
+        LD (INBUF+4), A      ; save opp row for frame 2
+        LD A, C
+        LD (INBUF+5), A      ; save opp col for frame 2
+
+        ; start sound now so it plays through both animation frames
+        LD A, SOUND_HIT
+        CALL SNDON
+
+        ; frame 1: solid impact flash ~160ms (0x7F = all 6 sub-pixels, bit5 set)
+        LD A, 07FH
+        CALL PUTCHR
+        INC C
+        LD A, 07FH
+        CALL PUTCHR
+        LD HL, 15            ; ~300ms
+        CALL DLYLOOP
+
+        ; frame 2: scattered debris ~300ms
+        LD A, (INBUF+4)
+        LD B, A
+        LD A, (INBUF+5)
+        LD C, A
         LD A, 'f'            ; 066H: TR+ML+BR scattered piece
         CALL PUTCHR
         INC C
         LD A, '!'            ; 021H: TL-only fragment
         CALL PUTCHR
-
-        ; explosion sound + pause so player sees the hit and score update
-        LD A, SOUND_HIT
-        CALL SNDON
-        LD HL, 20            ; ~400ms
+        LD HL, 15            ; ~300ms
         CALL DLYLOOP
         CALL SNDOFF
 
@@ -1202,42 +1319,140 @@ PLN_RESET:
         RET
 
 
-; END_GAME  -- determine winner, print result, play tune, ask play again
-; In:  P_SCORE[0], P_SCORE[1] set
-; 
+; END_GAME  -- announce game over, show cup (winner) or draw, ask play again
+; BASIC lines 222-240: sound + asterisk box, then winner cup or draw text.
+; In:  P_SCORE[0], P_SCORE[2] set
+;
 END_GAME:
-        EI                   ; re-enable interrupts (DI was set in main loop)
-        LD A, (P_SCORE)      ; P1 score
+        EI
+
+        ; --- Determine winner, store in WINNER_V before any display ---
+        LD A, (P_SCORE)
         LD B, A
-        LD A, (P_SCORE+2)    ; P2 score
-        CP B                 ; P2 - P1: C=1 if P2 < P1
-        JR C, EG_P1WIN
-        LD A, 1
+        LD A, (P_SCORE+2)
+        CP B
+        JR Z, EG_SET_DRAW    ; equal scores -> draw
+        JR C, EG_SET_P1WIN   ; P2 < P1   -> P1 wins
+        LD A, 1              ; P2 > P1   -> P2 wins
         LD (WINNER_V), A
-        LD B, 21
-        LD C, 0
-        CALL CSRSET
-        LD HL, TXT_WIN_P2
-        CALL PRTSTR
-        JR EG_TUNE
-EG_P1WIN:
+        JR EG_ANNOUNCE
+EG_SET_DRAW:
+        LD A, 0FFH
+        LD (WINNER_V), A
+        JR EG_ANNOUNCE
+EG_SET_P1WIN:
         XOR A
         LD (WINNER_V), A
-        LD B, 21
-        LD C, 0
+
+        ; --- Lines 222-231: CLRSCR, box + SOUND_WIN ~1s, SOUND_INTRO ~2.5s ---
+EG_ANNOUNCE:
+        CALL SNDOFF
+        CALL CLRSCR
+        LD A, SOUND_WIN
+        CALL SNDON
+        LD B, 11
+        LD C, 8
         CALL CSRSET
-        LD HL, TXT_WIN_P1
+        LD HL, TXT_BOX_TOP
         CALL PRTSTR
-EG_TUNE:
+        LD B, 12
+        LD C, 8
+        CALL CSRSET
+        LD HL, TXT_BOX_MID
+        CALL PRTSTR
+        LD B, 13
+        LD C, 8
+        CALL CSRSET
+        LD HL, TXT_BOX_TOP
+        CALL PRTSTR
+        LD HL, 50            ; ~1 s
+        CALL DLYLOOP
+        CALL SNDOFF
+        LD A, SOUND_INTRO
+        CALL SNDON
+        LD HL, 125           ; ~2.5 s
+        CALL DLYLOOP
+        CALL SNDOFF
+        CALL CLRSCR
+        LD HL, 40            ; ~0.8 s
+        CALL DLYLOOP
+
+        ; --- Branch: winner gets cup, draw gets OAVGJORT ---
+        LD A, (WINNER_V)
+        CP 0FFH
+        JR Z, EG_DRAW_SHOW
+
+        ; --- Lines 234-240: "VINNARE BLEV..." + cup mosaic ---
+        LD B, 4
+        LD C, 12
+        CALL CSRSET
+        LD HL, TXT_WIN_HDR   ; "VINNARE BLEV..."
+        CALL PRTSTR
+        LD B, 10             ; rows 10-18 -> graphics mode (line 235)
+        LD C, 18
+        CALL DRAWBDR
+        LD B, 13             ; cup top rim (line 236)
+        LD C, 12
+        CALL CSRSET
+        LD HL, CUP_R0
+        CALL PRTSTR
+        LD B, 14             ; cup body   (line 237)
+        LD C, 12
+        CALL CSRSET
+        LD HL, CUP_R1
+        CALL PRTSTR
+        LD B, 15             ; cup stem   (line 238)
+        LD C, 17
+        CALL CSRSET
+        LD HL, CUP_R2
+        CALL PRTSTR
+        LD B, 16             ; cup base   (line 239)
+        LD C, 17
+        CALL CSRSET
+        LD HL, CUP_R2
+        CALL PRTSTR
+        LD HL, 90            ; ~1.8 s     (line 240)
+        CALL DLYLOOP
+
+        ; --- Winner name + " VINNER!" at row 6 ---
+        LD A, (WINNER_V)
+        PUSH AF              ; save 0=P1 / 1=P2 across CSRSET (clobbers A)
+        LD B, 6
+        LD C, 4
+        CALL CSRSET
+        POP AF
+        OR A
+        JR NZ, EG_SHOW_P2
+        LD HL, NAME_P1
+        LD D, 20
+        CALL PRTNAME
+        JR EG_SHOW_SFX
+EG_SHOW_P2:
+        LD HL, NAME_P2
+        LD D, 20
+        CALL PRTNAME
+EG_SHOW_SFX:
         CALL PLY_TUNE
-        CALL PLAY_AGAIN
+        JP PLAY_AGAIN
+
+EG_DRAW_SHOW:
+        LD B, 11
+        LD C, 16
+        CALL CSRSET
+        LD HL, TXT_DRAW      ; "OAVGJORT"
+        CALL PRTSTR
+        JP PLAY_AGAIN
 
 
-; PLY_TUNE  -- victory tune from original 1981 BASIC (line 263-274)
-; Original BASIC: repeat B times: OUT 6,121 / J-loop delay / OUT 6,0
-; The J-loop sets pitch -- BASIC was ~8000 iters/s vs Z80 tight loop.
-; TUNE_SCALE waste iterations inside the inner loop compensate for the
-; speed difference.  Adjust TUNE_SCALE EQU if pitch is wrong.
+; PLY_TUNE  -- victory tune from original 1981 BASIC (lines 263-274)
+; BASIC structure (lines 265-270):
+;   READ A0%,A1% : A1%=A1%+10%        ; outer count, raw delay+10 = actual delay
+;   FOR I%=1 TO A0%                    ; outer repeat (integer I%)
+;     OUT 6,121                        ; sound ON
+;     FOR J%=1 TO A1% : NEXT J%       ; pitch delay -- INTEGER loop, ~3x faster than float
+;     OUT 6,0 : NEXT I%               ; sound OFF + NEXT I% overhead (~1 int iter)
+;   FOR T=1 TO 10 : NEXT T            ; inter-note silence -- FLOAT loop, slower
+; J%/I% loops → INT_SCALE; T loop → TUNE_SCALE (float).  Adjust both EQUs if pitch wrong.
 ; Uses direct OUT rather than CALL SNDON (avoids chip reset mid-loop).
 ;
 PLY_TUNE:
@@ -1255,7 +1470,7 @@ PTLP_OUTER:
         OUT (PORT_SND), A    ; sound ON -- direct OUT, no chip reset
         LD E, C              ; E counts down inner delay
 PTLP_INNER:
-        LD A, TUNE_SCALE     ; waste loop to slow Z80 down to BASIC speed
+        LD A, INT_SCALE      ; integer J% speed: ~0.33ms per step (3x faster than float)
 PTLP_WASTE:
         DEC A
         JR NZ, PTLP_WASTE
@@ -1263,11 +1478,25 @@ PTLP_WASTE:
         JR NZ, PTLP_INNER
         XOR A
         OUT (PORT_SND), A    ; sound OFF
+        LD A, INT_SCALE      ; OFF delay: ~0.33ms = 1 integer iter (BASIC "NEXT I%" overhead)
+PTLP_OFF:
+        DEC A
+        JR NZ, PTLP_OFF
         DJNZ PTLP_OUTER
+        LD E, 10             ; inter-note gap: 10 silent steps (BASIC line 270)
+PTLP_GAP:
+        LD A, TUNE_SCALE
+PTLP_GAPW:
+        DEC A
+        JR NZ, PTLP_GAPW
+        DEC E
+        JR NZ, PTLP_GAP
         JR PTLP_NOTE
 
 
 ; PLAY_AGAIN  -- ask "SPELA IGEN? (J/N)" and restart or exit
+; J = restart with same names/mode.  N = full intro (new names, new mode).
+; Drains any keys still held at game-end before reading the answer.
 ;
 PLAY_AGAIN:
         LD B, 22
@@ -1275,14 +1504,18 @@ PLAY_AGAIN:
         CALL CSRSET
         LD HL, TXT_AGAIN
         CALL PRTSTR
+PA_DRAIN:
+        IN A, (PORT_KB)      ; wait for all keys to be released
+        AND 07FH
+        JR NZ, PA_DRAIN
 PA_WAIT:
         CALL INKEY
-        OR A
-        JR Z, PA_WAIT
         AND 0DFH             ; force uppercase
         CP 'J'
         JP Z, RESTART_GAME
-        JP COLD_START
+        CP 'N'
+        JP Z, COLD_START
+        JR PA_WAIT           ; ignore anything else, wait for J or N
 
 
 ; SCREEN PRIMITIVES
@@ -1339,6 +1572,26 @@ PRTSTR:
         POP HL
         INC HL           ; next character
         JR PRTSTR
+
+
+; PRTNAME -- print null-terminated string at cursor, up to D chars
+; In:  HL = string address, D = max characters to print
+; Out: cursor advanced past printed chars
+; Clobbers: A, B, C, D, HL  (B/C clobbered by PRTCHR; use D not B for count)
+;
+PRTNAME:
+        LD A, D
+        OR A
+        RET Z            ; limit reached
+        LD A, (HL)
+        OR A
+        RET Z            ; null terminator
+        PUSH HL
+        CALL PRTCHR
+        POP HL
+        INC HL
+        DEC D
+        JR PRTNAME
 
 
 ; CLRSCR  -- clear all 24 screen rows
@@ -1653,10 +1906,18 @@ TXT_READY:
         DEFB "REDO! TRYCK VALFRI TANGENT", 0
 TXT_FIRE:
         DEFB "SKJUT!", 0
+TXT_WIN_SFX:
+        DEFB " VINNER!", 0
+TXT_DRAW:
+        DEFB "OAVGJORT", 0
 TXT_WIN_P1:
-        DEFB "SPELARE 1 VINNER!", 0
+        DEFB "SPELARE 1 VINNER!", 0       ; fallback (kept for monitor reference)
 TXT_WIN_P2:
-        DEFB "SPELARE 2 VINNER!", 0
+        DEFB "SPELARE 2 VINNER!", 0       ; fallback (kept for monitor reference)
+TXT_P1KEYS:
+        DEFB "A/D/X ", 0
+TXT_P2KEYS:
+        DEFB "J/L/M ", 0
 TXT_AGAIN:
         DEFB "SPELA IGEN? (J/N)", 0
 TXT_SCORE_P1:
@@ -1669,6 +1930,23 @@ TXT_YES:
         DEFB "J", 0      ; expected answer for J/N prompts
 TXT_NO:
         DEFB "N", 0
+TXT_BOX_TOP:
+        DEFB "*******************", 0
+TXT_BOX_MID:
+        DEFB "*   SPELET SLUT   *", 0
+TXT_WIN_HDR:
+        DEFB "VINNARE BLEV...", 0
+
+; Cup/trophy mosaic (END_GAME lines 236-239).
+; Characters are ABC80 mosaic: char = 0x20|(P&0x1F)|((P&0x20)<<1)
+; P bit0=TL bit1=TR bit2=ML bit3=MR bit4=BL bit5=BR
+CUP_R0:                          ; row 13 col 12: top rim
+        DEFB 028H, 073H, 02CH, 070H, "       ", 070H, 02CH, 073H, 024H, 0
+CUP_R1:                          ; row 14 col 12: body
+        DEFB 022H, 028H, 063H, 024H, 023H, 02CH, 070H, 020H
+        DEFB 070H, 02CH, 023H, 028H, 033H, 024H, 021H, 0
+CUP_R2:                          ; rows 15+16 col 17: stem / base
+        DEFB "_____", 0           ; 0x5F = full block in graphics mode
 
 ; Instruction screen strings (used by SHOW_INSTR via INSTR_TABLE)
 ; Swedish: [ = Ä (0x5B)   ] = Å (0x5D)   05CH = Ö
@@ -1787,29 +2065,18 @@ DIR_NAMES:
 
 
 ; TUNE_DATA
-; Victory tune: sequence of (sound_value, delay_ticks) pairs.
-; Played by PLY_TUNE which loops until it sees a 0,0 terminator.
-; delay_ticks is in 20ms units (50Hz); value 3 = 60ms, 6 = 120ms.
-; TODO: replace with exact notes and pauses from
-; original 1981 BASIC program.
-; 
-; Original BASIC line 274: DATA 20,45, 20,45, 40,45, 50,32, 60,23, 130,13
-; Pairs: (outer_count, inner_delay) -- ascending count, descending delay = rising pitch
-; 264 FOR U%=1% TO 6%
-; 265 READ A0%,A1% : A1%=A1%+10%    -- probably adjustment after the fact
-; 266 FOR I%=1% TO A0%              -- repeats
-; 267 OUT 6%,121% -- same tune      -- delays
-; 268 FOR J%=1% TO A1% : NEXT J%
-; 269 OUT 6%,0% : NEXT I%
-; 270 FOR T=1 TO 10 : NEXT T
-; 271 NEXT U%
+; Victory tune: pairs of (outer_count, inner_delay) played by PLY_TUNE.
+; Terminated by 0,0.
+; BASIC line 274 raw: DATA 20,45, 20,45, 40,45, 50,32, 60,23, 130,13
+; BASIC line 265 adds 10: A1%=A1%+10%, so actual delays = raw+10.
+; Values stored here are the adjusted (raw+10) delays, matching BASIC exactly.
 TUNE_DATA:
-        DEFB  20, 55         ; note 1: 20 reps, delay 55
-        DEFB  20, 55         ; note 2: 20 reps, delay 55
-        DEFB  40, 55         ; note 3: 40 reps, delay 55
-        DEFB  50, 42         ; note 4: 50 reps, delay 42 (higher)
-        DEFB  60, 33         ; note 5: 60 reps, delay 33 (higher)
-        DEFB 130, 23         ; note 6: 130 reps, delay 23 (highest, longest)
+        DEFB  20, 55         ; note 1: 20 reps, delay 45+10
+        DEFB  20, 55         ; note 2: 20 reps, delay 45+10
+        DEFB  40, 55         ; note 3: 40 reps, delay 45+10
+        DEFB  50, 45         ; note 4: 50 reps, delay 32+10
+        DEFB  60, 35         ; note 5: 60 reps, delay 23+10
+        DEFB 130, 25         ; note 6: 130 reps, delay 17+10
         DEFB   0,  0         ; end
 
 
