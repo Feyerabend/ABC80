@@ -137,6 +137,7 @@ typedef struct {
     float decay_step;
     float peak_v;
     uint32_t noise_freq;
+    float smoothed_out;     // IIR output for soft chip enable/disable transitions
 } sn_t;
 
 static sn_t s_sn;
@@ -264,7 +265,9 @@ static bool audio_cb(repeating_timer_t *rt) {
     }
 
     // -- PWM-DAC: map voltage to 8-bit duty cycle ------------------------------
-    float norm = (voltage_out - OUT_LO_CLIP) / (OUT_HI_CLIP - OUT_LO_CLIP);
+    // IIR lowpass (~0.3 ms ramp) softens chip enable/disable edges.
+    s->smoothed_out += (voltage_out - s->smoothed_out) * 0.0125f; // 0.025f 
+    float norm = (s->smoothed_out - OUT_LO_CLIP) / (OUT_HI_CLIP - OUT_LO_CLIP);
     if (norm < 0.0f) norm = 0.0f;
     if (norm > 1.0f) norm = 1.0f;
     pwm_set_chan_level(s_slice, s_chan, (uint16_t)(norm * 255.0f));
@@ -283,8 +286,9 @@ void sn76477_init(void) {
 
     sn_t *s = &s_sn;
     *s = (sn_t){0};
-    s->enable = 1;         // start silent
-    s->ad_v   = AD_V_MAX;  // envelope_mode=2 starts at full amplitude
+    s->enable       = 1;           // start silent
+    s->ad_v         = AD_V_MAX;   // envelope_mode=2 starts at full amplitude
+    s->smoothed_out = OUT_CENTER; // IIR starts at idle voltage
 
     // Seed the noise LFSR and SLF phase from the hardware TRNG so that
     // sounds 135 and 157 ("Oi..." effects) genuinely vary each power-on,
