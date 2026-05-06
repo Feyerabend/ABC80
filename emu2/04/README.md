@@ -1,4 +1,6 @@
 
+![AIRFIGHT RETURNS!](./../../assets/images/airfight-emu.png)
+
 ## ABC80 Emulator: AIRFIGHT returns ..
 
 An ABC80 emulator for the Raspberry Pi Pico 2 (RP2350), running on the
