@@ -344,17 +344,23 @@ src/airfight.asm  -->  z80asm_host  -->  airfight.bin  -->  xxd  -->  airfight_b
 
 
 ### Building
-
+                                                                                                                       
 Requires Pico SDK 2.2.0, pico-extras, and the ARM GCC toolchain.
-The VS Code Pico extension installs these automatically.
+The VS Code Pico extension for VS Code (Mac/Windows) installs these
+automatically under `~/.pico-sdk`. On Linux, install `cmake`,
+`ninja-build`, `gcc-arm-none-eabi`, and set `PICO_SDK_PATH`.
 
-```sh
+```sh       
 mkdir build && cd build
 cmake ..
-make -j4
-```
+cmake --build . -j4
+``
+Flash abc_pico.uf2 to the Pico in BOOTSEL mode.
+build_and_flash.sh automates the above on macOS with the VS Code Pico extension;
+edit the path variables at the top if your SDK lives elsewhere.
 
-Flash `abc_pico.uf2` to the Pico in BOOTSEL mode.
+The Z80 assembler (z80asm_host) is built automatically during the CMake build--
+no separate step required.
 
 
 ### Source layout
