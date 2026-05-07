@@ -354,7 +354,7 @@ automatically under `~/.pico-sdk`. On Linux, install `cmake`,
 mkdir build && cd build
 cmake ..
 cmake --build . -j4
-``
+```
 Flash abc_pico.uf2 to the Pico in BOOTSEL mode.
 build_and_flash.sh automates the above on macOS with the VS Code Pico extension;
 edit the path variables at the top if your SDK lives elsewhere.
