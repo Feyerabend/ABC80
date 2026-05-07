@@ -17,9 +17,11 @@ set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
 if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
-# ==================================
+# ------------------------------------
 
 set(PICO_BOARD pico2 CACHE STRING "Board type")
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 include(pico_sdk_import.cmake)
 include(pico_extras_import.cmake)
@@ -69,9 +71,11 @@ add_custom_command(
 # airfight.bin -> airfight_bin.h  (C array embedded in firmware)
 add_custom_command(
     OUTPUT  ${CMAKE_BINARY_DIR}/airfight_bin.h
-    COMMAND xxd -i -n airfight_bin
+    COMMAND ${Python3_EXECUTABLE}
+                ${CMAKE_SOURCE_DIR}/bin2c.py
                 ${CMAKE_BINARY_DIR}/airfight.bin
-                > ${CMAKE_BINARY_DIR}/airfight_bin.h
+                ${CMAKE_BINARY_DIR}/airfight_bin.h
+                airfight_bin
     DEPENDS ${CMAKE_BINARY_DIR}/airfight.bin
     COMMENT "Generating airfight_bin.h"
 )
