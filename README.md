@@ -3,8 +3,11 @@
 
 # ABC80 AIR-FIGHT 1981
 
-ABC80 AIR-FIGHT 1981 is a recreated program/code from a paper trail. Originally,
-the program was coded for the Swedish home computer
+ABC80 AIR-FIGHT 1981 is a recreated program/code from a paper trail.
+It now exists in a most simple JavaScript
+[version](./contrib/javascript/air-fight-reimagined-javascript.html),
+but also in a microcontroller version in [Rasberry Pi Pico 2](./emu2/04/).
+Originally, the program was coded for the Swedish home computer
 [ABC80](https://en.wikipedia.org/wiki/ABC_80)[^1] in 1981. It was inspired
 by the [Atari VCS/2600](https://en.wikipedia.org/wiki/Atari_2600)
 game [Combat #24](https://en.wikipedia.org/wiki/Combat_(Atari_2600)).
