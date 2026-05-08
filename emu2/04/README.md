@@ -62,6 +62,7 @@ This emulator reproduces the chip's VCO, SLF oscillator, noise generator,
 one-shot envelope, and mixer in software, outputting PWM audio on GPIO 28.
 An IIR low-pass filter smooths chip-enable on/off transitions to avoid
 audible clicks on square-wave toggling sounds such as the victory tune.
+However, minor clicks are still audible.
 
 #### Port 6 bit mapping
 
@@ -87,7 +88,7 @@ ROM always writes `OUT 6, 0` immediately before writing the one-shot value.
 | Noise | 73 (0x49) | bit0+bit3+bit6 |
 | Pulsed noise | 97 (0x61) | bit0+bit5+bit6 |
 | Tremolo 640 Hz | 195 (0xC3) | alternating envelope |
-| **Bell** (CHR$ 7) | 131 (0x83) | preceded by OUT 6,0; one-shot 640 Hz tone |
+| __Bell__ (CHR$ 7) | 131 (0x83) | preceded by OUT 6,0; one-shot 640 Hz tone |
 | Bang (noise) | 137 (0x89) | preceded by OUT 6,0 |
 | Boom (VCO+noise) | 155 (0x9B) | preceded by OUT 6,0 |
 
