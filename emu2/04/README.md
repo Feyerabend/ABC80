@@ -286,8 +286,9 @@ with a ~1.5 s pause before play resumes.
 1. *Announcement* - screen clears, `SOUND_WIN` plays over a `* SPELET SLUT *`
    box for ~1 s, then `SOUND_INTRO` plays as the screen fades (~2.5 s).
 2. *Winner* - `VINNARE BLEV...` appears at the top of a fresh screen;
-   rows 10-18 switch to graphics mode and a mosaic trophy cup is drawn.
-   After ~1.8 s the winner's name is shown and the victory tune plays.
+   rows 10-18 switch to graphics mode and a mosaic trophy cup (or are there
+   two flags? Why flags? I've no idea what Kristian wanted to show here)
+   is drawn. After ~1.8 s the winner's name is shown and the victory tune plays.
 3. *Draw* - `OAVGJORT` is shown instead; no trophy, no tune.
 4. *Play again* - `SPELA IGEN? (J/N)` at row 22.
 
@@ -302,8 +303,9 @@ with a ~1.5 s pause before play resumes.
 | End-of-game fanfare | `SOUND_WIN` (199) |
 | Victory tune | Original 1981 melody: 6 notes, rising pitch and duration |
 
-The victory tune is reproduced from the original BASIC source using a
-software-driven square wave (direct `OUT 6` toggling, same as the original).
+The victory tune is reproduced (but with some unknown flaws) from the
+original BASIC source using a software-driven square wave
+(direct `OUT 6` toggling, same as the original). It can be improved upon.
 `INT_SCALE` controls the inner-loop delay that sets pitch; `TUNE_SCALE`
 controls the inter-note gap.  Adjust `INT_SCALE` first if the pitch sounds
 wrong.
