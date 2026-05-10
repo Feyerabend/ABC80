@@ -2050,9 +2050,9 @@ TUNE_DATA:
         DEFB  20, 55         ; note 1: 20 reps, delay 45+10
         DEFB  20, 55         ; note 2: 20 reps, delay 45+10
         DEFB  40, 55         ; note 3: 40 reps, delay 45+10
-        DEFB  50, 45         ; note 4: 50 reps, delay 32+10
-        DEFB  60, 35         ; note 5: 60 reps, delay 23+10
-        DEFB 130, 25         ; note 6: 130 reps, delay 17+10
+        DEFB  50, 42         ; note 4: 50 reps, delay 32+10
+        DEFB  60, 33         ; note 5: 60 reps, delay 23+10
+        DEFB 130, 23         ; note 6: 130 reps, delay 13+10
         DEFB   0,  0         ; end
 
 
