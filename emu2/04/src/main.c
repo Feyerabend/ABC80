@@ -8,9 +8,9 @@
 //          Core 0 renders into the back buffer; buffers swap during vblank.
 //
 // Buttons (VGA Demo Board, readable during vblank only):
-//   A (GPIO 0)   reset ABC80 (not working : use hard reset on board)
-//   B (GPIO 6)   toggle monitor mode
-//   C (GPIO 11)  unused
+//   A (GPIO 0)   unusable: VGA Blue MSB DAC resistor holds pin permanently low
+//   B (GPIO 6)   hold ~130 ms to toggle between emulator and monitor
+//   C (GPIO 11)  hold ~130 ms to exit monitor (backup; try on your board)
 
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
@@ -120,12 +120,6 @@ int main(void) {
 
     uint64_t last_frame = time_us_64();
 
-    /* Button state for edge detection.
-     * Start 0xFF (all "pressed") so the first read never triggers a false edge
-     * the VGA PIO drives these pins and can read as low before we get clean
-     * button samples during vblank. */
-    uint8_t btn_prev = 0xFF;
-
     while (true) {
         if (!monitor_is_active()) {
             if (strobe_pending) {
@@ -161,27 +155,56 @@ int main(void) {
             }
             last_frame = time_us_64();
 
-            /* Read buttons during vblank (pins shared with VGA color LSBs) */
+            /* Read buttons during vblank (pins shared with VGA color LSBs).
+             *
+             * Button A (GPIO 0, Blue MSB): the small DAC resistor + 75 Ω
+             *   termination permanently pulls it below the input threshold —
+             *   always reads as pressed, cannot be used.
+             *
+             * Button B (GPIO 6, Green[1]): toggle monitor / emulator.
+             * Button C (GPIO 11): exit monitor only (backup; try on your board).
+             *
+             * Multi-frame hold debounce: require BTN_HOLD_FRAMES consecutive
+             * pressed readings (~130 ms at 30 fps) before acting.  Real presses
+             * hold far longer; single-frame DAC-noise glitches are filtered out.
+             * A shared cooldown prevents immediate re-trigger after a transition. */
+#define BTN_HOLD_FRAMES  4
+#define BTN_COOLDOWN_US  500000ULL
+
+            static uint8_t  btn_b_hold = 0, btn_c_hold = 0;
+            static uint64_t btn_cooldown = 0;
+
             uint8_t btn = display_buttons_read();
-            uint8_t pressed = btn & ~btn_prev;
-            btn_prev = btn;
 
-            /* Button B: enter monitor (only).  Exit via Q or X inside monitor.
-             * Button B shares GPIO 6 with VGA Green[1]; the 75 Ω VGA termination
-             * pulls it low through the DAC resistor, so a consistently-low reading
-             * cannot be distinguished from a genuine press.  Edge detection handles
-             * steady-state, but a glitch after the cooldown would exit the monitor
-             * unexpectedly--so Button B never exits, only enters. */
-            static uint64_t btn_b_ready = 0;
-            if ((pressed & (1u << 1)) && now >= btn_b_ready && !monitor_is_active()) {
-                btn_b_ready = now + 400000;
-                monitor_enter();
+            if (now >= btn_cooldown) {
+                /* Button B: toggle monitor on / off */
+                if (btn & (1u << 1)) {
+                    if (++btn_b_hold >= BTN_HOLD_FRAMES) {
+                        btn_b_hold = btn_c_hold = 0;
+                        btn_cooldown = now + BTN_COOLDOWN_US;
+                        if (monitor_is_active()) monitor_exit();
+                        else                     monitor_enter();
+                    }
+                } else {
+                    btn_b_hold = 0;
+                }
+
+                /* Button C: exit monitor only.
+                 * Gated to monitor-active so a constantly-low GPIO 11 can't
+                 * trigger the cooldown (and block Button B) outside the monitor. */
+                if (monitor_is_active() && (btn & (1u << 2))) {
+                    if (++btn_c_hold >= BTN_HOLD_FRAMES) {
+                        btn_c_hold = 0;
+                        btn_cooldown = now + BTN_COOLDOWN_US;
+                        monitor_exit();
+                    }
+                } else {
+                    btn_c_hold = 0;
+                }
+            } else {
+                /* Reset hold counters during cooldown to prevent carry-over. */
+                btn_b_hold = btn_c_hold = 0;
             }
-
-            /* Button A (GPIO 0) shares the VGA Blue[0] DAC resistor which
-             * pulls it low through the monitor's 75 Ω termination, causing
-             * constant false "pressed" readings.  Reset via monitor G 0. */
-            (void)btn;
         }
     }
 }
