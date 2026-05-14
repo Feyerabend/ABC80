@@ -1,7 +1,7 @@
 // Full SN76477 emulation for ABC80 on Pico 2.
 //
 // Audio output: PWM-DAC on GPIO 28 (Pimoroni Demo Board PWM audio left).
-// GPIO 28 → logic buffer U3 → RC low-pass filter → 3.5mm PWM audio jack.
+// GPIO 28 --> logic buffer U3 --> RC low-pass filter --> 3.5mm PWM audio jack.
 //
 // PWM carrier: ~586 kHz (150 MHz / 256).  Duty cycle updated at 22050 Hz
 // by a repeating timer ISR.  The RC filter recovers the audio envelope.
@@ -15,14 +15,14 @@
 //   One-shot:     C=0.1µF  (C53), R=330kΩ (R25)
 //
 // Port 6 bit mapping:
-//   bit 0 : enable inverted — 1=chip on, 0=chip off (silence)
-//   bit 1 : vco_voltage     — 0=0V→~6400 Hz (high), 1=~2V→640 Hz (low)
-//   bit 2 : vco_w           — 0=external voltage (fixed tone), 1=SLF drives VCO (wow-wow)
-//   bit 3 : mixer_b (pin25) -┐
-//   bit 4 : mixer_a (pin26) -┼- mixer_mode = (bit5<<2)|(bit3<<1)|bit4
-//   bit 5 : mixer_c (pin27) -┘
-//   bit 6 : envelope_2      -┐ envelope_mode = (bit6<<1)|bit7
-//   bit 7 : envelope_1      -┘
+//   bit 0 : enable inverted    1=chip on, 0=chip off (silence)
+//   bit 1 : vco_voltage        0=0V-->~6400 Hz (high), 1=~2V-->640 Hz (low)
+//   bit 2 : vco_w              0=external voltage (fixed tone), 1=SLF drives VCO (wow-wow)
+//   bit 3 : mixer_b (pin25) -|
+//   bit 4 : mixer_a (pin26) -|- mixer_mode = (bit5<<2)|(bit3<<1)|bit4
+//   bit 5 : mixer_c (pin27) -|
+//   bit 6 : envelope_2      --| envelope_mode = (bit6<<1)|bit7
+//   bit 7 : envelope_1      --|
 //
 // Mixer modes (CBA = bit5, bit3, bit4):
 //   0=VCO  1=SLF  2=Noise  3=VCO+Noise  4=SLF+Noise  5=SLF+VCO+Noise  6=SLF+VCO  7=Inhibit
@@ -171,19 +171,19 @@ static bool audio_cb(repeating_timer_t *rt) {
     }
 
     // -- VCO -------------------------------------------------------------------
-    // External: higher pin-16 voltage → lower frequency (SN76477 datasheet).
-    //   0V (bit1=0) → ~6400 Hz max;  ~2V (bit1=1) → 640 Hz minimum.
-    // SLF: triangle wave sweeps vco_top → wow-wow.
+    // External: higher pin-16 voltage --> lower frequency (SN76477 datasheet).
+    //   0V (bit1=0) --> ~6400 Hz max;  ~2V (bit1=1) --> 640 Hz minimum.
+    // SLF: triangle wave sweeps vco_top --> wow-wow.
     float vco_top;
     if (s->vco_mode) {
-        // External voltage: 0V → ~6400 Hz, ~2V → 640 Hz
+        // External voltage: 0V --> ~6400 Hz, ~2V --> 640 Hz
         vco_top = VCO_V_MIN + VCO_V_RANGE * (s->vco_voltage / 2.0f);
         if (vco_top > VCO_V_MAX)         vco_top = VCO_V_MAX;
         if (vco_top < VCO_V_MIN + 0.24f) vco_top = VCO_V_MIN + 0.24f;
     } else {
         // SLF mode: linearly map SLF voltage across the full 10:1 VCO range.
-        // Matches FPGA sound.v: saw(vco_min→vco_max) drives VCO pitch directly,
-        // sweeping 6400 Hz (SLF low) → 640 Hz (SLF high).
+        // Matches FPGA sound.v: saw(vco_min-->vco_max) drives VCO pitch directly,
+        // sweeping 6400 Hz (SLF low) --> 640 Hz (SLF high).
         float t = (s->slf_v - SLF_V_MIN) / SLF_V_RANGE;   // 0.0 .. 1.0
         vco_top = VCO_V_MIN + VCO_V_RANGE * (0.1f + 0.9f * t);
     }
@@ -236,7 +236,7 @@ static bool audio_cb(repeating_timer_t *rt) {
         if (s->ad_v < AD_V_MIN) s->ad_v = AD_V_MIN;
     }
 
-    // -- Mixer → output voltage ------------------------------------------------
+    // -- Mixer --> output voltage ------------------------------------------------
     float voltage_out;
     if (!s->enable) {
         uint32_t out;
@@ -261,7 +261,7 @@ static bool audio_cb(repeating_timer_t *rt) {
             if (voltage_out < OUT_LO_CLIP) voltage_out = OUT_LO_CLIP;
         }
     } else {
-        voltage_out = OUT_CENTER;   // chip disabled → DC → filtered away
+        voltage_out = OUT_CENTER;   // chip disabled --> DC --> filtered away
     }
 
     // -- PWM-DAC: map voltage to 8-bit duty cycle ------------------------------
@@ -317,15 +317,15 @@ void sn76477_init(void) {
 void sn76477_write(uint8_t data) {
     sn_t *s = &s_sn;
     uint32_t new_enable = (data & 0x01) ? 0u : 1u;
-    // One-shot fires on chip-enable edge: disabled→enabled (bit0: 0→1).
+    // One-shot fires on chip-enable edge: disabled-->enabled (bit0: 0-->1).
     // Per SN76477 datasheet: pin 9 high-to-low transition triggers one-shot.
     if (s->enable && !new_enable) {
         s->one_shot_ff = 1;
         s->one_shot_v  = ONE_SHOT_V_MIN;
     }
     s->enable        = new_enable;
-    s->vco_voltage   = (data & 0x02) ? 2.0f : 0.0f;  // pin16 via 1.5k/1k divider → 0V or ~2V
-    s->vco_mode      = (data & 0x04) ? 0u : 1u;  // bit2=0→external(1), bit2=1→SLF(0)
+    s->vco_voltage   = (data & 0x02) ? 2.0f : 0.0f;  // pin16 via 1.5k/1k divider --> 0V or ~2V
+    s->vco_mode      = (data & 0x04) ? 0u : 1u;  // bit2=0-->external(1), bit2=1-->SLF(0)
     s->mixer_mode    = (((data >> 5) & 1u) << 2)
                      | (((data >> 3) & 1u) << 1)
                      |  ((data >> 4) & 1u);
