@@ -240,7 +240,10 @@ ASKPL_NO:
         RET
 
 
+; PHASE 8 -- Setup: name entry, instructions, mode selection
+;
 
+;
 ; GET_NAMES  -- collect player names into NAME_P1 and NAME_P2
 ; In:  nothing  (CUR_ROW/CUR_COL may be anything)
 ; Out: NAME_P1 and NAME_P2 hold null-terminated name strings (max 24 chars)
@@ -377,7 +380,10 @@ GMODE_T:
         RET
 
 
+; PHASE 9 -- Game init, HUD, plane drawing
+;
 
+;
 ; GAME_INIT  -- reset all game state and draw starting screen
 ; In:  MODE_SLIM/MODE_TDIR/TMIN_V already set by GET_MODE
 ; Out: screen cleared and redrawn; planes at start positions; HUD shown
@@ -687,7 +693,10 @@ PDRAW_SPR:
         RET
 
 
+; Main loop, plane movement, keyboard, timer
+;
 
+; 
 ; MAIN_LOOP  -- game loop, runs forever (Ctrl-C -> monitor via C code)
 ; Frame rate: 2 CLKLO ticks = 40ms (~25fps).
 ; Order: delay > keys > move P1 > move P2 > draw P1 > draw P2 > bullets > timer
@@ -850,7 +859,10 @@ PMOV_COLDONE:
         RET
 
 
+; Bullet: fire, move, hit test
+;
 
+;
 ; BUL_INIT  -- fire a bullet from player B's plane
 ; In:  B = player/bullet index (0 or 1)
 ; Out: bullet armed at plane's position/direction; no-op if already active
@@ -1173,7 +1185,10 @@ TTK_P2:
         RET
 
 
+; PHASE 12 -- Scoring, end game, play again
+;
 
+; 
 ; BUL_HIT  -- bullet hit opponent: boom, score, win check
 ; In:  B = bullet index (0=P1 shot, 1=P2 shot)
 ; Clobbers: A, B, C, D, E, H, L
@@ -1499,13 +1514,56 @@ PA_WAIT:
         CP 'J'
         JP Z, RESTART_GAME
         CP 'N'
-        JP Z, COLD_START
+        JP Z, PLAY_NO
         JR PA_WAIT           ; ignore anything else, wait for J or N
 
 
+; PLAY_NO  -- "N" response: farewell screen (original BASIC lines 275-283), then full restart
+; Mirrors: CHR(12) clear, messages at rows 2/4/5/6, 3s pause,
+;          handover message at rows 12/13, 4s pause, then GOTO 1 (= COLD_START).
+PLAY_NO:
+        CALL CLRSCR
+        LD B, 2
+        LD C, 13
+        CALL CSRSET
+        LD HL, TXT_INTEDET
+        CALL PRTSTR
+        LD B, 4
+        LD C, 3
+        CALL CSRSET
+        LD HL, TXT_HOPPAS
+        CALL PRTSTR
+        LD B, 5
+        LD C, 13
+        CALL CSRSET
+        LD HL, TXT_ROLIGT
+        CALL PRTSTR
+        LD B, 6
+        LD C, 0
+        CALL CSRSET
+        LD HL, TXT_SEP
+        CALL PRTSTR
+        LD HL, 150           ; ~3 s (original: FOR T=1 TO 3000)
+        CALL DLYLOOP
+        LD B, 12
+        LD C, 8
+        CALL CSRSET
+        LD HL, TXT_LAMNA
+        CALL PRTSTR
+        LD B, 13
+        LD C, 8
+        CALL CSRSET
+        LD HL, TXT_SPKON
+        CALL PRTSTR
+        LD HL, 200           ; ~4 s (original: FOR T=1 TO 4000)
+        CALL DLYLOOP
+        JP COLD_START
+
 
 ; SCREEN PRIMITIVES
+;
 
+;
 ; CSRSET  -- set cursor position
 ; In:  B = row (0..23),  C = col (0..39)
 ; Out: CUR_ROW, CUR_COL updated
@@ -1664,7 +1722,9 @@ CLRROW_LP:
 
 
 ; SOUND + DELAY
+;
 
+; 
 ; SNDON  -- activate sound chip with given value
 ; In:  A = SN76477 register byte
 ; Out: sound starts
@@ -1718,7 +1778,9 @@ DLYI:
 
 
 ; LOW-LEVEL SCREEN ACCESS
+;
 
+; 
 ; PUTCHR  -- write character to screen RAM
 ; In:  B = row (0..23),  C = col (0..39),  A = character byte
 ; Out: character stored in ABC80 screen RAM
@@ -1771,7 +1833,9 @@ SCRADDR:
 
 
 ; INPUT ROUTINES
+;
 
+; 
 ; INKEY  -- wait for a keypress and return its ASCII code
 ; In:  nothing  (busy-waits)
 ; Out: A = ASCII code (bit 7 stripped)
@@ -1898,6 +1962,18 @@ TXT_P2KEYS:
         DEFB "J/L/M ", 0
 TXT_AGAIN:
         DEFB "SPELA IGEN? (J/N)", 0
+TXT_INTEDET:
+        DEFB "INTE DET.", 0
+TXT_HOPPAS:
+        DEFB "HOPPAS ATT NI I ALLA FALL HAFT", 0
+TXT_ROLIGT:
+        DEFB "ROLIGT!!!", 0
+TXT_SEP:
+        DEFB 017H, "(,, (,, (,, (,, (,, (,, (,, (,, (,,"  , 0  ; a dashed line
+TXT_LAMNA:
+        DEFB "L[MNA NU ", 05CH, "VER TILL N[STA", 0           ; LÄMNA NU ÖVER TILL NÄSTA
+TXT_SPKON:
+        DEFB "SPELARE I K", 05CH, "N!!!!", 0                  ; SPELARE I KÖN!!!!
 TXT_SCORE_P1:
         DEFB "P1:", 0
 TXT_SCORE_P2:
@@ -1977,7 +2053,9 @@ TXT_WAIT:
 
 
 ; GAME DATA TABLES
+;
 
+; 
 ; SPRITES_P1 / SPRITES_P2
 ; 8 entries x 2 bytes = (left_char, right_char) for each compass direction.
 ; Directions: 0=N  1=NE  2=E  3=SE  4=S  5=SW  6=W  7=NW

@@ -173,33 +173,40 @@ int main(void) {
 
             static uint8_t  btn_b_hold = 0, btn_c_hold = 0;
             static uint64_t btn_cooldown = 0;
+            /* "Primed" flags: a button must be seen as not-pressed at least once
+             * before its hold counter starts.  A pin stuck low (like Button A on
+             * GPIO 0 via the DAC resistor) never releases, so it never primes and
+             * never triggers — no startup-time sampling required. */
+            static bool btn_b_primed = false, btn_c_primed = false;
 
             uint8_t btn = display_buttons_read();
 
             if (now >= btn_cooldown) {
                 /* Button B: toggle monitor on / off */
                 if (btn & (1u << 1)) {
-                    if (++btn_b_hold >= BTN_HOLD_FRAMES) {
+                    if (btn_b_primed && ++btn_b_hold >= BTN_HOLD_FRAMES) {
                         btn_b_hold = btn_c_hold = 0;
+                        btn_b_primed = btn_c_primed = false;
                         btn_cooldown = now + BTN_COOLDOWN_US;
                         if (monitor_is_active()) monitor_exit();
                         else                     monitor_enter();
                     }
                 } else {
-                    btn_b_hold = 0;
+                    btn_b_hold  = 0;
+                    btn_b_primed = true;   /* released: now primed for next press */
                 }
 
-                /* Button C: exit monitor only.
-                 * Gated to monitor-active so a constantly-low GPIO 11 can't
-                 * trigger the cooldown (and block Button B) outside the monitor. */
+                /* Button C: exit monitor only */
                 if (monitor_is_active() && (btn & (1u << 2))) {
-                    if (++btn_c_hold >= BTN_HOLD_FRAMES) {
+                    if (btn_c_primed && ++btn_c_hold >= BTN_HOLD_FRAMES) {
                         btn_c_hold = 0;
+                        btn_c_primed = false;
                         btn_cooldown = now + BTN_COOLDOWN_US;
                         monitor_exit();
                     }
                 } else {
-                    btn_c_hold = 0;
+                    btn_c_hold   = 0;
+                    btn_c_primed = true;
                 }
             } else {
                 /* Reset hold counters during cooldown to prevent carry-over. */
