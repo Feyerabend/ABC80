@@ -1,10 +1,10 @@
-// FatFS disk I/O — bit-bang SPI SD card on Pimoroni VGA Demo Base.
+// FatFS disk I/O - bit-bang SPI SD card on Pimoroni VGA Demo Base.
 //
 // Pin assignment (fixed by the board):
-//   GPIO  5  CLK   — shared with VGA Green[0] (PIO0); claimed/released per op
-//   GPIO 18  MOSI  — SD CMD
-//   GPIO 19  MISO  — SD DAT0
-//   GPIO 22  CS    — SD DAT3 (active-low)
+//   GPIO  5  CLK   - shared with VGA Green[0] (PIO0); claimed/released per op
+//   GPIO 18  MOSI  - SD CMD
+//   GPIO 19  MISO  - SD DAT0
+//   GPIO 22  CS    - SD DAT3 (active-low)
 //
 // SD cards 1-3 (DAT1=GPIO20, DAT2=GPIO21) are unused in SPI mode.
 
@@ -58,7 +58,7 @@ static uint8_t sd_cmd_raw(uint8_t cmd, uint32_t arg) {
     spi_byte((uint8_t)(arg >> 16));
     spi_byte((uint8_t)(arg >>  8));
     spi_byte((uint8_t)(arg      ));
-    // CRC — only required for CMD0 and CMD8 in SPI mode
+    // CRC - only required for CMD0 and CMD8 in SPI mode
     uint8_t crc = 0xFF;
     if (cmd ==  0) crc = 0x95;
     if (cmd ==  8) crc = 0x87;
@@ -129,7 +129,7 @@ DSTATUS disk_initialize(BYTE pdrv) {
     gpio_put(SD_MOSI, 1);
     spi_ff(10);
 
-    // CMD0 — software reset, enter SPI mode
+    // CMD0 - software reset, enter SPI mode
     int attempts = 0;
     uint8_t r;
     do {
@@ -137,7 +137,7 @@ DSTATUS disk_initialize(BYTE pdrv) {
     } while (r != 0x01 && ++attempts < 20);
     if (r != 0x01) goto fail;
 
-    // CMD8 — send interface condition (also tells card we support SDHC)
+    // CMD8 - send interface condition (also tells card we support SDHC)
     cs_lo();
     r = sd_cmd_raw(8, 0x1AA);
     if (r == 0x01) {
@@ -153,7 +153,7 @@ DSTATUS disk_initialize(BYTE pdrv) {
             sleep_ms(10);
         }
         if (r != 0) goto fail;
-        // CMD58 — read OCR to check CCS bit (SDHC vs SDSC)
+        // CMD58 - read OCR to check CCS bit (SDHC vs SDSC)
         cs_lo();
         r = sd_cmd_raw(58, 0);
         uint8_t ocr[4];
@@ -174,7 +174,7 @@ DSTATUS disk_initialize(BYTE pdrv) {
         }
         if (r != 0) goto fail;
         s_sdhc = false;
-        // CMD16 — set block length to 512
+        // CMD16 - set block length to 512
         r = sd_cmd(16, 512);
         if (r != 0) goto fail;
     }
@@ -203,7 +203,7 @@ DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
     clk_claim();
 
     if (count == 1) {
-        // CMD17 — single block read
+        // CMD17 - single block read
         cs_lo();
         uint8_t r = sd_cmd_raw(17, sector);
         if (r != 0 || wait_token() != 0) { cs_hi(); goto fail; }
@@ -212,7 +212,7 @@ DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
         cs_hi();
         spi_ff(1);
     } else {
-        // CMD18 — multiple block read
+        // CMD18 - multiple block read
         cs_lo();
         uint8_t r = sd_cmd_raw(18, sector);
         if (r != 0) { cs_hi(); goto fail; }
@@ -223,7 +223,7 @@ DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
         }
         cs_hi();
         spi_ff(1);
-        sd_cmd(12, 0);  // CMD12 — stop transmission
+        sd_cmd(12, 0);  // CMD12 - stop transmission
     }
 
     clk_release();
@@ -242,7 +242,7 @@ DRESULT disk_write(BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count) {
     clk_claim();
 
     while (count--) {
-        // CMD24 — single block write
+        // CMD24 - single block write
         cs_lo();
         uint8_t r = sd_cmd_raw(24, sector);
         if (r != 0) { cs_hi(); goto fail; }

@@ -1,5 +1,5 @@
 // ------------------------------------------------------
-// sd_device.c — ABC80 SD: device driver (main-Pico side)
+// sd_device.c - ABC80 SD: device driver (main-Pico side)
 //
 // This file implements the C-side handlers for the fake "SD:" device
 // that is injected into ABC80's enhetslista (device list) at boot.
@@ -8,13 +8,13 @@
 // ---------------------
 //
 //   Main Pico 2W                         SD-Pico 2W
-//   ─────────────────────────────────    ──────────────────────────
+//   ---------------------------------    --------------------------
 //   Z80 emulator (abc_pico)              SD-Pico firmware
-//     │                                    │
-//     │  UART1 (TX=GP4, RX=GP5)            │ UART0 (RX=GP1, TX=GP0)
-//     ├────────────────────────────────────┤
-//     │  ABC80 BASIC --> SAVE/LOAD SD:     ├── SPI --> SD card (FatFS)
-//     │  PC trap --> handler here          │
+//     |                                    |
+//     |  UART1 (TX=GP4, RX=GP5)            | UART0 (RX=GP1, TX=GP0)
+//     |------------------------------------|
+//     |  ABC80 BASIC --> SAVE/LOAD SD:     |-- SPI --> SD card (FatFS)
+//     |  PC trap --> handler here          |
 //
 // PC trap mechanism
 // -----------------
@@ -32,17 +32,17 @@
 //
 //   Each entry is 7 bytes at an arbitrary RAM address:
 //
-//     +0, +1   next_ptr  (uint16_t LE) — address of next entry, or original
+//     +0, +1   next_ptr  (uint16_t LE) - address of next entry, or original
 //                          list head so we stay linked into the chain
-//     +2..+4   name[3]   — device name in ABC80 character set (e.g. "SD ")
-//     +5, +6   htable_ptr (uint16_t LE) — address of the 9-entry jump table
+//     +2..+4   name[3]   - device name in ABC80 character set (e.g. "SD ")
+//     +5, +6   htable_ptr (uint16_t LE) - address of the 9-entry jump table
 //
 //   The ROM's boot code at 0x00B7 does:
 //       LD HL, <original_head>       ; e.g. 0x018C
 //       LD (0xFE0A), HL              ; store into system variable
 //   We patch the LD HL immediate operand at 0x00B8/0x00B9 so the ROM
 //   writes SD_ENTRY into 0xFE0A itself.  That way SD: is always the
-//   first entry and the original head becomes our next_ptr — no extra
+//   first entry and the original head becomes our next_ptr - no extra
 //   timing tricks needed.
 //
 //   We use 0xFF80 for SD_ENTRY (top 128 bytes of RAM are documented
@@ -70,7 +70,7 @@
 //   the blocking buffer and calls BL_UT when the buffer fills up.
 //
 // ---------------------------------------
-// FCB (File Control Block) — IX register
+// FCB (File Control Block) - IX register
 // ---------------------------------------
 //
 //   When any driver routine is called, IX points to a 15-byte FCB that
@@ -104,7 +104,7 @@
 //                      bit 0: 1 = current buffer has been flushed to device
 //
 // ------------------------------------------------------------
-// Blocking buffer mechanism — BL_UT (write) calling convention
+// Blocking buffer mechanism - BL_UT (write) calling convention
 // ------------------------------------------------------------
 //
 //   The ROM's blocking print routine at 0x001B:
@@ -132,7 +132,7 @@
 //   IX+6 and IX+10,11 must stay in sync with DE/HL.
 //
 // -----------------------------------------------------------
-// Blocking buffer mechanism — BL_IN (read) calling convention
+// Blocking buffer mechanism - BL_IN (read) calling convention
 // -----------------------------------------------------------
 //
 //   The ROM's blocking input routine at 0x0015:
@@ -203,9 +203,9 @@
 // ---------------------------------------------------------------------------
 // Memory map for SD: device structures
 //
-//   0xFF80  SD_ENTRY  — 7-byte enhetslistan entry (next_ptr + name + htable_ptr)
-//   0xFF87  SD_HTABLE — 27-byte handler jump table (9 × JP nn)
-//   0x7B00  SD_BUF    — 256-byte blocking I/O buffer (BL_UT write, BAS INPUT).
+//   0xFF80  SD_ENTRY  - 7-byte enhetslistan entry (next_ptr + name + htable_ptr)
+//   0xFF87  SD_HTABLE - 27-byte handler jump table (9 x JP nn)
+//   0x7B00  SD_BUF    - 256-byte blocking I/O buffer (BL_UT write, BAS INPUT).
 //                       0x7B00-0x7BFF sits below screen RAM (0x7C00) and below
 //                       BOFA (0x8000), so it is never reached by BASIC programs
 //                       or the display controller.
@@ -214,7 +214,7 @@
 #define SD_HTABLE       0xFF87u
 #define SD_BUF          0x7B00u   // below screen RAM (0x7C00) and below BOFA (0x8000)
 
-// Trap addresses — these must be in the top-of-RAM region where we own the
+// Trap addresses - these must be in the top-of-RAM region where we own the
 // memory.  They hold a HALT (0x76) as a guard; our dispatch intercepts
 // before the guard executes.
 
@@ -228,7 +228,7 @@
 #define SD_TRAP_INPUT   0xFFA9u   // handler index 3: INPUT for BAS load
 
 // ---------------------------------------------------------------------------
-// WiFi protocol — TODO
+// WiFi protocol - TODO
 //
 // All data exchange with SD-Pico goes here once the protocol is defined.
 // Each handler below marks exactly what must be sent / received.
@@ -280,7 +280,8 @@ static char sd_fname[13];
 static void sd_ret(void);   // forward declaration
 
 // ---------------------------------------------------------------------------
-// BAS save as ASCII — detokenizer -- TEST! WILL IT WORK? DEAD CODE?
+// BAS save as ASCII - detokenizer -- never used, test yourself
+// The reality it is much more complex and needs time to understand.
 //
 // When the user types SAVE SD:TEST, the ABC80 ROM stores (should store) the
 // program as binary tokens (same as .BAC) rather than ASCII text.
@@ -295,15 +296,15 @@ static void sd_ret(void);   // forward declaration
 // Token byte values:
 //   0x00         : end of line
 //   0x01         : end of program (at EOFA)
-//   0x20–0x7E    : literal ASCII character (pass through, incl ABC80 Swedish chars)
-//   0x80–0xBD    : single-byte statement keyword (context: statement start)
-//   0xBE–0xFC    : single-byte tokens (mostly unused or internal)
-//   0xFF         : two-byte token prefix — read one more byte
+//   0x20-0x7E    : literal ASCII character (pass through, incl ABC80 Swedish chars)
+//   0x80-0xBD    : single-byte statement keyword (context: statement start)
+//   0xBE-0xFC    : single-byte tokens (mostly unused or internal)
+//   0xFF         : two-byte token prefix - read one more byte
 //
 // Two-byte tokens (0xFF, second_byte):
-//   second 0x80–0x95: statement I/O commands (stmt context) or math functions (expr context)
-//   second 0xB7–0xBD: structural keywords (TO, STEP, ELSE, THEN, AS, ASFILE)
-//   second 0xDD–0xFD: logical/arithmetic operators (AND, OR, NOT, +, -, *, /, ^, comparisons)
+//   second 0x80-0x95: statement I/O commands (stmt context) or math functions (expr context)
+//   second 0xB7-0xBD: structural keywords (TO, STEP, ELSE, THEN, AS, ASFILE)
+//   second 0xDD-0xFD: logical/arithmetic operators (AND, OR, NOT, +, -, *, /, ^, comparisons)
 //
 // Context rules: stmt_mode=true at start of each line.  The first high-byte
 // token on a line is a statement keyword; subsequent tokens are expression
@@ -320,7 +321,7 @@ static const char *const S_STMT[256] = {
     [0xbd] = "THEN",
 };
 
-// Two-byte tokens (0xFF, second_byte) — statement I/O context (0x80–0x95 range)
+// Two-byte tokens (0xFF, second_byte) - statement I/O context (0x80-0x95 range)
 static const char *const S_FF_STMT[256] = {
     [0x80] = "DIM",        [0x81] = "POKE",        [0x82] = "OUT",
     [0x84] = "REM",        [0x85] = "OPEN",        [0x86] = "PREPARE",
@@ -341,7 +342,7 @@ static const char *const S_FF_STMT[256] = {
     [0xf9] = "*",          [0xfb] = "/",           [0xfd] = "^",
 };
 
-// Two-byte tokens (0xFF, second_byte) — expression/function context (0x80–0xB4)
+// Two-byte tokens (0xFF, second_byte) - expression/function context (0x80-0xB4)
 static const char *const S_FF_FUNC[256] = {
     [0x80] = "FN",         [0x81] = "ABS",         [0x82] = "ATN",
     [0x83] = "COS",        [0x84] = "EXP",         [0x85] = "FIX",
@@ -438,7 +439,7 @@ static void bas_save_as_text(void) {
             if (tok == 0x00) break;   // end of line
 
             if (tok < 0x80) {
-                // Literal ASCII character — pass through as-is
+                // Literal ASCII character - pass through as-is
                 if (!bas_emit(tok)) goto upload_done;
                 continue;
             }
@@ -463,10 +464,10 @@ static void bas_save_as_text(void) {
                 // Single-byte token
                 kw = S_STMT[tok];
                 if (stmt_mode) {
-                    // First statement keyword — switch to expression mode
+                    // First statement keyword - switch to expression mode
                     stmt_mode = false;
                 } else if (!kw) {
-                    // Not in stmt table — might be an expression-context byte;
+                    // Not in stmt table - might be an expression-context byte;
                     // output nothing for now (avoids garbled output)
                 }
                 // THEN (0xBD) seen as single-byte resets to stmt mode
@@ -479,7 +480,7 @@ static void bas_save_as_text(void) {
                     if (!bas_emit(' ')) goto upload_done;
                 }
             } else {
-                // Unknown token — emit placeholder so the user can see it
+                // Unknown token - emit placeholder so the user can see it
                 char ph[8];
                 snprintf(ph, sizeof(ph), "[%02X]", (unsigned)tok);
                 if (!bas_emit_str(ph)) goto upload_done;
@@ -506,7 +507,7 @@ upload_done:
 }
 
 // ---------------------------------------------------------------------------
-// BAS load — INPUT handler
+// BAS load - INPUT handler
 //
 // For BAS files the ROM LOAD command calls the device INPUT routine once per
 // BASIC line.  Interface (from ABC80 device driver spec):
@@ -525,7 +526,7 @@ static uint16_t bas_src_pos = 0;   // read cursor in sim_buf
 static int      bas_line_n  = 0;   // line counter (for debug)
 
 // ---------------------------------------------------------------------------
-// Handler: INPUT — supply next BAS line to the ROM's LOAD machinery
+// Handler: INPUT - supply next BAS line to the ROM's LOAD machinery
 //
 // Called by: ROM LOAD loop for BAS files (htab index 3 -> SD_TRAP_INPUT)
 // Entry:     HL = destination in Z80 RAM, C = max length
@@ -568,7 +569,7 @@ static void sd_handle_input(void) {
             }
             m[(uint16_t)(dst + i++)] = ch;
         }
-        // If i == 0 here, the line was empty — loop again to get a real line.
+        // If i == 0 here, the line was empty - loop again to get a real line.
     } while (i == 0);
 
     m[(uint16_t)(dst + i)] = 0x0D;     // CR must follow the text immediately
@@ -651,14 +652,14 @@ static void sd_parse_filename(uint16_t de, char *out) {
 // FCB blocking-buffer initialisation (common to OPEN and PREPARE)
 //
 // Sets the FCB fields that control the blocking mechanism:
-//   IX+7  = 0x84 = 132  — flush trigger (BL_UT called when IX+6 reaches this)
-//   IX+8,9              — SD_BUF (buffer start address, lo/hi)
-//   IX+10,11            — SD_BUF (current write ptr, starts at buffer start)
-//   IX+13 = 252 (0xFC)  — free bytes counter; ROM 0x001B decrements this per char
+//   IX+7  = 0x84 = 132  - flush trigger (BL_UT called when IX+6 reaches this)
+//   IX+8,9              - SD_BUF (buffer start address, lo/hi)
+//   IX+10,11            - SD_BUF (current write ptr, starts at buffer start)
+//   IX+13 = 252 (0xFC)  - free bytes counter; ROM 0x001B decrements this per char
 //                         IMPORTANT: must be 252, not 253.  The ROM example
 //                         uses `LD (IX+0DH), 0FCH`.  Off-by-one here causes the
 //                         counter to wrap incorrectly after the first BL_UT.
-//   IX+14 = 0x00        — status: nothing written, nothing flushed
+//   IX+14 = 0x00        - status: nothing written, nothing flushed
 //
 //   Do NOT pre-write m[SD_BUF]: the ROM writes TO the buffer during SAVE/PRINT;
 //   a sentinel byte there would corrupt the output and is not needed.
@@ -677,7 +678,7 @@ static void sd_setup_fcb_buf(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Handler: OPEN — open existing file for reading
+// Handler: OPEN - open existing file for reading
 //
 // Called by: LOAD SD:file / RUN SD:file / OPEN "SD:file" AS FILE N
 // Entry:     DE = address of 11-byte 8.3 filename in Z80 RAM
@@ -718,7 +719,7 @@ static void sd_handle_open(void) {
 
     } else if (sim_file_type == FILE_BAC) {
         // BAC load: ROM calls BL_IN after OPEN, but expects cassette-framed
-        // blocks — we cannot serve raw tokens that way.  Instead, copy the
+        // blocks - we cannot serve raw tokens that way.  Instead, copy the
         // raw program bytes directly into the program area right now so that
         // BL_IN can return EOF (no blocks) and the ROM will proceed to CLOSE
         // with the correct data already in place.
@@ -743,7 +744,7 @@ static void sd_handle_open(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Handler: PREPARE — create/truncate file for writing
+// Handler: PREPARE - create/truncate file for writing
 //
 // Called by: SAVE SD:file / LIST SD:file / PREPARE "SD:file" AS FILE N
 // Entry:     DE = address of 11-byte 8.3 filename in Z80 RAM
@@ -780,7 +781,7 @@ static void sd_handle_prepare(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Handler: CLOSE — flush partial buffer and close file
+// Handler: CLOSE - flush partial buffer and close file
 //
 // Called by: CLOSE N  (after PREPARE/PRINT# sequence)
 // Entry:     IX = FCB for the file being closed
@@ -799,7 +800,7 @@ static void sd_handle_close(void) {
         if (sim_file_type == FILE_BAS &&
             (m[(uint16_t)(ix + 14)] & 0x80) != 0) {
             // -----------------------------------------------------------
-            // BAS/LIST write path — file was opened in PREPARE, full blocks
+            // BAS/LIST write path - file was opened in PREPARE, full blocks
             // were streamed through BL_UT; flush the final partial block.
             uint16_t buf_start = (uint16_t)(m[(uint16_t)(ix+8)]  | (m[(uint16_t)(ix+9)]  << 8));
             uint16_t buf_cur   = (uint16_t)(m[(uint16_t)(ix+10)] | (m[(uint16_t)(ix+11)] << 8));
@@ -875,7 +876,7 @@ static void sd_handle_close(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Handler: BL_IN — supply next block to ROM input routine (read path)
+// Handler: BL_IN - supply next block to ROM input routine (read path)
 //
 // Called by: ROM 0x0015 when the blocking input buffer is exhausted.
 // Entry:     IX = FCB
@@ -909,30 +910,30 @@ static void sd_handle_blread(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Handler: BL_UT — flush full block to SD-Pico (write path)
+// Handler: BL_UT - flush full block to SD-Pico (write path)
 //
 // Called by: ROM 0x001B when the blocking output buffer is full.
 //            Triggered when IX+6 reaches IX+7 (pos == maxpos == 132).
 //
 // Entry:
 //   HL = current write pointer = SD_BUF + bytes_written
-//   IX+8,9 = SD_BUF  (buffer start — set by sd_setup_fcb_buf)
+//   IX+8,9 = SD_BUF  (buffer start - set by sd_setup_fcb_buf)
 //   The data to flush is m[SD_BUF .. HL-1], length = HL - SD_BUF.
 //
 // Exit:
-//   HL = SD_BUF  (reset buffer pointer — ROM 0x001B updates IX+6/IX+10,11 from this)
+//   HL = SD_BUF  (reset buffer pointer - ROM 0x001B updates IX+6/IX+10,11 from this)
 //   IX+13 = 252  (reset free-bytes counter for next block)
 //   IX+14 bit 0 set  (marks that this buffer was flushed)
 //   A=0, CY=0
 //
-// IMPORTANT — reset IX+6, IX+10, IX+11 and DE here.
+// IMPORTANT - reset IX+6, IX+10, IX+11 and DE here.
 //   The SAVE loop (ROM ~0x0DF5) uses DE as the buffer write pointer and
 //   does NOT reload it from IX+10,11 after BL_UT returns.  If DE is not
 //   reset to buf_start the write pointer runs past the buffer boundary,
 //   corrupting all of Z80 RAM.  IX+6 (pos) must also be reset to 0 so
 //   the flush trigger fires correctly for the next block.
 //
-// IMPORTANT — always reset IX+13 = 252.
+// IMPORTANT - always reset IX+13 = 252.
 //   If IX+13 is not reset, ROM's decrement wraps 0-->255 and the IX+13
 //   trigger never fires again.  The IX+6/IX+7 trigger will still fire but
 //   without IX+13 tracking the free bytes correctly the buffer accounting
@@ -954,7 +955,7 @@ static void sd_handle_blwrite(void) {
            (unsigned)saved_src, (unsigned)bofa, (unsigned)eofa);
 
     // BAS LIST save: stream this block to the server via HTTP POST.
-    //   IX+14 bit 7 is set by ROM 0x001B when writing ASCII — this means
+    //   IX+14 bit 7 is set by ROM 0x001B when writing ASCII - this means
     //   the data came via LIST (ASCII text).  If bit 7 is clear the data
     //   came from the SAVE loop directly (raw cassette tokens), so we skip
     //   the upload here; sd_handle_close() will upload from BOFA instead.
@@ -967,7 +968,7 @@ static void sd_handle_blwrite(void) {
             if (!sd_fat_save_write(m + buf_start, (int)data_len))
                 printf("SD: BL_UT  write failed!\n");
         } else {
-            printf("SD: BL_UT  BAS/SAVE raw tokens — deferred to CLOSE\n");
+            printf("SD: BL_UT  BAS/SAVE raw tokens - deferred to CLOSE\n");
         }
     }
 
@@ -987,7 +988,7 @@ static void sd_handle_blwrite(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Handler: error stubs (indices 7 and 8 — not used by normal BASIC operations)
+// Handler: error stubs (indices 7 and 8 - not used by normal BASIC operations)
 
 static void sd_handle_err(void) {
     printf("SD: ERR (stub)\n");
@@ -995,15 +996,15 @@ static void sd_handle_err(void) {
 }
 
 // ---------------------------------------------------------------------------
-// sd_device_init — inject SD: into the enhetslistan and install traps
+// sd_device_init - inject SD: into the enhetslistan and install traps
 //
 // Called from abc80_init() after the ROM image is loaded into m[].
 //
 // Memory written:
-//   m[0x00B8,0x00B9]    — patch ROM init to write SD_ENTRY into 0xFE0A
-//   m[SD_ENTRY+0..+6]   — 7-byte enhetslista entry
-//   m[SD_HTABLE+0..+26] — 9 × JP nn (handler jump table)
-//   m[trap_addr]        — HALT guard at each trap address
+//   m[0x00B8,0x00B9]    - patch ROM init to write SD_ENTRY into 0xFE0A
+//   m[SD_ENTRY+0..+6]   - 7-byte enhetslista entry
+//   m[SD_HTABLE+0..+26] - 9 x JP nn (handler jump table)
+//   m[trap_addr]        - HALT guard at each trap address
 
 void sd_device_init(void) {
     // Patch the ROM's enhetslistan-head store instruction.
@@ -1014,7 +1015,7 @@ void sd_device_init(void) {
     m[0x00B9] = (uint8_t)(SD_ENTRY >> 8);
 
     // Device entry at SD_ENTRY (0xFF80):
-    //   +0,+1  next_ptr = 0x018C  (original list head — keeps chain intact)
+    //   +0,+1  next_ptr = 0x018C  (original list head - keeps chain intact)
     //   +2..4  name = "SD "
     //   +5,+6  htable_ptr = SD_HTABLE
     m[SD_ENTRY + 0] = 0x8C;                             // next_ptr lo
@@ -1029,7 +1030,7 @@ void sd_device_init(void) {
     //   Index order per ABC80 device driver spec (elementärt-enhetslista):
     //     3 = INPUT  (LOAD NAM:, RUN NAM:, INPUT #N)
     //     4 = PRINT  (LIST NAM:, PRINT #N) -> JP 001BH (ROM blocking print)
-    //   index 4 (PRINT) --> ROM 0x001B — no trap, use existing ROM routine
+    //   index 4 (PRINT) --> ROM 0x001B - no trap, use existing ROM routine
     static const uint16_t htab[9] = {
         SD_TRAP_OPEN,    // 0: OPEN
         SD_TRAP_INIT,    // 1: PREPARE
@@ -1059,7 +1060,7 @@ void sd_device_init(void) {
 }
 
 // ---------------------------------------------------------------------------
-// sd_device_dispatch — check pc against trap table and call handler
+// sd_device_dispatch - check pc against trap table and call handler
 //
 // Called from abc80_step() after every step().
 // Returns true if the trap was handled (abc80_step must not re-execute).

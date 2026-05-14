@@ -1,4 +1,4 @@
-// Z80 disassembler — adapted from TurboDis Z80 by Markus Fritze (sarnau).
+// Z80 disassembler - adapted from TurboDis Z80 by Markus Fritze (sarnau).
 // Original: https://github.com/sarnau/Z80DisAssembler  (freeware)
 // Stripped to OpcodeLen + Disassemble only; reads via abc80_read_mem().
 
@@ -8,7 +8,7 @@
 #include "abc80.h"
 #include "disasm.h"
 
-// Read helpers — all memory accesses go through the Z80 address space.
+// Read helpers - all memory accesses go through the Z80 address space.
 #define M(a)      abc80_read_mem((uint16_t)(a))
 #define BYTE_1    M(adr + 1)
 #define BYTE_2    M(adr + 2)

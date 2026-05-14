@@ -1,4 +1,4 @@
-// ABC80 built-in monitor — entered with Button X, exited with X/Q.
+// ABC80 built-in monitor - entered with Button X, exited with X/Q.
 // Amber display distinguishes monitor mode from normal ABC80 operation.
 // The Z80 is frozen while the monitor is active.
 
@@ -25,14 +25,14 @@
 #define MON_OUT_HIST  120   // scrollback history
 
 // ---------------------------------------------------------------------------
-// Assembly source — line-numbered editor, like ABC80 BASIC.
+// Assembly source - line-numbered editor, like ABC80 BASIC.
 //
-// "A 10 LD HL,0"  — set line 10 to "LD HL,0"
-// "A 10"          — delete line 10
-// "AL"            — list all lines
-// "AL 10 30"      — list lines 10–30
-// "AC"            — clear all lines
-// "AS addr"       — assemble to Z80 address
+// "A 10 LD HL,0"  - set line 10 to "LD HL,0"
+// "A 10"          - delete line 10
+// "AL"            - list all lines
+// "AL 10 30"      - list lines 10-30
+// "AC"            - clear all lines
+// "AS addr"       - assemble to Z80 address
 //
 // Lines are kept sorted by line number at all times.
 #define ASM_MAX_LINES  640
@@ -211,7 +211,7 @@ static void cmd_vars(const char *args) {
     //                      4=float[] 5=int[] 6=str[]
     //                      8=float[,] 9=int[,] A=str[,]
     //   name: raw ABC80 char 0x41('A')..0x5A('Z'),0x5B(Ä),0x5C(Ö),0x5D(Å)
-    //   float  (offset+4): 5 bytes SSSIE — BCD×3, sign, exp+128
+    //   float  (offset+4): 5 bytes SSSIE - BCD×3, sign, exp+128
     //   int    (offset+4): 2 bytes LE
     //   string (offset+4): DD LL RR (dim_len, cur_len, content_ptr, each 2B)
     uint16_t root = mon_read16(0xFE29);
@@ -394,7 +394,7 @@ static int asm_find(uint16_t num) {
     return -1;
 }
 
-// A [num [text]] — line editor entry point.
+// A [num [text]] - line editor entry point.
 //   A 10 LD A,42   → set line 10
 //   A 10           → delete line 10
 //   A              → show line count
@@ -440,7 +440,7 @@ static void cmd_asm_line(const char *args) {
     snprintf(asm_lines[idx].text, ASM_LINE_LEN, "%s", args);
 }
 
-// AC — clear all lines.
+// AC - clear all lines.
 static void cmd_asm_clear(const char *args) {
     (void)args;
     asm_nlines = 0;
@@ -448,7 +448,7 @@ static void cmd_asm_clear(const char *args) {
 }
 
 
-// AL [from [to]] — list lines; optional decimal range.
+// AL [from [to]] - list lines; optional decimal range.
 static void cmd_asm_list(const char *args) {
     if (asm_nlines == 0) { mon_print("(empty)"); return; }
     while (*args == ' ') args++;
@@ -471,8 +471,8 @@ static void cmd_asm_list(const char *args) {
     if (shown == 0) mon_print("(no lines in range)");
 }
 
-// AS [addr] [L] — assemble all lines to Z80 address (hex, default 8000).
-// Append L to enable listing (default off — ~250 lines would flood the buffer).
+// AS [addr] [L] - assemble all lines to Z80 address (hex, default 8000).
+// Append L to enable listing (default off - ~250 lines would flood the buffer).
 static void cmd_asm_assemble(const char *args) {
     if (asm_nlines == 0) { mon_print("no source (use A n text)"); return; }
     while (*args == ' ') args++;
@@ -514,7 +514,7 @@ static void cmd_asm_assemble(const char *args) {
     mon_print(info);
 }
 
-// G [addr] — set PC (hex) and resume Z80 execution.
+// G [addr] - set PC (hex) and resume Z80 execution.
 static void cmd_go(const char *args) {
     if (*args) {
         extern uint16_t pc;
@@ -557,7 +557,7 @@ static void load_asm_src(const char *src, const char *name) {
 }
 
 // ---------------------------------------------------------------------------
-// File commands — F-family (FatFS on SD card)
+// File commands - F-family (FatFS on SD card)
 //
 // FL [path]   list directory (default /)
 // FD path     delete file
@@ -584,7 +584,7 @@ static void fl_cb(const char *name, bool is_dir, uint32_t size) {
     fmon_count++;
 }
 
-// FL [path] — list a directory.
+// FL [path] - list a directory.
 static void cmd_file_list(const char *args) {
     if (!sd_fat_mounted()) { mon_print("no SD card"); return; }
     const char *path = (*args) ? args : "/";
@@ -598,7 +598,7 @@ static void cmd_file_list(const char *args) {
         mon_print("  (empty)");
 }
 
-// FD path — delete file.
+// FD path - delete file.
 static void cmd_file_delete(const char *args) {
     if (!*args) { mon_print("usage: FD path"); return; }
     if (!sd_fat_mounted()) { mon_print("no SD card"); return; }
@@ -606,7 +606,7 @@ static void cmd_file_delete(const char *args) {
     else                     mon_print("error / not found");
 }
 
-// FK path — create directory.
+// FK path - create directory.
 static void cmd_file_mkdir(const char *args) {
     if (!*args) { mon_print("usage: FK path"); return; }
     if (!sd_fat_mounted()) { mon_print("no SD card"); return; }
@@ -614,7 +614,7 @@ static void cmd_file_mkdir(const char *args) {
     else                    mon_print("error");
 }
 
-// FM src dst — rename/move.
+// FM src dst - rename/move.
 static void cmd_file_move(const char *args) {
     const char *sp = args;
     while (*sp && *sp != ' ') sp++;
@@ -632,14 +632,14 @@ static void cmd_file_move(const char *args) {
     else                        mon_print("error");
 }
 
-// FC — remount SD card.
+// FC - remount SD card.
 static void cmd_file_connect(const char *args) {
     (void)args;
     if (sd_fat_init()) mon_print("SD: mounted");
     else               mon_print("SD: mount failed");
 }
 
-// FB path [addr] — load binary file from SD card into Z80 RAM.
+// FB path [addr] - load binary file from SD card into Z80 RAM.
 // addr is hex (default 8000). Then use G addr to run.
 static void cmd_file_binary(const char *args) {
     if (!*args) { mon_print("usage: FB path [addr]"); return; }
@@ -669,13 +669,13 @@ static void cmd_file_binary(const char *args) {
     mon_print(info);
 }
 
-// FX — kept for compatibility.
+// FX - kept for compatibility.
 static void cmd_file_disconnect(const char *args) {
     (void)args;
     mon_print("SD: use FC to remount");
 }
 
-// FI — SD card info.
+// FI - SD card info.
 static void cmd_file_info(const char *args) {
     (void)args;
     char line[41];
@@ -691,7 +691,7 @@ static void cmd_file_info(const char *args) {
     mon_print(line);
 }
 
-// P — load the pre-assembled AIRFIGHT binary directly into Z80 memory.
+// P - load the pre-assembled AIRFIGHT binary directly into Z80 memory.
 static void cmd_airfight(const char *args) {
     (void)args;
     extern uint8_t m[];
@@ -743,7 +743,7 @@ static void mon_exec(const char *cmd) {
     char ch = *cmd++;
     if (ch >= 'a' && ch <= 'z') ch = (char)(ch - 32);
 
-    if (ch == '\0') return;   // empty line — do nothing
+    if (ch == '\0') return;   // empty line - do nothing
     if (ch == 'H') { cmd_help(); return; }
 
     /* F-family: FL, FD, FK, FM, FI */
@@ -772,7 +772,7 @@ static void mon_exec(const char *cmd) {
         if (sub == 'L') { cmd++; while (*cmd == ' ') cmd++; cmd_asm_list(cmd);     return; }
         if (sub == 'C') { cmd_asm_clear(cmd); return; }
         if (sub == 'I') { mon_print("AI command removed"); return; }
-        /* A n [text] — line editor */
+        /* A n [text] - line editor */
         while (*cmd == ' ') cmd++;
         cmd_asm_line(cmd);
         return;
@@ -831,10 +831,10 @@ void monitor_serial_poll(void) {
     }
     if (mon_esc == 2) {
         mon_esc = 0;
-        if (ch == 'A') {  // up arrow — scroll back
+        if (ch == 'A') {  // up arrow - scroll back
             int max_scroll = mon_nout - MON_OUT_ROWS;
             if (max_scroll > 0 && mon_scroll < max_scroll) mon_scroll++;
-        } else if (ch == 'B') {  // down arrow — scroll forward
+        } else if (ch == 'B') {  // down arrow - scroll forward
             if (mon_scroll > 0) mon_scroll--;
         }
         return;
