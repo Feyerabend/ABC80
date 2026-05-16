@@ -21,12 +21,12 @@ USB-CDC keyboard input, and a built-in Z80 assembly dogfight game--AIRFIGHT.
 
 Connect a *Pico DVI Sock* (castellated pads) to the Pico:
 
-| GPIO | TMDS signal |
-||-|
+| GPIO   | TMDS signal                      |
+|--------|----------------------------------|
 | 12, 13 | Lane 0 — Blue + H/V sync (D+/D−) |
-| 14, 15 | Clock (CK+/CK−) |
-| 16, 17 | Lane 2 — Red (D+/D−) |
-| 18, 19 | Lane 1 — Green (D+/D−) |
+| 14, 15 | Clock (CK+/CK−)                  |
+| 16, 17 | Lane 2 — Red (D+/D−)             |
+| 18, 19 | Lane 1 — Green (D+/D−)           |
 
 DVI output: 640×480 60 Hz, ZX81 display (256×192, 32×24 chars) centred with a black border.
 
