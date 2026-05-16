@@ -30,6 +30,8 @@ Connect a *Pico DVI Sock* (castellated pads) to the Pico:
 
 DVI output: 640×480 60 Hz, ZX81 display (256×192, 32×24 chars) centred with a black border.
 
+![RPI Pico 2W](./../../assets/images/pico2_dvi.jpeg)
+
 #### Keyboard — USB-CDC serial (current)
 
 Type through any USB serial terminal at 115200 baud. ASCII characters are translated
