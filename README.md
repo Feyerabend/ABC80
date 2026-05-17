@@ -558,6 +558,31 @@ with the keyboard. Even for the time. So it was soon shelved.
 ![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
 
 
+### contrib/ZX81
+
+The stark contrast between that era and the present day is truly mind-blowing, especially
+when it comes to computers that ordinary people could actually own and interact with--home
+computers and personal computers.
+
+Today, it is possible to implement an emulator on a microcontroller such as the Raspberry
+Pi Pico 2 W, a device smaller than a finger. Combined with a compact DVI interface capable
+of generating video signals for a modern display, and software partly or entirely written
+by an LLM, it creates the astonishing impression that a computer comparable to the Sinclair
+ZX81 can be recreated within just a few hours: both the hardware and the software.
+
+What once required entire engineering teams, specialised manufacturing, and months or years
+of development can now be approached as an evening project by a single enthusiast. The sheer
+compression of complexity, cost, and effort over the decades is remarkable. It highlights
+not only the exponential progress in electronics and software engineering, but also how much
+knowledge and capability have become accessible to individuals.
+
+It is difficult not to feel a sense of awe when realising that a tiny modern microcontroller
+possesses computational resources vastly beyond those of early home computers, while
+simultaneously being cheap, programmable, and available almost everywhere.
+
+[Incredible](./contrib/zx81_pico/).
+
+
 # ABC80 MUSIC 1981
 
 Most simple sample we could come up with that made it to the presentation.
