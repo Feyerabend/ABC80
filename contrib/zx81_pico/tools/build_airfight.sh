@@ -6,11 +6,8 @@
 set -e
 cd "$(dirname "$0")/.."
 
-echo "=== Compiling make_airfight ==="
-cc -std=c11 -Wall -O2 -o tools/make_airfight tools/make_airfight.c
-
 echo "=== Assembling & building airfight.p ==="
-./tools/make_airfight games/airfight.asm games/airfight.p
+python3 tools/make_p.py games/airfight.asm --header
 
 if [ -n "$1" ]; then
     echo "=== Loading onto Pico at $1 ==="
