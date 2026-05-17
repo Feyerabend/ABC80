@@ -1,12 +1,18 @@
 # Makefile — zx81_pico
 #
 # Targets:
-#   make            — build game binary + firmware (default)
-#   make airfight   — assemble airfight.asm → src/airfight_bin.h
-#   make firmware   — cmake/ninja build only (assumes airfight up to date)
-#   make flash      — flash last-built .uf2 via picotool
-#   make clean      — remove build artifacts
-#   make monitor    — open USB CDC serial monitor (screen)
+#   make              — build airfight binary + Pico firmware (default)
+#   make airfight     — assemble airfight.asm → games/airfight.p + src/airfight_bin.h
+#   make firmware     — cmake/ninja build only (assumes airfight up to date)
+#   make flash        — flash last-built .uf2 via picotool
+#   make load         — build airfight.p and send to Pico over serial
+#   make hello        — build smoke-test hello.p (HELLO on screen)
+#   make send P=f.p   — send any .p file:  make send P=games/airfight.p
+#   make clean        — remove build artifacts
+#   make monitor      — open USB CDC serial monitor (screen)
+#
+# Serial port is auto-detected (/dev/tty.usbmodem*).
+# Override:  make load PORT=/dev/ttyACM0
 
 # ── Pico SDK paths ────────────────────────────────────────────────────────────
 PICO_HOME   := $(HOME)/.pico-sdk
@@ -25,14 +31,17 @@ UF2         := $(BUILD_DIR)/$(TARGET).uf2
 
 NCPU := $(shell sysctl -n hw.logicalcpu 2>/dev/null || nproc 2>/dev/null || echo 4)
 
-.PHONY: all airfight firmware flash clean monitor
+# Serial port — auto-detected; override with: make load PORT=/dev/ttyACM0
+PORT ?= $(shell ls /dev/tty.usbmodem* 2>/dev/null | head -1)
+
+.PHONY: all airfight firmware flash load hello send clean monitor
 
 all: airfight firmware
 
 # Assemble airfight.asm → games/airfight.p + src/airfight_bin.h
 airfight:
 	@echo "==> Building airfight..."
-	bash tools/build_airfight.sh
+	python3 tools/make_p.py games/airfight.asm --header
 
 # Build Pico firmware (cmake + ninja)
 firmware:
@@ -55,10 +64,29 @@ flash:
 	    $(PICOTOOL) load -f -x $(UF2)
 	@echo "==> Done — Pico is running the new firmware"
 
+# Build airfight.p and send to Pico
+load: airfight
+	@test -n "$(PORT)" || { echo "ERROR: No USB CDC device found (Pico plugged in? Or set PORT=)"; exit 1; }
+	@echo "==> Sending games/airfight.p to $(PORT) ..."
+	python3 tools/send_p_termios.py $(PORT) games/airfight.p
+
+# Build smoke-test hello.p (writes HELLO to screen, loops)
+hello:
+	@echo "==> Building hello.p ..."
+	python3 tools/make_hello.py games/hello.p
+	@echo "==> games/hello.p ready  (use 'make send P=games/hello.p' to load)"
+
+# Send any .p file:  make send P=games/airfight.p
+send:
+	@test -n "$(P)" || { echo "Usage: make send P=<file.p>"; exit 1; }
+	@test -n "$(PORT)" || { echo "ERROR: No USB CDC device found (Pico plugged in? Or set PORT=)"; exit 1; }
+	@echo "==> Sending $(P) to $(PORT) ..."
+	python3 tools/send_p_termios.py $(PORT) $(P)
+
 # Remove all generated artifacts
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f tools/make_airfight src/airfight_bin.h games/airfight.p
+	rm -f src/airfight_bin.h games/airfight.p games/hello.p
 
 # Open USB CDC serial monitor
 monitor:
