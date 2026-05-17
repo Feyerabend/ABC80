@@ -113,8 +113,8 @@ wr(0x403B, 0x40)               # CDFLAG: bit6=1 → ROM proceeds to BASIC
 # BASIC line 10: RAND USR 32768
 # body: FD(RAND) D8(USR) "32768" 7E(num) float(32768) 76(NEWLINE)
 body = bytes([
-    0xFA,                               # RAND token
-    0xD5,                               # USR token
+    0xF9,                               # RAND token
+    0xD4,                               # USR token
     0x1F, 0x1E, 0x23, 0x22, 0x24,       # "32768" in ZX81 char codes
     0x7E,                               # number follows
     0x90, 0x00, 0x00, 0x00, 0x00,       # float 32768.0 (exp=0x90)
