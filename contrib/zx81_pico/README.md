@@ -15,7 +15,7 @@ to go for the Jupiter ACE.
 
 Well, today as a modern asset .. was a different question.
 
-[ZX81 Original](./../../assets/images/zx81orig.jpeg)
+![ZX81 Original](./../../assets/images/zx81orig.jpeg)
 
 
 ### Hardware
