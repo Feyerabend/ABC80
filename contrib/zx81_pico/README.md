@@ -6,6 +6,14 @@ USB-CDC keyboard input, and a built-in Z80 assembly dogfight game--AIRFIGHT.
 
 ![ZX81](../../assets/images/zx81.jpeg)
 
+The real ZX81 was primarily launched in Sweden by the still-existing company
+[Beckmann Innovation AB](http://historia.beckman-inno.se). At their office
+and small shop, you could try out the ZX80 and ZX81 - which I did.
+However, I wasn’t very impressed, since the ABC80 was indeed far superior.
+But what can you do when you don’t have enough money? At the end I decided
+to go for Jupiter ACE.
+
+
 
 
 ### Hardware
