@@ -23,7 +23,7 @@ import sys, os, re, struct, subprocess, tempfile, argparse, math
 
 SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
-Z80ASM       = os.path.join(PROJECT_ROOT, 'old', 'z80asm')
+Z80ASM       = os.path.join(PROJECT_ROOT, 'asm', 'z80asm')
 
 PFILE_ORIGIN    = 0x4009
 BASIC_LINE_ADDR = 0x407D   # right after system variables (0x74 = 116 bytes)
