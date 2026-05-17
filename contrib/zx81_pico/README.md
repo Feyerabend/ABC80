@@ -1,19 +1,21 @@
 
-## ZX81 Pico 2
+## ZX81 Emulation on a Pico 2
 
 A ZX81 emulator for the *Raspberry Pi Pico 2 (RP2350)* with DVI video output,
 USB-CDC keyboard input, and a built-in Z80 assembly dogfight game--AIRFIGHT.
 
-![ZX81](../../assets/images/zx81.jpeg)
+![ZX81 Emulator](./../../assets/images/zx81.jpeg)
 
 The real ZX81 was primarily launched in Sweden by the still-existing company
 [Beckmann Innovation AB](http://historia.beckman-inno.se). At their office
 and small shop, you could try out the ZX80 and ZX81 - which I did.
 However, I wasn’t very impressed, since the ABC80 was indeed far superior.
 But what can you do when you don’t have enough money? At the end I decided
-to go for Jupiter ACE.
+to go for the Jupiter ACE.
 
+Well, today as a modern asset .. was a different question.
 
+[ZX81 Original](./../../assets/images/zx81orig.jpeg)
 
 
 ### Hardware
