@@ -236,7 +236,7 @@ roms/           — ZX81 ROM binary
 src/            — emulator C source
 tools/          — build helpers and PC-side scripts
 libdvi/         — PicoDVI TMDS library
-parser/         — .p file parser utilities (pending)
+token/          — .p file parser tokenizer/detokenzier BASIC utility (can be used independently)
 old/            — archived / duplicate files
 ```
 
