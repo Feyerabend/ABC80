@@ -86,8 +86,7 @@ libdvi/             — PicoDVI TMDS library (Wren6991/PicoDVI)
 #### ZX81 emulation
 
 - ROM: 16 KB Sinclair ZX81 ROM at 0x0000–0x3FFF
-- RAM: 16 KB at 0x4000–0x7FFF (system variables
-  + BASIC + display file)
+- RAM: 16 KB at 0x4000–0x7FFF (system variables + BASIC + display file)
 - Display file (D_FILE): read from sysvar at 0x400C
   each frame; 24 rows × 32 chars + HALT bytes
 - NMI disabled at startup (emulator handles timing explicitly)
