@@ -209,11 +209,11 @@ Vol. 2 Luxor datorer och persondatorbranschen*, Unitryck, Linköping, 1996, p. 2
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
 
-| Year | Computer | Sold at | Today 2022 value |
-| --- | --- | --- | --- |
-| 1977 | Commodore PET | $595 | ca $2,850 USD |
-| 1978 | ABC80  | 6,900 SEK (no VAT) | ca $2,900 USD |
-| 1983 | Commodore 64 | $595 | ca $1,700 USD |
+| Year | Computer      | Sold at              | Today 2022 value |
+|------|---------------|----------------------|------------------|
+| 1977 | Commodore PET | $595                 | ca $2,850 USD    |
+| 1978 | ABC80         | 6,900 SEK (no VAT)   | ca $2,900 USD    |
+| 1983 | Commodore 64  | $595                 | ca $1,700 USD    |
 
 
 ## The computer ABC80
@@ -474,8 +474,10 @@ e.g. We had no teachers. We taught each other. We were hungry for
 learning, even in some cases to the detriment of subjects we should learn, in school.
 When we understood code, we also invited others to learn. Thus, a small
 [course in BASIC](assets/pdf/course.pdf) with state support through a
-[study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.
+[study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.[^latercourse]
 
+[^latercourse]: I held many courses during the 1980s. One of those was for
+[young children](./contrib/vic20_pico/) at Lidingö. 
 
 ## Some observations
 

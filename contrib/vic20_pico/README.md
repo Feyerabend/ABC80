@@ -23,7 +23,12 @@ that we explored collectively through trial and error. Much of the learning
 came not from mastery, but from curiosity, patience, and the excitement of
 discovering that a few lines of code could make the machine respond at all.
 
-So, maybe the AIRFIGHT be implemented on a VIC-20?
+So, maybe can the AIRFIGHT be implemented on a VIC-20?
 
 
+
+### Hardware
+
+
+### Software
 
