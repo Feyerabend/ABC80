@@ -28,7 +28,7 @@ Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 [^p40]: Better than nothing, a quite limited printer was used,
 which was the only available development "tool" we had access
-to at the time: [P40 Printer](./assets/pdf/P40-Skrivare.pdf).
+to at the time: [P40 Printer](https://github.com/Feyerabend/ABC80/tree/master/assets/pdf/P40-Skrivare.pdf).
 
 ![Atari VCS/2600](assets/images/Atari-2600.jpg)
  
@@ -477,7 +477,7 @@ When we understood code, we also invited others to learn. Thus, a small
 [study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.[^latercourse]
 
 [^latercourse]: I held many courses during the 1980s. One of those was for
-young children at Lidingö using [Commodore Vic-20](./contrib/vic20_pico/). 
+young children at Lidingö using [Commodore Vic-20](https://github.com/Feyerabend/ABC80/tree/master/contrib/vic20_pico). 
 
 ## Some observations
 
