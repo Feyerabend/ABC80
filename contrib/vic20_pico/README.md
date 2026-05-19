@@ -25,7 +25,7 @@ discovering that a few lines of code could make the machine respond at all.
 
 So, maybe can the AIRFIGHT be implemented on a VIC-20?
 
-
+![Airfight Vic 20](./../../assets/images/vic20-airfight.jpeg)
 
 ### Hardware
 
