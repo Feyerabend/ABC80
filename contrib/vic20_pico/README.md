@@ -1,5 +1,5 @@
 
-## Commodore VIC20 Emulator on a Raspberry Pi Pico 2W with DVI
+## Commodore VIC-20 Emulator on a Raspberry Pi Pico 2W with DVI
 
 ![VIC 20 Emulator](./../../assets/images/vic20.jpeg)
 
@@ -23,7 +23,7 @@ that we explored collectively through trial and error. Much of the learning
 came not from mastery, but from curiosity, patience, and the excitement of
 discovering that a few lines of code could make the machine respond at all.
 
-So, maybe the AIRFIGHT be implemented on a VIC20?
+So, maybe the AIRFIGHT be implemented on a VIC-20?
 
 
 
