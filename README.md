@@ -130,6 +130,7 @@ during the years 1975-1984, with year of introduction and computer respectively:
   - Sinclair ZX-Spectrum
   - Commodore 64
 - 1983
+  - *ABC802*
   - Jupiter Ace
   - Apple Lisa
 - 1984
