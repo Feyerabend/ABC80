@@ -477,7 +477,7 @@ When we understood code, we also invited others to learn. Thus, a small
 [study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.[^latercourse]
 
 [^latercourse]: I held many courses during the 1980s. One of those was for
-young children at Lidingö using [Commodore Vic-20](contrib/vic20_pico/). 
+young children at Lidingö using [Commodore Vic-20](./contrib/vic20_pico/). 
 
 ## Some observations
 
