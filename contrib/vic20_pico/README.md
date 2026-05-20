@@ -265,3 +265,63 @@ libdvi/                 Raspberry Pi DVI/HDMI output library (PIO + DMA)
   and generate the header files with the same Python pattern used for the PRG.
 - The high score table is stored in RAM at `$0300` and is lost on power-off.
 - Audio registers are accepted by the VIC chip emulator but produce no output.
+
+
+### What does it really illustrates? How close are we to a VIC-20?
+
+What IS real VIC-20 hardware usage.
+The program uses every address correctly for the real chip:
+
+```
+  ┌────────────────────┬─────────────────────┬────────────────────────────────┐
+  │        Used        │ Real VIC-20 address │            Correct?            │
+  ├────────────────────┼─────────────────────┼────────────────────────────────┤
+  │ Screen RAM         │ $1E00               │ Yes                            │
+  ├────────────────────┼─────────────────────┼────────────────────────────────┤
+  │ Colour RAM         │ $9400               │ Yes                            │
+  ├────────────────────┼─────────────────────┼────────────────────────────────┤
+  │ VIC registers      │ $9000–$900F         │ Yes                            │
+  ├────────────────────┼─────────────────────┼────────────────────────────────┤
+  │ Charset selector   │ $9005 lower nibble  │ Yes — real VIC-I register      │
+  ├────────────────────┼─────────────────────┼────────────────────────────────┤
+  │ Custom charset RAM │ $1C00 (block 7)     │ Yes — real unexpanded RAM      │
+  ├────────────────────┼─────────────────────┼────────────────────────────────┤
+  │ Load address       │ $1000               │ Yes — in the 4K user RAM block │
+  └────────────────────┴─────────────────────┴────────────────────────────────┘
+```
+
+The $9005 charset trick is genuine — on the real VIC-I chip, the lower nibble of that
+register selects the character memory block. Writing 7 to point at $1C00 is exactly
+what real VIC-20 programs do.
+
+*The one showstopper: keyboard*
+
+The game does SEI at startup (interrupts off) and polls the KERNAL ring buffer at
+$C6/$0277. On the Pico, the USB driver calls inject_petscii() directly to fill that
+buffer — no IRQ needed.
+
+On a real VIC-20, that buffer is only filled by SCNKEY, which runs inside the KERNAL's
+IRQ handler. With IRQs disabled, it never runs. The game would start and run perfectly
+— but ignoring all key presses forever.
+  
+*Could it run on a real VIC-20?*
+
+Yes, with one change: replace SEI with CLI (or just remove it).
+Then:
+  1. Boot the VIC-20 normally so KERNAL initialises the IRQ vector at $0314
+  2. LOAD "AIRFIGHT",8,1 — absolute load to $1000
+  3. SYS 4096 — jump to $1000
+  4. The KERNAL IRQ fires at 60 Hz, runs SCNKEY, fills $C6/$0277
+  5. READ_KEYS works exactly as written
+
+As a cartridge it would need to be relocated to $A000 (standard cartridge address),
+but all the logic — charset copying, screen writes, VIC register manipulation — is
+already correct for real hardware. Nothing in the code is emulator-specific.
+  
+*Bottom line*
+
+The emulator is a faithful illustration of a real VIC-20. The 6502 code runs identically —
+the Pico just replaces the physical chips underneath. The game is real VIC-20 machine code;
+it just has the keyboard wired to a USB serial port instead of a key matrix, and IRQs disabled
+to match that. One SEI→CLI change and it becomes a proper VIC-20 program.
+
