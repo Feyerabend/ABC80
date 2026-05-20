@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
-
-PICO_SDK_ROOT="/Users/setlonnert/.pico-sdk"
+# sample script .. change paths
+PICO_SDK_ROOT="/PATH_TO_SDK/.pico-sdk"
 CMAKE="$PICO_SDK_ROOT/cmake/v3.31.5/CMake.app/Contents/bin/cmake"
 NINJA="$PICO_SDK_ROOT/ninja/v1.12.1/ninja"
 TOOLCHAIN="$PICO_SDK_ROOT/toolchain/14_2_Rel1/bin"
