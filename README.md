@@ -28,7 +28,7 @@ Service manual: https://www.abc80.org/docs/abc80_servicemanual.pdf
 
 [^p40]: Better than nothing, a quite limited printer was used,
 which was the only available development "tool" we had access
-to at the time: [P40 Printer](./assets/pdf/P40-Skrivare.pdf).
+to at the time: [P40 Printer](https://github.com/Feyerabend/ABC80/tree/master/assets/pdf/P40-Skrivare.pdf).
 
 ![Atari VCS/2600](assets/images/Atari-2600.jpg)
  
@@ -130,6 +130,7 @@ during the years 1975-1984, with year of introduction and computer respectively:
   - Sinclair ZX-Spectrum
   - Commodore 64
 - 1983
+  - *ABC802*
   - Jupiter Ace
   - Apple Lisa
 - 1984
@@ -209,11 +210,11 @@ Vol. 2 Luxor datorer och persondatorbranschen*, Unitryck, Linköping, 1996, p. 2
 
 The cost of computers was quite high at this time, but also shrinking rapidly.
 
-| Year | Computer | Sold at | Today 2022 value |
-| --- | --- | --- | --- |
-| 1977 | Commodore PET | $595 | ca $2,850 USD |
-| 1978 | ABC80  | 6,900 SEK (no VAT) | ca $2,900 USD |
-| 1983 | Commodore 64 | $595 | ca $1,700 USD |
+| Year | Computer      | Sold at              | Today 2022 value |
+|------|---------------|----------------------|------------------|
+| 1977 | Commodore PET | $595                 | ca $2,850 USD    |
+| 1978 | ABC80         | 6,900 SEK (no VAT)   | ca $2,900 USD    |
+| 1983 | Commodore 64  | $595                 | ca $1,700 USD    |
 
 
 ## The computer ABC80
@@ -474,8 +475,10 @@ e.g. We had no teachers. We taught each other. We were hungry for
 learning, even in some cases to the detriment of subjects we should learn, in school.
 When we understood code, we also invited others to learn. Thus, a small
 [course in BASIC](assets/pdf/course.pdf) with state support through a
-[study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.
+[study circle](https://en.wikipedia.org/wiki/Study_circle) came to light.[^latercourse]
 
+[^latercourse]: I held many courses during the 1980s. One of those was for
+young children at Lidingö using [Commodore Vic-20](https://github.com/Feyerabend/ABC80/tree/master/contrib/vic20_pico). 
 
 ## Some observations
 
@@ -556,6 +559,31 @@ Though the interior resembles more the Sinclair ZX80/81. It was fast, but not re
 with the keyboard. Even for the time. So it was soon shelved.
 
 ![Reimagined partial idea on AIR-FIGHT](assets/images/Ace.gif)
+
+
+### contrib/ZX81
+
+The stark contrast between that era and the present day is truly mind-blowing, especially
+when it comes to computers that ordinary people could actually own and interact with--home
+computers and personal computers.
+
+Today, it is possible to implement an emulator on a microcontroller such as the Raspberry
+Pi Pico 2 W, a device smaller than a finger. Combined with a compact DVI interface capable
+of generating video signals for a modern display, and software partly or entirely written
+by an LLM, it creates the astonishing impression that a computer comparable to the Sinclair
+ZX81 can be recreated within just a few hours: both the hardware and the software.
+
+What once required entire engineering teams, specialised manufacturing, and months or years
+of development can now be approached as an evening project by a single enthusiast. The sheer
+compression of complexity, cost, and effort over the decades is remarkable. It highlights
+not only the exponential progress in electronics and software engineering, but also how much
+knowledge and capability have become accessible to individuals.
+
+It is difficult not to feel a sense of awe when realising that a tiny modern microcontroller
+possesses computational resources vastly beyond those of early home computers, while
+simultaneously being cheap, programmable, and available almost everywhere.
+
+[Incredible](./contrib/zx81_pico/).
 
 
 # ABC80 MUSIC 1981
