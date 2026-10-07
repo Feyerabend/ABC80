@@ -1,0 +1,8 @@
+# det som byggs i verktyg/ (make); .bin och .rom i de andra mapparna hör till
+verktyg/z80asm
+verktyg/abc80
+verktyg/*.o
+verktyg/prov/
+*.lst
+*.hex
+.DS_Store
