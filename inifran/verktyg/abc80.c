@@ -19,6 +19,9 @@
  *     -K ms,ms       hur länge en tangent hålls nere och släppt (40,60)
  *     -s text        tecken som tas emot på V24 efter tangenterna
  *     -S baud        hastigheten på V24 (1200)
+ *     -W h@ms,...    labplattan på V24: strömbrytarna på ingångarna, bit
+ *                    0-2 (hex, 7 = öppna) från tiden ms (@0 kan utelämnas);
+ *                    i batchläget skrivs utgångarna (bit 3, 4) efter skärmen
  *     -t ms          batchläge: kör så länge efter tangenterna och skriv
  *                    sedan skärmen på standard ut
  *     -d adr,n       batchläge: skriv också n bytes av minnet från adr
@@ -38,7 +41,9 @@
  *                    allt annat läser $FF och går inte att skriva
  *     port $38       tangentbordet (PIO A): koden, bit 7 = tangenten är nere
  *     port $39       PIO A:s styrord: läge, avbrott och vektor
- *     port $3A       PIO B: bit 0 = V24 in (RxD); de andra bitarna läser 1
+ *     port $3A       PIO B: bit 0 = V24 in (RxD); de andra bitarna läser 1.
+ *                    Med -W: bit 0-2 V24:s ingångar, bit 3-6 det senast
+ *                    skrivna och bit 7 = 1, som på maskinen
  *     avbrott        PIO A i läge 3 med avbrott på: INT när en tangent
  *                    trycks ned; i läge 1: INT från linjesignalen på ASTB,
  *                    7 812,5 gånger i sekunden. Vektorn är PIO A:s.
@@ -88,6 +93,11 @@ typedef struct {
     int nv24;
     long long v24_start;                     /* -1: inte börjat */
     long baud;
+
+    int lab[16];                             /* -W: bit 0-2 på ingångarna */
+    long long lab_t[16];                     /* från tiden, i T-cykler */
+    int nlab;
+    uint8_t pio_b;                           /* PIO B: senast skrivet */
 } Dator;
 
 static void fel(const char *s, const char *t)
@@ -130,12 +140,26 @@ static int rxd(Dator *d)
     return d->v24[tecken] >> (b - 1) & 1;
 }
 
+/* Labplattan (-W): strömbrytarna på V24:s ingångar, bit 0-2 som PIO B
+ * läser dem. Öppna ingångar läses som 1. */
+static int lab(Dator *d)
+{
+    int v = 7;
+    for (int k = 0; k < d->nlab; k++)
+        if (d->t >= d->lab_t[k])
+            v = d->lab[k];
+    return v;
+}
+
 static uint8_t in(void *p, uint16_t port)
 {
     Dator *d = p;
     switch (port & 0xFF) {
     case 0x38: return d->tangent;
-    case 0x3A: return 0xFE | rxd(d);
+    case 0x3A:                               /* bit 3-6 läses tillbaka */
+        if (d->nlab)
+            return (d->pio_b & 0x78) | 0x80 | (lab(d) & (6 | rxd(d)));
+        return 0xFE | rxd(d);
     default: return 0xFF;
     }
 }
@@ -167,6 +191,8 @@ static void ut(void *p, uint16_t port, uint8_t v)
     Dator *d = p;
     if ((port & 0xFF) == 0x39)
         pio_styr(d, v);
+    else if ((port & 0xFF) == 0x3A)
+        d->pio_b = v;
 }
 
 /* ---------------------------------------------------------------- */
@@ -541,10 +567,26 @@ static void interaktiv(Dator *d)
 
 /* ---------------------------------------------------------------- */
 
+/* -W h[@ms],...: strömbrytarna h (hex, bit 0-2) från tiden ms. */
+static void labb(Dator *d, const char *s)
+{
+    while (*s && d->nlab < 16) {
+        char *e;
+        d->lab[d->nlab] = (int)strtol(s, &e, 16) & 7;
+        long ms = 0;
+        if (*e == '@')
+            ms = strtol(e + 1, &e, 10);
+        d->lab_t[d->nlab++] = (long long)ms * (KLOCKA / 1000);
+        if (*e != ',')
+            break;
+        s = e + 1;
+    }
+}
+
 static void hjalp(void)
 {
     fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48]\n"
-          "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud]\n"
+          "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..]\n"
           "                  [-t ms [-d adr,n]...]\n"
           "utan -t körs ABC80 i terminalen (Ctrl-] avslutar)\n", stderr);
     exit(1);
@@ -578,6 +620,7 @@ int main(int argc, char **argv)
         case 'K': if (sscanf(v, "%ld,%ld", &d.tryck, &d.slapp) != 2) hjalp(); break;
         case 's': v24 = v; break;
         case 'S': d.baud = atol(v); break;
+        case 'W': labb(&d, v); break;
         case 't': efter = atol(v); break;
         case 'd': if (nvisas < 16) visas[nvisas++] = v; break;
         default: hjalp();
@@ -630,6 +673,8 @@ int main(int argc, char **argv)
         kor(&d, d.v24_start - d.t + (long long)d.nv24 * 10 * KLOCKA / d.baud);
     kor(&d, efter * (KLOCKA / 1000));
     skriv_skarm(&d);
+    if (d.nlab)
+        printf("V24 ut: bit 3 = %d, bit 4 = %d\n", d.pio_b >> 3 & 1, d.pio_b >> 4 & 1);
     for (int k = 0; k < nvisas; k++)
         skriv_minne(&d, visas[k]);
     return 0;

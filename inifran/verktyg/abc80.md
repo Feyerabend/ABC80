@@ -21,6 +21,7 @@ Den skrevs för boken *ABC80 inifrån*, och bokens exempel provas med den.
 | `-K ms,ms` | hur länge varje tangent hålls nere och sedan är släppt; standard `40,60` |
 | `-s text` | tecken att ta emot på V24, efter tangenterna (8 bitar, ingen paritet, en stoppbit) |
 | `-S baud` | V24:s hastighet; standard 1200 |
+| `-W h@ms,…` | labplattan på V24: strömbrytarna på ingångarna, bit 0–2 (hex; 7 = alla öppna) från tiden ms efter start (`@0` kan utelämnas). Se *Labplattan* |
 | `-t ms` | batchläget: kör så här länge efter sista tangenten och skriv sedan skärmen på standard ut |
 | `-d adr,n` | batchläget: skriv också n bytes av minnet från adr (hex) efter skärmen |
 
@@ -123,6 +124,24 @@ mycket fortare än så. Tolken läser inte tangenterna medan den skriver
 ` OK`, så en rad som skrivs in direkt efter förra tappar sina första
 tecken; `\w200` före raden väntar ut det.
 
+### Labplattan
+
+Markesjö (*Mikrodatorns ABC*, 1978, s. 208–210) kopplar en labplatta
+till V24-kontakten: tre strömbrytare på ingångarna (PIO B bit 0–2) och
+två lysdioder på utgångarna (bit 3 och 4). `-W` sätter strömbrytarna.
+PIO B läser också tillbaka det som senast skrevs till utgångarna, så
+med alla ingångar öppna ger `INP(58)` 135 och, efter `OUT 58,24`, 159:
+
+    $ ./abc80 -W 7 -t 300 -k 'PRINT INP(58)\rOUT 58,24\rPRINT INP(58)\r' | grep '^ [0-9]'
+     135
+     159
+
+I batchläget skrivs utgångarna efter skärmen som `V24 ut: bit 3 = 1,
+bit 4 = 1`. Med `-W 7,6@3000` är alla öppna de första tre sekunderna,
+och sedan sluts strömbrytaren på bit 0. Markesjös program, som visar
+porten på skärmen och låter lysdioderna följa två av strömbrytarna,
+ger med `-W 7` samma skärm som hans figur 7.17b (Data: 159).
+
 ## Maskinen
 
 Det här är vad emulatorn gör av ABC80. Boken beskriver var och en av
@@ -143,7 +162,7 @@ Allt annat läser $FF, som en tom buss, och skrivningar dit försvinner.
 |---|---|---|
 | $38 | tangentbordet: koden, bit 7 = tangenten är nere | – |
 | $39 | – | PIO A:s styrord |
-| $3A | bit 0 = V24 in (RxD); de andra bitarna 1 | – |
+| $3A | bit 0 = V24 in (RxD); de andra bitarna 1. Med `-W`: bit 0–2 V24:s ingångar, bit 3–6 det senast skrivna, bit 7 = 1 | med `-W`: bit 3 och 4 är V24:s utgångar |
 | övriga | $FF | – |
 
 **Avbrotten.** NMI kommer var 20:e ms (bildens vertikalsignal); ROM:en
@@ -175,7 +194,8 @@ markören, som visas inverterad. Blinkning, dubbel höjd och de andra
 teletextkoderna visas som mellanslag utan verkan.
 
 **Inte med.** Kassetten, skrivaren, ljudet och korten på ABC-bussen
-(skivminne, IEC) finns inte. V24 kan bara ta emot.
+(skivminne, IEC) finns inte. V24 kan bara ta emot tecken; utgångarna
+syns bara med labplattan (`-W`).
 
 ## Koden
 
