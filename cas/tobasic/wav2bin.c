@@ -303,11 +303,11 @@ int main(int argc, char *argv[]) {
                 }
                 break;
 
-            case 'f': // limit error messages
-                options.flags = (uint32_t) strtoul(optarg, NULL, 16);
-                break;
+			case 'f': /* limit error messages */
+			    options.flags = (unsigned long) strtoul(optarg, NULL, 16);
+    			break;
 
-            case 'v':
+			case 'v':
                 options.verbose += 1;
                 break;
 
