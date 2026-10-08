@@ -12,7 +12,7 @@ def svenska(content):
         line = line.replace(u'Ä', '[')
         line = line.replace(u'Ö', '\\')
         line = line.replace(u'Å', ']')
-        line = line.replace(u'È', '@')
+        line = line.replace(u'É', '@')
         line = line.replace(u'Ü', '^')
         line = line.replace(u"ä", '{')
         line = line.replace(u'ö', '|')
