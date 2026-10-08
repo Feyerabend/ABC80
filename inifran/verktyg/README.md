@@ -81,9 +81,10 @@ comments and manuals are in Swedish.
   with T-state timing, 50 Hz NMI, the keyboard on PIO A with its
   interrupt, the 40×24 teletext-style screen (mosaic graphics are drawn
   with Unicode sextant characters, so use a font that has them), extra
-  ROMs (`-l file@addr`), a bank-switched ROM card (`-b`), and serial input
-  (`-s`). With `-t ms` it runs without a terminal and prints the screen,
-  which is how the book's examples are tested. `Ctrl-]` quits.
+  ROMs (`-l file@addr`), a bank-switched ROM card (`-b`), serial input
+  (`-s`), and a lab board with switches and LEDs on the V24 port (`-W`).
+  With `-t ms` it runs without a terminal and prints the screen, which
+  is how the book's examples are tested. `Ctrl-]` quits.
 
 Build with `make`; `make prov` assembles the examples and the Forth
 system and checks the result against the `.bin` files. The ROM images are
