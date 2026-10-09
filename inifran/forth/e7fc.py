@@ -9,13 +9,16 @@ behövs och ingångstabellen. Bara ord som nås från ingångarna tas med:
 anropsgrafen är utan cykler (ett ord kan bara använda ord som redan
 är definierade), så det räcker att följa den från ingångarna.
 
-Tre bilder skrivs:
+Fyra bilder skrivs:
     e7.asm   e7.fs på $4000 (kretsen)
     e7r.asm  e7.fs på $C000 (RAM under programmet, sedan BOFA har
              flyttats upp med POKE 65052,0,196 och NEW)
     e7i.asm  e7.fs och tolken e7i.fs på $C000, med huvuden: alla ord
              tas med och får namn, så att tolken hittar dem
              (POKE 65052,0,208 och NEW, 4 KB)
+    e7ip.asm samma tolk på $4000, som en krets (ett 2732-EPROM) i
+             stället för Smartaid: bara de nya orden hamnar i RAM, från
+             $C000 och uppåt (POKE 65052,0,208 och NEW)
 
 Forth-källan:
     : namn ... ;          kolonord
@@ -27,16 +30,19 @@ Forth-källan:
     IF ELSE THEN  BEGIN UNTIL AGAIN WHILE REPEAT  DO LOOP
     ." text"  S" text"  [CHAR] x  ['] namn  \\ kommentar  ( kommentar )
 ['] ger adressen till ett ord eller en etikett i kärnan (DOCOL ...);
-LATEST och SLUT är det sista huvudet och bildens slut.
+LATEST och SLUT är det sista huvudet och där nya ord börjar: bildens
+slut, eller RAM på $C000 för kretsen.
 Tal skrivs decimalt eller med $ för hex.
 """
 import re
 import sys
 
 KERN = "e7k.inc"
-OUTS = [("e7.asm", 0x4000, ["e7.fs"], False),
-        ("e7r.asm", 0xC000, ["e7.fs"], False),
-        ("e7i.asm", 0xC000, ["e7.fs", "e7i.fs"], True)]
+# (fil, ORG, källor, huvuden, var nya ord börjar: None = bildens slut)
+OUTS = [("e7.asm", 0x4000, ["e7.fs"], False, None),
+        ("e7r.asm", 0xC000, ["e7.fs"], False, None),
+        ("e7i.asm", 0xC000, ["e7.fs", "e7i.fs"], True, None),
+        ("e7ip.asm", 0x4000, ["e7.fs", "e7i.fs"], True, 0xC000)]
 
 # RAM för VARIABLE: de 8 dolda bytena efter var tredje rad i bildminnet
 # ($7C78-$7C7F osv.); $7C78 och $7C7A är SAVESP och S0, $7FF8- lämnas
@@ -206,7 +212,7 @@ def header(name, lab, prev, immediate):
     return h, s
 
 
-def build(out_name, org, srcs, heads):
+def build(out_name, org, srcs, heads, dict0):
     core, prims = read_kernel(KERN)
     asmlabels = set(re.findall(r"(?m)^(\w+):", "".join(core)))
     asmlabels |= {"LATEST", "SLUT"}
@@ -285,7 +291,12 @@ def build(out_name, org, srcs, heads):
         out.append("        DEFW %s ; %d %s\n" % (label(e, prims), i, e))
     out.append("\n; Efter ett stackfel (STKERR)\nABORTT: DEFW %s\n"
                % (label("ABORT", prims) if "ABORT" in words else "BYE"))
-    out.append("LATEST: EQU %s\nSLUT:\n" % prev)
+    out.append("LATEST: EQU %s\n" % prev)
+    if dict0 is None:
+        out.append("SLUT:\n")
+    else:
+        out.append("BILDSLUT:\n; Kretsen kan inte skrivas: nya ord läggs i RAM\n"
+                   "SLUT:   EQU $%04X\n" % dict0)
     text = re.sub(r"(?m)^(\s+ORG\s+)\$4000", r"\g<1>$%04X" % org, "".join(out))
     open(out_name, "w", encoding="utf-8").write(text)
     ncode = len([w for w in need if w in prims])
