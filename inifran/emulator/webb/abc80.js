@@ -15,8 +15,11 @@
  *
  * Bandets eget ljud: WAV-filen läses här (avkoda_bandet) och räknas om
  * till provtakten, och medan bandet går (och inte snabbt) läggs det som
- * passerar huvudet till bildens prov. Med "PLAY nere" stannar bandet inte när ROM:en slår av motorn;
- * så hörs musiken efter programmet i Genesis-demots band.
+ * passerar huvudet till bildens prov. ▶ är PLAY (nere eller uppe);
+ * utan "fjärrstyrd" stannar bandet inte när ROM:en slår av motorn, så
+ * hörs musiken efter programmet i Genesis-demots band. ⏪ och ⏩
+ * spolar (SPOLFART gånger vanlig fart) det band som spelas upp, och
+ * räkneverket räknar varv på upptagningsspolen, som på en bandspelare.
  *
  * Disketten: kortet skriver i avbilden i WebAssemblys minne, så det som
  * sparas med SAVE DR0: finns där tills maskinen startas om med en annan
@@ -149,7 +152,7 @@ function starta(diskett = skivan_nu()) {
     const p = lagg_i_minnet(rom);
     e.starta(16, p, rom.length, provtakt);
     e.slapp(p);
-    e.spela_vidare($('play').checked ? 1 : 0, 0);
+    knappar();
     if (skivans_minne)                       /* kortet är tomt nu */
         e.slapp(skivans_minne);
     skivans_minne = 0;
@@ -345,6 +348,11 @@ function rita() {
 }
 
 function varv() {
+    spola_vidare();
+    if (play_vid_relaet && e.motor()) {
+        play_vid_relaet = false;
+        knappar(true);
+    }
     if (performance.now() - cmos_sparat > 1000) {
         cmos_spara();
         cmos_sparat = performance.now();
@@ -371,7 +379,7 @@ function varv() {
         let ritad = false;
         while (nasta < nu + (med_ljud ? LJUD_FORE : 0)) {
             const sista = nasta + BILD >= nu + (med_ljud ? LJUD_FORE : 0);
-            const fran = bandljudet && e.bandet_gar() ? e.bandlage() : null;
+            const fran = bandljudet && e.bandet_gar() && !spolning ? e.bandlage() : null;
             const antal = e.bild(sista ? 1 : 0, markor);
             if (med_ljud && antal > 0)
                 spela(antal, nasta, fran);
@@ -410,7 +418,66 @@ function visa_bandet() {
     const status = $('bandstatus');
     if (status.textContent !== text)
         status.textContent = text;
+    const steg = har_band ? Math.round(spolens_varv(e.bandlage()) - rakneverk_noll) : 0;
+    const visas = String((steg % 1000 + 1000) % 1000).padStart(3, '0');
+    if ($('rakneverk').textContent !== visas)
+        $('rakneverk').textContent = visas;
 }
+
+/* Spolningen: -1 bakåt, 1 framåt, 0 står. En C60-sida (30 min) spolas
+ * på en och en halv minut. */
+const SPOLFART = 20;
+let spolning = 0, spolat = 0, rakneverk_noll = 0;
+
+/* Varv på upptagningsspolen efter s sekunder: navet 11 mm, bandet
+ * 16 µm tjockt och 47,6 mm/s; räkneverket går 3 steg på 4 varv. En
+ * C60-sida blir knappt 600. */
+function spolens_varv(s) {
+    const nav = 11, tjocklek = 0.016, fart = 47.6;
+    return 0.75 * (Math.sqrt(nav * nav + fart * tjocklek * s / Math.PI) - nav) / tjocklek;
+}
+
+function spola_vidare() {
+    if (!spolning)
+        return;
+    const nu = performance.now();
+    const langd = e.bandlangd();
+    const lage = Math.min(e.bandlage(), langd) + spolning * SPOLFART * (nu - spolat) / 1000;
+    spolat = nu;
+    e.spola(lage);                           /* stannar vid 0 och längden */
+    if (spolning < 0 ? lage <= 0 : lage >= langd)
+        stanna_spolningen();
+}
+
+function stanna_spolningen() {
+    spolning = 0;
+    $('bakat').classList.remove('pa');
+    $('framat').classList.remove('pa');
+}
+
+function spola_at(riktning) {
+    if (spelar_in || !har_band) {
+        meddela(spelar_in ? 'Under inspelning går det inte att spola.' : 'Inget band i kassetten.');
+        return;
+    }
+    const igen = spolning === riktning;
+    stanna_spolningen();
+    if (!igen) {
+        knappar(false);                      /* PLAY släpps upp */
+        play_vid_relaet = false;
+        spolning = riktning;
+        spolat = performance.now();
+        $(riktning < 0 ? 'bakat' : 'framat').classList.add('pa');
+    }
+    skarm.focus();
+}
+
+$('bakat').addEventListener('click', () => spola_at(-1));
+$('framat').addEventListener('click', () => spola_at(1));
+$('rakneverk').addEventListener('click', () => {
+    rakneverk_noll = har_band ? spolens_varv(e.bandlage()) : 0;
+    skarm.focus();
+});
 
 function lagg_i_band(data, namn) {
     const p = lagg_i_minnet(data);
@@ -422,6 +489,9 @@ function lagg_i_band(data, namn) {
     }
     har_band = true;
     spelar_in = false;
+    stanna_spolningen();
+    rakneverk_noll = 0;
+    knappar(true);
     $('spelain').classList.remove('pa');
     meddela(namn + ' ligger i kassetten (' + flanker + ' flanker). Skriv LOAD CAS: eller RUN CAS:');
     bandljudet = avkoda_bandet(data);
@@ -462,10 +532,25 @@ function avkoda_bandet(data) {
     return ut;
 }
 
-$('play').addEventListener('change', () => {
-    e.spela_vidare($('play').checked ? 1 : 0, har_band ? 1 : 0);
+/* Bandspelarens knappar: PLAY (▶, nere eller uppe) och fjärrstyrd.
+ * play_vid_relaet: PLAY trycks ned när motorreläet drar (Genesis-demot,
+ * utan fjärrstyrning, så att bandet inte går före RUN CAS:). */
+let play_nere = false, play_vid_relaet = false;
+
+function knappar(play = play_nere) {
+    play_nere = play;
+    $('play').classList.toggle('pa', play_nere);
+    e.knappar(play_nere ? 1 : 0, $('fjarr').checked ? 1 : 0);
+}
+
+$('play').addEventListener('click', () => {
+    play_vid_relaet = false;
+    if (!play_nere)
+        stanna_spolningen();
+    knappar(!play_nere);
     skarm.focus();
 });
+$('fjarr').addEventListener('change', () => { knappar(); skarm.focus(); });
 
 $('spelain').addEventListener('click', () => {
     if (!e.spela_in()) {
@@ -474,6 +559,8 @@ $('spelain').addEventListener('click', () => {
     }
     spelar_in = true;
     har_band = false;
+    stanna_spolningen();
+    knappar(true);
     bandljudet = null;
     $('spelain').classList.add('pa');
     meddela('Inspelningsknappen är nere. Skriv SAVE CAS:NAMN och tryck sedan Spara inspelning.');
@@ -696,18 +783,20 @@ document.addEventListener('visibilitychange', () => {
 
 const GENESIS = 'ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ';
 
-/* Från bandet: musiken ligger efter programmet och hörs med PLAY nere.
+/* Från bandet: musiken ligger efter programmet och hörs utan
+ * fjärrstyrning, så att bandet går vidare.
  * Knapparna finns bara när demot ligger i sidan. */
 $('genesis')?.addEventListener('click', () => {
     if (typeof FILER.genesis_band === 'string')
         FILER.genesis_band = base64(FILER.genesis_band);
     starta(null);
     lagg_i_band(FILER.genesis_band, 'Genesis-bandet');
-    $('play').checked = true;
-    e.spela_vidare(1, 0);
+    $('fjarr').checked = false;
+    knappar(false);
+    play_vid_relaet = true;
     e.paus(1000);
     skriv('RUN CAS:\n');
-    meddela(GENESIS + 'Från bandet; musiken spelas av bandspelaren, med PLAY nere.');
+    meddela(GENESIS + 'Från bandet; musiken spelas av bandspelaren, utan fjärrstyrning.');
     skarm.focus();
 });
 

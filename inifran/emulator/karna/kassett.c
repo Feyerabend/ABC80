@@ -33,6 +33,44 @@ long long kassett_lage(const Kassett *k, long long tid)
     return k->motor ? k->band + (tid - k->motor_start) : k->band;
 }
 
+/* Bandet går om PLAY är nere och reläet drar, eller utan fjärrstyrning;
+ * startar eller stannar det, börjar läget räknas från tiden. */
+static void satt_motorn(Kassett *k, long long tid)
+{
+    int motor = !k->stopp && (k->motorrelaet || k->utan_fjarrstyrning);
+    if (motor != k->motor) {
+        k->band = kassett_lage(k, tid);
+        k->motor_start = tid;
+        k->motor = motor;
+    }
+}
+
+void kassett_knappar(Kassett *k, long long tid, int play_nere, int fjarrstyrd)
+{
+    kassett_fram(k, tid);
+    k->stopp = !play_nere;
+    k->utan_fjarrstyrning = !fjarrstyrd;
+    satt_motorn(k, tid);
+}
+
+void kassett_spola(Kassett *k, long long tid, long long lage)
+{
+    if (lage < 0)
+        lage = 0;
+    k->band = lage;
+    k->motor_start = tid;
+    /* Den första flanken efter läget: binärsökning, flankerna växer. */
+    long fran = 0, till = k->antal_spelas;
+    while (fran < till) {
+        long mitt = fran + (till - fran) / 2;
+        if (k->spelas[mitt] <= lage)
+            fran = mitt + 1;
+        else
+            till = mitt;
+    }
+    k->nasta = fran;
+}
+
 int kassett_fram(Kassett *k, long long tid)
 {
     if (!k->motor || k->spelar_in)
@@ -65,13 +103,7 @@ void kassett_skriv(Kassett *k, long long tid, uint8_t varde)
             k->full = 1;
     }
     k->motorrelaet = motor;
-    if (k->spelar_vidare && k->motor)        /* PLAY är nere: bandet går vidare */
-        motor = 1;
-    if (motor != k->motor) {                 /* bandet startar eller stannar här */
-        k->band = lage;
-        k->motor_start = tid;
-        k->motor = motor;
-    }
+    satt_motorn(k, tid);
     k->skrivsignal = skrivsignal;
     if (!skrivsignal)
         k->latch = 0;
