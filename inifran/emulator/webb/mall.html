@@ -4,15 +4,16 @@
 
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
-  exempeldisketten, Forth-kretsen och Genesis-demot (band och diskett), om
-  de finns, in som base64, och abc80.js efter. Då är abc80.html en enda fil som går
+  exempeldisketten, Forth-kretsen, MÅLARE-bandet och Genesis-demot (band
+  och diskett), om de finns, in som base64, och abc80.js efter. Då är abc80.html en enda fil som går
   att öppna direkt i webbläsaren, utan server och utan att något installeras.
 
   Mellan MALL och /MALL står det som bara syns i mallen; bygg.sh tar
   bort det. Mellan PROGRAM och /PROGRAM står exempeldiskettens knapp och
   text, som tas bort när exempel/program/diskett/program.dsk inte finns,
   mellan KRETS och /KRETS Forth-kretsens, som tas bort när
-  exempel/krets/forth.bin inte finns, och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
+  exempel/krets/forth.bin inte finns, mellan MALARE och /MALARE bandet
+  MÅLAREs, som tas bort när exempel/malare/MALARE.wav inte finns, och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
   inte finns.
 -->
 <html lang="sv">
@@ -169,6 +170,9 @@
       <button id="framat" title="Spola framåt (tryck igen för att stanna)">⏩</button>
       <button id="rakneverk" title="Räkneverket: klicka för att nollställa">000</button>
       <span id="bandstatus">inget band</span>
+<!-- MALARE -->
+      <button id="malare" title="Ritprogrammet MÅLARE av Mikael Bonnier 1982, från bandet (GPL-3.0)">MÅLARE</button>
+<!-- /MALARE -->
     </div>
 <!-- GENESIS -->
     <div class="grupp">
@@ -228,6 +232,15 @@
     <code>exempel/program/text/</code> (<i>Skriv in…</i> och
     <code>RUN</code>).</p>
 <!-- /PROGRAM -->
+<!-- MALARE -->
+    <p><i>MÅLARE</i> lägger i ett band med Mikael Bonniers ritprogram från
+    1982 och skriver <code>RUN CAS:</code>. Svara på tidsfördröjningen med
+    ett tal (till exempel 10) och RETURN. Markören flyttas med tangenterna
+    runt F: E, R, T, D, G, C, V och B. Med Caps Lock på suddar den, och
+    utan Caps Lock ritar den. S tömmer skärmen. Programmet är fri programvara
+    (GPL-3.0); bandet är gjort i emulatorn ur källan, och
+    <code>exempel/malare/LASMIG.md</code> berättar var det kommer ifrån.</p>
+<!-- /MALARE -->
 <!-- KRETS -->
     <p><i>CMOS-minnet</i> är 2 KB RAM på <code>$5000</code>–<code>$57FF</code>
     (20480–22527), som det batteriförsedda minnet på Super Smartaid. Det

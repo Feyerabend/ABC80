@@ -41,8 +41,10 @@ ger ERR 35, så lägg en lång paus (`\w`) före nästa kommando:
 
 `exempel/program/` har fyra exempelprogram (GISSA, KURVA, MUSIK och
 AIRFIGHT) i tre mappar: `kassett/` (ett band per program), `diskett/`
-(alla fyra för ABC-DOS) och `text/`, och `exempel/genesis/`, när den
-finns med, ett demo från 2015 som kassett-WAV och diskett; kommandona
+(alla fyra för ABC-DOS) och `text/`. `exempel/malare/` har MÅLARE, ett
+ritprogram av Mikael Bonnier från 1982 (GPL-3.0), som band och text,
+med förbehållen om var det kommer ifrån. `exempel/genesis/`, när den
+finns med, är ett demo från 2015 som kassett-WAV och diskett; kommandona
 står i mapparnas `LASMIG.md`. `exempel/krets/forth.bin` är Forth-tolken
 från bokens exempel 7 som en krets på $4000, som Smartaid
 (`-l exempel/krets/forth.bin@4000`, sedan `POKE 65052,0,208`, `NEW` och
@@ -72,15 +74,15 @@ abc80host att köra mot den här (569 fall):
 `webb/abc80.html` är hela emulatorn i en fil: öppna den i webbläsaren,
 direkt från disken; den behöver ingen server och inget installerat.
 WebAssembly-koden, de två ROM:arna och ABC-DOS ligger i filen, och
-exempeldisketten (`exempel/program/diskett/program.dsk`) och Genesis-demot
-(band med musiken och diskett) om de finns; med båda blir filen drygt
+exempeldisketten (`exempel/program/diskett/program.dsk`), MÅLARE-bandet
+och Genesis-demot (band med musiken och diskett) om de finns; med båda blir filen drygt
 4 MB, med bara exempeldisketten 330 KB. Sidan har ljudet
 (Web Audio), kassetten (lägg i en WAV, spela in och spara som WAV,
 snabbt medan motorn går; PLAY, spolning åt båda hållen och ett
 räkneverk; bandets eget ljud hörs, och utan fjärrstyrning går bandet
 vidare när motorn slås av, så att Genesis-demots musik kommer från
 bandet), disketten i FD2 med ABC-DOS, Forth-kretsarna (en lista, eller
-`?krets=forth` och `?krets=cmos`), CMOS-minnet, exempeldisketten och Genesis-demot på
+`?krets=forth` och `?krets=cmos`), CMOS-minnet, exempeldisketten, MÅLARE och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:
