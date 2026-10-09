@@ -14,3 +14,6 @@ Publicering av boken väntas under 2026.
 - [`emulator/`](emulator/): emulatorn med kassett, diskett och ljud, i
   terminalen och som en enda fil i webbläsaren (`webb/abc80.html`), med
   exempelprogram på band och diskett
+- [`utanfor/`](utanfor/): utanför boken, men i dess anda: experiment om
+  hur ABC80 kunde ha utvecklats, till exempel en snabbare Forth, med vad
+  som är ändrat och mot vad
