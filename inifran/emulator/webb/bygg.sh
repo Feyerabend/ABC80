@@ -6,7 +6,8 @@
 # två ROM:arna och ABC-DOS som base64, och abc80.js efter, där raden med
 # FILER står. Finns exempel/program/diskett/program.dsk kommer
 # exempeldisketten med; annars tas dess knapp och text bort (mellan PROGRAM
-# och /PROGRAM i mallen). Finns exempel/genesis/ kommer Genesis-demot med
+# och /PROGRAM i mallen). Finns exempel/krets/forth.bin och
+# forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns exempel/genesis/ kommer Genesis-demot med
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
 # knappar och text bort (mellan GENESIS och /GENESIS). Det som bara syns i
 # mallen (mellan MALL och /MALL) tas alltid bort. Filen skrivs på
@@ -18,6 +19,8 @@ set -e
 cd "$(dirname "$0")/.."
 
 PROGRAM=exempel/program/diskett/program.dsk
+KRETS=exempel/krets/forth.bin
+KRETS_CMOS=exempel/krets/forth_cmos.bin
 SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
 BAND=exempel/genesis/GenesisProject_ABCDemo_webb.wav
 
@@ -44,6 +47,7 @@ finns() {
 sida() {
     avsnitt MALL nej < webb/mall.html |
         avsnitt PROGRAM "$(finns "$PROGRAM")" |
+        avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
         avsnitt GENESIS "$(finns "$SKIVA" "$BAND")"
 }
 
@@ -55,6 +59,10 @@ printf '  rom_gammal: "%s",\n' "$(base64_av roms/abc80old.rom)"
 printf '  dos: "%s",\n' "$(base64_av roms/abcdos80.rom)"
 if [ -f "$PROGRAM" ]; then
     printf '  program: "%s",\n' "$(base64_av "$PROGRAM")"
+fi
+if [ -f "$KRETS" ] && [ -f "$KRETS_CMOS" ]; then
+    printf '  krets: "%s",\n' "$(base64_av "$KRETS")"
+    printf '  krets_cmos: "%s",\n' "$(base64_av "$KRETS_CMOS")"
 fi
 if [ -f "$SKIVA" ] && [ -f "$BAND" ]; then
     printf '  genesis: "%s",\n' "$(base64_av "$SKIVA")"

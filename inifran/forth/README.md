@@ -29,6 +29,8 @@ på nästa adress i tråden.
 | `e7r.asm`, `e7r.bin` | de färdiga orden på $C000 (i RAM) |
 | `e7i.asm`, `e7i.bin` | orden och tolken på $C000, 3167 bytes |
 | `e7ip.asm`, `e7ip.bin` | samma tolk på $4000, för en krets (ett 2732-EPROM) |
+| `e7c.fs` | tillägg till tolken: de egna orden i CMOS-minne (inte med i boken) |
+| `e7c.asm`, `e7c.bin` | kretsen med tillägget, på $4000 |
 | `e7i.bas` | laddprogram i ABC80-BASIC med tolken som DATA-rader |
 | `FORTH.wav` | tolken på band, sparad med `SAVE CAS:FORTH` (2 min 15 s) |
 
@@ -46,7 +48,9 @@ från $C000 blir ledigt:
 Skriv sedan in `e7i.bas` (eller ladda det i en emulator) och kör det med
 `RUN`. Varje DATA-rad har 30 bytes i hex och deras summa, och en
 felskriven rad ger `FEL I RAD` och radens nummer innan något av den har
-hamnat i minnet. Programmet slutar med `3167 BYTES`. Ta bort det med `NEW`
+hamnat i minnet. Har BOFA inte flyttats upp slutar programmet direkt med
+`SKRIV POKE 65052,0,208 OCH NEW`, i stället för att lägga tolken över
+sig självt. Annars slutar det med `3167 BYTES`. Ta bort det med `NEW`
 och starta tolken:
 
     Z=CALL(49152,3)
@@ -66,7 +70,8 @@ skrivs `É` i tolken: `VARIABLE V 42 V ! V É .`
 
 `FORTH.wav` är tolken sparad som ett BASIC-program, med BOFA flyttad
 till $D000. Programmet flyttar sig när det laddas, men BOFA måste flyttas
-upp först, så att tolken får plats:
+upp först, så att tolken får plats (annars skriver programmet
+`SKRIV POKE 65052,0,208 OCH NEW`):
 
     POKE 65052,0,208
     NEW
@@ -102,6 +107,35 @@ I emulatorn (byggd med `make` i `../emulator/`) sätts kretsen i med `-l`:
 
     ../emulator/abc80 -l e7ip.bin@4000 -k 'POKE 65052,0,208\rNEW\rZ=CALL(16384,3)\r'
 
+I webbläsarens emulator (`../emulator/webb/abc80.html`) väljer du
+*Forth-kretsen*, eller öppnar sidan med `?krets=forth`.
+
+## Med CMOS-minne
+
+Super Smartaid hade 2 KB CMOS-minne med batteri på $5000–$57FF, så att det
+som stod där fanns kvar när datorn slogs av. `e7c.bin` är kretsen med ett
+tillägg, `e7c.fs`, som lägger de egna orden där. Det är en
+vidareutveckling som inte finns med i boken. `e7c.fs` läses efter `e7.fs`
+och `e7i.fs` och definierar om `TIB`, `QUIT` och `FORTH`. Radbufferten
+ligger också i CMOS-minnet, så ingen `POKE` behövs:
+
+    Z=CALL(16384,3)
+    NY ORDLISTA
+    : DUBBEL DUP + ;  OK
+
+Efter varje rad utan fel skrivs ett huvud först i minnet: ett märke (det
+sista huvudet i kretsen), DP, LAST och en kontrollsumma. Nästa gång
+fortsätter tolken med orden kvar, om huvudet stämmer; annars börjar den
+med en tom ordlista. `EMPTY` tömmer ordlistan, och en rad som inte får
+plats tas bort med `CMOS FULLT`.
+
+Emulatorn sparar CMOS-minnet i en fil med `-M`:
+
+    ../emulator/abc80 -l e7c.bin@4000 -M cmos.bin -k 'Z=CALL(16384,3)\r'
+
+I webbläsaren väljer du *Forth med CMOS* (eller `?krets=cmos`). Där
+sparas minnet i webbläsaren och finns kvar när sidan laddas om.
+
 ## Köra tolken i emulatorn
 
 Med emulatorn i [`../verktyg/`](../verktyg/) går det i ett kommando;
@@ -115,10 +149,10 @@ Sedan är tolken igång i terminalen; Ctrl-] avslutar emulatorn.
 
 ## Bygga om
 
-    python3 e7fc.py      # e7.fs, e7i.fs, e7k.inc -> e7.asm, e7r.asm, e7i.asm, e7ip.asm
-    ../verktyg/z80asm e7.asm   # och e7r.asm, e7i.asm, e7ip.asm -> .bin
+    python3 e7fc.py      # e7.fs, e7i.fs, e7c.fs, e7k.inc -> e7.asm, e7r.asm, e7i.asm, e7ip.asm, e7c.asm
+    ../verktyg/z80asm e7.asm   # och e7r.asm, e7i.asm, e7ip.asm, e7c.asm -> .bin
     python3 e7bas.py     # e7i.bin -> e7i.bas
 
 Bara de ord som nås från ingångarna (`ENTRY`) tas med i `e7.asm` och
-`e7r.asm`; i `e7i.asm` och `e7ip.asm` tas alla ord med och får huvuden, så att tolken
+`e7r.asm`; i `e7i.asm`, `e7ip.asm` och `e7c.asm` tas alla ord med och får huvuden, så att tolken
 hittar dem.

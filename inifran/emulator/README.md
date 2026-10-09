@@ -43,7 +43,16 @@ ger ERR 35, så lägg en lång paus (`\w`) före nästa kommando:
 AIRFIGHT) i tre mappar: `kassett/` (ett band per program), `diskett/`
 (alla fyra för ABC-DOS) och `text/`, och `exempel/genesis/`, när den
 finns med, ett demo från 2015 som kassett-WAV och diskett; kommandona
-står i mapparnas `LASMIG.md`.
+står i mapparnas `LASMIG.md`. `exempel/krets/forth.bin` är Forth-tolken
+från bokens exempel 7 som en krets på $4000, som Smartaid
+(`-l exempel/krets/forth.bin@4000`, sedan `POKE 65052,0,208`, `NEW` och
+`Z=CALL(16384,3)`), och `forth_cmos.bin` samma tolk med de egna orden i
+CMOS-minnet (`-M`, nedan), som finns kvar till nästa gång.
+
+`-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
+Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när
+emulatorn slutar (`-M fil@adr` för en annan adress). I webbläsaren sparas
+det i webbläsaren själv (gruppen *CMOS-minnet*).
 
     make            # abc80
     make prov       # jämför med verktyg/abc80 i en rad fall
@@ -69,7 +78,8 @@ exempeldisketten (`exempel/program/diskett/program.dsk`) och Genesis-demot
 (Web Audio), kassetten (lägg i en WAV, spela in och spara som WAV,
 snabbt medan motorn går; bandets eget ljud hörs, och med *PLAY nere*
 går bandet vidare när motorn slås av, så att Genesis-demots musik
-kommer från bandet), disketten i FD2 med ABC-DOS, exempeldisketten och Genesis-demot på
+kommer från bandet), disketten i FD2 med ABC-DOS, Forth-kretsen (en
+kryssruta eller `?krets=forth`), exempeldisketten och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:

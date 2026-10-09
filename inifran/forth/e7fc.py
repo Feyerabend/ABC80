@@ -9,7 +9,7 @@ behövs och ingångstabellen. Bara ord som nås från ingångarna tas med:
 anropsgrafen är utan cykler (ett ord kan bara använda ord som redan
 är definierade), så det räcker att följa den från ingångarna.
 
-Fyra bilder skrivs:
+Fem bilder skrivs:
     e7.asm   e7.fs på $4000 (kretsen)
     e7r.asm  e7.fs på $C000 (RAM under programmet, sedan BOFA har
              flyttats upp med POKE 65052,0,196 och NEW)
@@ -19,6 +19,8 @@ Fyra bilder skrivs:
     e7ip.asm samma tolk på $4000, som en krets (ett 2732-EPROM) i
              stället för Smartaid: bara de nya orden hamnar i RAM, från
              $C000 och uppåt (POKE 65052,0,208 och NEW)
+    e7c.asm  tolken på $4000 med e7c.fs, som lägger nya ord i
+             CMOS-minnet på $5000 (inte med i boken)
 
 Forth-källan:
     : namn ... ;          kolonord
@@ -33,6 +35,9 @@ Forth-källan:
 LATEST och SLUT är det sista huvudet och där nya ord börjar: bildens
 slut, eller RAM på $C000 för kretsen.
 Tal skrivs decimalt eller med $ för hex.
+Ett ord som definieras igen (i en senare källa) ersätter det tidigare,
+på samma plats i ordlistan, och de ord som redan använder det får det
+nya.
 """
 import re
 import sys
@@ -42,7 +47,8 @@ KERN = "e7k.inc"
 OUTS = [("e7.asm", 0x4000, ["e7.fs"], False, None),
         ("e7r.asm", 0xC000, ["e7.fs"], False, None),
         ("e7i.asm", 0xC000, ["e7.fs", "e7i.fs"], True, None),
-        ("e7ip.asm", 0x4000, ["e7.fs", "e7i.fs"], True, 0xC000)]
+        ("e7ip.asm", 0x4000, ["e7.fs", "e7i.fs"], True, 0xC000),
+        ("e7c.asm", 0x4000, ["e7.fs", "e7i.fs", "e7c.fs"], True, 0x5008)]
 
 # RAM för VARIABLE: de 8 dolda bytena efter var tredje rad i bildminnet
 # ($7C78-$7C7F osv.); $7C78 och $7C7A är SAVESP och S0, $7FF8- lämnas

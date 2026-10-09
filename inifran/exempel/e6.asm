@@ -2,7 +2,7 @@
 ; texttelefonen tar emot. Skrivet för boken, inte ur någon krets.
 ;
 ; Kretsen sitter på $4000. Från BASIC:
-;   Z=CALL(16384)   koppla in: PIO A i läge 1, avbrott för varje bildlinje
+;   Z=CALL(16384)   koppla in: PIO A i läge 1, avbrott varannan bildlinje
 ;   Z=CALL(16387)   koppla ur: PIO A som ROM:en ställer den
 ;   A=CALL(16390)   nästa mottagna tecken, eller -1 om inget har kommit
 ; Hastigheten är 1200 baud, 8 databitar, ingen paritet, en stoppbit.
@@ -30,7 +30,7 @@ RING:   EQU  $FC            ; ringbufferten $FC00-$FCFF (sidan)
 
 ; Koppla in. Tillståndet blir VILA, bufferten töms, avbrottet går via
 ; tabellen på $4034 och PIO A ställs i läge 1: avbrott på strobe-
-; ingången, som får en puls för varje bildlinje (7 812,5 i sekunden).
+; ingången, som växlar för varje bildlinje (7 800 avbrott i sekunden).
 PA:     DI
         LD   A,$C3          ; JP
         LD   (STATE),A
@@ -53,7 +53,7 @@ PA:     DI
         DEFS $4034-$        ; fyll ut till vektortabellen (PA måste
                             ; sluta före $4034)
 
-        DEFW LINJE          ; $4034 PIO A: varje bildlinje
+        DEFW LINJE          ; $4034 PIO A: varannan bildlinje
         DEFW CASINT         ; $4036 PIO B: kassetten, ROM:ens
 
 ; Koppla ur: PIO A tillbaka i bitläge med avbrott när bit 7 (tangent
@@ -88,15 +88,15 @@ HAMTA:  LD   HL,(INPOS)     ; L = INPOS, H = OUTPOS
         LD   H,0
         RET
 
-; Avstånden mellan läsningarna, i avbrott. En bit är 7812,5/1200 =
-; 6,51 avbrott. Databit n läses mitt i biten, (1,5 + n) bitar efter
-; startbitens början: 9,77 16,28 22,79 29,30 35,81 42,32 48,83 55,34
+; Avstånden mellan läsningarna, i avbrott. En bit är 7800/1200 =
+; 6,5 avbrott. Databit n läses mitt i biten, (1,5 + n) bitar efter
+; startbitens början: 9,75 16,25 22,75 29,25 35,75 42,25 48,75 55,25
 ; avbrott, avrundat 10 16 23 29 36 42 49 55. Avstånden är skillnaderna.
 ; Varje läsning avrundas för sig, så felet växer inte genom tecknet.
 TAB:    DEFB 10             ; startbiten till databit 0
         DEFB 6,7,6,7,6,7,6  ; till databit 1-7
         DEFB 0              ; slut: stoppbiten
-STOPN:  EQU  7              ; 9,5 bitar = 61,85 -> 62, dvs. 62 - 55
+STOPN:  EQU  7              ; 9,5 bitar = 61,75 -> 62, dvs. 62 - 55
 
 ; Avbrottet. Det hoppar till det aktuella tillståndet genom JP-
 ; instruktionen i RAM; ett tillstånd byter till nästa genom att skriva

@@ -18,6 +18,9 @@
  *     -b f0,f1,..@adr  en krets med banker (högst 8 à 4 KB); skrivning till
  *                    adr+$40+n väljer bank n
  *     -m kb          RAM överst i minnet: 16 (standard), 32 eller 48
+ *     -M fil[@adr]   CMOS-minne med batteri, 2 KB på adr (standard 5000,
+ *                    som Super Smartaid): läses ur filen, om den finns,
+ *                    och skrivs tillbaka när emulatorn slutar
  *
  * Tangenterna och V24:
  *     -k text        tangenter att skriva efter starten
@@ -230,6 +233,34 @@ static void banker(Maskin *m, const char *arg)
     }
 }
 
+/* CMOS-minnet (-M fil[@adr]): 2 KB, tomt (0) om filen inte finns än. */
+#define CMOS_STORLEK 0x800
+static char cmos_namn[1024];
+static uint8_t *cmos_minne;
+
+static void cmos_las(Maskin *m, const char *arg)
+{
+    uint8_t buffert[CMOS_STORLEK] = { 0 };
+    int adress = 0x5000;
+    snprintf(cmos_namn, sizeof cmos_namn, "%s", arg);
+    if (strrchr(cmos_namn, '@'))
+        adress = adress_efter(cmos_namn, "-M fil@adr: ");
+    FILE *f = fopen(cmos_namn, "rb");
+    if (f) {
+        if (fread(buffert, 1, sizeof buffert, f)) {}
+        fclose(f);
+    }
+    cmos_minne = maskin_cmos(m, (uint16_t)adress, buffert, sizeof buffert);
+}
+
+static void cmos_skriv(void)
+{
+    FILE *f = fopen(cmos_namn, "wb");
+    if (!f || fwrite(cmos_minne, 1, CMOS_STORLEK, f) != CMOS_STORLEK)
+        vard_fel("kan inte skriva CMOS-minnet till ", cmos_namn);
+    fclose(f);
+}
+
 /* ROM:en ur en fil eller med ett av namnen 9913, 11273 och basicii80. */
 static void rom(Vard *v, const char *arg)
 {
@@ -315,7 +346,7 @@ static void andra_skiva(Vard *v, const char *arg)
 
 static void hjalp(void)
 {
-    fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48]\n"
+    fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48] [-M fil[@adr]]\n"
           "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L]\n"
           "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-E adr[,text]]\n"
           "                  [-T band.wav] [-U inspelning.wav]\n"
@@ -350,7 +381,7 @@ int main(int argc, char **argv)
     static Kassett kassett;
     static char standard_rom[1100];
     Vard *v = &vard;
-    const char *romfil = NULL, *v24 = NULL, *bankarg = NULL;
+    const char *romfil = NULL, *v24 = NULL, *bankarg = NULL, *cmosfil = NULL;
     const char *kretsar[16];
     int antal_kretsar = 0, ram_kb = 16, utforlig = 0, utan_lyssnare = 0;
 
@@ -385,6 +416,7 @@ int main(int argc, char **argv)
         else if (!strcmp(f, "-l")) { if (antal_kretsar < 16) kretsar[antal_kretsar++] = a; }
         else if (!strcmp(f, "-b")) bankarg = a;
         else if (!strcmp(f, "-m")) ;                    /* läst ovan */
+        else if (!strcmp(f, "-M")) cmosfil = a;
         else if (!strcmp(f, "-k")) text(&maskin, a, 0); /* i ordning */
         else if (!strcmp(f, "-f")) textfil(&maskin, a);
         else if (!strcmp(f, "-K")) {
@@ -470,6 +502,8 @@ int main(int argc, char **argv)
         krets(&maskin, kretsar[k]);
     if (bankarg)
         banker(&maskin, bankarg);
+    if (cmosfil)
+        cmos_las(&maskin, cmosfil);
     if (v24)
         text(&maskin, v24, 1);
     if (v->tst && !v->basic_ii)
@@ -521,6 +555,8 @@ int main(int argc, char **argv)
         if (kassett.full)
             fprintf(stderr, "abc80: inspelningen fick inte plats; bara början är med\n");
     }
+    if (cmosfil)
+        cmos_skriv();
     if (utforlig)
         fprintf(stderr, "PC $%04X, %lld instruktioner, %lld T-cykler\n",
                 maskin.z80.pc, maskin.instruktioner, maskin.tid);

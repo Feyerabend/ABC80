@@ -272,6 +272,15 @@ void maskin_ram(Maskin *m, uint16_t adress, size_t storlek, uint8_t fyllnad)
     memset(m->skydd + adress, 0, storlek);
 }
 
+uint8_t *maskin_cmos(Maskin *m, uint16_t adress, const uint8_t *data, size_t storlek)
+{
+    if (storlek > (size_t)(0x10000 - adress))
+        storlek = (size_t)(0x10000 - adress);
+    memcpy(m->minne + adress, data, storlek);
+    memset(m->skydd + adress, 0, storlek);
+    return m->minne + adress;
+}
+
 void maskin_krets(Maskin *m, uint16_t adress, const uint8_t *data, size_t storlek)
 {
     if (storlek > (size_t)(0x10000 - adress))
