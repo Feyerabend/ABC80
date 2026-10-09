@@ -11,3 +11,6 @@ Publicering av boken väntas under 2026.
   och BASIC II för ABC80, med ROM:arna
 - [`verktyg/`](verktyg/): assemblern och emulatorn som bokens exempel
   byggs och provas med
+- [`emulator/`](emulator/): emulatorn med kassett, diskett och ljud, i
+  terminalen och som en enda fil i webbläsaren (`webb/abc80.html`), med
+  exempelprogram på band och diskett

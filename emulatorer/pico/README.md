@@ -1,0 +1,25 @@
+
+![ABC80 for ants](./../../assets/images/ant.png)
+
+## ABC80 for Ants
+
+A reconstruction of the ABC80 highlighting core elements such as files, screen, and keyboard.
+In the most recent revision, we also have sound.
+
+If you want to fully commit to emulation, consider exploring hardware-based solutions
+like MiSTer[^mister], or software options such as MAME[^mame]. They also can peek at
+the ABC80, without resorting to the actual old hardware.
+
+[^mister]: Wikipedia: https://en.wikipedia.org/wiki/MiSTer
+
+[^mame]: ABC80: https://github.com/MisterTea/MAMEHub/blob/master/Sources/Emulator/src/mess/drivers/abc80.c,
+Wikipedia: https://en.wikipedia.org/wiki/MAME
+
+
+##### License
+
+The greedy licens here derives from the Z80 processor emulator inclusion. You might change this
+and swap it for something else, with another license. The rest of the code (mine) does not depend
+on this greedy license, and can be freely used under other packages. But as the code stands here,
+it is thus included, and must so be.
+

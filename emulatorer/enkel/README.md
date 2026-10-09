@@ -1,0 +1,64 @@
+# Barely functional emulator for ABC80
+
+There are naturally several emulators for ABC80. But this one
+may be the simplest, although [barely functional](./src/).
+It lacks most features, graphics, sound etc. but it shows how
+simple programs (text based) can work. Starting from a simple
+Z80 emulator, the program copies what is in the screen memory
+to display, and recognizes some keys as input, but not much beyond.
+Built upon "tinyz80"[^tiny] in C it illustrates some simple
+programming concepts such as a sample:
+
+[^tiny]: https://github.com/kspalaiologos/tinyz80
+
+```basic
+10 ; "Hejsan ";
+20 GOTO 10
+```
+
+![Running the emu.](../../assets/images/abc80emu.gif)
+
+
+## Compile and run
+
+To compile you need `cmake` as we use `ncurses` for display and keyboard.
+Create a folder `build` in parallel to (same parent as) `src`. From the
+`build` type:
+
+```sh
+> cmake ../
+> make
+> bin/abc
+```
+
+Now there is a [__second version__](./src2/), which can load and save programs directly
+to the desktop/laptop. Use the additional commands: `ESAVE`, `ELOAD`, `ELIST`,
+`ETEXT` and look at the current folder for programs `ELIB`.
+We assume `ncurses` already installed ..
+
+```sh
+> cd src2
+> make
+> ./abc80
+```
+
+There are many quirks when building an emulator or simulator.
+Trying to adapt “fake hardware” to satisfy real software doesn’t
+always make sense, and can introduce its own inconsistencies.
+If you want to go further down that rabbit hole, a good place to start is:
+
+- Markesjö, (1978) G. *Mikrodatorns ABC: Elektroniken i ett mikrodatorsystem.*
+  Esselte Studium.
+
+![New Emu](./../../assets/images/ABCv2.png)
+
+
+## License
+
+As tinyz80 is licensed with a "greedy" version 3 of GNU, every
+file that works with it must follow the same license.
+
+*The `abcprom.h` file however is data and __not__ part of the program.
+Dataindustrier AB (DIAB) gave Jonas Yngvesson permission to distribute
+the PROM-contents. Jonas Yngvesson also made a proper simulator/emulator
+for ABC80.*
