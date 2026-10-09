@@ -78,6 +78,13 @@ EXPORT(krets) void krets(int adress, const uint8_t *data, long storlek)
     maskin_krets(&maskin, (uint16_t)adress, data, (size_t)storlek);
 }
 
+/* CMOS-minnet (storlek bytes på adressen, som -M): RAM med data i.
+ * Ger platsen i minnet, där sidan läser det för att spara det. */
+EXPORT(cmos) uint8_t *cmos(int adress, const uint8_t *data, long storlek)
+{
+    return maskin_cmos(&maskin, (uint16_t)adress, data, (size_t)storlek);
+}
+
 /* En skivavbild på kortet (44, 45 eller 36) och enheten (-D). data ska
  * ha 256 bytes över efter avbilden och ligga kvar; kortet skriver i
  * den. 0 om det redan finns åtta. */

@@ -162,6 +162,12 @@ void maskin_bank(Maskin *m, uint16_t adress, const uint8_t *data, size_t storlek
 /* RAM på adressen, fyllt med fyllnad (t.ex. ett bildminne på ett kort). */
 void maskin_ram(Maskin *m, uint16_t adress, size_t storlek, uint8_t fyllnad);
 
+/* CMOS-minne med batteri, som på Super Smartaid ($5000-$57FF): RAM på
+ * adressen med innehållet data (storlek bytes). Värden sparar det som
+ * står där efteråt och lägger tillbaka det nästa gång. Ger platsen i
+ * minnet, där värden läser det. */
+uint8_t *maskin_cmos(Maskin *m, uint16_t adress, const uint8_t *data, size_t storlek);
+
 /* Processorn till startläget (efter att minnet är laddat). */
 void maskin_aterstall(Maskin *m);
 

@@ -4,8 +4,8 @@
  * Kärnan är WebAssembly (webb.c och karna/, make webb); här finns allt
  * runt den: skärmen på en canvas, tangentbordet, ljudet med Web Audio,
  * filerna och knapparna. bygg.sh lägger in WebAssembly-koden, ROM:arna,
- * exempeldisketten och Genesis-demot (de två om de finns) som base64 i FILER, så
- * att sidan inte behöver hämta något.
+ * exempeldisketten, Forth-kretsarna och Genesis-demot (de tre om de finns)
+ * som base64 i FILER, så att sidan inte behöver hämta något.
  *
  * Tiden: en bild är 20 ms. Med ljudet på följer emulatorn ljudets
  * klocka, och varje bilds prov läggs i en AudioBuffer som spelas precis
@@ -23,6 +23,11 @@
  * diskett. "Spara disketten" laddar ner avbilden som den är nu, och
  * "Katalogen" visar filerna, läst ur katalogen i sektor 16-23 som
  * ABC-DOS ordnar den (band 2, kapitlet om FD2).
+ *
+ * CMOS-minnet: 2 KB RAM på $5000, som Super Smartaids med batteri. Det
+ * läggs in efter varje start och sparas i webbläsaren (localStorage),
+ * en gång i sekunden när det har ändrats och när sidan stängs. Forth
+ * med CMOS är tolken från exempel 7 med de egna orden där.
  *
  * Tangenterna går som i terminalen (vard/terminal.c): Enter är RETURN
  * ($0D), backsteg och vänsterpil $08, högerpil $09, Ctrl-C BREAK ($03),
@@ -74,6 +79,55 @@ function lagg_i_minnet(data, extra = 0) {
 }
 
 /* ---------------------------------------------------------------- */
+/* CMOS-minnet                                                       */
+
+const CMOS_ADRESS = 0x5000, CMOS_STORLEK = 0x800, CMOS_NYCKEL = 'abc80-cmos';
+let cmos = new Uint8Array(CMOS_STORLEK);    /* det som är sparat */
+let cmos_pekare = 0;                        /* i WebAssemblys minne, 0 = av */
+let cmos_sparat = 0;                        /* performance.now() */
+
+function cmos_las_in() {
+    try {
+        const t = localStorage.getItem(CMOS_NYCKEL);
+        if (t) {
+            const b = base64(t);
+            if (b.length === CMOS_STORLEK)
+                cmos = b;
+        }
+    } catch (fel) { /* utan localStorage: tomt */ }
+}
+
+function cmos_nu() {
+    return new Uint8Array(e.memory.buffer, cmos_pekare, CMOS_STORLEK);
+}
+
+function cmos_skriv() {
+    try {
+        localStorage.setItem(CMOS_NYCKEL, btoa(String.fromCharCode(...cmos)));
+    } catch (fel) { /* fullt eller förbjudet: bara i minnet */ }
+}
+
+/* Det som står i minnet nu sparas, om det har ändrats. */
+function cmos_spara() {
+    if (!cmos_pekare)
+        return;
+    const nu = cmos_nu();
+    if (nu.every((b, k) => b === cmos[k]))
+        return;
+    cmos = nu.slice();
+    cmos_skriv();
+}
+
+/* Nytt innehåll (en fil eller nollor), också i maskinen om det är på. */
+function cmos_byt(data) {
+    cmos = new Uint8Array(CMOS_STORLEK);
+    cmos.set(data.subarray(0, CMOS_STORLEK));
+    if (cmos_pekare)
+        cmos_nu().set(cmos);
+    cmos_skriv();
+}
+
+/* ---------------------------------------------------------------- */
 /* Maskinen                                                          */
 
 const ROM = {};
@@ -87,8 +141,10 @@ function skivan_nu() {
 
 /* Starta maskinen; med en diskett sitter ABC-DOS på $6000 och
  * disketten i FD2 (kort 45). Utan argument sitter samma diskett kvar,
- * med det som har sparats på den. */
+ * med det som har sparats på den. En krets sitter på $4000, som
+ * Smartaid (-l forth.bin@4000); Forth med CMOS slår på CMOS-minnet. */
 function starta(diskett = skivan_nu()) {
+    cmos_spara();                            /* innan minnet töms */
     const rom = ROM[$('rom').value];
     const p = lagg_i_minnet(rom);
     e.starta(16, p, rom.length, provtakt);
@@ -106,6 +162,21 @@ function starta(diskett = skivan_nu()) {
         /* Kortet skriver i avbilden, så den ligger kvar (256 bytes över). */
         skivans_minne = lagg_i_minnet(skivan, 256);
         e.skiva(45, 0, skivans_minne, skivan.length, 0);
+    }
+    const val = $('krets')?.value;
+    if (val) {
+        const data = val === 'cmos' ? FILER.krets_cmos : FILER.krets;
+        const krets = lagg_i_minnet(data);
+        e.krets(0x4000, krets, data.length);
+        e.slapp(krets);
+        if (val === 'cmos')
+            $('cmos').checked = true;
+    }
+    cmos_pekare = 0;
+    if ($('cmos').checked) {
+        const p = lagg_i_minnet(cmos);
+        cmos_pekare = e.cmos(CMOS_ADRESS, p, CMOS_STORLEK);
+        e.slapp(p);
     }
     e.aterstall();
     nasta = null;
@@ -274,6 +345,10 @@ function rita() {
 }
 
 function varv() {
+    if (performance.now() - cmos_sparat > 1000) {
+        cmos_spara();
+        cmos_sparat = performance.now();
+    }
     const nu = klockan();
     const med_ljud = ljudet_gar();
     if (nasta === null || med_ljud !== anvande_ljud || nu - nasta > 0.25 || nasta - nu > 0.5)
@@ -523,6 +598,10 @@ async function oppna(fil, vad) {
         vad = /\.wav$/i.test(namn) ? 'band' : /\.(dsk|img)$/i.test(namn) ? 'skiva' : 'program';
     if (vad === 'band')
         lagg_i_band(data, namn);
+    else if (vad === 'cmos') {
+        cmos_byt(data);
+        meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'));
+    }
     else if (vad === 'skiva') {
         skivans_namn = namn;
         starta(data);
@@ -570,6 +649,51 @@ $('exempel')?.addEventListener('click', () => {
     skarm.focus();
 });
 
+/* Forth-kretsarna (exempel/krets/), när de ligger i sidan: maskinen
+ * startas om med den valda kretsen eller utan. */
+const KRETSAR = {
+    '': '',
+    forth: 'Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
+    cmos: 'Forth med CMOS: Z=CALL(16384,3); orden sparas i CMOS-minnet på $5000.',
+};
+$('krets')?.addEventListener('change', () => {
+    starta();
+    meddela(KRETSAR[$('krets').value]);
+    skarm.focus();
+});
+
+/* CMOS-minnet: på eller av startar om maskinen (som att sätta i kortet). */
+$('cmos').addEventListener('change', () => {
+    if (!$('cmos').checked && $('krets')?.value === 'cmos')
+        $('krets').value = '';
+    starta();
+    meddela($('cmos').checked
+        ? 'CMOS-minnet på $5000-$57FF (20480-22527), sparat i webbläsaren.'
+        : 'CMOS-minnet är av; det som står där finns kvar till nästa gång.');
+    skarm.focus();
+});
+$('cmos_tom').addEventListener('click', () => {
+    cmos_byt(new Uint8Array(0));
+    meddela('CMOS-minnet är tomt.');
+    skarm.focus();
+});
+$('cmos_spara').addEventListener('click', () => {
+    cmos_spara();
+    const lank = document.createElement('a');
+    lank.href = URL.createObjectURL(new Blob([cmos], { type: 'application/octet-stream' }));
+    lank.download = 'cmos.bin';
+    lank.click();
+    setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
+    meddela('cmos.bin laddas ner (som -M cmos.bin i terminalen).');
+    skarm.focus();
+});
+$('cmos_ladda').addEventListener('click', () => valj_fil('cmos', '.bin'));
+window.addEventListener('pagehide', cmos_spara);
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden)
+        cmos_spara();
+});
+
 const GENESIS = 'ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ';
 
 /* Från bandet: musiken ligger efter programmet och hörs med PLAY nere.
@@ -609,12 +733,21 @@ $('genesis_skiva')?.addEventListener('click', () => {
         FILER.program = base64(FILER.program);
     if (FILER.genesis)
         FILER.genesis = base64(FILER.genesis);
+    if (FILER.krets) {
+        FILER.krets = base64(FILER.krets);
+        FILER.krets_cmos = base64(FILER.krets_cmos);
+    }
+    cmos_las_in();
 
     const fraga = new URLSearchParams(location.search);
     if (fraga.get('rom') === 'gammal')
         $('rom').value = 'gammal';
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;
+    if (['forth', 'cmos'].includes(fraga.get('krets')) && $('krets'))
+        $('krets').value = fraga.get('krets');
+    if (fraga.get('cmos') === 'pa')
+        $('cmos').checked = true;
     visa_ljudet();
     starta(null);
     if (fraga.get('k')) {

@@ -8,9 +8,9 @@ Läser e7i.bin (tolken på $C000, assemblerad av test.sh) och skriver
 e7i.bas: ett ABC80-BASIC-program som lägger bilden i minnet med POKE.
 Varje DATA-rad har 30 bytes i hex och summan av dem; en rad som är
 felskriven ger "FEL I RAD n" innan något av den har lagts i minnet
-(raden läses två gånger). Programmet förutsätter att BOFA redan har
-flyttats upp (POKE 65052,0,208 och NEW), så att det självt ligger
-ovanför $D000.
+(raden läses två gånger). BOFA måste redan ha flyttats upp (POKE
+65052,0,208 och NEW), så att programmet självt ligger ovanför $D000;
+annars skriver det det i stället för att lägga bilden över sig självt.
 """
 import sys
 
@@ -18,6 +18,7 @@ ORG, BIN, OUT, N = 0xC000, "e7i.bin", "e7i.bas", 30
 
 PROG = """\
 10 REM FORTH, EXEMPEL 7
+15 IF PEEK(65053)<208 THEN 270
 20 A=%d
 30 L=1000
 40 READ H$,S
@@ -43,6 +44,8 @@ PROG = """\
 240 END
 250 PRINT A-%d;" BYTES"
 260 END
+270 PRINT "SKRIV POKE 65052,0,208 OCH NEW"
+280 END
 """ % (ORG, ORG)
 
 data = open(BIN, "rb").read()

@@ -4,14 +4,15 @@
 
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
-  exempeldisketten och Genesis-demot (band och diskett), om de finns, in
-  som base64, och abc80.js efter. Då är abc80.html en enda fil som går
+  exempeldisketten, Forth-kretsen och Genesis-demot (band och diskett), om
+  de finns, in som base64, och abc80.js efter. Då är abc80.html en enda fil som går
   att öppna direkt i webbläsaren, utan server och utan att något installeras.
 
   Mellan MALL och /MALL står det som bara syns i mallen; bygg.sh tar
   bort det. Mellan PROGRAM och /PROGRAM står exempeldiskettens knapp och
   text, som tas bort när exempel/program/diskett/program.dsk inte finns,
-  och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
+  mellan KRETS och /KRETS Forth-kretsens, som tas bort när
+  exempel/krets/forth.bin inte finns, och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
   inte finns.
 -->
 <html lang="sv">
@@ -127,6 +128,20 @@
       <button id="nystart" title="Töm minnet och starta om">Starta om</button>
       <button id="ljud" title="Ljudet från SN76477 (OUT 6) och bandet">Ljud: på</button>
       <button id="program" title="En textfil med ett BASIC-program skrivs in som tangenter">Skriv in…</button>
+<!-- KRETS -->
+      <select id="krets" title="En krets på $4000, som Smartaid">
+        <option value="">Ingen krets</option>
+        <option value="forth">Forth-kretsen</option>
+        <option value="cmos">Forth med CMOS</option>
+      </select>
+<!-- /KRETS -->
+    </div>
+    <div class="grupp">
+      <b>CMOS-minnet</b>
+      <label title="2 KB RAM med batteri på $5000-$57FF, som på Super Smartaid: innehållet sparas i webbläsaren"><input type="checkbox" id="cmos"> på $5000</label>
+      <button id="cmos_tom" title="Nollställ CMOS-minnet">Töm</button>
+      <button id="cmos_spara" title="Ladda ner CMOS-minnet (2 KB)">Spara</button>
+      <button id="cmos_ladda" title="Lägg in en fil i CMOS-minnet">Ladda…</button>
     </div>
     <div class="grupp">
       <b><span class="ikon">💾</span>Disketten</b>
@@ -194,6 +209,29 @@
     <code>exempel/program/text/</code> (<i>Skriv in…</i> och
     <code>RUN</code>).</p>
 <!-- /PROGRAM -->
+<!-- KRETS -->
+    <p><i>CMOS-minnet</i> är 2 KB RAM på <code>$5000</code>–<code>$57FF</code>
+    (20480–22527), som det batteriförsedda minnet på Super Smartaid. Det
+    som står där sparas i webbläsaren och finns kvar när sidan laddas om
+    eller maskinen startas om: <code>POKE 20480,42</code>, ladda om, och
+    <code>PRINT PEEK(20480)</code> ger 42. <i>Spara</i> och <i>Ladda…</i>
+    flyttar det som en fil (i terminalen: <code>-M cmos.bin</code>).</p>
+    <p><i>Forth-kretsen</i> sätter Forth-tolken från exempel 7 (band 2) i
+    en krets på <code>$4000</code>, där Smartaid satt, och startar om
+    maskinen. Kretsen kan inte skrivas i, så de egna orden läggs i RAM från
+    <code>$C000</code>, och BOFA flyttas upp först:
+    <code>POKE 65052,0,208</code> och <code>NEW</code>. Sedan startar
+    <code>Z=CALL(16384,3)</code> tolken: <code>: KV DUP + ;</code> och
+    <code>7 KV .</code> ger 14. <code>WORDS</code> listar orden, och
+    <code>@</code> skrivs <code>É</code>. <code>BYE</code> går tillbaka
+    till BASIC och <code>Z=CALL(16384,4)</code> fortsätter med de egna
+    orden kvar. Samma tolk finns som band i bokens kodförråd
+    (<code>inifran/forth/FORTH.wav</code>), för RAM på <code>$C000</code>.</p>
+    <p><i>Forth med CMOS</i> är samma tolk, men de egna orden läggs i
+    CMOS-minnet, och radbufferten också, så ingen <code>POKE</code> behövs:
+    <code>Z=CALL(16384,3)</code> direkt. Orden finns kvar när sidan laddas
+    om. <code>EMPTY</code> tömmer ordlistan.</p>
+<!-- /KRETS -->
 <!-- GENESIS -->
     <p><i>Genesis-demot</i> laddar demot från bandet (snabbt) och spelar
     musiken, som ligger efter programmet på bandet, med <i>PLAY nere</i>;
@@ -202,8 +240,10 @@
     <p>Länkar kan ge tangenter att skriva efter starten:
     <code>abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r</code>, med
     <code>\r</code> för RETURN och <code>\w500</code> för en paus i ms.
-    <code>?rom=gammal</code> väljer den gamla ROM:en och <code>?ljud=av</code>
-    startar utan ljud.</p>
+    <code>?rom=gammal</code> väljer den gamla ROM:en, <code>?ljud=av</code>
+    startar utan ljud<!-- KRETS -->, <code>?krets=forth</code> sätter i
+    Forth-kretsen och <code>?krets=cmos</code> Forth med CMOS<!-- /KRETS -->
+    och <code>?cmos=pa</code> slår på CMOS-minnet.</p>
     <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
     klickat på sidan eller skrivit något.</p>
   </details>
