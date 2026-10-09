@@ -4,7 +4,8 @@
  * Kärnan är WebAssembly (webb.c och karna/, make webb); här finns allt
  * runt den: skärmen på en canvas, tangentbordet, ljudet med Web Audio,
  * filerna och knapparna. bygg.sh lägger in WebAssembly-koden, ROM:arna,
- * exempeldisketten, Forth-kretsarna och Genesis-demot (de tre om de finns)
+ * exempeldisketten, Forth-kretsarna, MÅLARE-bandet och Genesis-demot (de
+ * fyra om de finns)
  * som base64 i FILER, så att sidan inte behöver hämta något.
  *
  * Tiden: en bild är 20 ms. Med ljudet på följer emulatorn ljudets
@@ -779,6 +780,22 @@ window.addEventListener('pagehide', cmos_spara);
 document.addEventListener('visibilitychange', () => {
     if (document.hidden)
         cmos_spara();
+});
+
+/* MÅLARE (exempel/malare/), när bandet ligger i sidan: fjärrstyrt, som
+ * ett vanligt band, så att det stannar efter programmet. */
+$('malare')?.addEventListener('click', () => {
+    if (typeof FILER.malare_band === 'string')
+        FILER.malare_band = base64(FILER.malare_band);
+    starta(null);
+    lagg_i_band(FILER.malare_band, 'MÅLARE');
+    $('fjarr').checked = true;
+    knappar(true);
+    e.paus(1000);
+    skriv('RUN CAS:\n');
+    meddela('MÅLARE av Mikael Bonnier 1982 (GPL-3.0). Svara med ett tal och RETURN; '
+            + 'tangenterna runt F flyttar, Caps Lock på suddar, S tömmer skärmen.');
+    skarm.focus();
 });
 
 const GENESIS = 'ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ';

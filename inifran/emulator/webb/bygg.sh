@@ -7,7 +7,9 @@
 # FILER står. Finns exempel/program/diskett/program.dsk kommer
 # exempeldisketten med; annars tas dess knapp och text bort (mellan PROGRAM
 # och /PROGRAM i mallen). Finns exempel/krets/forth.bin och
-# forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns exempel/genesis/ kommer Genesis-demot med
+# forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns
+# exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
+# /MALARE). Finns exempel/genesis/ kommer Genesis-demot med
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
 # knappar och text bort (mellan GENESIS och /GENESIS). Det som bara syns i
 # mallen (mellan MALL och /MALL) tas alltid bort. Filen skrivs på
@@ -21,6 +23,7 @@ cd "$(dirname "$0")/.."
 PROGRAM=exempel/program/diskett/program.dsk
 KRETS=exempel/krets/forth.bin
 KRETS_CMOS=exempel/krets/forth_cmos.bin
+MALARE=exempel/malare/MALARE.wav
 SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
 BAND=exempel/genesis/GenesisProject_ABCDemo_webb.wav
 
@@ -48,6 +51,7 @@ sida() {
     avsnitt MALL nej < webb/mall.html |
         avsnitt PROGRAM "$(finns "$PROGRAM")" |
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
+        avsnitt MALARE "$(finns "$MALARE")" |
         avsnitt GENESIS "$(finns "$SKIVA" "$BAND")"
 }
 
@@ -63,6 +67,9 @@ fi
 if [ -f "$KRETS" ] && [ -f "$KRETS_CMOS" ]; then
     printf '  krets: "%s",\n' "$(base64_av "$KRETS")"
     printf '  krets_cmos: "%s",\n' "$(base64_av "$KRETS_CMOS")"
+fi
+if [ -f "$MALARE" ]; then
+    printf '  malare_band: "%s",\n' "$(base64_av "$MALARE")"
 fi
 if [ -f "$SKIVA" ] && [ -f "$BAND" ]; then
     printf '  genesis: "%s",\n' "$(base64_av "$SKIVA")"
