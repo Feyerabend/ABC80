@@ -62,9 +62,10 @@ EXPORT(starta) int starta(int ram_kb, const uint8_t *rom, long storlek, long pro
         return 0;
     ljud_starta(&ljud, provtakt, MASKIN_KLOCKA, 0x00A5C301);
     maskin.ljud = &ljud;
-    int vidare = kassett.spelar_vidare;
+    int stopp = kassett.stopp, utan = kassett.utan_fjarrstyrning;
     kassett_starta(&kassett);                /* bandet sitter kvar, tillbakaspolat */
-    kassett.spelar_vidare = vidare;
+    kassett.stopp = stopp;
+    kassett.utan_fjarrstyrning = utan;
     kassett_spela(&kassett, bandet, bandets_flanker);
     maskin.kassett = &kassett;
     skivkort_starta(&skivkort);
@@ -139,7 +140,7 @@ EXPORT(tangenter_klara) int tangenter_klara(void) { return tangentko_tom(&maskin
 static void spola_tillbaka(void)
 {
     kassett.band = 0;
-    kassett.motor = kassett.motorrelaet;
+    kassett.motor = !kassett.stopp && (kassett.motorrelaet || kassett.utan_fjarrstyrning);
     kassett.motor_start = maskin.tid;
     kassett.langst = 0;
     kassett.spelar_in = 0;
@@ -202,18 +203,24 @@ EXPORT(inspelade_flanker) long inspelade_flanker(void) { return kassett.antal_in
 EXPORT(motor) int motor(void) { return kassett.motorrelaet; }
 EXPORT(bandet_gar) int bandet_gar(void) { return kassett.motor; }
 
-/* Bandspelaren utan fjärrstyrning: bandet stannar inte när motorreläet
- * släpper (som PLAY nere). Med starta går bandet nu, som när PLAY
- * trycks ned; av stannar det om reläet är från. */
-EXPORT(spela_vidare) void spela_vidare(int pa, int starta)
+/* Bandspelarens knappar: PLAY nere (1) eller uppe, fjärrstyrd (1,
+ * motorreläet styr) eller inte (bandet går så länge PLAY är nere). */
+EXPORT(knappar) void knappar(int play_nere, int fjarrstyrd)
 {
-    kassett.spelar_vidare = pa;
-    int motor = pa ? kassett.motor || starta : kassett.motorrelaet;
-    if (motor != kassett.motor) {
-        kassett.band = kassett_lage(&kassett, maskin.tid);
-        kassett.motor_start = maskin.tid;
-        kassett.motor = motor;
-    }
+    kassett_knappar(&kassett, maskin.tid, play_nere, fjarrstyrd);
+}
+
+/* Spola till läget i sekunder (bandet som spelas upp, inte under
+ * inspelning): 0 är början, och längre än bandet går inte. */
+EXPORT(spola) void spola(double sekunder)
+{
+    if (kassett.spelar_in)
+        return;
+    double langd = kassett.antal_spelas
+                 ? (double)kassett.spelas[kassett.antal_spelas - 1] / MASKIN_KLOCKA : 0;
+    if (sekunder > langd)
+        sekunder = langd;
+    kassett_spola(&kassett, maskin.tid, (long long)(sekunder * MASKIN_KLOCKA));
 }
 
 /* Bandets läge och längd i sekunder. */

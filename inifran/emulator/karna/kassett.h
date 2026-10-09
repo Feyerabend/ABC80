@@ -23,11 +23,16 @@
  * flanker in på bandet och inget läses; annars spelas bandet upp och
  * skrivsignalen går ingenstans.
  *
- * En bandspelare utan fjärrstyrning (spelar_vidare) stannar inte när
- * motorreläet släpper: när bandet väl har startat går det vidare, som
- * om PLAY hölls nere. Så hördes musiken i Genesis Projects demo (2015,
- * exempel/genesis/): den ligger på bandet efter programmet och spelas
- * av bandspelaren själv, inte av ABC80.
+ * Bandspelarens knappar (kassett_knappar): med PLAY uppe (stopp) står
+ * bandet still. Med PLAY nere går det när motorreläet drar, om
+ * bandspelaren är fjärrstyrd; annars går det hela tiden, och stannar
+ * inte när ROM:en släpper reläet. Så hördes musiken i Genesis Projects
+ * demo (2015, exempel/genesis/): den ligger på bandet efter programmet
+ * och spelas av bandspelaren själv, inte av ABC80. Från början är PLAY
+ * nere och bandspelaren fjärrstyrd: motorn följer reläet.
+ *
+ * Spolning (kassett_spola) flyttar bandet till ett annat läge, framåt
+ * eller bakåt; de flanker som ligger före läget räknas som passerade.
  */
 
 #ifndef KASSETT_H
@@ -49,7 +54,8 @@ typedef struct Kassett {
 
     /* Motorn och bandets läge. */
     int motorrelaet;                         /* bit 5, det senast skrivna */
-    int spelar_vidare;                       /* utan fjärrstyrning: stannar inte */
+    int stopp;                               /* PLAY är uppe: bandet står */
+    int utan_fjarrstyrning;                  /* bandet går utan reläet */
     int motor;                               /* bandet går */
     long long band;                          /* läget när motorn startade
                                                 (eller står, om den är av) */
@@ -72,6 +78,14 @@ void kassett_spela_in(Kassett *k, long long *buffert, long storlek);
 
 /* Bandets läge vid maskinens tid. */
 long long kassett_lage(const Kassett *k, long long tid);
+
+/* Bandspelarens knappar vid maskinens tid: PLAY nere eller uppe, och
+ * fjärrstyrd (motorreläet styr) eller inte. */
+void kassett_knappar(Kassett *k, long long tid, int play_nere, int fjarrstyrd);
+
+/* Spola bandet till läget (T-cykler från början, inte under 0) vid
+ * maskinens tid; motorn går eller står som förut. */
+void kassett_spola(Kassett *k, long long tid, long long lage);
 
 /* OUT till port $3A vid tiden. */
 void kassett_skriv(Kassett *k, long long tid, uint8_t varde);

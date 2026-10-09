@@ -76,10 +76,11 @@ exempeldisketten (`exempel/program/diskett/program.dsk`) och Genesis-demot
 (band med musiken och diskett) om de finns; med båda blir filen drygt
 4 MB, med bara exempeldisketten 330 KB. Sidan har ljudet
 (Web Audio), kassetten (lägg i en WAV, spela in och spara som WAV,
-snabbt medan motorn går; bandets eget ljud hörs, och med *PLAY nere*
-går bandet vidare när motorn slås av, så att Genesis-demots musik
-kommer från bandet), disketten i FD2 med ABC-DOS, Forth-kretsen (en
-kryssruta eller `?krets=forth`), exempeldisketten och Genesis-demot på
+snabbt medan motorn går; PLAY, spolning åt båda hållen och ett
+räkneverk; bandets eget ljud hörs, och utan fjärrstyrning går bandet
+vidare när motorn slås av, så att Genesis-demots musik kommer från
+bandet), disketten i FD2 med ABC-DOS, Forth-kretsarna (en lista, eller
+`?krets=forth` och `?krets=cmos`), CMOS-minnet, exempeldisketten och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:

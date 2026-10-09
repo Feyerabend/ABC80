@@ -88,6 +88,11 @@
   button:hover, select:hover { border-color: var(--dampad); }
   button.pa { background: var(--accent); color: #1b1b1a; border-color: var(--accent); }
   label { font-size: 14px; display: flex; gap: 4px; align-items: center; cursor: pointer; }
+  #rakneverk {
+    font: 15px ui-monospace, Menlo, monospace; letter-spacing: 2px;
+    color: var(--text); background: #111; border: 1px solid var(--kant);
+    border-radius: 4px; padding: 2px 6px;
+  }
   #bandstatus { font-variant-numeric: tabular-nums; color: var(--dampad); font-size: 13px; min-width: 9em; }
   #meddelande { margin: 0; color: var(--dampad); font-size: 13px; min-height: 1.4em; }
   #katalog {
@@ -158,7 +163,11 @@
       <button id="spelain" title="Ett tomt band med inspelningsknappen nere (SAVE CAS:)">Spela in</button>
       <button id="spara" title="Ladda ner det som har spelats in som WAV">Spara inspelning</button>
       <label title="Kör tio gånger fortare medan motorn går"><input type="checkbox" id="snabbt" checked> snabbt</label>
-      <label title="Bandspelaren utan fjärrstyrning: bandet går vidare när ROM:en slår av motorn"><input type="checkbox" id="play" checked> PLAY nere</label>
+      <label title="Motorreläet i ABC80 startar och stoppar bandet; utan fjärrstyrning går bandet så länge PLAY är nere"><input type="checkbox" id="fjarr" checked> fjärrstyrd</label>
+      <button id="play" title="PLAY: tryck ned, och tryck igen för att släppa upp den (bandet stannar)">▶</button>
+      <button id="bakat" title="Spola bakåt (tryck igen för att stanna)">⏪</button>
+      <button id="framat" title="Spola framåt (tryck igen för att stanna)">⏩</button>
+      <button id="rakneverk" title="Räkneverket: klicka för att nollställa">000</button>
       <span id="bandstatus">inget band</span>
     </div>
 <!-- GENESIS -->
@@ -192,10 +201,20 @@
     <code>RUN CAS:</code>. Skriv inget medan blocken läses, det ger ERR 35. För
     att spela in: tryck <i>Spela in</i>, skriv <code>SAVE CAS:NAMN</code> och
     tryck sedan <i>Spara inspelning</i>.</p>
+    <p>⏪ och ⏩ spolar bandet, tjugo gånger fortare än det spelar, tills
+    du trycker igen eller bandet tar slut; PLAY släpps upp, så tryck ▶
+    igen efteråt, före <code>LOAD CAS:</code> (står bandet ger ROM:en
+    ERR 21). Räkneverket räknar varv på
+    spolen, som på en kassettbandspelare: det går fortare i början av
+    bandet än i slutet, och ett klick nollställer det. Skriv upp var
+    programmen börjar, så hittar du tillbaka, eller spola tillbaka och
+    försök igen efter ett läsfel. Under inspelning går det inte att spola.</p>
     <p>Bandets eget ljud hörs med ljudet på, medan bandet går i vanlig fart.
-    Med <i>PLAY nere</i> (ikryssad från början) stannar bandet inte när
-    ROM:en slår av motorn, som på en bandspelare utan fjärrstyrning, och
-    att kryssa i den startar bandet.</p>
+    ▶ är PLAY: den trycks ned när ett band läggs i, och ett tryck till
+    släpper upp den, så att bandet stannar. Är bandspelaren
+    <i>fjärrstyrd</i> (från början) startar och stoppar ABC80 bandet med
+    motorreläet, så det stannar efter programmet; utan fjärrstyrning går
+    det så länge PLAY är nere.</p>
 <!-- PROGRAM -->
     <p><i>Exempeldisketten</i> lägger i en diskett med fyra program: skriv
     <code>RUN DR0:GISSA</code> (gissa talet), <code>RUN DR0:KURVA</code>
@@ -234,7 +253,7 @@
 <!-- /KRETS -->
 <!-- GENESIS -->
     <p><i>Genesis-demot</i> laddar demot från bandet (snabbt) och spelar
-    musiken, som ligger efter programmet på bandet, med <i>PLAY nere</i>;
+    musiken, som ligger efter programmet på bandet, utan fjärrstyrning;
     <i>… från disketten</i> startar det med ABC-DOS, utan musik.</p>
 <!-- /GENESIS -->
     <p>Länkar kan ge tangenter att skriva efter starten:
