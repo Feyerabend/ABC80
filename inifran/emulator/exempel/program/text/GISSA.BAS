@@ -1,0 +1,15 @@
+10 REM GISSA TALET, ETT EXEMPEL TILL ABC80 INIFRÅN
+20 RANDOMIZE
+30 T=INT(RND*100)+1 : N=0
+40 PRINT CHR$(12);"Jag tänker på ett tal mellan 1 och 100."
+50 PRINT
+60 PRINT "Din gissning"; : INPUT G
+70 N=N+1
+80 IF G=T THEN 110
+90 IF G<T THEN PRINT "För litet." ELSE PRINT "För stort."
+100 GOTO 60
+110 PRINT CHR$(7);"Rätt på";N;"försök!"
+120 PRINT
+130 PRINT "En gång till (J/N)"; : INPUT S$
+140 IF LEFT$(S$,1)="J" OR LEFT$(S$,1)="j" THEN 30
+150 END

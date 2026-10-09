@@ -1,0 +1,216 @@
+<!doctype html>
+<!--
+  mall.html -- mallen till emulatorns sida, till boken ABC80 inifrån
+
+  Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
+  till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
+  exempeldisketten och Genesis-demot (band och diskett), om de finns, in
+  som base64, och abc80.js efter. Då är abc80.html en enda fil som går
+  att öppna direkt i webbläsaren, utan server och utan att något installeras.
+
+  Mellan MALL och /MALL står det som bara syns i mallen; bygg.sh tar
+  bort det. Mellan PROGRAM och /PROGRAM står exempeldiskettens knapp och
+  text, som tas bort när exempel/program/diskett/program.dsk inte finns,
+  och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
+  inte finns.
+-->
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC80</title>
+<style>
+  :root {
+    --bakgrund: #1b1b1a;
+    --yta: #262624;
+    --text: #e8e6df;
+    --dampad: #9c9a92;
+    --kant: #3a3a37;
+    --accent: #d9a441;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bakgrund);
+    color: var(--text);
+    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  /* Skärmen till vänster, så stor som fönstrets höjd tillåter, och
+     knapparna i en kolumn till höger; på en smal skärm under varandra. */
+  main { display: flex; gap: 16px; align-items: flex-start; padding: 12px 16px; }
+  #vanster {
+    flex: 0 1 auto;
+    /* Ramen är 3,5 % av bredden på var sida: höjden blir
+       0,93 * 3/4 + 0,07 = 0,7675 av bredden. */
+    width: min(calc(100vw - 32px - 16px - 300px), calc((100vh - 24px) / 0.7675));
+    position: sticky; top: 12px;
+  }
+  #hoger { flex: 0 0 300px; display: flex; flex-direction: column; gap: 8px; }
+  @media (max-width: 760px) {
+    main { flex-direction: column; }
+    #vanster { width: 100%; position: static; }
+    #hoger { flex: none; width: 100%; }
+  }
+  h1 { font-size: 17px; font-weight: 600; margin: 0 0 2px; letter-spacing: .02em; line-height: 1.3; }
+  h1 span { display: block; color: var(--dampad); font-weight: 400; font-size: 13px; }
+  /* En svart ram runt bilden, som kanten på TV:n, så att tecknen
+     längst ut inte hamnar i fönstrets kant. */
+  #ram {
+    background: #000;
+    padding: 3.5%;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px var(--kant);
+    cursor: text;
+  }
+  #ram:focus-within { box-shadow: 0 0 0 2px var(--accent); }
+  #skarm {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #000;
+    image-rendering: pixelated;
+    outline: none;
+  }
+  .grupp {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    background: var(--yta); border: 1px solid var(--kant);
+    border-radius: 8px; padding: 6px 8px 8px;
+  }
+  .grupp b { flex-basis: 100%; font-weight: 500; color: var(--dampad); font-size: 13px; }
+  .grupp b .ikon { font-size: 16px; margin-right: 4px; }
+  button, select {
+    font: inherit; font-size: 14px;
+    color: var(--text); background: #33332f;
+    border: 1px solid var(--kant); border-radius: 6px;
+    padding: 4px 10px; cursor: pointer;
+  }
+  button:hover, select:hover { border-color: var(--dampad); }
+  button.pa { background: var(--accent); color: #1b1b1a; border-color: var(--accent); }
+  label { font-size: 14px; display: flex; gap: 4px; align-items: center; cursor: pointer; }
+  #bandstatus { font-variant-numeric: tabular-nums; color: var(--dampad); font-size: 13px; min-width: 9em; }
+  #meddelande { margin: 0; color: var(--dampad); font-size: 13px; min-height: 1.4em; }
+  #katalog {
+    margin: 0; padding: 8px 10px; font: 13px/1.4 ui-monospace, Menlo, monospace;
+    background: var(--yta); border: 1px solid var(--kant); border-radius: 8px;
+    overflow-x: auto;
+  }
+  details { margin-top: 4px; color: var(--dampad); font-size: 14px; }
+  summary { cursor: pointer; color: var(--text); }
+  kbd {
+    font: 12px ui-monospace, Menlo, monospace;
+    border: 1px solid var(--kant); border-radius: 4px; padding: 0 4px;
+  }
+  body.slapp #ram { box-shadow: 0 0 0 3px var(--accent); }
+  input[type=file] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <div id="vanster">
+    <div id="ram"><canvas id="skarm" width="320" height="240" tabindex="0"></canvas></div>
+  </div>
+
+  <div id="hoger">
+    <h1>ABC80 <span>emulatorn till boken ABC80 inifrån</span></h1>
+<!-- MALL -->
+    <p style="background:#5a2a1a;padding:10px 12px;border-radius:8px;margin:0">Det här
+    är mallen till sidan, utan emulatorn i. Öppna <b>abc80.html</b> bredvid i
+    stället; den byggs med <code>make webb</code>.</p>
+<!-- /MALL -->
+    <div class="grupp">
+      <b>Maskinen</b>
+      <select id="rom" title="ROM:en">
+        <option value="ny">Nya ROM:en</option>
+        <option value="gammal">Gamla ROM:en</option>
+      </select>
+      <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar">RESET</button>
+      <button id="nystart" title="Töm minnet och starta om">Starta om</button>
+      <button id="ljud" title="Ljudet från SN76477 (OUT 6) och bandet">Ljud: på</button>
+      <button id="program" title="En textfil med ett BASIC-program skrivs in som tangenter">Skriv in…</button>
+    </div>
+    <div class="grupp">
+      <b><span class="ikon">💾</span>Disketten</b>
+      <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB)">Lägg i diskett…</button>
+<!-- PROGRAM -->
+      <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS">Exempeldisketten</button>
+<!-- /PROGRAM -->
+      <button id="katalog_knapp" title="Filerna på disketten i FD2">Katalogen</button>
+      <button id="spara_skiva" title="Ladda ner disketten med det som har sparats på den (SAVE DR0:)">Spara disketten</button>
+    </div>
+    <div class="grupp">
+      <b><span class="ikon">📼</span>Kassetten</b>
+      <button id="band" title="En WAV-fil att spela upp (LOAD, RUN CAS:)">Lägg i band…</button>
+      <button id="spelain" title="Ett tomt band med inspelningsknappen nere (SAVE CAS:)">Spela in</button>
+      <button id="spara" title="Ladda ner det som har spelats in som WAV">Spara inspelning</button>
+      <label title="Kör tio gånger fortare medan motorn går"><input type="checkbox" id="snabbt" checked> snabbt</label>
+      <label title="Bandspelaren utan fjärrstyrning: bandet går vidare när ROM:en slår av motorn"><input type="checkbox" id="play" checked> PLAY nere</label>
+      <span id="bandstatus">inget band</span>
+    </div>
+<!-- GENESIS -->
+    <div class="grupp">
+      <b>Demot</b>
+      <button id="genesis" title="Genesis Projects demo från 2015, från bandet, med musiken">Genesis-demot</button>
+      <button id="genesis_skiva" title="Samma demo från disketten med ABC-DOS: snabbt, men utan musik">… från disketten</button>
+    </div>
+<!-- /GENESIS -->
+    <p id="meddelande"></p>
+    <pre id="katalog" hidden></pre>
+
+  <details>
+    <summary>Hur den används</summary>
+    <p>Klicka på skärmen och skriv. <kbd>Enter</kbd> är RETURN, <kbd>←</kbd> och
+    <kbd>Backsteg</kbd> backar, <kbd>→</kbd> går framåt, <kbd>Ctrl</kbd>+<kbd>C</kbd>
+    är BREAK. Å, Ä, Ö, É och Ü skrivs som vanligt. Text som klistras in
+    skrivs som tangenter, en rad i taget.</p>
+    <p>Filer går också att dra till sidan: en <code>.wav</code> blir ett band i
+    kassetten, en <code>.dsk</code> en diskett och annat ett program som skrivs in.
+    Disketten sitter i FD2 (kort 45) med ABC-DOS. Man stannar i BASIC:
+    DOS:en lägger bara till enheterna <code>DR0:</code>–<code>DR6:</code>,
+    så det är <code>LOAD DR0:A.B</code> eller <code>RUN DR0:A.B</code>.
+    <code>BYE</code> kör CMDINT.SYS från disketten, om den finns där.
+    BASIC:en kan inte lista katalogen (det gjorde programmet LIB på
+    systemskivan), så <i>Katalogen</i> visar filerna och hur många sektorer
+    de tar. Det som sparas med <code>SAVE DR0:NAMN</code> hamnar bara i
+    sidans minne; <i>Spara disketten</i> laddar ner den som en
+    <code>.dsk</code>, som går att lägga i igen.</p>
+    <p>Kassetten: lägg i ett band och skriv <code>LOAD CAS:</code> eller
+    <code>RUN CAS:</code>. Skriv inget medan blocken läses, det ger ERR 35. För
+    att spela in: tryck <i>Spela in</i>, skriv <code>SAVE CAS:NAMN</code> och
+    tryck sedan <i>Spara inspelning</i>.</p>
+    <p>Bandets eget ljud hörs med ljudet på, medan bandet går i vanlig fart.
+    Med <i>PLAY nere</i> (ikryssad från början) stannar bandet inte när
+    ROM:en slår av motorn, som på en bandspelare utan fjärrstyrning, och
+    att kryssa i den startar bandet.</p>
+<!-- PROGRAM -->
+    <p><i>Exempeldisketten</i> lägger i en diskett med fyra program: skriv
+    <code>RUN DR0:GISSA</code> (gissa talet), <code>RUN DR0:KURVA</code>
+    (kurvor med <code>SETDOT</code>), <code>RUN DR0:MUSIK</code> (en orgel
+    från 1981 på tangenterna Z, X, C … med S, D, G … som de svarta, med
+    Caps Lock eftersom programmet väntar sig versaler) eller <code>RUN DR0:AIRFIGHT</code>
+    (spelet från 1981 i Z80-kod, för två: A, D och X mot J, L och M;
+    laddaren tar en halv minut). Samma fyra program finns också som band,
+    ett per program, i <code>exempel/program/kassett/</code> (<i>Lägg i
+    band…</i> och <code>RUN CAS:</code>), och som text i
+    <code>exempel/program/text/</code> (<i>Skriv in…</i> och
+    <code>RUN</code>).</p>
+<!-- /PROGRAM -->
+<!-- GENESIS -->
+    <p><i>Genesis-demot</i> laddar demot från bandet (snabbt) och spelar
+    musiken, som ligger efter programmet på bandet, med <i>PLAY nere</i>;
+    <i>… från disketten</i> startar det med ABC-DOS, utan musik.</p>
+<!-- /GENESIS -->
+    <p>Länkar kan ge tangenter att skriva efter starten:
+    <code>abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r</code>, med
+    <code>\r</code> för RETURN och <code>\w500</code> för en paus i ms.
+    <code>?rom=gammal</code> väljer den gamla ROM:en och <code>?ljud=av</code>
+    startar utan ljud.</p>
+    <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
+    klickat på sidan eller skrivit något.</p>
+  </details>
+
+    <input type="file" id="filval">
+  </div>
+</main>
+<!-- FILER -->
+</body>
+</html>
