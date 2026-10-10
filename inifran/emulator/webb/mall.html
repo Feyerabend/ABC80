@@ -330,7 +330,10 @@
     Maskinen startas om med kretsen i, och raden under skärmen säger hur
     programmet kopplas in, oftast <code>Z=CALL(16384)</code>. Exempel 6
     läser det som kommer på V24; en länk med <code>?s=</code> sänder en
-    text dit.</p>
+    text dit. Medan det är inkopplat ger tangenterna inget avbrott, som i
+    texttelefonen, så det körs i ett program som kopplar ur själv med
+    <code>Z=CALL(16387)</code>; i direktläge står maskinen still tills
+    <i>RESET</i>.</p>
 <!-- /EXEMPEL -->
     <p><i>Skrivaren P40</i> är nålskrivaren från band 2, kapitlet
     Skrivarna, på kort 60, med drivrutinen på <code>$7800</code>. Den kopplas
