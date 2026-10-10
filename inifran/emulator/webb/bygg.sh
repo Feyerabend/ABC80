@@ -3,7 +3,7 @@
 # inifrån
 #
 # Mallen (mall.html) får WebAssembly-koden (abc80.wasm, make webb), de
-# två ROM:arna och ABC-DOS som base64, och abc80.js efter, där raden med
+# två ROM:arna, ABC-DOS och drivrutinen till P40 som base64, och abc80.js efter, där raden med
 # FILER står. Finns exempel/program/diskett/program.dsk kommer
 # exempeldisketten med; annars tas dess knapp och text bort (mellan PROGRAM
 # och /PROGRAM i mallen). Finns exempel/krets/forth.bin och
@@ -61,6 +61,7 @@ printf '  wasm: "%s",\n' "$(base64_av webb/abc80.wasm)"
 printf '  rom_ny: "%s",\n' "$(base64_av roms/abc80new.rom)"
 printf '  rom_gammal: "%s",\n' "$(base64_av roms/abc80old.rom)"
 printf '  dos: "%s",\n' "$(base64_av roms/abcdos80.rom)"
+printf '  p40: "%s",\n' "$(base64_av roms/p40.rom)"
 if [ -f "$PROGRAM" ]; then
     printf '  program: "%s",\n' "$(base64_av "$PROGRAM")"
 fi

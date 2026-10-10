@@ -18,6 +18,18 @@ void bussen_koppla(Bussen *b, Kort *kort)
         b->kort[b->antal++] = kort;
 }
 
+/* Ta ur kortet; de andra behåller sin ordning. */
+void bussen_koppla_ur(Bussen *b, Kort *kort)
+{
+    for (int k = 0; k < b->antal; k++)
+        if (b->kort[k] == kort) {
+            for (int j = k + 1; j < b->antal; j++)
+                b->kort[j - 1] = b->kort[j];
+            b->antal--;
+            return;
+        }
+}
+
 /* Det valda kortet, eller NULL. */
 static Kort *valt_kort(const Bussen *b)
 {
@@ -30,12 +42,14 @@ static Kort *valt_kort(const Bussen *b)
 uint8_t bussen_in(Bussen *b, int port)
 {
     Kort *kort = valt_kort(b);
-    return kort ? kort->in(kort->data, port) : 0xFF;
+    if (!kort)
+        return 0xFF;
+    return kort->in(kort->data, kort->hela_porten ? port : port & 7);
 }
 
 void bussen_ut(Bussen *b, int port, uint8_t varde)
 {
-    if (port == 1) {
+    if ((port & 7) == 1) {
         b->valt = varde & 0x3F;
         for (int k = 0; k < b->antal; k++)
             if (b->kort[k]->valj)
@@ -44,5 +58,5 @@ void bussen_ut(Bussen *b, int port, uint8_t varde)
     }
     Kort *kort = valt_kort(b);
     if (kort)
-        kort->ut(kort->data, port, varde);
+        kort->ut(kort->data, kort->hela_porten ? port : port & 7, varde);
 }

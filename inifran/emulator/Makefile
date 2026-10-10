@@ -10,9 +10,10 @@ CC     ?= cc
 CFLAGS ?= -std=c11 -O2 -Wall -Wextra
 
 KARNA = karna/z80.c karna/maskin.c karna/tecken.c karna/bussen.c \
-        karna/skivkort.c karna/skrivarkort.c karna/ieckort.c karna/ljud.c karna/kassett.c
+        karna/skivkort.c karna/skrivarkort.c karna/ieckort.c karna/ljud.c karna/kassett.c \
+        karna/p40.c
 VARD  = vard/abc80.c vard/terminal.c vard/batch.c vard/anrop.c vard/tstenhet.c \
-        vard/kassettfil.c vard/wav.c
+        vard/kassettfil.c vard/wav.c vard/png.c
 
 # WebAssembly utan C-bibliotek: clang och lld (wasm-ld) räcker, t.ex.
 # Apple clang och Homebrews lld. Bara kärnan, utan skrivarkortet och
@@ -20,7 +21,7 @@ VARD  = vard/abc80.c vard/terminal.c vard/batch.c vard/anrop.c vard/tstenhet.c \
 CLANG   ?= clang
 WASM_LD ?= $(firstword $(wildcard /opt/homebrew/opt/lld/bin/wasm-ld /usr/local/opt/lld/bin/wasm-ld) wasm-ld)
 WEBB_C   = karna/z80.c karna/maskin.c karna/bussen.c karna/skivkort.c karna/ljud.c \
-           karna/kassett.c karna/bild.c vard/wav.c webb/webb.c webb/libc.c
+           karna/p40.c karna/kassett.c karna/bild.c vard/wav.c webb/webb.c webb/libc.c
 WEBB_FLAGGOR = --target=wasm32 -std=c11 -O2 -Wall -Wextra -ffreestanding -nostdlib \
            -isystem webb/libc -fuse-ld=$(WASM_LD) -Wl,--no-entry -Wl,--strip-all \
            -Wl,-z,stack-size=1048576
@@ -36,7 +37,7 @@ webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 # Exempeldisketten, Forth-kretsarna, MÅLARE-bandet och Genesis-demot kommer
 # med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
-                 roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom \
+                 roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \
                             exempel/krets/forth_cmos.bin \

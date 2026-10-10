@@ -11,15 +11,17 @@
  * (ljudprov(), 16 bitar, med den provtakt som starta() fick).
  *
  * Det mesta motsvarar flaggorna i vard/abc80.c: krets() är -l,
- * skiva() -D, band() -T och spela_in() -U.
+ * skiva() -D, band() -T, spela_in() -U och p40() -CP.
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../karna/bild.h"
 #include "../karna/kassett.h"
 #include "../karna/ljud.h"
 #include "../karna/maskin.h"
+#include "../karna/p40.h"
 #include "../karna/skivkort.h"
 #include "../vard/wav.h"
 
@@ -34,6 +36,8 @@ static Ljud ljud;
 static Kassett kassett;
 static Skivkort skivkort;
 static int skivkortet_kopplat;
+static P40 skrivaren;
+static int skrivaren_kopplad;
 
 static uint32_t bilden[BILD_BREDD * BILD_HOJD];
 static int16_t proven[2048];                 /* en bild: 960 vid 48 kHz */
@@ -70,6 +74,7 @@ EXPORT(starta) int starta(int ram_kb, const uint8_t *rom, long storlek, long pro
     maskin.kassett = &kassett;
     skivkort_starta(&skivkort);
     skivkortet_kopplat = 0;
+    skrivaren_kopplad = 0;
     return 1;
 }
 
@@ -242,3 +247,32 @@ EXPORT(bildminne) const uint8_t *bildminne(void)
 {
     return maskin.minne + MASKIN_BILDMINNE;
 }
+
+/* ---------------------------------------------------------------- */
+/* Skrivaren P40                                                     */
+
+/* Skrivaren på kort 60 (-CP) in eller ur medan maskinen går; drivrutinen
+ * ($7800) läggs i med krets() först. BASIC letar upp drivrutinen när
+ * PR: öppnas, så maskinen behöver inte startas om. Ur tas också
+ * drivrutinen bort: platsen blir tom ($FF), som efter starta().
+ * Papperet börjar tomt när skrivaren kopplas in. */
+EXPORT(p40) void p40(int in)
+{
+    if (in && !skrivaren_kopplad) {
+        p40_starta(&skrivaren, &maskin.tid);
+        bussen_koppla(&maskin.bussen, &skrivaren.kort);
+    } else if (!in && skrivaren_kopplad) {
+        bussen_koppla_ur(&maskin.bussen, &skrivaren.kort);
+        memset(maskin.minne + 0x7800, 0xFF, 0x400);
+    }
+    skrivaren_kopplad = in;
+}
+
+/* Anslagen hittills: p40_anslag() pekar på p40_antal() stycken, 12 bytes
+ * vart (x i fjärdedels kolumner, pappersraden, nålarna; se p40.h). */
+EXPORT(p40_antal) int p40_antal(void) { return skrivaren.antal; }
+EXPORT(p40_anslag) const P40Anslag *p40_anslag(void) { return skrivaren.anslag; }
+EXPORT(p40_fullt) int p40_fullt(void) { return skrivaren.antal >= P40_ANSLAG; }
+
+/* Riv av papperet: anslagen glöms, men vagnen står kvar. */
+EXPORT(p40_riv) void p40_riv(void) { skrivaren.antal = 0; }

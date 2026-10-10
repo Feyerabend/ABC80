@@ -40,7 +40,7 @@ void skrivarkort_starta(Skrivarkort *s, uint8_t status, uint8_t status_upptagen,
                         int antal_upptagen)
 {
     memset(s, 0, sizeof *s);
-    s->kort = (Kort){ s, kort_svarar, NULL, kort_in, kort_ut };
+    s->kort = (Kort){ s, kort_svarar, NULL, kort_in, kort_ut, 0 };
     s->status = status;
     s->status_upptagen = status_upptagen;
     s->antal_upptagen = antal_upptagen;

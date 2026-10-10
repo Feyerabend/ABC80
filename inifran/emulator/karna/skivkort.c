@@ -274,7 +274,7 @@ static void ut(void *data, int port, uint8_t varde)
 void skivkort_starta(Skivkort *s)
 {
     memset(s, 0, sizeof *s);
-    s->kort = (Kort){ s, svarar, valj, in, ut };
+    s->kort = (Kort){ s, svarar, valj, in, ut, 0 };
     s->valt = -1;
     s->aktuell = -1;
     s->fd2_lage = 3;
