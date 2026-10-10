@@ -95,13 +95,17 @@ snabbt medan motorn går; PLAY, spolning åt båda hållen och ett
 räkneverk; bandets eget ljud hörs, och utan fjärrstyrning går bandet
 vidare när motorn slås av, så att Genesis-demots musik kommer från
 bandet), disketten i FD2 med ABC-DOS, Forth-kretsarna (en lista, eller
-`?krets=forth` och `?krets=cmos`), CMOS-minnet, skrivaren P40 (papperet
+`?krets=forth` och `?krets=cmos`), bokens exempel 1–6 i den tänkta
+kretsen (i samma lista, eller `?krets=e1` till `?krets=e6`), CMOS-minnet, skrivaren P40 (papperet
 växer på sidan och sparas som PNG, `?p40=pa`), exempeldisketten, MÅLARE och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:
 
     abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r
+
+och `?s=` en text till V24, med samma syntax som `-s`, när tangenterna
+är skrivna.
 
 `make webb` bygger om den med clang och wasm-ld (lld), utan Emscripten
 och utan C-bibliotek: kärnan, `vard/wav.c` och `webb/webb.c` med

@@ -10,8 +10,8 @@
  * skärmen som punkter (punkter(), 320 x 240, RGBA) och ljudet som prov
  * (ljudprov(), 16 bitar, med den provtakt som starta() fick).
  *
- * Det mesta motsvarar flaggorna i vard/abc80.c: krets() är -l,
- * skiva() -D, band() -T, spela_in() -U och p40() -CP.
+ * Det mesta motsvarar flaggorna i vard/abc80.c: krets() är -l, bank()
+ * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP och v24() -s.
  */
 
 #include <stdlib.h>
@@ -84,6 +84,13 @@ EXPORT(krets) void krets(int adress, const uint8_t *data, long storlek)
     maskin_krets(&maskin, (uint16_t)adress, data, (size_t)storlek);
 }
 
+/* En bank i en krets med banker (-b fil,fil@adr), en gång per bank i
+ * ordning; en skrivning till adressen + $40 + n väljer bank n. */
+EXPORT(bank) void bank(int adress, const uint8_t *data, long storlek)
+{
+    maskin_bank(&maskin, (uint16_t)adress, data, (size_t)storlek);
+}
+
 /* CMOS-minnet (storlek bytes på adressen, som -M): RAM med data i.
  * Ger platsen i minnet, där sidan läser det för att spara det. */
 EXPORT(cmos) uint8_t *cmos(int adress, const uint8_t *data, long storlek)
@@ -137,6 +144,14 @@ EXPORT(ljudprov) int16_t *ljudprov(void) { return proven; }
 EXPORT(tangent) void tangent(int kod) { tangentko_lagg(&maskin, (uint8_t)kod); }
 EXPORT(paus) void paus(long ms) { tangentko_paus(&maskin, ms); }
 EXPORT(tangenter_klara) int tangenter_klara(void) { return tangentko_tom(&maskin); }
+
+/* ---------------------------------------------------------------- */
+/* V24                                                               */
+
+/* Ett tecken till V24 (-s), i 1 200 baud. v24_om() börjar sända om ms
+ * millisekunder; batchläget börjar 100 ms efter tangenterna. */
+EXPORT(v24) void v24(int kod) { v24_lagg(&maskin, (uint8_t)kod); }
+EXPORT(v24_om) void v24_om(long ms) { v24_starta(&maskin, maskin.tid + MASKIN_MS(ms)); }
 
 /* ---------------------------------------------------------------- */
 /* Kassetten                                                         */

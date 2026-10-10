@@ -61,3 +61,25 @@ för e5. Utan terminal skriver emulatorn skärmen efteråt:
 
 Hur emulatorn tar emot V24 för e6 (`-s`) står i dess manual,
 [`../verktyg/abc80.md`](../verktyg/abc80.md).
+
+## I webbläsaren
+
+Emulatorn finns också som en webbsida,
+[`../emulator/webb/abc80.html`](../emulator/webb/abc80.html), en enda fil
+som går att öppna direkt. Länkarna nedan öppnar den på GitHub Pages med
+kretsen på sin plats och skriver kommandona åt en:
+
+| Länk | Vad som händer |
+|---|---|
+| [Exempel 1](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=e1&k=Z%3DCALL%2816384%29%5Cr) | räknaren står i skärmens övre högra hörn; skriv något och se den räkna; `Z=CALL(16387)` kopplar ur |
+| [Exempel 2](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=e2&k=Z%3DCALL%2816384%29%5Cr%5Cw50print%20%22hej%22%5Cr) | `print "hej"` blir versaler i direktläge; i `INPUT` får gemenerna vara kvar |
+| [Exempel 3](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=e3&k=Z%3DCALL%2816384%29%5Cr%5Cw50%2010%20PRINT%20%22HEJ%22%5Cr20%20GOTO%2010%5Cr%5Cx0c) | ett program skrivs in, och CTRL-L listar det |
+| [Exempel 4](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=e4&k=Z%3DCALL%2816384%29%5Cr) | 0, 1 och 0 överst till höger: bank 0, ett anrop till bank 1 och tillbaka i bank 0 |
+| [Exempel 5](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=e5&k=10%20FOR%20I%3D1%20TO%203%5Cr20%20CMD%20%22VARV%20%22%2BNUM%24%28I%29%5Cr30%20NEXT%20I%5Cr40%20CMD%20%22SLUT%22%5CrRUN%5Cr) | `CMD` skriver på en statusrad överst medan programmet går |
+| [Exempel 6](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=e6&k=10%20Z%3DCALL%2816384%29%5Cr20%20A%3DCALL%2816390%29%5Cr30%20IF%20A%3C0%20THEN%2020%5Cr40%20IF%20A%3D4%20THEN%2070%5Cr50%20PRINT%20CHR%24%28A%29%3B%5Cr60%20GOTO%2020%5Cr70%20Z%3DCALL%2816387%29%5Cr80%20PRINT%5Cr90%20PRINT%20%22KLART%22%5CrRUN%5Cr&s=HEJ%21%20DETTA%20KOM%20P%C3%85%20V24%20I%201200%20BAUD.%5Cx04) | programmet tar emot en text på V24 (länken sänder den med `?s=`) och skriver ut den |
+
+Kretsen väljs med `?krets=e1` till `?krets=e6`, eller i listan
+bredvid *Starta om*. `?k=` ger tangenterna med samma skrivsätt som
+`-k` (`\r` för RETURN, `\w50` för en paus i ms, `\x0c` för
+CTRL-L) och `?s=` en text till V24 som `-s`. Med `&rom=gammal` sist
+i länken körs exemplet med den gamla ROM:en.
