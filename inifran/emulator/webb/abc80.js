@@ -182,6 +182,8 @@ function starta(diskett = skivan_nu()) {
         cmos_pekare = e.cmos(CMOS_ADRESS, p, CMOS_STORLEK);
         e.slapp(p);
     }
+    papper_tomt();
+    p40_koppla();
     e.aterstall();
     nasta = null;
 }
@@ -339,6 +341,120 @@ function klockan() {
     return ljudet_gar() ? ljud.currentTime : performance.now() / 1000;
 }
 
+/* ---------------------------------------------------------------- */
+/* Skrivaren P40                                                     */
+
+/* Papperet ritas som -CP i terminalen (karna/p40.c): en kolumn är 4
+ * punkter bred, en nålrad 4 hög och raderna 40 isär, med en kant om 8.
+ * Anslagen läses ur WebAssemblys minne, 12 bytes vart: x i fjärdedels
+ * kolumner, pappersraden och nålarna (bit 0 översta). */
+const P40_BANAN = 262, P40_KANT = 8, P40_NALRAD = 4, P40_RADHOJD = 40, P40_ANSLAG = 12;
+const pappret = $('pappret');
+const papperet_ritas = pappret.getContext('2d');
+let papper_ritat = 0;                        /* anslag som är ritade */
+let papper_forsta = 0;                       /* pappersraden överst */
+let papper_rader = 0;                        /* rader som får plats */
+let papper_senast = 0;                       /* när det senast kom anslag (ms) */
+const PAPPER_PAUS = 1500;                    /* så länge tyst: en ny utskrift */
+
+/* Lappen: popover där webbläsaren har det, annars klassen oppen. */
+const papperet = $('papper');
+const med_popover = typeof papperet.showPopover === 'function';
+
+function papper_oppet() {
+    return med_popover ? papperet.matches(':popover-open') : papperet.classList.contains('oppen');
+}
+
+function papper_visa(visa) {
+    if (visa === papper_oppet())
+        return;
+    if (med_popover)
+        visa ? papperet.showPopover() : papperet.hidePopover();
+    else
+        papperet.classList.toggle('oppen', visa);
+    if (visa)
+        $('p40_visa').classList.remove('nytt');
+}
+
+/* Skrivaren och drivrutinen in eller ur, som rutan säger. */
+function p40_koppla() {
+    if ($('p40').checked) {
+        const p = lagg_i_minnet(ROM.p40);
+        e.krets(0x7800, p, ROM.p40.length);
+        e.slapp(p);
+    }
+    e.p40($('p40').checked ? 1 : 0);
+}
+
+function papper_tomt() {
+    papper_ritat = 0;
+    papper_rader = 0;
+    papper_senast = 0;
+    papper_visa(false);
+    $('p40_visa').disabled = true;
+    $('p40_visa').classList.remove('nytt');
+    $('papper_rubrik').textContent = 'Papperet';
+}
+
+function papper_anslag(fran, till) {
+    return new DataView(e.memory.buffer, e.p40_anslag() + fran * P40_ANSLAG,
+                        (till - fran) * P40_ANSLAG);
+}
+
+/* Rita de anslag som har kommit sedan sist. Behövs fler rader görs
+ * bilden om och allt ritas igen. */
+function papper_rita() {
+    if (!$('p40').checked)
+        return;
+    const antal = e.p40_antal();
+    if (antal === papper_ritat)
+        return;
+    if (antal < papper_ritat)
+        papper_tomt();
+    if (antal === 0)
+        return;
+    const ny_utskrift = performance.now() - papper_senast > PAPPER_PAUS;
+    papper_senast = performance.now();
+    let d = papper_anslag(papper_ritat, antal);
+    if (papper_ritat === 0)
+        papper_forsta = d.getInt32(4, true);
+    const sista = d.getInt32((antal - papper_ritat - 1) * P40_ANSLAG + 4, true);
+    if (sista - papper_forsta + 1 > papper_rader) {
+        papper_rader = sista - papper_forsta + 1;
+        pappret.width = P40_BANAN * 4 + 2 * P40_KANT;
+        pappret.height = papper_rader * P40_RADHOJD + 2 * P40_KANT;
+        papperet_ritas.fillStyle = '#fbfaf5';
+        papperet_ritas.fillRect(0, 0, pappret.width, pappret.height);
+        papper_ritat = 0;
+        d = papper_anslag(0, antal);
+    }
+    papperet_ritas.fillStyle = '#202020';
+    for (let k = 0; k < antal - papper_ritat; k++) {
+        const x = d.getInt32(k * P40_ANSLAG, true);
+        const rad = d.getInt32(k * P40_ANSLAG + 4, true) - papper_forsta;
+        const nalar = d.getUint8(k * P40_ANSLAG + 8);
+        for (let n = 0; n < 7; n++)
+            if (nalar >> n & 1)
+                papperet_ritas.fillRect(P40_KANT + x,
+                                        P40_KANT + rad * P40_RADHOJD + n * P40_NALRAD, 3, 3);
+    }
+    papper_ritat = antal;
+    $('p40_visa').disabled = false;
+    $('papper_rubrik').textContent = 'Papperet, ' + papper_rader +
+        (papper_rader === 1 ? ' rad' : ' rader');
+    /* En ny utskrift tar fram lappen; stängs den under utskriften
+     * lyser bara knappen. */
+    if (ny_utskrift)
+        papper_visa(true);
+    else if (!papper_oppet())
+        $('p40_visa').classList.add('nytt');
+    const ruta = $('papper_rulle');
+    if (ny_utskrift || ruta.scrollTop + ruta.clientHeight >= ruta.scrollHeight - 80)
+        ruta.scrollTop = ruta.scrollHeight;
+    if (e.p40_fullt())
+        meddela('Papperet är fullt: riv av det.');
+}
+
 let anvande_ljud = false;
 
 const bilden = ritning.createImageData(320, 240);
@@ -350,6 +466,7 @@ function rita() {
 
 function varv() {
     spola_vidare();
+    papper_rita();
     if (play_vid_relaet && e.motor()) {
         play_vid_relaet = false;
         knappar(true);
@@ -775,6 +892,127 @@ $('cmos_spara').addEventListener('click', () => {
     meddela('cmos.bin laddas ner (som -M cmos.bin i terminalen).');
     skarm.focus();
 });
+/* Skrivaren kopplas in och ur medan maskinen går: programmet ligger
+ * kvar, och BASIC hittar drivrutinen när PR: öppnas. */
+$('p40').addEventListener('change', () => {
+    p40_koppla();
+    meddela($('p40').checked
+        ? 'P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.'
+        : 'Skrivaren är urkopplad; papperet ligger kvar.');
+    skarm.focus();
+});
+$('p40_riv').addEventListener('click', () => {
+    if ($('p40').checked)
+        e.p40_riv();
+    papper_tomt();
+    meddela('Papperet är avrivet.');
+    skarm.focus();
+});
+if (!med_popover)                            /* annars popovertarget */
+    $('p40_visa').addEventListener('click', () => papper_visa(!papper_oppet()));
+$('p40_stang').addEventListener('click', () => {
+    papper_visa(false);
+    skarm.focus();
+});
+/* Kom igång visas av sig själv första gången (sparas i webbläsaren). */
+const HJALP_NYCKEL = 'abc80_kom_igang';
+function kom_igang() {
+    const hjalp = $('hjalp');
+    if (typeof hjalp.showPopover !== 'function')
+        return;
+    try {
+        if (localStorage.getItem(HJALP_NYCKEL))
+            return;
+        localStorage.setItem(HJALP_NYCKEL, '1');
+    } catch (fel) { return; }
+    hjalp.showPopover();
+}
+if (typeof $('hjalp').showPopover !== 'function')
+    $('hjalp_visa').hidden = true;           /* utan popover: bara texten nedan */
+$('hjalp').addEventListener('toggle', h => {
+    if (h.newState === 'closed')
+        skarm.focus();
+});
+
+/* Papperet flyttas genom att man drar i listen (inte i knapparna). Var
+ * det står sparas i webbläsaren; det hålls inne på sidan. */
+const PAPPER_NYCKEL = 'abc80_papper';
+let papper_drag = null;                      /* {dx, dy} medan det dras */
+
+function papper_flytta(x, y) {
+    const r = papperet.getBoundingClientRect();
+    x = Math.max(0, Math.min(x, innerWidth - r.width));
+    y = Math.max(0, Math.min(y, innerHeight - 40));
+    papperet.style.left = x + 'px';
+    papperet.style.top = y + 'px';
+    papperet.style.right = 'auto';
+    return [x, y];
+}
+
+function papper_lage() {
+    try {
+        const l = JSON.parse(localStorage.getItem(PAPPER_NYCKEL));
+        if (l && isFinite(l.x) && isFinite(l.y))
+            papper_flytta(l.x, l.y);
+    } catch (fel) { /* utan localStorage: uppe till höger */ }
+}
+
+const listen = papperet.querySelector('header');
+listen.addEventListener('pointerdown', h => {
+    if (h.target.closest('button') || h.button !== 0)
+        return;
+    const r = papperet.getBoundingClientRect();
+    papper_drag = { dx: h.clientX - r.left, dy: h.clientY - r.top };
+    listen.setPointerCapture(h.pointerId);
+    h.preventDefault();
+});
+listen.addEventListener('pointermove', h => {
+    if (papper_drag)
+        papper_flytta(h.clientX - papper_drag.dx, h.clientY - papper_drag.dy);
+});
+function papper_slapp() {
+    if (!papper_drag)
+        return;
+    papper_drag = null;
+    const r = papperet.getBoundingClientRect();
+    try {
+        localStorage.setItem(PAPPER_NYCKEL, JSON.stringify({ x: r.left, y: r.top }));
+    } catch (fel) { /* sparas inte */ }
+}
+listen.addEventListener('pointerup', papper_slapp);
+listen.addEventListener('pointercancel', papper_slapp);
+addEventListener('resize', () => {
+    if (papperet.style.left)
+        papper_flytta(parseFloat(papperet.style.left), parseFloat(papperet.style.top));
+});
+
+papperet.addEventListener('toggle', () => {
+    if (papper_oppet()) {
+        papper_lage();
+        $('p40_visa').classList.remove('nytt');
+        const ruta = $('papper_rulle');
+        ruta.scrollTop = ruta.scrollHeight;
+    }
+});
+document.addEventListener('keydown', h => {   /* Esc utan popover */
+    if (h.key === 'Escape' && !med_popover)
+        papper_visa(false);
+});
+$('p40_spara').addEventListener('click', () => {
+    if (!papper_ritat) {
+        meddela('Papperet är tomt.');
+        return;
+    }
+    pappret.toBlob(blob => {
+        const lank = document.createElement('a');
+        lank.href = URL.createObjectURL(blob);
+        lank.download = 'papper.png';
+        lank.click();
+        setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
+    });
+    meddela('papper.png laddas ner (som -CP papper.png i terminalen).');
+    skarm.focus();
+});
 $('cmos_ladda').addEventListener('click', () => valj_fil('cmos', '.bin'));
 window.addEventListener('pagehide', cmos_spara);
 document.addEventListener('visibilitychange', () => {
@@ -835,6 +1073,7 @@ $('genesis_skiva')?.addEventListener('click', () => {
     ROM.ny = base64(FILER.rom_ny);
     ROM.gammal = base64(FILER.rom_gammal);
     ROM.dos = base64(FILER.dos);
+    ROM.p40 = base64(FILER.p40);
     if (FILER.program)
         FILER.program = base64(FILER.program);
     if (FILER.genesis)
@@ -854,12 +1093,15 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('krets').value = fraga.get('krets');
     if (fraga.get('cmos') === 'pa')
         $('cmos').checked = true;
+    if (fraga.get('p40') === 'pa')
+        $('p40').checked = true;
     visa_ljudet();
     starta(null);
     if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);
-    }
+    } else
+        kom_igang();
     skarm.focus();
     requestAnimationFrame(varv);
 })();

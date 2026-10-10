@@ -6,7 +6,8 @@ delar:
 - **`karna/`**: själva datorn, utan in- och utmatning. `z80.c` är
   processorn, `maskin.c` minnet, portarna, avbrotten, tangentkön, V24
   och labplattan, med tiden i T-cykler (2,9952 MHz), `bussen.c`
-  ABC-bussen med korten (`skivkort.c`, `skrivarkort.c`, `ieckort.c`),
+  ABC-bussen med korten (`skivkort.c`, `skrivarkort.c`, `ieckort.c`,
+  `p40.c`),
   `kassett.c` bandspelaren som en följd av flanker, `ljud.c` SN76477,
   `tecken.c` gör om bildminnet till text i UTF-8 och `bild.c` till
   punkter. Kärnan läser inga filer och
@@ -16,7 +17,7 @@ delar:
   `terminal.c` kör ABC80 i en POSIX-terminal, `batch.c` kör utan
   terminal och skriver skärmen efteråt, `anrop.c` är anropsläget och
   `tstenhet.c` filenheten TST: och `kassettfil.c` kassettbandet som
-  WAV-fil (omvandlingen i `wav.c`).
+  WAV-fil (omvandlingen i `wav.c`); `png.c` skriver P40:s papper.
 - **`webb/`**: emulatorn i webbläsaren, se nedan.
 
 Flaggorna är de från `verktyg/abc80` och `dis/04/host/abc80host`; se
@@ -51,6 +52,18 @@ från bokens exempel 7 som en krets på $4000, som Smartaid
 `Z=CALL(16384,3)`), och `forth_cmos.bin` samma tolk med de egna orden i
 CMOS-minnet (`-M`, nedan), som finns kvar till nästa gång.
 
+`-CP papper.png` kopplar in nålskrivaren P40 på kort 60
+(`karna/p40.c`). ABC80 kör själv vagnens motor och nålarna med
+drivrutinen på $7800 (`-l roms/p40.rom@7800`), och var punkterna hamnar
+avgörs av tiden; papperet skrivs som en bild när emulatorn slutar.
+Vagnens mekanik är antagen (se `karna/p40.h`). `exempel/p40/` har ett
+provprogram och vad det visar:
+
+    ./abc80 -r roms/abc80new.rom -l roms/p40.rom@7800 -CP papper.png \
+            -f exempel/p40/PROV.BAS -k 'RUN\r' -t 9000
+
+I webbläsaren finns skrivaren i gruppen *Skrivaren P40*.
+
 `-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
 Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när
 emulatorn slutar (`-M fil@adr` för en annan adress). I webbläsaren sparas
@@ -82,7 +95,8 @@ snabbt medan motorn går; PLAY, spolning åt båda hållen och ett
 räkneverk; bandets eget ljud hörs, och utan fjärrstyrning går bandet
 vidare när motorn slås av, så att Genesis-demots musik kommer från
 bandet), disketten i FD2 med ABC-DOS, Forth-kretsarna (en lista, eller
-`?krets=forth` och `?krets=cmos`), CMOS-minnet, exempeldisketten, MÅLARE och Genesis-demot på
+`?krets=forth` och `?krets=cmos`), CMOS-minnet, skrivaren P40 (papperet
+växer på sidan och sparas som PNG, `?p40=pa`), exempeldisketten, MÅLARE och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:

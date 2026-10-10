@@ -67,7 +67,7 @@ static int labb_brytare(const Maskin *m)
 static uint8_t las_port(void *dator, uint16_t port)
 {
     Maskin *m = dator;
-    if ((port & 0xFF) < 8)
+    if (!(port & 0x10))                      /* adressbit 4 = 0: ABC-bussen */
         return bussen_in(&m->bussen, port & 0xFF);
     switch (port & 0xFF) {
     case 0x38:
@@ -134,7 +134,7 @@ static void skriv_port(void *dator, uint16_t port, uint8_t varde)
         m->krokar.port_ut(m->krokar.data, m, (uint8_t)port, varde);
     if ((port & 0xFF) == 6 && m->ljud)
         ljud_skriv(m->ljud, m->tid, varde);
-    if ((port & 0xFF) < 8)
+    if (!(port & 0x10))
         bussen_ut(&m->bussen, port & 0xFF, varde);
     else if ((port & 0xFF) == 0x39)
         pio_styrord(&m->pio_a, varde);

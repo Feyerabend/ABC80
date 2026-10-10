@@ -107,6 +107,47 @@
     font: 12px ui-monospace, Menlo, monospace;
     border: 1px solid var(--kant); border-radius: 4px; padding: 0 4px;
   }
+  /* Papperet: en lapp ovanpå sidan (popover), som försvinner vid ett
+   * klick utanför eller Esc. Utan popover i webbläsaren: klassen oppen. */
+  #papper {
+    position: fixed; inset: 16px 16px auto auto; margin: 0; padding: 0;
+    width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    background: var(--yta); color: var(--text);
+    border: 1px solid var(--kant); border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
+  }
+  #papper { display: none; flex-direction: column; }
+  #papper.oppen { display: flex; }
+  #papper:popover-open { display: flex; }
+  #papper header {
+    display: flex; align-items: center; gap: 6px; padding: 6px 8px;
+    border-bottom: 1px solid var(--kant); font-size: 13px; color: var(--dampad);
+  }
+  #papper header span { flex: 1; }
+  #papper header { cursor: move; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #papper header button { cursor: pointer; }
+  #papper_rulle { overflow: auto; background: #fbfaf5; border-radius: 0 0 10px 10px; }
+  #papper canvas { display: block; width: 532px; }   /* halva storleken */
+  #p40_visa.nytt { box-shadow: 0 0 0 2px var(--accent); }
+  /* Kom igång: en ruta mitt på sidan (popover). */
+  #rubrik { display: flex; align-items: flex-start; gap: 8px; }
+  #rubrik h1 { flex: 1; }
+  #hjalp {
+    width: min(460px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    overflow: auto; padding: 14px 18px; margin: auto;
+    background: var(--yta); color: var(--text); font-size: 14px; line-height: 1.5;
+    border: 1px solid var(--kant); border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
+  }
+  #hjalp { display: none; }
+  #hjalp:popover-open { display: block; }
+  #hjalp h2 { font-size: 16px; margin: 0 0 8px; }
+  #hjalp ul { padding-left: 20px; margin: 6px 0; }
+  #hjalp li { margin: 4px 0; }
+  #hjalp p { margin: 8px 0; }
+  #hjalp .stang { float: right; }
+  #hjalp pre { margin: 4px 0; font: 13px/1.4 ui-monospace, Menlo, monospace; }
+  #hjalp::backdrop, #papper::backdrop { background: transparent; }
   body.slapp #ram { box-shadow: 0 0 0 3px var(--accent); }
   input[type=file] { display: none; }
 </style>
@@ -118,7 +159,10 @@
   </div>
 
   <div id="hoger">
-    <h1>ABC80 <span>emulatorn till boken ABC80 inifrån</span></h1>
+    <div id="rubrik">
+      <h1>ABC80 <span>emulatorn till boken ABC80 inifrån</span></h1>
+      <button id="hjalp_visa" popovertarget="hjalp" title="Vad det här är och hur man kommer igång">Kom igång</button>
+    </div>
 <!-- MALL -->
     <p style="background:#5a2a1a;padding:10px 12px;border-radius:8px;margin:0">Det här
     är mallen till sidan, utan emulatorn i. Öppna <b>abc80.html</b> bredvid i
@@ -148,6 +192,11 @@
       <button id="cmos_tom" title="Nollställ CMOS-minnet">Töm</button>
       <button id="cmos_spara" title="Ladda ner CMOS-minnet (2 KB)">Spara</button>
       <button id="cmos_ladda" title="Lägg in en fil i CMOS-minnet">Ladda…</button>
+    </div>
+    <div class="grupp">
+      <b>Skrivaren P40</b>
+      <label title="Nålskrivaren på kort 60 och drivrutinen på $7800: PRINT #1 efter OPEN &quot;PR:&quot; (som -CP i terminalen)"><input type="checkbox" id="p40"> på kort 60</label>
+      <button id="p40_visa" popovertarget="papper" title="Visa papperet; det kommer fram av sig självt när skrivaren börjar" disabled>Papperet</button>
     </div>
     <div class="grupp">
       <b><span class="ikon">💾</span>Disketten</b>
@@ -264,23 +313,89 @@
     <code>Z=CALL(16384,3)</code> direkt. Orden finns kvar när sidan laddas
     om. <code>EMPTY</code> tömmer ordlistan.</p>
 <!-- /KRETS -->
+    <p><i>Skrivaren P40</i> är nålskrivaren från band 2, kapitlet
+    Skrivarna, på kort 60, med drivrutinen på <code>$7800</code>. Den kopplas
+    in och ur medan maskinen går, så programmet ligger kvar: BASIC letar
+    upp drivrutinen först när <code>PR:</code> öppnas. Den skriver det som går till
+    <code>PR:</code>: <code>10 OPEN "PR:" AS FILE 1</code>,
+    <code>20 PRINT #1,"HEJ"</code>, <code>30 CLOSE 1</code>, eller
+    <code>LIST PR:</code>. Papperet kommer fram som en lapp när skrivaren
+    börjar och försvinner med ett klick utanför eller <kbd>Esc</kbd>;
+    <i>Papperet</i> tar fram det igen, och <i>Spara</i> ger det som en
+    bild (i terminalen: <code>-CP papper.png</code>). Skrivarens mekanik är inte
+    bevarad, så den är antagen: vagnen går med fast fart, och var
+    punkterna hamnar avgörs bara av tiden, som på skrivaren. Raderna som
+    skrivs framåt hamnar drygt två kolumner till vänster om dem som
+    skrivs bakåt; <code>exempel/p40/LASMIG.md</code> berättar varför
+    (?).</p>
 <!-- GENESIS -->
     <p><i>Genesis-demot</i> laddar demot från bandet (snabbt) och spelar
     musiken, som ligger efter programmet på bandet, utan fjärrstyrning;
     <i>… från disketten</i> startar det med ABC-DOS, utan musik.</p>
 <!-- /GENESIS -->
+    <p><i>Kom igång</i> visas av sig själv första gången sidan öppnas
+    (inte med <code>?k=</code>); knappen tar fram den igen. Papperet går
+    att flytta genom att dra i dess list, och det stället kommer
+    sidan ihåg.</p>
     <p>Länkar kan ge tangenter att skriva efter starten:
     <code>abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r</code>, med
     <code>\r</code> för RETURN och <code>\w500</code> för en paus i ms.
     <code>?rom=gammal</code> väljer den gamla ROM:en, <code>?ljud=av</code>
-    startar utan ljud<!-- KRETS -->, <code>?krets=forth</code> sätter i
-    Forth-kretsen och <code>?krets=cmos</code> Forth med CMOS<!-- /KRETS -->
-    och <code>?cmos=pa</code> slår på CMOS-minnet.</p>
+    startar utan ljud,
+<!-- KRETS -->
+    <code>?krets=forth</code> sätter i Forth-kretsen,
+    <code>?krets=cmos</code> Forth med CMOS,
+<!-- /KRETS -->
+    <code>?cmos=pa</code> slår på CMOS-minnet och <code>?p40=pa</code>
+    skrivaren.</p>
     <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
     klickat på sidan eller skrivit något.</p>
   </details>
 
     <input type="file" id="filval">
+    <div id="hjalp" popover>
+      <button class="stang" popovertarget="hjalp" popovertargetaction="hide" title="Stäng (Esc, eller klicka utanför)">✕</button>
+      <h2>Kom igång</h2>
+      <p>Det här är en ABC80, Luxors dator från 1978, i webbläsaren.
+      Processorn, skärmen, ljudet, kassetten och disketten är
+      emulerade och kör maskinens egna ROM:ar, så det är samma BASIC som
+      på den riktiga maskinen. Emulatorn hör till boken <i>ABC80
+      inifrån</i>.</p>
+      <p>Klicka på den svarta skärmen och skriv. Varje rad avslutas med
+      <kbd>Enter</kbd>, som är RETURN.</p>
+      <p>Prova:</p>
+      <ul>
+        <li><code>PRINT 2+2</code></li>
+        <li>Ett program, rad för rad:
+<pre>10 PRINT "HEJ ";
+20 GOTO 10
+RUN</pre>
+        <kbd>Ctrl</kbd>+<kbd>C</kbd> stoppar det, <code>LIST</code> visar
+        det och <code>NEW</code> tar bort det.</li>
+<!-- PROGRAM -->
+        <li><i>Exempeldisketten</i>, och sedan <code>RUN DR0:GISSA</code>
+        eller <code>RUN DR0:KURVA</code>.</li>
+<!-- /PROGRAM -->
+<!-- MALARE -->
+        <li><i>MÅLARE</i>, ett ritprogram från 1982 på band: svara 10
+        och RETURN, och rita med E, R, T, D, G, C, V och B.</li>
+<!-- /MALARE -->
+        <li>Skrivaren: kryssa i <i>på kort 60</i> och skriv
+        <code>LIST PR:</code>.</li>
+      </ul>
+      <p>Har maskinen hängt sig: <i>RESET</i>, eller <i>Starta om</i>, som
+      också tömmer minnet. Mer om allt finns under <i>Hur den används</i>
+      längst ner.</p>
+    </div>
+    <div id="papper" popover>
+      <header>
+        <span id="papper_rubrik">Papperet</span>
+        <button id="p40_riv" title="Riv av papperet">Riv av</button>
+        <button id="p40_spara" title="Ladda ner papperet som PNG">Spara</button>
+        <button id="p40_stang" title="Stäng (Esc, eller klicka utanför)">✕</button>
+      </header>
+      <div id="papper_rulle"><canvas id="pappret" width="1064" height="16"></canvas></div>
+    </div>
   </div>
 </main>
 <!-- FILER -->

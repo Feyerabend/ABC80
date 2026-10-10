@@ -48,6 +48,9 @@
  *                    läsningarna bb); tecknen skrivs som "PR60: hh ..."
  *     -CR            ett bildminne på $4000-$43FF (skrivarkretsens typ R),
  *                    som skrivs efter skärmen med "K:" först
+ *     -CP fil.png    nålskrivaren P40 på kort 60 (i stället för -C), med
+ *                    drivrutinen -l roms/p40.rom@7800; papperet skrivs
+ *                    till fil.png efteråt (se karna/p40.h)
  *     -E adr[,text]  IEC-kortet 49 med adressen; text är det en talare
  *                    skickar (\r, \xHH, \\, \e = EOI med nästa tecken)
  *     -EN            ingen lyssnare på IEC-bussen
@@ -93,7 +96,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "../karna/p40.h"
 #include "../karna/tecken.h"
+#include "png.h"
 #include "vard.h"
 
 void vard_fel(const char *text, const char *tillagg)
@@ -348,8 +353,8 @@ static void hjalp(void)
 {
     fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48] [-M fil[@adr]]\n"
           "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L]\n"
-          "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-E adr[,text]]\n"
-          "                  [-T band.wav] [-U inspelning.wav]\n"
+          "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-CP fil.png]\n"
+          "                  [-E adr[,text]] [-T band.wav] [-U inspelning.wav]\n"
           "                  [-t ms [-d adr,n].. [-a fil.wav] [-x adr [-p ..] [-R ..]] ...]\n"
           "utan -t körs ABC80 i terminalen (Ctrl-C två gånger avslutar); se huvudet i vard/abc80.c\n",
           stderr);
@@ -377,11 +382,13 @@ int main(int argc, char **argv)
     static Skrivarkort skrivarkort;
     static V24Skrivare v24_skrivare;
     static Ieckort ieckort;
+    static P40 p40;
     static Ljud ljud;
     static Kassett kassett;
     static char standard_rom[1100];
     Vard *v = &vard;
     const char *romfil = NULL, *v24 = NULL, *bankarg = NULL, *cmosfil = NULL;
+    const char *pappersfil = NULL;           /* -CP */
     const char *kretsar[16];
     int antal_kretsar = 0, ram_kb = 16, utforlig = 0, utan_lyssnare = 0;
 
@@ -459,6 +466,7 @@ int main(int argc, char **argv)
             v->skrivarkort = &skrivarkort;
         }
         else if (!strcmp(f, "-CR")) v->kortets_bildminne = 1;
+        else if (!strcmp(f, "-CP")) pappersfil = a;
         else if (!strcmp(f, "-E")) {
             char *slut;
             ieckort_starta(&ieckort, (int)strtol(a, &slut, 10));
@@ -512,6 +520,12 @@ int main(int argc, char **argv)
         bussen_koppla(&maskin.bussen, &skivkort.kort);
     if (v->skrivarkort)
         bussen_koppla(&maskin.bussen, &skrivarkort.kort);
+    if (pappersfil) {
+        if (v->skrivarkort)
+            vard_fel("-C och -CP är båda kort 60", NULL);
+        p40_starta(&p40, &maskin.tid);
+        bussen_koppla(&maskin.bussen, &p40.kort);
+    }
     if (v->ieckort) {
         ieckort.utan_lyssnare = utan_lyssnare;
         bussen_koppla(&maskin.bussen, &ieckort.kort);
@@ -554,6 +568,19 @@ int main(int argc, char **argv)
         kassett_skriv_wav(v->inspelningsfil, kassett.inspelning, kassett.antal_inspelat, slut);
         if (kassett.full)
             fprintf(stderr, "abc80: inspelningen fick inte plats; bara början är med\n");
+    }
+    if (pappersfil) {
+        int bredd, hojd;
+        p40_papper(&p40, NULL, &bredd, &hojd);
+        uint8_t *bild = malloc((size_t)bredd * hojd);
+        if (!bild)
+            vard_fel("inget minne för papperet", NULL);
+        p40_papper(&p40, bild, &bredd, &hojd);
+        if (!png_skriv(pappersfil, bild, bredd, hojd))
+            vard_fel("kan inte skriva", pappersfil);
+        free(bild);
+        if (p40.antal == P40_ANSLAG)
+            fprintf(stderr, "abc80: papperet tog slut; bara början är med\n");
     }
     if (cmosfil)
         cmos_skriv();

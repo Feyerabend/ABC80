@@ -162,7 +162,7 @@ static void ut(void *data, int port, uint8_t varde)
 void ieckort_starta(Ieckort *k, int adress)
 {
     memset(k, 0, sizeof *k);
-    k->kort = (Kort){ k, svarar, NULL, in, ut };
+    k->kort = (Kort){ k, svarar, NULL, in, ut, 0 };
     k->adress = adress & 0x1F;
     k->nollstalld = 1;
     k->data_in = 0xFF;
