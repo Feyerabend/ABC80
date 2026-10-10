@@ -4,15 +4,17 @@
 
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
-  exempeldisketten, Forth-kretsen, MÅLARE-bandet och Genesis-demot (band
-  och diskett), om de finns, in som base64, och abc80.js efter. Då är abc80.html en enda fil som går
+  exempeldisketten, Forth-kretsen, bokens exempel 1-6, MÅLARE-bandet och
+  Genesis-demot (band och diskett), om de finns, in som base64, och abc80.js efter. Då är abc80.html en enda fil som går
   att öppna direkt i webbläsaren, utan server och utan att något installeras.
 
   Mellan MALL och /MALL står det som bara syns i mallen; bygg.sh tar
   bort det. Mellan PROGRAM och /PROGRAM står exempeldiskettens knapp och
   text, som tas bort när exempel/program/diskett/program.dsk inte finns,
   mellan KRETS och /KRETS Forth-kretsens, som tas bort när
-  exempel/krets/forth.bin inte finns, mellan MALARE och /MALARE bandet
+  exempel/krets/forth.bin inte finns, mellan EXEMPEL och /EXEMPEL
+  exemplens, som tas bort när exempel/krets/e1.bin med flera inte finns,
+  mellan MALARE och /MALARE bandet
   MÅLAREs, som tas bort när exempel/malare/MALARE.wav inte finns, och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
   inte finns.
 -->
@@ -178,13 +180,21 @@
       <button id="nystart" title="Töm minnet och starta om">Starta om</button>
       <button id="ljud" title="Ljudet från SN76477 (OUT 6) och bandet">Ljud: på</button>
       <button id="program" title="En textfil med ett BASIC-program skrivs in som tangenter">Skriv in…</button>
-<!-- KRETS -->
-      <select id="krets" title="En krets på $4000, som Smartaid">
+      <select id="krets" title="En krets: Forth-tolken eller ett av bokens exempel">
         <option value="">Ingen krets</option>
+<!-- KRETS -->
         <option value="forth">Forth-kretsen</option>
         <option value="cmos">Forth med CMOS</option>
-      </select>
 <!-- /KRETS -->
+<!-- EXEMPEL -->
+        <option value="e1">Exempel 1: tangentavbrottet</option>
+        <option value="e2">Exempel 2: versaler</option>
+        <option value="e3">Exempel 3: snabbtangenten</option>
+        <option value="e4">Exempel 4: två banker</option>
+        <option value="e5">Exempel 5: en egen sats</option>
+        <option value="e6">Exempel 6: V24 i program</option>
+<!-- /EXEMPEL -->
+      </select>
     </div>
     <div class="grupp">
       <b>CMOS-minnet</b>
@@ -313,6 +323,15 @@
     <code>Z=CALL(16384,3)</code> direkt. Orden finns kvar när sidan laddas
     om. <code>EMPTY</code> tömmer ordlistan.</p>
 <!-- /KRETS -->
+<!-- EXEMPEL -->
+    <p><i>Exempel 1</i>–<i>6</i> är programmen i band 2, kapitlet Egna
+    exempel, i den tänkta kretsen: på <code>$4000</code>, exempel 4 med två
+    banker där och exempel 5 på <code>$7000</code>, IEC-kretsens plats.
+    Maskinen startas om med kretsen i, och raden under skärmen säger hur
+    programmet kopplas in, oftast <code>Z=CALL(16384)</code>. Exempel 6
+    läser det som kommer på V24; en länk med <code>?s=</code> sänder en
+    text dit.</p>
+<!-- /EXEMPEL -->
     <p><i>Skrivaren P40</i> är nålskrivaren från band 2, kapitlet
     Skrivarna, på kort 60, med drivrutinen på <code>$7800</code>. Den kopplas
     in och ur medan maskinen går, så programmet ligger kvar: BASIC letar
@@ -346,6 +365,11 @@
     <code>?krets=forth</code> sätter i Forth-kretsen,
     <code>?krets=cmos</code> Forth med CMOS,
 <!-- /KRETS -->
+<!-- EXEMPEL -->
+    <code>?krets=e1</code> till <code>?krets=e6</code> bokens exempel,
+    <code>?s=</code> en text till V24 (efter tangenterna, som
+    <code>-s</code>),
+<!-- /EXEMPEL -->
     <code>?cmos=pa</code> slår på CMOS-minnet och <code>?p40=pa</code>
     skrivaren.</p>
     <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har

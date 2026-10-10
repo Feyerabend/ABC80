@@ -34,13 +34,14 @@ webb: webb/abc80.html
 webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 	$(CLANG) $(WEBB_FLAGGOR) -o $@ $(WEBB_C)
 
-# Exempeldisketten, Forth-kretsarna, MÅLARE-bandet och Genesis-demot kommer
+# Exempeldisketten, Forth-kretsarna, bokens exempel 1-6, MÅLARE-bandet och Genesis-demot kommer
 # med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \
                             exempel/krets/forth_cmos.bin \
+                            $(wildcard exempel/krets/e*.bin) \
                             exempel/malare/MALARE.wav \
                             exempel/genesis/GenesisProject_ABCDemo.dsk \
                             exempel/genesis/GenesisProject_ABCDemo_webb.wav)

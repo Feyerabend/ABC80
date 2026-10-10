@@ -8,6 +8,8 @@
 # exempeldisketten med; annars tas dess knapp och text bort (mellan PROGRAM
 # och /PROGRAM i mallen). Finns exempel/krets/forth.bin och
 # forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns
+# exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
+# bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
 # exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
 # /MALARE). Finns exempel/genesis/ kommer Genesis-demot med
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
@@ -23,6 +25,7 @@ cd "$(dirname "$0")/.."
 PROGRAM=exempel/program/diskett/program.dsk
 KRETS=exempel/krets/forth.bin
 KRETS_CMOS=exempel/krets/forth_cmos.bin
+EXEMPEL="e1 e2 e3 e4a e4b e5 e6"
 MALARE=exempel/malare/MALARE.wav
 SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
 BAND=exempel/genesis/GenesisProject_ABCDemo_webb.wav
@@ -41,6 +44,10 @@ avsnitt() {
     fi
 }
 
+exemplen() {
+    for n in $EXEMPEL; do echo exempel/krets/$n.bin; done
+}
+
 finns() {
     for f in "$@"; do [ -f "$f" ] || { echo nej; return; }; done
     echo ja
@@ -51,6 +58,7 @@ sida() {
     avsnitt MALL nej < webb/mall.html |
         avsnitt PROGRAM "$(finns "$PROGRAM")" |
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
+        avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
         avsnitt GENESIS "$(finns "$SKIVA" "$BAND")"
 }
@@ -68,6 +76,13 @@ fi
 if [ -f "$KRETS" ] && [ -f "$KRETS_CMOS" ]; then
     printf '  krets: "%s",\n' "$(base64_av "$KRETS")"
     printf '  krets_cmos: "%s",\n' "$(base64_av "$KRETS_CMOS")"
+fi
+if [ "$(finns $(exemplen))" = ja ]; then
+    printf '  exempel: {\n'
+    for n in $EXEMPEL; do
+        printf '    %s: "%s",\n' $n "$(base64_av exempel/krets/$n.bin)"
+    done
+    printf '  },\n'
 fi
 if [ -f "$MALARE" ]; then
     printf '  malare_band: "%s",\n' "$(base64_av "$MALARE")"

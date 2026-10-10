@@ -4,8 +4,8 @@
  * Kärnan är WebAssembly (webb.c och karna/, make webb); här finns allt
  * runt den: skärmen på en canvas, tangentbordet, ljudet med Web Audio,
  * filerna och knapparna. bygg.sh lägger in WebAssembly-koden, ROM:arna,
- * exempeldisketten, Forth-kretsarna, MÅLARE-bandet och Genesis-demot (de
- * fyra om de finns)
+ * exempeldisketten, Forth-kretsarna, bokens exempel 1-6, MÅLARE-bandet
+ * och Genesis-demot (de fem om de finns)
  * som base64 i FILER, så att sidan inte behöver hämta något.
  *
  * Tiden: en bild är 20 ms. Med ljudet på följer emulatorn ljudets
@@ -168,7 +168,18 @@ function starta(diskett = skivan_nu()) {
         e.skiva(45, 0, skivans_minne, skivan.length, 0);
     }
     const val = $('krets')?.value;
-    if (val) {
+    const ex = EXEMPEL[val];
+    if (ex) {
+        for (const namn of ex.filer) {
+            const data = FILER.exempel[namn];
+            const p = lagg_i_minnet(data);
+            if (ex.filer.length > 1)
+                e.bank(ex.adress, p, data.length);
+            else
+                e.krets(ex.adress, p, data.length);
+            e.slapp(p);
+        }
+    } else if (val) {
         const data = val === 'cmos' ? FILER.krets_cmos : FILER.krets;
         const krets = lagg_i_minnet(data);
         e.krets(0x4000, krets, data.length);
@@ -199,34 +210,37 @@ function tangent_kod(tecken) {
 }
 
 /* Text som tangenter; radslut blir RETURN med en paus efter. Med
- * flaggor gäller -k: \r, \w ms, \xHH, \\. */
-function skriv(text, flaggor = false) {
+ * flaggor gäller -k: \r, \w ms, \xHH, \\. Med v24 går texten till
+ * V24 i stället, som -s (utan pauser). */
+function skriv(text, flaggor = false, v24 = false) {
+    const ut = v24 ? e.v24 : e.tangent;
+    const paus = v24 ? () => {} : e.paus;
     for (let k = 0; k < text.length; k++) {
         const c = text[k];
         if (flaggor && c === '\\' && k + 1 < text.length) {
             const n = text[++k];
             if (n === 'r')
-                e.tangent(0x0D);
+                ut(0x0D);
             else if (n === 'w') {
                 const m = /^\d+/.exec(text.slice(k + 1));
-                e.paus(m ? +m[0] : 0);
+                paus(m ? +m[0] : 0);
                 k += m ? m[0].length : 0;
             } else if (n === 'x') {
-                e.tangent(parseInt(text.substr(k + 1, 2), 16) & 0xFF);
+                ut(parseInt(text.substr(k + 1, 2), 16) & 0xFF);
                 k += 2;
             } else if (n !== '.')
-                e.tangent(tangent_kod(n));
+                ut(tangent_kod(n));
             continue;
         }
         if (c === '\r')
             continue;
         if (c === '\n') {
-            e.tangent(0x0D);
-            e.paus(200);
+            ut(0x0D);
+            paus(200);
             continue;
         }
         const kod = tangent_kod(c);
-        e.tangent(kod || 0x3F);
+        ut(kod || 0x3F);
     }
 }
 
@@ -465,6 +479,11 @@ function rita() {
 }
 
 function varv() {
+    if (v24_text !== null && e.tangenter_klara()) {
+        skriv(v24_text, true, true);         /* som batchläget: 100 ms efter */
+        e.v24_om(100);
+        v24_text = null;
+    }
     spola_vidare();
     papper_rita();
     if (play_vid_relaet && e.motor()) {
@@ -861,9 +880,29 @@ const KRETSAR = {
     forth: 'Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
     cmos: 'Forth med CMOS: Z=CALL(16384,3); orden sparas i CMOS-minnet på $5000.',
 };
+
+/* Bokens exempel 1-6 (band 2, kapitlet Egna exempel; exempel/krets/),
+ * när de ligger i sidan: filerna i FILER.exempel, på sina adresser som
+ * -l och -b i bok/band2/exempel/eN.test. Med två filer är det banker. */
+const EXEMPEL = {
+    e1: { filer: ['e1'], adress: 0x4000,
+          text: 'Exempel 1 på $4000: Z=CALL(16384) räknar tangenterna i hörnet, Z=CALL(16387) slutar.' },
+    e2: { filer: ['e2'], adress: 0x4000,
+          text: 'Exempel 2 på $4000: Z=CALL(16384) gör gemener till versaler i direktläge, Z=CALL(16387) slutar.' },
+    e3: { filer: ['e3'], adress: 0x4000,
+          text: 'Exempel 3 på $4000: Z=CALL(16384), och CTRL-L i direktläge blir LIST.' },
+    e4: { filer: ['e4a', 'e4b'], adress: 0x4000,
+          text: 'Exempel 4, två banker på $4000: Z=CALL(16384) anropar bank 1 från bank 0.' },
+    e5: { filer: ['e5'], adress: 0x7000,
+          text: 'Exempel 5 på $7000, IEC-kretsens plats: CMD "TEXT" skriver en statusrad.' },
+    e6: { filer: ['e6'], adress: 0x4000,
+          text: 'Exempel 6 på $4000: Z=CALL(16384), A=CALL(16390) ger tecknet från V24 (-1 om inget), Z=CALL(16387) slutar.' },
+};
+let v24_text = null;                         /* ?s=, sänds när tangenterna är skrivna */
+
 $('krets')?.addEventListener('change', () => {
     starta();
-    meddela(KRETSAR[$('krets').value]);
+    meddela(KRETSAR[$('krets').value] ?? EXEMPEL[$('krets').value].text);
     skarm.focus();
 });
 
@@ -1089,8 +1128,17 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('rom').value = 'gammal';
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;
-    if (['forth', 'cmos'].includes(fraga.get('krets')) && $('krets'))
-        $('krets').value = fraga.get('krets');
+    if (FILER.exempel)
+        for (const namn in FILER.exempel)
+            FILER.exempel[namn] = base64(FILER.exempel[namn]);
+    else
+        for (const namn in EXEMPEL)
+            delete EXEMPEL[namn];
+    if ($('krets').options.length < 2)
+        $('krets').hidden = true;            /* varken Forth eller exemplen */
+    const krets = fraga.get('krets');
+    if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) || krets in EXEMPEL))
+        $('krets').value = krets;
     if (fraga.get('cmos') === 'pa')
         $('cmos').checked = true;
     if (fraga.get('p40') === 'pa')
@@ -1100,8 +1148,9 @@ $('genesis_skiva')?.addEventListener('click', () => {
     if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);
-    } else
+    } else if (!fraga.get('s'))
         kom_igang();
+    v24_text = fraga.get('s');
     skarm.focus();
     requestAnimationFrame(varv);
 })();
