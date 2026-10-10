@@ -108,7 +108,8 @@ I emulatorn (byggd med `make` i `../emulator/`) sätts kretsen i med `-l`:
     ../emulator/abc80 -l e7ip.bin@4000 -k 'POKE 65052,0,208\rNEW\rZ=CALL(16384,3)\r'
 
 I webbläsarens emulator (`../emulator/webb/abc80.html`) väljer du
-*Forth-kretsen*, eller öppnar sidan med `?krets=forth`.
+*Forth-kretsen*, eller öppnar sidan med `?krets=forth`:
+[abc80.html?krets=forth](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?krets=forth).
 
 ## Med CMOS-minne
 
