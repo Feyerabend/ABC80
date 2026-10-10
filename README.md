@@ -23,8 +23,8 @@ material to the book *ABC80 inifrån* ("ABC80 from the inside").
 
 Börja gärna med [uppsatsen om AIR-FIGHT](airfight/README.md) eller med
 emulatorn i [`inifran/emulator/`](inifran/emulator/), som går att köra
-direkt i webbläsaren.
+direkt i webbläsaren: [https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)
 
 A good place to start is [the essay on AIR-FIGHT](airfight/README.md),
 or the emulator in [`inifran/emulator/`](inifran/emulator/), which runs
-directly in the browser.
+directly in the browser: [https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)

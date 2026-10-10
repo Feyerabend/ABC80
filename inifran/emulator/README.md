@@ -85,7 +85,9 @@ abc80host att köra mot den här (569 fall):
 ## I webbläsaren
 
 `webb/abc80.html` är hela emulatorn i en fil: öppna den i webbläsaren,
-direkt från disken; den behöver ingen server och inget installerat.
+direkt från disken; den behöver ingen server och inget installerat. Den
+ligger också på webben, i den version som finns i kodförrådet:
+[https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)
 WebAssembly-koden, de två ROM:arna och ABC-DOS ligger i filen, och
 exempeldisketten (`exempel/program/diskett/program.dsk`), MÅLARE-bandet
 och Genesis-demot (band med musiken och diskett) om de finns; med båda blir filen drygt

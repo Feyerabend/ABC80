@@ -4,6 +4,9 @@ Material till boken *ABC80 inifrån* (Set Lonnert): källor och program
 som boken beskriver, så att de kan köras och ändras.
 Publicering av boken väntas under 2026.
 
+Emulatorn går att köra direkt i webbläsaren, utan att något installeras:
+[https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)
+
 - [`forth/`](forth/): en liten Forth för ABC80 (band 2, exempel 7)
 - [`exempel/`](exempel/): program i en krets, exempel 1–6 (band 2)
 - [`tidslinje.md`](tidslinje.md): tidslinjen från bokens bilaga
