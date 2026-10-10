@@ -54,7 +54,7 @@ const ritning = skarm.getContext('2d');
 
 let e;                                       /* WebAssemblys exporter */
 let ljud = null;                             /* AudioContext, eller null utan Web Audio */
-let provtakt = 48000;                        /* ljudets prov/s: webbläsarens egen takt */
+let provtakt = 48000;                        /* ljudets prov/s (PROVTAKT) */
 let nasta = null;                            /* klockans tid för nästa bild */
 let skivan = null;                           /* disketten (bytes), eller null */
 let skivans_minne = 0;                       /* avbilden i WebAssemblys minne */
@@ -283,21 +283,70 @@ document.addEventListener('paste', (h) => {
 /* Ljudet                                                            */
 
 /* Ljudet är på från början, men webbläsaren släpper inte fram det
- * förrän man har klickat eller skrivit på sidan; då väcks det. Det
- * skapas i webbläsarens egen provtakt, som kärnans ljud får. */
+ * förrän man har klickat eller skrivit på sidan; då väcks det. Provtakten
+ * är fast, 48 kHz (kärnans ljud får den i starta), och webbläsaren räknar
+ * om till ljudkortets takt. WebKit är nyckfullt: ett ljud som skapas
+ * innan man har rört sidan kan stå som igång men vara tyst, också efter
+ * en omladdning. Därför skapas ljudet om, och låses upp med ett tyst
+ * prov, i själva klicket eller tangenttrycket, om det inte går eller om
+ * dess klocka står still (ljudet_star). */
+const PROVTAKT = 48000;
 let ljud_valt = true;
+let ljud_upplast = false;                    /* ett tyst prov har spelats i en användarhandling */
+let ljud_sedd = null;                        /* {ljud, tid, nu}: när currentTime senast ändrades */
 
-try {
-    ljud = new AudioContext();
-    provtakt = ljud.sampleRate;
-    ljud.addEventListener('statechange', visa_ljudet);
-} catch (fel) {
-    ljud = null;
+function nytt_ljud() {
+    let nytt = null;
+    try {
+        nytt = new AudioContext({ sampleRate: PROVTAKT });
+    } catch (fel) {
+        try { nytt = new AudioContext(); } catch (fel2) { return null; }
+    }
+    nytt.addEventListener('statechange', visa_ljudet);
+    return nytt;
 }
 
+ljud = nytt_ljud();
+provtakt = ljud ? ljud.sampleRate : PROVTAKT;   /* 48 kHz, om webbläsaren inte vägrar */
+
+/* Anropas i klick och tangenttryck (användarhandlingar). */
 function vack_ljudet() {
-    if (ljud_valt && ljud && ljud.state !== 'running')
+    if (!ljud_valt || !ljud)
+        return;
+    if (ljud.state === 'closed' || ljudet_star()) {
+        const gammalt = ljud;
+        const nytt = nytt_ljud();
+        if (nytt && nytt.sampleRate === provtakt) {
+            ljud = nytt;
+            ljud_upplast = false;
+            ljud_sedd = null;
+            nasta = null;
+            gammalt.close().catch(() => {});
+        } else if (nytt)
+            nytt.close().catch(() => {});
+    }
+    if (ljud.state !== 'running')
         ljud.resume().catch(() => {});
+    if (!ljud_upplast) {
+        const tyst = ljud.createBufferSource();
+        tyst.buffer = ljud.createBuffer(1, 1, provtakt);
+        tyst.connect(ljud.destination);
+        tyst.start(0);
+        ljud_upplast = true;
+    }
+    visa_ljudet();
+}
+
+/* Igång men tyst: klockan har stått still i en halv sekund. */
+function ljudet_star() {
+    if (!ljud || ljud.state !== 'running')
+        return false;
+    const nu = performance.now();
+    if (!ljud_sedd || ljud_sedd.ljud !== ljud || ljud_sedd.tid !== ljud.currentTime) {
+        ljud_sedd = { ljud, tid: ljud.currentTime, nu };
+        return false;
+    }
+    return nu - ljud_sedd.nu > 500;
 }
 
 function visa_ljudet() {
@@ -306,14 +355,22 @@ function visa_ljudet() {
     if (!ljud)
         text = 'Inget ljud';
     else if (ljud_valt)
-        text = ljud.state === 'running' ? 'Ljud: på' : 'Ljud: klicka på skärmen';
+        text = ljud.state === 'running' && !ljudet_star() ? 'Ljud: på' : 'Ljud: klicka på skärmen';
     if (knapp.textContent !== text)
         knapp.textContent = text;
+    knapp.title = 'Ljudet från SN76477 (OUT 6) och bandet' +
+        (ljud ? ' (' + ljud.state + ', ' + ljud.sampleRate + ' Hz)' : '');
     knapp.classList.toggle('pa', ljud_valt && !!ljud);
 }
 
-document.addEventListener('pointerdown', vack_ljudet, true);
-document.addEventListener('keydown', vack_ljudet, true);
+for (const namn of ['pointerdown', 'mousedown', 'click', 'touchend', 'keydown', 'keyup'])
+    document.addEventListener(namn, vack_ljudet, true);
+/* Tillbaka till fliken: Safari kan ha avbrutit ljudet (interrupted). */
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && ljud_valt && ljud && ljud.state !== 'running')
+        ljud.resume().catch(() => {});
+    nasta = null;
+});
 
 $('ljud').addEventListener('click', () => {
     ljud_valt = !ljud_valt;
@@ -325,7 +382,7 @@ $('ljud').addEventListener('click', () => {
 });
 
 function ljudet_gar() {
-    return ljud_valt && ljud && ljud.state === 'running';
+    return ljud_valt && ljud && ljud.state === 'running' && !ljudet_star();
 }
 
 /* Bildens prov från tiden tid; bandets ljud från fran sekunder in på
@@ -496,6 +553,8 @@ function varv() {
     }
     const nu = klockan();
     const med_ljud = ljudet_gar();
+    if (med_ljud !== anvande_ljud)
+        visa_ljudet();
     if (nasta === null || med_ljud !== anvande_ljud || nu - nasta > 0.25 || nasta - nu > 0.5)
         nasta = nu + (med_ljud ? 0.05 : 0);
     anvande_ljud = med_ljud;
@@ -896,7 +955,7 @@ const EXEMPEL = {
     e5: { filer: ['e5'], adress: 0x7000,
           text: 'Exempel 5 på $7000, IEC-kretsens plats: CMD "TEXT" skriver en statusrad.' },
     e6: { filer: ['e6'], adress: 0x4000,
-          text: 'Exempel 6 på $4000: Z=CALL(16384), A=CALL(16390) ger tecknet från V24 (-1 om inget), Z=CALL(16387) slutar.' },
+          text: 'Exempel 6 på $4000: inkopplat (Z=CALL(16384)) ger tangenterna inget avbrott, så kör det i ett program som kopplar ur själv (Z=CALL(16387)); A=CALL(16390) ger tecknet från V24, -1 om inget. Fast: RESET.' },
 };
 let v24_text = null;                         /* ?s=, sänds när tangenterna är skrivna */
 
