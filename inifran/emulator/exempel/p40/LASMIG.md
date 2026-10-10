@@ -74,6 +74,16 @@ parvis):
     papper.png:    7.00 9.25 8.00 10.25 8.00 10.25 7.00 9.25 7.00
     papper_orc.png:9.00 9.25 10.00 10.25 10.00 10.25 9.00 9.25 9.00
 
+Drivrutinen som den är, med `OR B`. Varannan rad står förskjuten, och
+I:na i de fyra mittraderna hamnar inte under varandra:
+
+![Papperet med OR B](papper.png)
+
+Samma program med `OR C`. Raderna börjar under varandra, och I:na
+bildar raka kolumner:
+
+![Papperet med OR C](papper_orc.png)
+
 På en verklig P40 kan vagnens start, stopp och ändlägen ha gett andra
 fasta förskjutningar, som den fasta väntan FWDDLY ($0082, ungefär en
 halv kolumn) kan ha varit till för att jämna ut. Felet med `OR B` är
