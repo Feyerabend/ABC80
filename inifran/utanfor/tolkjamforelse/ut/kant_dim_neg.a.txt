@@ -1,0 +1,8 @@
+ABC80
+10 DIM A%(5)
+20 I%=-1
+30 PRINT A%(I%)
+RUN
+ERR 5 LINE 30
+ABC80
+_

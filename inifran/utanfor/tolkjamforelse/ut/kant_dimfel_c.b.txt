@@ -1,0 +1,13 @@
+ABC800
+10 DIM K(1,2,3,4)
+10 DIM M(
+Error 234.
+10 DIM H(1
+Error 229.
+10 DIM I(1,
+Error 234.
+10 DIM D(1;
+Error 229.
+10 DIM L5
+10 DIM a
+_

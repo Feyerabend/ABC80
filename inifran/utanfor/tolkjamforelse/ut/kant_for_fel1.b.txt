@@ -1,0 +1,6 @@
+ABC800
+10 NEXT I%
+RUN
+Error 183 in line 10.
+ABC800
+_

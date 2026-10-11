@@ -1,0 +1,27 @@
+170 C$ = ".,'~=+:;[/<&?oxOX# "
+180 S0 = 1
+190 M1 = LEN(C$) : M2 = 4
+210 L1 = -2.0 : T0 = 1.25 : X0 = 2.5 : Y0 = -2.5
+250 W = 38 : H = 21
+270 S1 = X0 / W : S2 = Y0 / H
+300 FOR Y = 0 TO H
+310 C2 = Y * S2 + T0
+320 FOR X = 0 TO W
+330 C1 = X * S1 + L1
+340 Z1 = 0
+350 Z2 = 0
+360 C = S0
+370 X2 = Z1 * Z1
+380 Y2 = Z2 * Z2
+390 IF C > M1 THEN GOTO 460
+400 IF (X2 + Y2) > M2 THEN GOTO 460
+410 T = X2 - Y2 + C1
+420 Z2 = 2 * Z1 * Z2 + C2
+430 Z1 = T
+440 C = C + 1
+450 GOTO 370
+460 PRINT MID$(C$, C - S0, 1);
+470 NEXT X
+480 PRINT
+490 NEXT Y
+520 END

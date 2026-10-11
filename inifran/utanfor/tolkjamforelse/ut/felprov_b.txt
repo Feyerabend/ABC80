@@ -1,0 +1,25 @@
+b_sup  bara_lag          1  sup_adrh                                 märks (sup_adrh)
+b_sup  bara_hog          1  hel_d                                    märks (hel_d)
+b_sup  utan_b5           1  sup_b2                                   märks (sup_b2, rad 60)
+b_sup  sub_som_add       2  sup_hel sup_b2                           märks
+b_sup  sub_omvand        2  sup_hel sup_b2                           märks: X - V i stället för V - X
+b_sup  de_fel            3  sup_hel sup_if sup_b2                    märks
+b_sup  intcon_hog0       2  sup_hel sup_b2                           märks
+b_sup  litet_fel         2  sup_hel sup_b2                           märks
+b_sup  hog_byte_ej       2  sup_hel sup_b2                           märks
+b_sup  miss_de          11  for_steg0 for_byt dim_hel dim_tva dim_in märks
+b_sup  x_ar_v            3  sup_hel sup_if sup_b2                    märks: X läst som V
+b_sup  utan_vff36        0                                           märks inte: VFF36 läses ingenstans i ROM:en
+b_sup  b_inte_1          0                                           märks inte: satsslingan (L1D1D) skriver över B innan någon läser den
+b_sup  c_fel             0                                           märks inte: som b_inte_1, för C
+b_sup  for_hl            0                                           märks inte: som b_inte_1, för HL (FOR går inte genom $1D1A)
+b_sup  f_bara_lag        0                                           märks inte och är inget fel: STFVAR läser målet ur koden, så A1=Q1+1 blir rätt (sup_b2g)
+b_sup  f_utan_b4         1  sup_b2g                                  märks (sup_b2g, K=K+J-K)
+b_sup  f_sub_som_add     4  sup_flt sup_if sup_b2f sup_dbl           märks
+b_sup  f_konst_len       0                                           märks inte: mönstret hittas aldrig med en konstant, och ROM:en gör satsen som förut
+b_sup  f_numpsh          4  sup_flt sup_if sup_b2f sup_dbl           märks
+b_sup  f_utan_ix         0                                           märks inte: inget efter satsen läser IX innan det sätts
+b_sup  f_de              4  sup_flt sup_if sup_b2f sup_dbl           märks
+b_sup  f_prgptr          4  sup_flt sup_if sup_b2f sup_dbl           märks
+b_sup  f_utan_fel        1  sup_b2f                                  märks (sup_b2f)
+b_sup  f_x_ar_v          3  sup_flt sup_b2f sup_dbl                  märks

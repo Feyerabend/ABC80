@@ -1,0 +1,23 @@
+ABC80
+10 A%=-5%:B%=1000%:A%=A%+B%:PRINT A%;:A%
+=A%-B%:PRINT A%;:A%=A%+32767%:PRINT A%;:
+A%=A%-(-2%):PRINT A%
+20 B%=B%-B%:PRINT B%;:C%=C%+34%:PRINT C%
+;:C%=C%+35%:PRINT C%;:C%=C%-0%:PRINT C%
+30 D%=32767%:D%=D%+1%:PRINT D%;:D%=D%-1%
+:PRINT D%;:E%=1%:E%=E%+E%:E%=E%+E%:PRINT
+ E%
+40 IF E%=4% THEN E%=E%+1%:PRINT E%
+50 F%=F%+1%:IF F%<5% THEN 50 ELSE PRINT
+F%
+60 A%=7%:B%=3%:A%=A%+B%-A%:PRINT A%;:A%=
+A%-B%+A%:PRINT A%
+RUN
+ 995-5 32762 32764
+ 0 34 69 69
+-32768 32767 4
+ 5
+ 5
+ 3 3
+ABC80
+_

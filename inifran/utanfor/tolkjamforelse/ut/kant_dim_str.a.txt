@@ -1,0 +1,9 @@
+ABC80
+10 DIM A¤(3)=5
+20 A¤(0)="AB"
+30 A¤(3)="XYZW"
+40 PRINT A¤(0);A¤(3);LEN(A¤(1))
+RUN
+ABXYZW 0
+ABC80
+_

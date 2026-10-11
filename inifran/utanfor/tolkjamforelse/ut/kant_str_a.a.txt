@@ -1,0 +1,15 @@
+ABC80
+10 A¤="HEJSAN"
+20 PRINT LEFT¤(A¤,3);RIGHT¤(A¤,4);MID¤(A
+¤,2,3);LEN(A¤)
+30 B¤=A¤+"!"
+40 PRINT B¤;ASC(B¤);CHR¤(65);STR¤(12.5);
+VAL("3.25")+1
+ERR 11
+ABC80
+50 PRINT A¤<B¤;A¤=A¤;"A"<"B";"B"<"A"
+RUN
+HEJSANEJS 6
+-1-1-1 0
+ABC80
+_

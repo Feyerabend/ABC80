@@ -71,13 +71,13 @@ tecken), och tolken saknar `*` och `/`, så proven har bara `+` och `-`.
 
 Provat med en slinga för varje fel, och sedan `1 2 + .` och `BYE`:
 
-| Slinga                            | Boken     | Varianten                  |
-|-----------------------------------|-----------|----------------------------|
-| `BEGIN 1 AGAIN` (fyller)          | `STACK ?` | `STACK ?`                  |
-| `BEGIN DROP AGAIN` (tömmer)       | `STACK ?` | `STACK ?`                  |
-| `BEGIN DROP DROP 1 AGAIN`         | `STACK ?` | `STACK ?`, BASIC klarar sig |
-| `10 0 DO R> DROP LOOP` (returstacken) | `STACK ?` | hänger sig            |
-
+| Slinga                                | Boken     | Varianten                   |
+|---------------------------------------|-----------|-----------------------------|
+| `BEGIN 1 AGAIN` (fyller)              | `STACK ?` | `STACK ?`                   |
+| `BEGIN DROP AGAIN` (tömmer)           | `STACK ?` | `STACK ?`                   |
+| `BEGIN DROP DROP 1 AGAIN`             | `STACK ?` | `STACK ?`, BASIC klarar sig |
+| `10 0 DO R> DROP LOOP` (returstacken) | `STACK ?` | hänger sig                  |
+ 
 Den tömda datastacken fångas i varianten först när SP har gått runt
 minnet och kommit ned under HEAP:s sida; att BASIC klarade sig i provet
 är tur snarare än skydd. En slinga som tömmer returstacken fångas inte

@@ -1,0 +1,17 @@
+ABC80
+10 A%=5%:B%=-7%
+20 A%=A%+1%:PRINT A%;:A%=A%-3%:PRINT A%;
+:A%=A%+B%:PRINT A%;:A%=A%-B%:PRINT A%;:A
+%=A%+A%:PRINT A%;:A%=A%-A%:PRINT A%
+30 C%=32767%:C%=C%+1%:PRINT C%;:C%=C%-1%
+:PRINT C%;:C%=C%+B%:PRINT C%;:D%=D%-1%:P
+RINT D%
+40 A%=A%+300%:PRINT A%;:A%=A%-1000%:PRIN
+T A%;:A%=A%+1%+1%:PRINT A%;:A%=A%-1%-1%:
+PRINT A%;:A%=A%+1%*2%:PRINT A%
+RUN
+ 6 3-4 3 6 0
+-32768 32767 32760-1
+ 300-700-698-700-698
+ABC80
+_

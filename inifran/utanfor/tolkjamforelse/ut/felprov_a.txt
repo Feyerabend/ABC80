@@ -1,0 +1,20 @@
+a_sup  h_lag             1  hel_d                                    märks (sup_adrh): bara den höga adressbyten prövad
+a_sup  h_hog             1  sup_adrh                                 märks (sup_adrh): bara den låga adressbyten prövad
+a_sup  h_geti1           0                                           märks inte: PRIMARY skriver alltid GETI/GETF direkt efter en variabel
+a_sup  h_geti2           0                                           märks inte: som h_geti1, för X
+a_sup  h_b7              2  sup_hel sup_b2                           märks: utan prövningen av ASGNI
+a_sup  h_sub_som_add     2  sup_hel sup_b2                           märks: subtraktionen blir addition
+a_sup  h_ny_de           4  sup_hel sup_for sup_if sup_b2            märks: DE inte flyttad efter satsen
+a_sup  h_konst_hog       2  sup_hel sup_b2                           märks: konstantens höga byte 0
+a_sup  h_hl_fel          0                                           märks inte: bara LET och FOR tar emot tilldelningen, och ingen läser HL
+a_sup  f_lag             1  sup_inte                                 märks (sup_adrf)
+a_sup  f_hog             1  sup_adrf                                 märks (sup_adrf)
+a_sup  f_getf1           0                                           märks inte: som h_geti1
+a_sup  f_getf2           0                                           märks inte: som h_geti1
+a_sup  f_b6              2  sup_inte sup_b2g                         märks: utan prövningen av ASGNF
+a_sup  f_fsub_som_fadd   5  sup_flt sup_fel sup_if sup_b2f sup_dbl   märks
+a_sup  f_konst_bc        5  sup_flt sup_for sup_if sup_b2f sup_dbl   märks: exponenten en byte fel
+a_sup  f_hoger_4         5  sup_flt sup_for sup_if sup_b2f sup_dbl   märks: fyra byte i stället för fem
+a_sup  f_ny_de           5  sup_flt sup_for sup_if sup_b2f sup_dbl   märks: DE inte flyttad
+a_sup  f_ej_tillbaka     5  sup_flt sup_for sup_if sup_b2f sup_dbl   märks: variabeln inte skriven
+a_sup  f_b_1             0                                           märks inte: som h_hl_fel, för B

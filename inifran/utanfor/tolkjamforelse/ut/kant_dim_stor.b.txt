@@ -1,0 +1,7 @@
+ABC800
+10 DIM A(200,200)
+20 PRINT "OK"
+RUN
+Error 201 in line 10.
+ABC800
+_

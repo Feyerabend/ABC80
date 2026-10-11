@@ -1,0 +1,7 @@
+50 PRINT "SLUT"
+RUN
+ 6 3 10 3 6
+ 2.5 2 2.25 2 4
+SLUT
+ABC80
+_

@@ -1,0 +1,10 @@
+ABC800
+10 FOR I%=1 TO 2
+20 FOR I%=7 TO 8
+30 PRINT I%;
+40 NEXT I%
+50 PRINT "/";I%
+RUN
+Error 185 in line 20.
+ABC800
+_

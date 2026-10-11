@@ -1,0 +1,8 @@
+ABC800
+10 DIM A%(5)
+20 I%=-1
+30 PRINT A%(I%)
+RUN
+Error 131 in line 30.
+ABC800
+_

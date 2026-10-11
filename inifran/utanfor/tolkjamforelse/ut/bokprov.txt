@@ -1,0 +1,936 @@
+ok   tests/basic 9913
+ok   tests/basic 11273
+ok   tests/break 9913
+ok   tests/break 11273
+ok   tests/clock 9913
+ok   tests/clock 11273
+ok   tests/rom 9913
+ok   tests/rom 11273
+ok   tests/v24lab 9913
+ok   tests/v24lab 11273
+ok   tests/old/asadd 11273
+ok   tests/old/asadd2 11273
+ok   tests/old/asbad 11273
+ok   tests/old/ascomp 11273
+ok   tests/old/ascomp2 11273
+ok   tests/old/asdiv 11273
+ok   tests/old/asdiv2 11273
+ok   tests/old/asmul 11273
+ok   tests/old/asmul2 11273
+ok   tests/old/assub 11273
+ok   tests/old/casge2 11273
+ok   tests/old/casget 11273
+ok   tests/old/casrbl 11273
+ok   tests/old/caswbl 11273
+FEL  tests/old/chain 11273
+1,2c1,2
+< STANNADE INTE (PC $02F7)
+< A=1A F=7C [-ZP-] BC=7878 DE=FE40 HL=7CD0 IX=FDF3 IY=FE16 SP=FAF8  (1620000 instr.)
+---
+> STANNADE INTE (PC $02F9)
+> A=0D F=7C [-ZP-] BC=7878 DE=FE40 HL=7CD0 IX=FDF3 IY=FE16 SP=FAF8  (1620000 instr.)
+FEL  tests/old/chain2 11273
+1,2c1,2
+< STANNADE INTE (PC $02F5)
+< A=1A F=7C [-ZP-] BC=7878 DE=FE40 HL=7FD0 IX=FDF3 IY=FE16 SP=FAF8  (2100000 instr.)
+---
+> STANNADE INTE (PC $0300)
+> A=1A F=18 [----] BC=7878 DE=FE40 HL=7FD0 IX=FDF3 IY=FE16 SP=FAF8  (2100000 instr.)
+ok   tests/old/close 11273
+ok   tests/old/cur 11273
+ok   tests/old/curfil 11273
+ok   tests/old/curfil2 11273
+ok   tests/old/curfil3 11273
+ok   tests/old/deffn 11273
+ok   tests/old/deffn2 11273
+ok   tests/old/deffn3 11273
+ok   tests/old/deffn4 11273
+ok   tests/old/deffn5 11273
+ok   tests/old/deffn6 11273
+ok   tests/old/detok 11273
+ok   tests/old/detok2 11273
+ok   tests/old/detok3 11273
+FEL  tests/old/detok4 11273
+1,2c1,2
+< STANNADE INTE (PC $396B)
+< A=FF F=A2 [S---] BC=3031 DE=187B HL=465A IX=FADC IY=FE16 SP=FADE  (1800000 instr.)
+---
+> STANNADE INTE (PC $3966)
+> A=30 F=20 [----] BC=3031 DE=465A HL=187C IX=FADC IY=FE16 SP=FADE  (1800000 instr.)
+ok   tests/old/dim 11273
+ok   tests/old/dim2 11273
+ok   tests/old/dim3 11273
+ok   tests/old/dim4 11273
+ok   tests/old/dim5 11273
+ok   tests/old/dim6 11273
+ok   tests/old/dim7 11273
+ok   tests/old/dim8 11273
+ok   tests/old/dimstr 11273
+ok   tests/old/dimstr2 11273
+ok   tests/old/dot 11273
+ok   tests/old/dot2 11273
+ok   tests/old/dot3 11273
+ok   tests/old/ed 11273
+ok   tests/old/errcode 11273
+ok   tests/old/errms2 11273
+ok   tests/old/errmsg 11273
+ok   tests/old/exec 11273
+ok   tests/old/exec2 11273
+ok   tests/old/exec2b 11273
+ok   tests/old/exec3 11273
+ok   tests/old/exec3b 11273
+ok   tests/old/exec4 11273
+ok   tests/old/expr 11273
+ok   tests/old/expr2 11273
+ok   tests/old/expr3 11273
+ok   tests/old/expr3b 11273
+ok   tests/old/expr4 11273
+ok   tests/old/expr4b 11273
+ok   tests/old/expr5 11273
+ok   tests/old/expr5b 11273
+ok   tests/old/fadd 11273
+FEL  tests/old/fcos 11273
+1c1
+< A=01 F=00 [----] BC=0000 DE=CFFF HL=FDCF IX=FAC5 IY=FE16 SP=FAF8  (3492 instr.)
+---
+> A=01 F=00 [----] BC=0000 DE=CFFF HL=FDCF IX=FAC5 IY=FE16 SP=FAF8  (3656 instr.)
+ok   tests/old/fcos2 11273
+FEL  tests/old/fdiv 11273
+1c1
+< A=00 F=A8 [S---] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (1027 instr.)
+---
+> A=00 F=A8 [S---] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (952 instr.)
+FEL  tests/old/fdiv2 11273
+1c1
+< A=00 F=A8 [S---] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (1315 instr.)
+---
+> A=00 F=A8 [S---] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (1183 instr.)
+ok   tests/old/fdiv3 11273
+FEL  tests/old/fdrnd 11273
+1c1
+< A=FF F=A8 [S---] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (2042 instr.)
+---
+> A=FF F=A8 [S---] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (1667 instr.)
+FEL  tests/old/fdrnd2 11273
+1c1
+< A=12 F=28 [----] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (2068 instr.)
+---
+> A=12 F=28 [----] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (1693 instr.)
+ok   tests/old/fdrnd3 11273
+ok   tests/old/ffunc 11273
+ok   tests/old/ffunc2 11273
+ok   tests/old/ffunc3 11273
+ok   tests/old/fint 11273
+ok   tests/old/fltasc 11273
+FEL  tests/old/fmul 11273
+1,2c1,2
+< STANNADE INTE (PC $02FC)
+< A=00 F=40 [-Z--] BC=7878 DE=FE40 HL=7E80 IX=FDF3 IY=FE16 SP=FAF8  (15000 instr.)
+---
+> STANNADE INTE (PC $02F5)
+> A=00 F=7C [-ZP-] BC=7878 DE=FE40 HL=7E80 IX=FDF3 IY=FE16 SP=FAF8  (15000 instr.)
+FEL  tests/old/fmul2 11273
+1c1
+< A=00 F=68 [-Z--] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (722 instr.)
+---
+> A=00 F=68 [-Z--] BC=D405 DE=D405 HL=D415 IX=FAC7 IY=FE16 SP=FAF8  (648 instr.)
+ok   tests/old/fname 11273
+ok   tests/old/fname2 11273
+ok   tests/old/fname3 11273
+ok   tests/old/fname4 11273
+ok   tests/old/fname5 11273
+ok   tests/old/for 11273
+ok   tests/old/for2 11273
+ok   tests/old/for3 11273
+ok   tests/old/fsqr 11273
+ok   tests/old/fsqr2 11273
+ok   tests/old/fsqr3 11273
+FEL  tests/old/fsqr4 11273
+1,2c1,2
+< STANNADE INTE (PC $3646)
+< A=00 F=42 [-Z--] BC=00BD DE=CFFF HL=CFFF IX=FAC7 IY=FE16 SP=FAC1  (900000 instr.)
+---
+> STANNADE INTE (PC $55A5)
+> A=00 F=46 [-ZP-] BC=FA38 DE=FAEA HL=D001 IX=FAC7 IY=FE16 SP=FAC1  (900000 instr.)
+ok   tests/old/get 11273
+ok   tests/old/getflt 11273
+ok   tests/old/getflt2 11273
+ok   tests/old/getflt3 11273
+ok   tests/old/getflt4 11273
+ok   tests/old/getflt5 11273
+ok   tests/old/getflt6 11273
+ok   tests/old/getln 11273
+ok   tests/old/getln2 11273
+ok   tests/old/getln3 11273
+ok   tests/old/getsfl 11273
+ok   tests/old/getsfl2 11273
+ok   tests/old/getsin 11273
+ok   tests/old/getsin2 11273
+ok   tests/old/getsin3 11273
+ok   tests/old/gosub 11273
+ok   tests/old/goto 11273
+ok   tests/old/if 11273
+ok   tests/old/if2 11273
+ok   tests/old/if3 11273
+ok   tests/old/inlin2 11273
+ok   tests/old/inline 11273
+ok   tests/old/inpcall 11273
+ok   tests/old/inplin 11273
+ok   tests/old/input 11273
+ok   tests/old/input2 11273
+ok   tests/old/input3 11273
+ok   tests/old/input4 11273
+ok   tests/old/input5 11273
+ok   tests/old/inslin 11273
+ok   tests/old/inslin2 11273
+ok   tests/old/inslin3 11273
+ok   tests/old/instr 11273
+ok   tests/old/let 11273
+ok   tests/old/list 11273
+ok   tests/old/list2 11273
+ok   tests/old/list3 11273
+FEL  tests/old/lnk8d 11273
+1,2c1,2
+< STANNADE INTE (PC $02F5)
+< A=1A F=7C [-ZP-] BC=7878 DE=FE40 HL=7FA8 IX=FDF3 IY=FE16 SP=FAF8  (1320000 instr.)
+---
+> STANNADE INTE (PC $02FA)
+> A=1A F=18 [----] BC=7878 DE=FE40 HL=7FA8 IX=FDF3 IY=FE16 SP=FAF8  (1320000 instr.)
+FEL  tests/old/lnkfn 11273
+1c1
+< STANNADE INTE (PC $02FA)
+---
+> STANNADE INTE (PC $02F1)
+FEL  tests/old/lnkfor 11273
+1,2c1,2
+< STANNADE INTE (PC $02F1)
+< A=1A F=18 [----] BC=7878 DE=FE40 HL=7D28 IX=FDF3 IY=FE16 SP=FAF8  (2040000 instr.)
+---
+> STANNADE INTE (PC $02F5)
+> A=1A F=7C [-ZP-] BC=7878 DE=FE40 HL=7D28 IX=FDF3 IY=FE16 SP=FAF8  (2040000 instr.)
+ok   tests/old/lnknxt 11273
+ok   tests/old/load 11273
+ok   tests/old/loadbac 11273
+ok   tests/old/loadbc2 11273
+ok   tests/old/mergbac 11273
+ok   tests/old/merge 11273
+ok   tests/old/new 11273
+ok   tests/old/newlin 11273
+ok   tests/old/next 11273
+ok   tests/old/nmiclk 11273
+ok   tests/old/on 11273
+ok   tests/old/on2 11273
+ok   tests/old/onerr 11273
+ok   tests/old/onerr2 11273
+ok   tests/old/open 11273
+ok   tests/old/open2 11273
+ok   tests/old/open3 11273
+FEL  tests/old/openst 11273
+1c1
+< STANNADE INTE (PC $02FC)
+---
+> STANNADE INTE (PC $02FA)
+ok   tests/old/out 11273
+ok   tests/old/out2 11273
+ok   tests/old/poke 11273
+ok   tests/old/pow 11273
+ok   tests/old/pow2 11273
+FEL  tests/old/prelnk 11273
+1c1
+< STANNADE INTE (PC $02FA)
+---
+> STANNADE INTE (PC $0300)
+ok   tests/old/prelnk2 11273
+FEL  tests/old/prelnk3 11273
+1,2c1,2
+< STANNADE INTE (PC $02F9)
+< A=0D F=7C [-ZP-] BC=7878 DE=FE40 HL=7FD0 IX=FDF3 IY=FE16 SP=FAF8  (3180000 instr.)
+---
+> STANNADE INTE (PC $02FC)
+> A=1A F=18 [----] BC=7878 DE=FE40 HL=7FD0 IX=FDF3 IY=FE16 SP=FAF8  (3180000 instr.)
+ok   tests/old/prelnk4 11273
+ok   tests/old/print 11273
+ok   tests/old/prnum 11273
+ok   tests/old/prnum2 11273
+ok   tests/old/prsin 11273
+ok   tests/old/prtcom 11273
+ok   tests/old/prtexp 11273
+ok   tests/old/prtexp2 11273
+ok   tests/old/prtfit 11273
+ok   tests/old/prtxt 11273
+ok   tests/old/random 11273
+FEL  tests/old/random2 11273
+14c14
+<  .624692
+---
+>  .511478
+18c18
+<  .557631
+---
+>  .553679
+ok   tests/old/read 11273
+ok   tests/old/ren 11273
+ok   tests/old/ren2 11273
+ok   tests/old/restore 11273
+ok   tests/old/return 11273
+ok   tests/old/return2 11273
+ok   tests/old/rnd 11273
+ok   tests/old/rnd2 11273
+ok   tests/old/rndini 11273
+ok   tests/old/room 11273
+ok   tests/old/room2 11273
+FEL  tests/old/run 11273
+1c1
+< STANNADE INTE (PC $02F1)
+---
+> STANNADE INTE (PC $02FC)
+FEL  tests/old/run2 11273
+1,2c1,2
+< STANNADE INTE (PC $02FC)
+< A=1A F=18 [----] BC=7878 DE=FE40 HL=7E50 IX=FDF3 IY=FE16 SP=FAF8  (1170000 instr.)
+---
+> STANNADE INTE (PC $02F7)
+> A=1A F=7C [-ZP-] BC=7878 DE=FE40 HL=7E50 IX=FDF3 IY=FE16 SP=FAF8  (1170000 instr.)
+FEL  tests/old/run3 11273
+1,2c1,2
+< STANNADE INTE (PC $02FA)
+< A=1A F=18 [----] BC=7878 DE=FE40 HL=7E28 IX=FDF3 IY=FE16 SP=FAF8  (900000 instr.)
+---
+> STANNADE INTE (PC $02F7)
+> A=1A F=7C [-ZP-] BC=7878 DE=FE40 HL=7E28 IX=FDF3 IY=FE16 SP=FAF8  (900000 instr.)
+ok   tests/old/save 11273
+ok   tests/old/save2 11273
+ok   tests/old/save3 11273
+FEL  tests/old/save4 11273
+1c1
+< STANNADE INTE (PC $02FC)
+---
+> STANNADE INTE (PC $02FA)
+ok   tests/old/stkchk 11273
+ok   tests/old/stkchk2 11273
+ok   tests/old/stop 11273
+ok   tests/old/strcat 11273
+ok   tests/old/strfil 11273
+ok   tests/old/strfn 11273
+ok   tests/old/toklin 11273
+ok   tests/old/toklin2 11273
+ok   tests/old/toklin3 11273
+ok   tests/old/toklin4 11273
+ok   tests/old/trace 11273
+ok   tests/old/trace2 11273
+ok   tests/old/trace3 11273
+ok   tests/old/txtend 11273
+ok   tests/old/txtinp 11273
+ok   tests/old/txtinp2 11273
+ok   tests/old/txtinp3 11273
+ok   tests/old/txtinp4 11273
+ok   tests/old/txtprt 11273
+ok   tests/old/txtprt2 11273
+ok   tests/old/txtprt3 11273
+ok   tests/old/val 11273
+ok   tests/old/wrap 11273
+ok   tests/bii/atn basicii80
+ok   tests/bii/auto basicii80
+ok   tests/bii/auto2 basicii80
+ok   tests/bii/bcdcarry basicii80
+ok   tests/bii/bcdexp basicii80
+ok   tests/bii/bcdlim basicii80
+ok   tests/bii/bcdmul basicii80
+ok   tests/bii/bcdops basicii80
+ok   tests/bii/bcdtrunc basicii80
+FEL  tests/bii/binerr basicii80
+26c26,41
+< 0000: FF FF FF 41 42 0D 43 00 44 0D C8 0D
+---
+> 0000: FE C2 D2 41 42 0D 43 00 44 0D C8 0D 23 23 7E FE
+> 0010: DD 30 0A FE C1 28 04 FE C7 20 62 23 23 23 7E FE
+> 0020: 9C 28 04 FE 9F 20 56 23 7E FE B5 20 50 23 1A BE
+> 0030: 20 4B 13 23 1A 1B BE 20 44 23 E5 CD 63 0F E5 4E
+> 0040: 23 46 C5 1A 13 D6 DD 38 05 6F 26 00 18 11 FE EA
+> 0050: 28 05 CD 63 0F 18 04 62 6B 13 13 7E 23 66 6F C1
+> 0060: 1A FE 9C 20 03 09 18 07 E5 60 69 C1 A7 ED 42 44
+> 0070: 4D E1 71 23 70 2B D1 22 36 FF 06 01 C9 C3 A6 22
+> 0080: 62 6B 23 23 7E FE C0 28 0E D6 D5 FE 08 30 72 3C
+> 0090: 85 6F 30 05 24 18 02 23 23 23 7E FE 9B 28 04 FE
+> 00A0: 9E 20 5E 23 7E FE B4 20 58 23 1A BE 20 53 13 23
+> 00B0: 1A 1B BE 20 4C CD 63 0F E5 D9 E1 CD 25 4C D9 1A
+> 00C0: 13 FE C0 20 10 CD 63 0F E5 D9 E1 CD 25 4C D9 DD
+> 00D0: 21 E0 57 18 0B D6 D4 EB CD 00 48 EB DD 21 F4 20
+> 00E0: 1A 13 ED 53 3A FF 4F 06 00 21 41 4F FE 9B 28 03
+> 00F0: 21 39 4F CD BC 1D DA 7B 21 ED 5B 3A FF 13 C3
+ok   tests/bii/brk basicii80
+ok   tests/bii/callpoke basicii80
+ok   tests/bii/cdata basicii80
+ok   tests/bii/cdef basicii80
+ok   tests/bii/cexpr basicii80
+ok   tests/bii/cfile basicii80
+ok   tests/bii/cfor basicii80
+ok   tests/bii/cfunc basicii80
+FEL  tests/bii/chain basicii80
+1,24c1,24
+< ABC800
+< 10 COMMON A%
+< SAVE TST:Q
+< ABC800
+< 10 COMMON B
+< 20 PRINT B
+< 30
+< SAVE TST:R
+< ABC800
+< 10 COMMON A
+< 20 A=5
+< 30 CHAIN "TST:Q"
+< RUN
+< Error 205.
+< ABC800
+< LIST
+< ABC800
+< 10 COMMON A
+< 20 A=5
+ok   tests/bii/chain2 basicii80
+FEL  tests/bii/chain3 basicii80
+1,21c1,24
+< ABC800
+< 10 COMMON A
+< 20 A=A+1:PRINT A
+< 30 IF A<3 THEN CHAIN "TST:P"
+< SAVE TST:P
+< ABC800
+< RUN
+<  1
+<  2
+<  3
+< ABC800
+< LOAD TST:P
+< ABC800
+< RUN
+<  1
+<  2
+<  3
+< ABC800
+< CLEAR
+ok   tests/bii/chainlen basicii80
+ok   tests/bii/chr basicii80
+ok   tests/bii/cif basicii80
+ok   tests/bii/cinput basicii80
+ok   tests/bii/cinput2 basicii80
+ok   tests/bii/ckonst basicii80
+ok   tests/bii/clnr0 basicii80
+ok   tests/bii/clock basicii80
+ok   tests/bii/cmdgo basicii80
+ok   tests/bii/cmdres basicii80
+ok   tests/bii/cmdres2 basicii80
+ok   tests/bii/cmid basicii80
+ok   tests/bii/cmplin basicii80
+ok   tests/bii/cmplin2 basicii80
+ok   tests/bii/colkw basicii80
+ok   tests/bii/common basicii80
+ok   tests/bii/common2 basicii80
+ok   tests/bii/comps basicii80
+ok   tests/bii/con basicii80
+ok   tests/bii/coninp basicii80
+ok   tests/bii/coninp2 basicii80
+ok   tests/bii/coninp3 basicii80
+ok   tests/bii/coninp4 basicii80
+ok   tests/bii/coninp5 basicii80
+ok   tests/bii/cprint basicii80
+ok   tests/bii/cprint2 basicii80
+ok   tests/bii/cprint3 basicii80
+ok   tests/bii/curlft basicii80
+ok   tests/bii/cvar basicii80
+ok   tests/bii/cvt basicii80
+ok   tests/bii/cxstm basicii80
+ok   tests/bii/cxy basicii80
+ok   tests/bii/daddb basicii80
+ok   tests/bii/daddb8 basicii80
+ok   tests/bii/daddx basicii80
+ok   tests/bii/darith basicii80
+ok   tests/bii/ddivx basicii80
+ok   tests/bii/ddivz basicii80
+ok   tests/bii/decdig basicii80
+ok   tests/bii/decdim basicii80
+ok   tests/bii/decif basicii80
+ok   tests/bii/decint basicii80
+ok   tests/bii/declong basicii80
+ok   tests/bii/decnum basicii80
+ok   tests/bii/decop basicii80
+ok   tests/bii/dectof basicii80
+ok   tests/bii/dectof8 basicii80
+ok   tests/bii/dectofb basicii80
+ok   tests/bii/dectofs basicii80
+ok   tests/bii/digits basicii80
+ok   tests/bii/dim190 basicii80
+ok   tests/bii/dimgr basicii80
+ok   tests/bii/dimigen basicii80
+ok   tests/bii/dmulovf basicii80
+ok   tests/bii/dmulx basicii80
+ok   tests/bii/docmd basicii80
+ok   tests/bii/dolin basicii80
+ok   tests/bii/dosbad basicii80
+ok   tests/bii/dosbadw basicii80
+ok   tests/bii/dosbye basicii80
+ok   tests/bii/dosbye2 basicii80
+ok   tests/bii/doschan basicii80
+ok   tests/bii/doscre basicii80
+ok   tests/bii/doscrep basicii80
+ok   tests/bii/doserr basicii80
+ok   tests/bii/dosflag21 basicii80
+ok   tests/bii/dosflag22 basicii80
+ok   tests/bii/dosflag23 basicii80
+ok   tests/bii/dosgrow basicii80
+ok   tests/bii/doshdr basicii80
+ok   tests/bii/doskerr basicii80
+ok   tests/bii/doskerr2 basicii80
+ok   tests/bii/doskill basicii80
+ok   tests/bii/dosload basicii80
+ok   tests/bii/dosname basicii80
+ok   tests/bii/dosname2 basicii80
+ok   tests/bii/dosprep basicii80
+ok   tests/bii/dosprot basicii80
+ok   tests/bii/dosrw basicii80
+ok   tests/bii/dosunsav basicii80
+ok   tests/bii/dosxstm basicii80
+ok   tests/bii/ed basicii80
+FEL  tests/bii/endcls basicii80
+26,27c26,57
+< 0000: FF FF FF 58 59 0D 5A 0D 57 0D 03
+< 0100: FF FF FF 00 00 00 00 00 00 03 03
+---
+> 0000: FE C2 D2 58 59 0D 5A 0D 57 0D 03 6B 23 23 7E FE
+> 0010: DD 30 0A FE C1 28 04 FE C7 20 62 23 23 23 7E FE
+> 0020: 9C 28 04 FE 9F 20 56 23 7E FE B5 20 50 23 1A BE
+> 0030: 20 4B 13 23 1A 1B BE 20 44 23 E5 CD 63 0F E5 4E
+> 0040: 23 46 C5 1A 13 D6 DD 38 05 6F 26 00 18 11 FE EA
+> 0050: 28 05 CD 63 0F 18 04 62 6B 13 13 7E 23 66 6F C1
+> 0060: 1A FE 9C 20 03 09 18 07 E5 60 69 C1 A7 ED 42 44
+> 0070: 4D E1 71 23 70 2B D1 22 36 FF 06 01 C9 C3 A6 22
+> 0080: 62 6B 23 23 7E FE C0 28 0E D6 D5 FE 08 30 72 3C
+> 0090: 85 6F 30 05 24 18 02 23 23 23 7E FE 9B 28 04 FE
+> 00A0: 9E 20 5E 23 7E FE B4 20 58 23 1A BE 20 53 13 23
+> 00B0: 1A 1B BE 20 4C CD 63 0F E5 D9 E1 CD 25 4C D9 1A
+> 00C0: 13 FE C0 20 10 CD 63 0F E5 D9 E1 CD 25 4C D9 DD
+> 00D0: 21 E0 57 18 0B D6 D4 EB CD 00 48 EB DD 21 F4 20
+> 00E0: 1A 13 ED 53 3A FF 4F 06 00 21 41 4F FE 9B 28 03
+> 00F0: 21 39 4F CD BC 1D DA 7B 21 ED 5B 3A FF 13 C3
+ok   tests/bii/erase basicii80
+ok   tests/bii/escpos basicii80
+ok   tests/bii/expwrap basicii80
+ok   tests/bii/extend basicii80
+ok   tests/bii/farith basicii80
+ok   tests/bii/fdivlim basicii80
+ok   tests/bii/fdivovf basicii80
+ok   tests/bii/felrad basicii80
+ok   tests/bii/fixint basicii80
+ok   tests/bii/fmfree basicii80
+ok   tests/bii/fmround basicii80
+ok   tests/bii/fncall basicii80
+ok   tests/bii/fnerr basicii80
+ok   tests/bii/fnerr2 basicii80
+ok   tests/bii/fnlocal basicii80
+ok   tests/bii/fnlocal2 basicii80
+ok   tests/bii/fnrek basicii80
+ok   tests/bii/fnret basicii80
+ok   tests/bii/fnret2 basicii80
+ok   tests/bii/fornext basicii80
+ok   tests/bii/fornext2 basicii80
+ok   tests/bii/forwrap basicii80
+ok   tests/bii/fovfl basicii80
+ok   tests/bii/fpow basicii80
+ok   tests/bii/ftodec basicii80
+ok   tests/bii/ftodec8 basicii80
+ok   tests/bii/ftoi basicii80
+ok   tests/bii/getf basicii80
+ok   tests/bii/idiv basicii80
+ok   tests/bii/ifrnd basicii80
+ok   tests/bii/ilog basicii80
+ok   tests/bii/init basicii80
+ok   tests/bii/init2 basicii80
+ok   tests/bii/inlinf basicii80
+ok   tests/bii/inpint basicii80
+ok   tests/bii/inputvals basicii80
+ok   tests/bii/inputvals2 basicii80
+ok   tests/bii/instr basicii80
+ok   tests/bii/kwsrch basicii80
+ok   tests/bii/kwsrch2 basicii80
+ok   tests/bii/link basicii80
+ok   tests/bii/link2 basicii80
+ok   tests/bii/link3 basicii80
+ok   tests/bii/link4 basicii80
+ok   tests/bii/linkcom basicii80
+ok   tests/bii/linkdir basicii80
+ok   tests/bii/linnr basicii80
+FEL  tests/bii/listfil basicii80
+26c26
+< 0000: FF FF FF 8F 00 39 00 3C 00 00 00 00 00 01 00 08
+---
+> 0000: FE C2 D2 8F 00 39 00 3C 00 00 00 00 00 01 00 08
+30c30,41
+< 0040: 80 78 01
+---
+> 0040: 80 78 01 1A 13 D6 DD 38 05 6F 26 00 18 11 FE EA
+> 0050: 28 05 CD 63 0F 18 04 62 6B 13 13 7E 23 66 6F C1
+> 0060: 1A FE 9C 20 03 09 18 07 E5 60 69 C1 A7 ED 42 44
+> 0070: 4D E1 71 23 70 2B D1 22 36 FF 06 01 C9 C3 A6 22
+> 0080: 62 6B 23 23 7E FE C0 28 0E D6 D5 FE 08 30 72 3C
+> 0090: 85 6F 30 05 24 18 02 23 23 23 7E FE 9B 28 04 FE
+> 00A0: 9E 20 5E 23 7E FE B4 20 58 23 1A BE 20 53 13 23
+> 00B0: 1A 1B BE 20 4C CD 63 0F E5 D9 E1 CD 25 4C D9 1A
+> 00C0: 13 FE C0 20 10 CD 63 0F E5 D9 E1 CD 25 4C D9 DD
+> 00D0: 21 E0 57 18 0B D6 D4 EB CD 00 48 EB DD 21 F4 20
+> 00E0: 1A 13 ED 53 3A FF 4F 06 00 21 41 4F FE 9B 28 03
+> 00F0: 21 39 4F CD BC 1D DA 7B 21 ED 5B 3A FF 13 C3
+32c43
+ok   tests/bii/listpag basicii80
+ok   tests/bii/listrng basicii80
+ok   tests/bii/load basicii80
+ok   tests/bii/logexp basicii80
+ok   tests/bii/lstdeep basicii80
+ok   tests/bii/lstind basicii80
+ok   tests/bii/lststm basicii80
+ok   tests/bii/mem201 basicii80
+ok   tests/bii/mem201b basicii80
+ok   tests/bii/memerr basicii80
+ok   tests/bii/memlay basicii80
+ok   tests/bii/midst basicii80
+ok   tests/bii/modes basicii80
+ok   tests/bii/negzero basicii80
+ok   tests/bii/nuldev basicii80
+ok   tests/bii/numcon basicii80
+ok   tests/bii/numdig basicii80
+ok   tests/bii/numstr basicii80
+ok   tests/bii/onerr basicii80
+ok   tests/bii/onerr2 basicii80
+ok   tests/bii/onerr3 basicii80
+ok   tests/bii/onlist basicii80
+ok   tests/bii/open basicii80
+ok   tests/bii/open2 basicii80
+ok   tests/bii/open3 basicii80
+ok   tests/bii/open4 basicii80
+ok   tests/bii/open5 basicii80
+ok   tests/bii/parsfn basicii80
+FEL  tests/bii/posit basicii80
+28,34c28,43
+< 0200: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+< 0210: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+< 0220: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+< 0230: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+< 0240: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+< 0250: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+< 0260: FF 51
+---
+> 0200: FE C2 D2 AA 1D 13 FE C1 20 76 62 6B 23 23 7E FE
+> 0210: DD 30 0A FE C1 28 04 FE C7 20 62 23 23 23 7E FE
+> 0220: 9C 28 04 FE 9F 20 56 23 7E FE B5 20 50 23 1A BE
+> 0230: 20 4B 13 23 1A 1B BE 20 44 23 E5 CD 63 0F E5 4E
+> 0240: 23 46 C5 1A 13 D6 DD 38 05 6F 26 00 18 11 FE EA
+> 0250: 28 05 CD 63 0F 18 04 62 6B 13 13 7E 23 66 6F C1
+> 0260: 1A 51 9C 20 03 09 18 07 E5 60 69 C1 A7 ED 42 44
+> 0270: 4D E1 71 23 70 2B D1 22 36 FF 06 01 C9 C3 A6 22
+> 0280: 62 6B 23 23 7E FE C0 28 0E D6 D5 FE 08 30 72 3C
+> 0290: 85 6F 30 05 24 18 02 23 23 23 7E FE 9B 28 04 FE
+> 02A0: 9E 20 5E 23 7E FE B4 20 58 23 1A BE 20 53 13 23
+ok   tests/bii/powi basicii80
+ok   tests/bii/prbad basicii80
+ok   tests/bii/prerr basicii80
+ok   tests/bii/prff basicii80
+ok   tests/bii/prff2 basicii80
+ok   tests/bii/propen basicii80
+ok   tests/bii/prpar basicii80
+ok   tests/bii/prprep basicii80
+ok   tests/bii/prshared basicii80
+ok   tests/bii/prwidth basicii80
+ok   tests/bii/prwrap basicii80
+ok   tests/bii/pscanres basicii80
+FEL  tests/bii/putinp basicii80
+26c26
+< 0000: FF FF FF 09 01 09 01 09 01 09 01 09 01 09 01 09
+---
+> 0000: FE C2 D2 09 01 09 01 09 01 09 01 09 01 09 01 09
+42c42
+< 0100: FF FF FF 0D 41 42 00 43 0D 09 01 09 01 09 01 09
+---
+> 0100: FE C2 D2 0D 41 42 00 43 0D 09 01 09 01 09 01 09
+ok   tests/bii/rattmall basicii80
+ok   tests/bii/readdata basicii80
+ok   tests/bii/readdata2 basicii80
+ok   tests/bii/readdata3 basicii80
+ok   tests/bii/renum basicii80
+ok   tests/bii/renum2 basicii80
+ok   tests/bii/renum3 basicii80
+ok   tests/bii/renum4 basicii80
+ok   tests/bii/resume basicii80
+ok   tests/bii/retfor basicii80
+ok   tests/bii/run basicii80
+FEL  tests/bii/save basicii80
+1,20d0
+< ABC800
+< 10 A=1 : B¤="XY" : C%=2 : D(3)=4
+< 20 PRINT A;B¤;C%;D(3)
+< SAVE TST:P
+< ABC800
+< NEW
+< ABC800
+< LOAD TST:P
+< ABC800
+< LIST
+< 10 A=1 : B¤="XY" : C%=2 : D(3)=4
+< 20 PRINT A;B¤;C%;D(3)
+< ABC800
+< PRINT A;B¤;C%
+<  0  0
+< ABC800
+< RUN
+<  1 XY 2  4
+< ABC800
+FEL  tests/bii/save2 basicii80
+1,24c1
+< ABC800
+< DOUBLE
+< ABC800
+< 10 A=2/3:PRINT A
+< SAVE TST:D
+< ABC800
+< NEW
+< ABC800
+< SINGLE
+< ABC800
+< LOAD TST:D
+< ABC800
+< PRINT 2/3
+<  .6666666666666667
+< ABC800
+< RUN
+<  .6666666666666667
+< ABC800
+< NEW
+ok   tests/bii/save3 basicii80
+ok   tests/bii/scat basicii80
+ok   tests/bii/scmp basicii80
+ok   tests/bii/sinbig basicii80
+ok   tests/bii/sincos basicii80
+ok   tests/bii/sincos8 basicii80
+ok   tests/bii/single211 basicii80
+ok   tests/bii/skydd basicii80
+ok   tests/bii/skydd2 basicii80
+ok   tests/bii/sqr basicii80
+ok   tests/bii/sqr8 basicii80
+FEL  tests/bii/step basicii80
+8c8
+<  18 * 19 * 20 * 21 * 22 * 23 * 24 *_
+---
+>  18 * 19 * 20 * 21 * 22 * 23 * 24 * 25 _
+ok   tests/bii/stmend basicii80
+ok   tests/bii/stopcon basicii80
+ok   tests/bii/stoperr basicii80
+ok   tests/bii/strasg basicii80
+ok   tests/bii/strfil basicii80
+ok   tests/bii/strfn basicii80
+ok   tests/bii/sys basicii80
+ok   tests/bii/sys2 basicii80
+ok   tests/bii/tab basicii80
+ok   tests/bii/trace basicii80
+ok   tests/bii/trace2 basicii80
+ok   tests/bii/trace32 basicii80
+FEL  tests/bii/txtfil basicii80
+26,29c26,57
+< 0000: FF FF FF 41 09 04 42 09 03 0D 43 44 0D 45 0D 46
+< 0010: 20 20 47 0D 48 20 0D 03
+< 0100: FF FF FF 00 00 00 00 00 00 03 43 44 0D 45 0D 46
+< 0110: 20 20 47 0D 48 20 0D 03
+---
+> 0000: FE C2 D2 41 09 04 42 09 03 0D 43 44 0D 45 0D 46
+> 0010: 20 20 47 0D 48 20 0D 03 C7 20 62 23 23 23 7E FE
+> 0020: 9C 28 04 FE 9F 20 56 23 7E FE B5 20 50 23 1A BE
+> 0030: 20 4B 13 23 1A 1B BE 20 44 23 E5 CD 63 0F E5 4E
+> 0040: 23 46 C5 1A 13 D6 DD 38 05 6F 26 00 18 11 FE EA
+> 0050: 28 05 CD 63 0F 18 04 62 6B 13 13 7E 23 66 6F C1
+> 0060: 1A FE 9C 20 03 09 18 07 E5 60 69 C1 A7 ED 42 44
+> 0070: 4D E1 71 23 70 2B D1 22 36 FF 06 01 C9 C3 A6 22
+> 0080: 62 6B 23 23 7E FE C0 28 0E D6 D5 FE 08 30 72 3C
+> 0090: 85 6F 30 05 24 18 02 23 23 23 7E FE 9B 28 04 FE
+> 00A0: 9E 20 5E 23 7E FE B4 20 58 23 1A BE 20 53 13 23
+> 00B0: 1A 1B BE 20 4C CD 63 0F E5 D9 E1 CD 25 4C D9 1A
+> 00C0: 13 FE C0 20 10 CD 63 0F E5 D9 E1 CD 25 4C D9 DD
+> 00D0: 21 E0 57 18 0B D6 D4 EB CD 00 48 EB DD 21 F4 20
+FEL  tests/bii/txtfil2 basicii80
+26,27c26,57
+< 0000: FF FF FF 41 09 2C 42 0D 43 0D 03
+< 0100: FF FF FF 00 00 00 00 00 00 03 03
+---
+> 0000: FE C2 D2 41 09 2C 42 0D 43 0D 03 6B 23 23 7E FE
+> 0010: DD 30 0A FE C1 28 04 FE C7 20 62 23 23 23 7E FE
+> 0020: 9C 28 04 FE 9F 20 56 23 7E FE B5 20 50 23 1A BE
+> 0030: 20 4B 13 23 1A 1B BE 20 44 23 E5 CD 63 0F E5 4E
+> 0040: 23 46 C5 1A 13 D6 DD 38 05 6F 26 00 18 11 FE EA
+> 0050: 28 05 CD 63 0F 18 04 62 6B 13 13 7E 23 66 6F C1
+> 0060: 1A FE 9C 20 03 09 18 07 E5 60 69 C1 A7 ED 42 44
+> 0070: 4D E1 71 23 70 2B D1 22 36 FF 06 01 C9 C3 A6 22
+> 0080: 62 6B 23 23 7E FE C0 28 0E D6 D5 FE 08 30 72 3C
+> 0090: 85 6F 30 05 24 18 02 23 23 23 7E FE 9B 28 04 FE
+> 00A0: 9E 20 5E 23 7E FE B4 20 58 23 1A BE 20 53 13 23
+> 00B0: 1A 1B BE 20 4C CD 63 0F E5 D9 E1 CD 25 4C D9 1A
+> 00C0: 13 FE C0 20 10 CD 63 0F E5 D9 E1 CD 25 4C D9 DD
+> 00D0: 21 E0 57 18 0B D6 D4 EB CD 00 48 EB DD 21 F4 20
+> 00E0: 1A 13 ED 53 3A FF 4F 06 00 21 41 4F FE 9B 28 03
+> 00F0: 21 39 4F CD BC 1D DA 7B 21 ED 5B 3A FF 13 C3
+ok   tests/bii/unmin basicii80
+ok   tests/bii/usefld basicii80
+ok   tests/bii/usefld2 basicii80
+ok   tests/bii/using basicii80
+ok   tests/bii/using2 basicii80
+ok   tests/bii/using3 basicii80
+ok   tests/bii/val basicii80
+ok   tests/bii/valform basicii80
+ok   tests/bii/varptr basicii80
+ok   tests/bii/varst basicii80
+ok   tests/bii/vext basicii80
+ok   tests/bii/vextlst basicii80
+ok   tests/bii/vinteg basicii80
+FEL  tests/bii/vnamlst basicii80
+1,24c1,24
+< SAVE TST:X
+< ABC800
+< NEW
+< ABC800
+< EXTEND
+< ABC800
+< 10 ALPHA=1
+< 10
+< PRINT GAMMA
+<  0
+< ABC800
+< 20 BETA=2
+< RUN
+< ABC800
+< SAVE TST:Y
+< ABC800
+< NEW
+< ABC800
+< EXTEND
+ok   tests/bii/vnamn basicii80
+ok   tests/bii/while basicii80
+ok   tests/bii/wrap basicii80
+ok   tests/bii/xfn basicii80
+ok   tests/bii/xstmtab basicii80
+ok   tests/ufd/auto 11273
+ok   tests/ufd/bye 11273
+ok   tests/ufd/bye2 11273
+ok   tests/ufd/bye3 11273
+ok   tests/ufd/cold 11273
+ok   tests/ufd/eof 11273
+ok   tests/ufd/fix 11273
+ok   tests/ufd/hdr 11273
+ok   tests/ufd/kill 11273
+ok   tests/ufd/load 11273
+ok   tests/ufd/name 11273
+ok   tests/ufd/namepr 11273
+ok   tests/ufd/prepdef 11273
+ok   tests/ufd/rderr 11273
+ok   tests/ufd/sector 11273
+ok   tests/ufd/secwr 11273
+ok   tests/ufd/ufd 11273
+ok   tests/ufd/ufdhdr 11273
+ok   tests/ufd/unit 11273
+ok   tests/ufd/unsav 11273
+ok   tests/ufd/unsav2 11273
+ok   tests/ufd/warm 11273
+ok   tests/ufd/wprot 11273
+ok   tests/ufd/wrerr 11273
+ok   tests/ufd/wrerr2 11273
+ok   tests/ufd/wrerr3 11273
+ok   tests/pr/autop 11273
+ok   tests/pr/autou 11273
+ok   tests/pr/autov 11273
+ok   tests/pr/baderr 11273
+ok   tests/pr/baud 11273
+ok   tests/pr/busy 11273
+ok   tests/pr/card 11273
+ok   tests/pr/err 11273
+ok   tests/pr/ff 11273
+ok   tests/pr/marg0 11273
+ok   tests/pr/marga 11273
+ok   tests/pr/margb 11273
+ok   tests/pr/nul 11273
+ok   tests/pr/parity 11273
+ok   tests/pr/pbrk 11273
+ok   tests/pr/rgb 11273
+ok   tests/pr/rgbesc 11273
+ok   tests/pr/rgbgr 11273
+ok   tests/pr/shared 11273
+ok   tests/pr/vopen 11273
+ok   tests/pr/widtha 11273
+ok   tests/pr/widthc 11273
+ok   tests/pr/wrapcnt 11273
+ok   tests/iec/adr 11273
+ok   tests/iec/again 11273
+ok   tests/iec/basic 11273
+ok   tests/iec/before 11273
+ok   tests/iec/bit4 11273
+ok   tests/iec/both 11273
+ok   tests/iec/brkread 11273
+ok   tests/iec/close 11273
+ok   tests/iec/comma 11273
+ok   tests/iec/comma1 11273
+ok   tests/iec/compile 11273
+ok   tests/iec/eoi 11273
+ok   tests/iec/err3 11273
+ok   tests/iec/err32 11273
+ok   tests/iec/err52 11273
+ok   tests/iec/err55 11273
+ok   tests/iec/listen 11273
+ok   tests/iec/noeoi 11273
+ok   tests/iec/nofcb 11273
+ok   tests/iec/nolsn 11273
+ok   tests/iec/prog 11273
+ok   tests/iec/reuse 11273
+ok   tests/iec/sendeoi 11273
+FEL  tests/iec/standby 11273
+11,13d10
+< STOP
+< ABC80
+< CLOSE 1
+15,16d11
+< ABC80
+< OPEN "IEC:" AS FILE 1
+18,19d12
+< ABC80
+< CMD "?"
+21,22d13
+< ABC80
+< _
+24a16,24
+> 
+> 
+> 
+> 
+> 
+> 
+ok   tests/iec/term 11273
+ok   tests/iec/two 11273
+ok   tests/iec/zero 11273
+ok   tests/fd2/bye 11273
+ok   tests/fd2/byefel 11273
+ok   tests/fd2/enhet 11273
+ok   tests/fd2/errtxt 11273
+ok   tests/fd2/hang 11273
+ok   tests/fd2/hangw 11273
+PC=6661 A=00 F=83 [S--C] BC=00F8 DE=0280 HL=FD20 IX=F4EF SP=F4D7
+PC=6661 A=A0 F=A0 [S---] BC=0000 DE=02A0 HL=FD20 IX=F4EF SP=F4D7
+PC=6661 A=C0 F=80 [S---] BC=0000 DE=02C0 HL=FD20 IX=F4EF SP=F4D7
+PC=6661 A=E0 F=A0 [S---] BC=0000 DE=02E0 HL=FD20 IX=F4EF SP=F4D7
+ok   tests/fd2/kat1 11273
+ok   tests/fd2/kill 11273
+ok   tests/fd2/name 11273
+ok   tests/fd2/name2 11273
+ok   tests/fd2/openq 11273
+ok   tests/fd2/openq2 11273
+ok   tests/fd2/openq3 11273
+ok   tests/fd2/prgsig 11273
+ok   tests/fd2/prgsig2 11273
+ok   tests/fd2/prot 11273
+ok   tests/fd2/rderr 11273
+ok   tests/fd2/rderr2 11273
+ok   tests/fd2/save 11273
+ok   tests/fd2/text 11273
+ok   tests/fd2/tom 11273
+ok   tests/fd2/wrerr 11273

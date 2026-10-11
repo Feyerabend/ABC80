@@ -1,0 +1,6 @@
+ABC800
+10 PRINT 0*-1;-0;1E38*10
+Error 234.
+RUN
+ABC800
+_

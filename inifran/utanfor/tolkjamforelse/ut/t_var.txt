@@ -1,0 +1,17 @@
+prov        förut     a_var   vinst  skärmen
+B1           0.958     0.958    0.0%  samma
+B2           2.115     2.045    3.3%  samma
+B3          10.853    10.605    2.3%  samma
+B4          11.827    11.724    0.9%  samma
+B5          12.246    12.143    0.8%  samma
+B6          17.485    17.385    0.6%  samma
+B7          23.574    23.112    2.0%  samma
+B8          13.318    13.301    0.1%  samma
+FIZZ         3.573     3.553    0.6%  samma
+FIZZ1        1.403     1.376    1.9%  samma
+INTER       12.929    12.672    2.0%  samma
+MANDEL     169.131   164.562    2.7%  samma
+NOEL        24.418    23.722    2.9%  samma
+NOEL1        9.333     8.423    9.8%  samma
+PRIMES      93.562    92.387    1.3%  samma
+SIEVE       26.312    23.950    9.0%  samma

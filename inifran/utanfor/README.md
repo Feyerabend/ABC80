@@ -12,9 +12,10 @@ Bokens egna filer ändras aldrig härifrån: skripten kopierar det de
 behöver (i det publika förrådet från `inifran/forth/` och
 `inifran/verktyg/`) och ändrar kopian.
 
-| Mapp           | Vad                                                        |
-|----------------|------------------------------------------------------------|
-| `forth_snabb/` | Forth-tolken från exempel 7 med en billigare stackprövning, mätt mot BASIC och mot bokens version |
+| Mapp              | Vad                                                        |
+|-------------------|------------------------------------------------------------|
+| `forth_snabb/`    | Forth-tolken från exempel 7 med en billigare stackprövning, mätt mot BASIC och mot bokens version |
+| `tolkjamforelse/` | ABC80-BASIC:en och BASIC II mätta med samma prov, profilerade per rutin, och lappade ROM:ar med billigare satsslinga, uttryckskoder, variabler, fält och BCD-flyttal |
 
 Annat utanför boken ligger hos det det hör till: CMOS-minnet och
 *Forth med CMOS* (`e7c.fs` bland Forth-källorna och

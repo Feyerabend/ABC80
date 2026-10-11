@@ -1,0 +1,17 @@
+prov        förut     b_nxt   vinst  skärmen
+B1           0.858     0.902   -5.1%  samma
+B2           1.814     1.814    0.0%  samma
+B3           5.977     5.977    0.0%  samma
+B4           5.998     5.998    0.0%  samma
+B5           6.440     6.440    0.0%  samma
+B6          11.683    11.904   -1.9%  samma
+B7          19.833    20.054   -1.1%  samma
+B8           2.886     2.886    0.0%  samma
+FIZZ         2.229     2.233   -0.2%  samma
+FIZZ1        1.473     1.471    0.1%  samma
+INTER        6.728     6.780   -0.8%  samma
+MANDEL      92.573    92.612   -0.0%  samma
+NOEL        18.766    19.208   -2.4%  samma
+NOEL1        7.839     7.728    1.4%  samma
+PRIMES      44.262    44.598   -0.8%  samma
+SIEVE       30.655    30.565    0.3%  samma

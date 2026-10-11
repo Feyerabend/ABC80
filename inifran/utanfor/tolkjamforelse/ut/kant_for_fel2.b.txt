@@ -1,0 +1,7 @@
+ABC800
+10 FOR I%=1 TO 2
+20 NEXT J%
+RUN
+Error 184 in line 20.
+ABC800
+_

@@ -1,0 +1,10 @@
+ABC800
+10 A%=181
+20 PRINT A%*A%;A%*-A%;-A%*-A%
+Error 234.
+30 B%=182
+40 PRINT B%*B%
+RUN
+-32412
+ABC800
+_

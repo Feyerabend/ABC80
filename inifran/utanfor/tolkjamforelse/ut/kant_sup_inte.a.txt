@@ -1,0 +1,16 @@
+ABC80
+10 B=2:A=B+1:A=A*2:A=A+1+1:A=1+A:PRINT A
+;:A%=4%:A%=A%+B:PRINT A%;:K=K+1%:PRINT K
+20 A¤="AB":A¤=A¤+"X":PRINT A¤;:DIM V(3),
+V%(3):V(1)=V(1)+1:V(1)=V(1)+V(1):V%(2)=V
+%(2)+3%:A%=A%+V%(2):PRINT V(1);V%(2);A%
+30 DEF FNA(X)=X+1
+40 X=5:X=X+FNA(1):PRINT X;:A%=A%-(1%):PR
+INT A%;:A=A-(-1):PRINT A;:A=A+B-B:PRINT
+A
+RUN
+ 9 6 1
+ABX 2 3 9
+ 7 8 10 10
+ABC80
+_

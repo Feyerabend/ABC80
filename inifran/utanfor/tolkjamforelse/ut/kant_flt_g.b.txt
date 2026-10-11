@@ -1,0 +1,10 @@
+ABC800
+10 A=7
+20 B=3
+30 PRINT A/B;A*B;A-B;A+B;-A/B;A/-B;B/A
+Error 234.
+40 PRINT A/B*B-A
+RUN
+ 0
+ABC800
+_

@@ -1,0 +1,7 @@
+ABC80
+10 DIM A%(5)
+20 A%(6)=1
+RUN
+ERR 5 LINE 20
+ABC80
+_

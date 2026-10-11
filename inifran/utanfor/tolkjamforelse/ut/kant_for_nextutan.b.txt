@@ -1,0 +1,9 @@
+ABC800
+10 FOR I%=1 TO 3
+20 PRINT I%;
+30 NEXT
+Error 234.
+RUN
+Error 182 in line 10.
+ABC800
+_
