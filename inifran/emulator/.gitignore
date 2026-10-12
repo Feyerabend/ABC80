@@ -1,3 +1,10 @@
 abc80
 prov/
 webb/abc80.wasm
+!cpm/prov/
+cpm/prov/*.bin
+cpm/prov/*.dsk
+cpm/cpm22.asm
+cpm/system.dsk
+cpm/prov/*.com
+cpm/*.lst

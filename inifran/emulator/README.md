@@ -8,6 +8,7 @@ delar:
   och labplattan, med tiden i T-cykler (2,9952 MHz), `bussen.c`
   ABC-bussen med korten (`skivkort.c`, `skrivarkort.c`, `ieckort.c`,
   `p40.c`),
+  `uni80.c` CP/M-kortet UNI-80,
   `kassett.c` bandspelaren som en följd av flanker, `ljud.c` SN76477,
   `tecken.c` gör om bildminnet till text i UTF-8 och `bild.c` till
   punkter. Kärnan läser inga filer och
@@ -64,6 +65,11 @@ provprogram och vad det visar:
 
 I webbläsaren finns skrivaren i gruppen *Skrivaren P40*.
 
+`-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
+Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när
+emulatorn slutar (`-M fil@adr` för en annan adress). I webbläsaren sparas
+det i webbläsaren själv (gruppen *CMOS-minnet*).
+
 `-tkn80 roms/tkn80-iii.rom` sätter i MyAB:s kort TKN80 för 80 tecken per
 rad, med 2 KB bildminne på $5800–$5FFF. Kortet startar i 80-teckensläget;
 `INP(3)` ger 40 tecken och `INP(4)` 80. `-B skarm.png` skriver skärmen
@@ -74,14 +80,24 @@ som en bild (640 × 480) när emulatorn slutar:
 
 I webbläsaren är det rutan *TKN80* under *Maskinen*, eller `?tkn80=pa`.
 
-`-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
-Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när
-emulatorn slutar (`-M fil@adr` för en annan adress). I webbläsaren sparas
-det i webbläsaren själv (gruppen *CMOS-minnet*).
+`-cpm cpm/system.dsk` sätter i MyAB:s kort UNI-80 (`karna/uni80.c`) och
+startar CP/M 2.2 från skivan, som när RESET hålls nere på den riktiga
+maskinen. Start-PROM:en (`cpm/start.asm`) och BIOS:en (`cpm/bios.asm`)
+är skrivna här; ingenting kommer från MyAB. CCP:n, BDOS:en och
+programmen är Digital Researchs fria CP/M 2.2 (`cpm/dr/`). `make`
+assemblerar dem med `z80asm` ur `../verktyg/` och bygger systemskivan
+`cpm/system.dsk` (`cpm/systemskiva.py`): A: och B: är FD2, 80 KB per
+enhet, och C: en RAM-skiva i ABC80:s eget minne. Med `-tkn80` blir
+skärmen 80 tecken bred.
+
+    ./abc80 -cpm cpm/system.dsk -k 'DIR\r'
+
+I webbläsaren är det rutan *CP/M* under *Maskinen*, eller `?cpm=pa`.
 
     make            # abc80
     make prov       # jämför med verktyg/abc80 i en rad fall
     make webb       # webb/abc80.html
+    make cpmprov    # CP/M: start-PROM:en, BIOS:en och programmen
     make clean
 
 `make prov` behöver den gamla emulatorn i `../verktyg/` och ROM:arna i

@@ -25,6 +25,13 @@
  *                    TKN80-III (roms/tkn80-iii.rom), till ROM:en 11273
  *                    eller 9913; startar med 80 tecken, INP(3) byter till
  *                    40 och INP(4) tillbaka (se karna/maskin.h)
+ *     -uni80         MyAB:s kort UNI-80 för CP/M: 64 KB RAM och OUT $EF
+ *                    som väljer minneskarta (se karna/uni80.h); startar
+ *                    som ABC80
+ *     -cpm fil.dsk   UNI-80 med vår start-PROM (cpm/start.bin bredvid
+ *                    programmet) och skivan som FD2 enhet 0 (kort 45);
+ *                    startar i startkartan, som när RESET hålls nere, och
+ *                    läser in systemet från skivan (se cpm/start.asm)
  *
  * Tangenterna och V24:
  *     -k text        tangenter att skriva efter starten
@@ -384,7 +391,7 @@ static void andra_skiva(Vard *v, const char *arg)
 static void hjalp(void)
 {
     fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48] [-M fil[@adr]]\n"
-          "                  [-tkn80 tkn80-iii.rom]\n"
+          "                  [-tkn80 tkn80-iii.rom] [-uni80] [-cpm system.dsk]\n"
           "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L]\n"
           "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-CP fil.png]\n"
           "                  [-E adr[,text]] [-T band.wav] [-U inspelning.wav]\n"
@@ -396,7 +403,7 @@ static void hjalp(void)
 
 /* Flaggorna utan värde. */
 static const char *const utan_varde[] = {
-    "-L", "-DS", "-CR", "-EN", "-F", "-FD", "-c", "-V", "-N", "-w", "-v", NULL
+    "-L", "-uni80", "-DS", "-CR", "-EN", "-F", "-FD", "-c", "-V", "-N", "-w", "-v", NULL
 };
 
 static int har_varde(const char *flagga)
@@ -418,11 +425,13 @@ int main(int argc, char **argv)
     static P40 p40;
     static Ljud ljud;
     static Kassett kassett;
+    static Uni80 uni80;
     static char standard_rom[1100];
     Vard *v = &vard;
     const char *romfil = NULL, *v24 = NULL, *bankarg = NULL, *cmosfil = NULL;
     const char *pappersfil = NULL;           /* -CP */
     const char *tkn80fil = NULL, *skarmfil = NULL;
+    int cpm = 0;                             /* -cpm: starta i startkartan */
     const char *kretsar[16];
     int antal_kretsar = 0, ram_kb = 16, utforlig = 0, utan_lyssnare = 0;
 
@@ -459,6 +468,24 @@ int main(int argc, char **argv)
         else if (!strcmp(f, "-m")) ;                    /* läst ovan */
         else if (!strcmp(f, "-M")) cmosfil = a;
         else if (!strcmp(f, "-tkn80")) tkn80fil = a;
+        else if (!strcmp(f, "-uni80")) {
+            uni80_starta(&uni80);
+            maskin.uni80 = &uni80;
+        }
+        else if (!strcmp(f, "-cpm")) {
+            static uint8_t krets[UNI80_STARTKRETS + 1];
+            char namn[1100];
+            snprintf(namn, sizeof namn, "%scpm/start.bin", programmets_katalog);
+            size_t storlek = las_fil(namn, krets, sizeof krets);
+            if (storlek > UNI80_STARTKRETS)
+                vard_fel("start-PROM:en är större än 2 KB: ", namn);
+            uni80_starta(&uni80);
+            uni80_startkrets(&uni80, krets, storlek);
+            maskin.uni80 = &uni80;
+            snprintf(namn, sizeof namn, "%s@45.0", a);
+            skiva(v, namn, 0);
+            cpm = 1;
+        }
         else if (!strcmp(f, "-k")) text(&maskin, a, 0); /* i ordning */
         else if (!strcmp(f, "-f")) textfil(&maskin, a);
         else if (!strcmp(f, "-K")) {
@@ -544,6 +571,8 @@ int main(int argc, char **argv)
     if (tkn80fil)
         tkn80(&maskin, tkn80fil);
     maskin_aterstall(&maskin);
+    if (cpm)
+        uni80_karta(&uni80, UNI80_START);
     for (int k = 0; k < antal_kretsar; k++)
         krets(&maskin, kretsar[k]);
     if (bankarg)

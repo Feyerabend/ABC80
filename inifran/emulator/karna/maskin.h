@@ -36,6 +36,10 @@
  *     $2000-$23FF    eller 9913), i 40-teckensläget ROM:ens egna
  *     IN 3, IN 4     läsningen byter till 40 respektive 80 tecken och ger
  *                    $FF; kortet startar i 80-teckensläget
+ * Med UNI-80, MyAB:s kort för CP/M (uni80.h), väljer OUT $EF vilken
+ * minneskarta processorn ser: kortets RAM, ABC80 som vanligt eller
+ * start-PROM:en. minne[] är alltid ABC80:s eget minne; kortets ligger i
+ * kortet. NMI tas bara när ABC80 syns.
  * Värden kan koppla in kort på bussen, en enhet på PIO B (V24-skrivaren),
  * kassetten (kassett.h) och krokar som anropas före och efter varje
  * instruktion.
@@ -50,6 +54,7 @@
 #include "bussen.h"
 #include "kassett.h"
 #include "ljud.h"
+#include "uni80.h"
 #include "z80.h"
 
 #define MASKIN_KLOCKA     2995200L               /* T-cykler per sekund */
@@ -121,6 +126,7 @@ struct Maskin {
     PioBEnhet *pio_b_enhet;                  /* NULL: V24 in och labplattan */
     Ljud *ljud;                              /* NULL: inget ljud */
     Kassett *kassett;                        /* NULL: ingen bandspelare */
+    Uni80 *uni80;                            /* NULL: inget UNI-80 */
 
     /* En krets med banker: skrivning till adress + $40 + n väljer bank n. */
     uint8_t bank[BANKER][BANKSTORLEK];

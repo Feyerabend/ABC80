@@ -14,12 +14,30 @@
 
 static uint8_t las_minne(void *dator, uint16_t adress)
 {
-    return ((Maskin *)dator)->minne[adress];
+    Maskin *m = dator;
+    if (m->uni80)                            /* kartan på UNI-80 */
+        switch (uni80_var(m->uni80, adress)) {
+        case UNI80_RAM:
+            return m->uni80->ram[adress];
+        case UNI80_KRETS:
+            return m->uni80->startkrets[adress % UNI80_STARTKRETS];
+        }
+    return m->minne[adress];
 }
 
 static void skriv_minne(void *dator, uint16_t adress, uint8_t varde)
 {
     Maskin *m = dator;
+    if (m->uni80)
+        switch (uni80_var(m->uni80, adress)) {
+        case UNI80_RAM:
+            m->uni80->ram[adress] = varde;
+            return;
+        case UNI80_KRETS:
+            if (m->krokar.skyddad_skrivning)
+                m->krokar.skyddad_skrivning(m->krokar.data, m, adress, varde);
+            return;
+        }
     if (m->antal_banker && adress >= m->bankadress + 0x40
         && adress < m->bankadress + 0x40 + m->antal_banker) {
         memcpy(m->minne + m->bankadress, m->bank[adress - m->bankadress - 0x40],
@@ -194,7 +212,9 @@ static void skriv_port(void *dator, uint16_t port, uint8_t varde)
         m->krokar.port_ut(m->krokar.data, m, (uint8_t)port, varde);
     if ((port & 0xFF) == 6 && m->ljud)
         ljud_skriv(m->ljud, m->tid, varde);
-    if (!(port & 0x10))
+    if (m->uni80 && (port & 0xFF) == UNI80_PORT)
+        uni80_karta(m->uni80, varde);        /* kortet avkodar hela porten */
+    else if (!(port & 0x10))
         bussen_ut(&m->bussen, port & 0xFF, varde);
     else if ((port & 0xFF) == 0x39)
         pio_styrord(&m->pio_a, varde);
@@ -414,10 +434,10 @@ void maskin_kor(Maskin *m, long long tcykler)
             m->stoppad = 1;
             return;
         }
-        uint8_t operation = m->minne[m->z80.pc];
         uint16_t pc = m->z80.pc, sp = m->z80.sp;
+        uint8_t operation = las_minne(m, pc);
         /* PIO:n ser RETI ($ED $4D) på bussen: PIO B:s avbrott är klart. */
-        int reti = operation == 0xED && m->minne[(uint16_t)(pc + 1)] == 0x4D;
+        int reti = operation == 0xED && las_minne(m, (uint16_t)(pc + 1)) == 0x4D;
         int t = z80_steg(&m->z80);
         if (reti)
             m->pio_b.betjanas = 0;
@@ -428,7 +448,8 @@ void maskin_kor(Maskin *m, long long tcykler)
         int avbrottet = 0;
         if (m->tid >= m->nasta_nmi) {
             m->nasta_nmi += MASKIN_BILD;
-            if (!m->utan_nmi)
+            /* UNI-80 släpper bara fram NMI när ABC80 syns (uni80.h). */
+            if (!m->utan_nmi && !(m->uni80 && m->uni80->karta != UNI80_SYSTEM))
                 avbrottet = z80_nmi(&m->z80);
         } else if (m->pio_a.vantar) {
             avbrottet = z80_int(&m->z80, m->pio_a.vektor);

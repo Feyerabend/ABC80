@@ -177,6 +177,9 @@
         <option value="gammal">Gamla ROM:en</option>
       </select>
       <label title="MyAB:s kort för 80 tecken per rad (band 2, kapitlet Skärmen): PRINT INP(3);CHR$(12) ger 40 tecken, PRINT INP(4);CHR$(12) 80 (som -tkn80 i terminalen)"><input type="checkbox" id="tkn80"> TKN80</label>
+<!-- CPM -->
+      <label title="MyAB:s kort UNI-80 med CP/M 2.2 (band 2, kapitlet CP/M): A: systemskivan, B: en tom skiva, C: ABC80:s RAM (som -cpm i terminalen)"><input type="checkbox" id="cpm"> CP/M</label>
+<!-- /CPM -->
       <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar">RESET</button>
       <button id="nystart" title="Töm minnet och starta om">Starta om</button>
       <button id="ljud" title="Ljudet från SN76477 (OUT 6) och bandet">Ljud: på</button>
@@ -211,7 +214,7 @@
     </div>
     <div class="grupp">
       <b><span class="ikon">💾</span>Disketten</b>
-      <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB)">Lägg i diskett…</button>
+      <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva">Lägg i diskett…</button>
 <!-- PROGRAM -->
       <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS">Exempeldisketten</button>
 <!-- /PROGRAM -->
@@ -344,6 +347,28 @@
     bruksanvisning. <code>PEEK(885)</code> är 88 med 80 tecken och 124
     med 40. Program som skriver direkt i bildminnet på
     <code>$7C00</code>, som Genesis-demot, behöver 40 tecken.</p>
+<!-- CPM -->
+    <p><i>CP/M</i> sätter i MyAB:s kort UNI-80 (band 2, kapitlet CP/M)
+    och startar CP/M 2.2 från en systemskiva i FD2, som när RESET hålls
+    nere på den riktiga maskinen. Allt utom CCP:n, BDOS:en och programmen
+    är eget: start-PROM:en och BIOS:en är skrivna till emulatorn, och
+    MyAB:s kod är inte med. A: är systemskivan med Digital Researchs
+    program (ASM, DDT, DUMP, ED, LOAD, PIP, STAT, SUBMIT och XSUB), B:
+    en tom skiva och C: en RAM-skiva i ABC80:s eget minne (15k), som
+    töms när CP/M startar. Prova <code>DIR</code>, <code>STAT</code>,
+    <code>PIP B:=*.COM</code> och <code>DIR B:</code>. Ett eget program:
+    <code>ED HEJ.ASM</code>, <code>I</code>, texten, <kbd>Ctrl</kbd>+<kbd>Z</kbd>
+    och <code>E</code>, sedan <code>ASM HEJ</code>, <code>LOAD HEJ</code>
+    och <code>HEJ</code>. Med TKN80 blir skärmen 80 tecken bred.
+    <kbd>Ctrl</kbd>+<kbd>C</kbd> först på raden startar om CP/M (varmstart),
+    och <i>RESET</i> läser in det från skivan igen. Tecknen är ABC80:s, så
+    <code>$</code> syns som <code>¤</code> och <code>^</code> som
+    <code>Ü</code>. <i>Lägg i diskett…</i> sätter en skiva i B:, eller i A:
+    om den är en systemskiva, och CP/M startar om. <i>Katalogen</i> visar
+    filerna på A: och B:, och <i>Spara disketten</i> laddar ner dem. Slås
+    CP/M av ligger skivorna undan till nästa gång, och ABC-DOS-disketten
+    kommer tillbaka.</p>
+<!-- /CPM -->
     <p><i>Skrivaren P40</i> är nålskrivaren från band 2, kapitlet
     Skrivarna, på kort 60, med drivrutinen på <code>$7800</code>. Den kopplas
     in och ur medan maskinen går, så programmet ligger kvar: BASIC letar
@@ -383,7 +408,11 @@
     <code>-s</code>),
 <!-- /EXEMPEL -->
     <code>?cmos=pa</code> slår på CMOS-minnet, <code>?p40=pa</code>
-    skrivaren och <code>?tkn80=pa</code> TKN80.</p>
+    skrivaren,
+<!-- CPM -->
+    <code>?cpm=pa</code> startar CP/M
+<!-- /CPM -->
+    och <code>?tkn80=pa</code> sätter i TKN80.</p>
     <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
     klickat på sidan eller skrivit något.</p>
   </details>
@@ -418,6 +447,9 @@ RUN</pre>
 <!-- /MALARE -->
         <li>Skrivaren: kryssa i <i>på kort 60</i> och skriv
         <code>LIST PR:</code>.</li>
+<!-- CPM -->
+        <li>CP/M: kryssa i <i>CP/M</i> och skriv <code>DIR</code>.</li>
+<!-- /CPM -->
       </ul>
       <p>Har maskinen hängt sig: <i>RESET</i>, eller <i>Starta om</i>, som
       också tömmer minnet. Mer om allt finns under <i>Hur den används</i>

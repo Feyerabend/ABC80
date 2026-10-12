@@ -12,8 +12,8 @@
  * (ljudprov(), 16 bitar, med den provtakt som starta() fick).
  *
  * Det mesta motsvarar flaggorna i vard/abc80.c: krets() är -l, bank()
- * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP, tkn80() -tkn80
- * och v24() -s.
+ * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP, tkn80() -tkn80,
+ * cpm() -cpm och v24() -s.
  */
 
 #include <stdlib.h>
@@ -40,6 +40,8 @@ static Skivkort skivkort;
 static int skivkortet_kopplat;
 static P40 skrivaren;
 static int skrivaren_kopplad;
+static Uni80 uni80;
+static int cpm_lage;                         /* UNI-80 med start-PROM:en */
 
 static uint32_t bilden[2 * BILD_BREDD * BILD_HOJD];   /* 80 tecken: dubbelt */
 static int16_t proven[2048];                 /* en bild: 960 vid 48 kHz */
@@ -77,6 +79,7 @@ EXPORT(starta) int starta(int ram_kb, const uint8_t *rom, long storlek, long pro
     skivkort_starta(&skivkort);
     skivkortet_kopplat = 0;
     skrivaren_kopplad = 0;
+    cpm_lage = 0;                            /* maskin.uni80 är NULL igen */
     return 1;
 }
 
@@ -91,6 +94,18 @@ EXPORT(krets) void krets(int adress, const uint8_t *data, long storlek)
 EXPORT(tkn80) int tkn80(const uint8_t *data, long storlek)
 {
     return maskin_tkn80(&maskin, data, (size_t)storlek);
+}
+
+/* UNI-80 med start-PROM:en (-cpm), efter starta(). Systemskivan ska
+ * sitta i FD2 enhet 0 (skiva(45, 0, ...)). aterstall() startar sedan i
+ * startkartan, så att PROM:en läser in CP/M från skivan, som när RESET
+ * hålls nere på den riktiga maskinen. */
+EXPORT(cpm) void cpm(const uint8_t *krets, long storlek)
+{
+    uni80_starta(&uni80);
+    uni80_startkrets(&uni80, krets, (size_t)storlek);
+    maskin.uni80 = &uni80;
+    cpm_lage = 1;
 }
 
 /* En bank i en krets med banker (-b fil,fil@adr), en gång per bank i
@@ -121,10 +136,13 @@ EXPORT(skiva) int skiva(int kort, int enhet, uint8_t *data, long storlek, int sk
     return 1;
 }
 
-/* Processorn till startläget, som RESET (minnet ligger kvar). */
+/* Processorn till startläget, som RESET (minnet ligger kvar). Med
+ * cpm() startar CP/M om från skivan. */
 EXPORT(aterstall) void aterstall(void)
 {
     maskin_aterstall(&maskin);
+    if (cpm_lage)
+        uni80_karta(&uni80, UNI80_START);
 }
 
 /* Kör en bild, 20 ms. Med rita blir skärmen punkter, med markören om

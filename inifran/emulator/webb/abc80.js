@@ -5,8 +5,8 @@
  * runt den: skärmen på en canvas, tangentbordet, ljudet med Web Audio,
  * filerna och knapparna. bygg.sh lägger in WebAssembly-koden, ROM:arna,
  * exempeldisketten, Forth-kretsarna, bokens exempel 1-6, MÅLARE-bandet
- * och Genesis-demot (de fem om de finns)
- * som base64 i FILER, så att sidan inte behöver hämta något.
+ * och Genesis-demot (de fem om de finns) och CP/M:s start-PROM och
+ * systemskiva som base64 i FILER, så att sidan inte behöver hämta något.
  *
  * Tiden: en bild är 20 ms. Med ljudet på följer emulatorn ljudets
  * klocka, och varje bilds prov läggs i en AudioBuffer som spelas precis
@@ -27,6 +27,12 @@
  * diskett. "Spara disketten" laddar ner avbilden som den är nu, och
  * "Katalogen" visar filerna, läst ur katalogen i sektor 16-23 som
  * ABC-DOS ordnar den (band 2, kapitlet om FD2).
+ *
+ * CP/M: UNI-80 med vår start-PROM (cpm/start.asm), som -cpm i
+ * terminalen. Systemskivan sitter i FD2 enhet 0 (A:) och en tom skiva
+ * i enhet 1 (B:); C: är ABC80:s eget RAM. Skivorna i det läge som inte
+ * är valt ligger undan, så att ABC-DOS-disketten och CP/M-skivorna
+ * finns kvar när man byter fram och tillbaka.
  *
  * CMOS-minnet: 2 KB RAM på $5000, som Super Smartaids med batteri. Det
  * läggs in efter varje start och sparas i webbläsaren (localStorage),
@@ -59,6 +65,9 @@ let nasta = null;                            /* klockans tid för nästa bild */
 let skivan = null;                           /* disketten (bytes), eller null */
 let skivans_minne = 0;                       /* avbilden i WebAssemblys minne */
 let skivans_namn = 'diskett.dsk';            /* namnet när den sparas */
+let skiva_b = null;                          /* CP/M:s B: (FD2 enhet 1), eller null */
+let skiva_b_minne = 0;
+let skiva_b_namn = 'b.dsk';
 let bandljudet = null;                       /* bandets ljud i provtakten, eller null */
 
 function base64(text) {
@@ -143,12 +152,37 @@ function skivan_nu() {
     return new Uint8Array(e.memory.buffer, skivans_minne, skivan.length).slice();
 }
 
+function skiva_b_nu() {
+    if (!skiva_b_minne)
+        return null;
+    return new Uint8Array(e.memory.buffer, skiva_b_minne, skiva_b.length).slice();
+}
+
+const CPM_SKIVA = 40 * 8 * 256;              /* FD2: 80 KB per enhet */
+
+function cpm_valt() {
+    return !!$('cpm')?.checked;
+}
+
+/* En CP/M-systemskiva börjar med startblocket, "CP/M" (cpm/start.asm). */
+function ar_cpm(d) {
+    return d && d.length >= 4 && String.fromCharCode(...d.subarray(0, 4)) === 'CP/M';
+}
+
+/* En tom CP/M-skiva: $E5 överallt, som efter formateringen. */
+function tom_cpm_skiva() {
+    return new Uint8Array(CPM_SKIVA).fill(0xE5);
+}
+
 /* Starta maskinen; med en diskett sitter ABC-DOS på $6000 och
  * disketten i FD2 (kort 45). Utan argument sitter samma diskett kvar,
  * med det som har sparats på den. En krets sitter på $4000, som
- * Smartaid (-l forth.bin@4000); Forth med CMOS slår på CMOS-minnet. */
-function starta(diskett = skivan_nu()) {
+ * Smartaid (-l forth.bin@4000); Forth med CMOS slår på CMOS-minnet.
+ * Med CP/M är disketten A: (utan den systemskivan) och b B: (utan den
+ * en tom skiva), och ABC-DOS sitter inte i. */
+function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
     cmos_spara();                            /* innan minnet töms */
+    const cpm = cpm_valt();
     const rom = ROM[$('rom').value];
     const p = lagg_i_minnet(rom);
     e.starta(16, p, rom.length, provtakt);
@@ -156,16 +190,33 @@ function starta(diskett = skivan_nu()) {
     knappar();
     if (skivans_minne)                       /* kortet är tomt nu */
         e.slapp(skivans_minne);
-    skivans_minne = 0;
+    if (skiva_b_minne)
+        e.slapp(skiva_b_minne);
+    skivans_minne = skiva_b_minne = 0;
+    if (cpm && !diskett) {
+        diskett = ROM.cpm_skiva.slice();
+        skivans_namn = 'cpm.dsk';
+    }
+    if (cpm && !b) {
+        b = tom_cpm_skiva();
+        skiva_b_namn = 'b.dsk';
+    }
     skivan = diskett;
+    skiva_b = cpm ? b : null;
     $('katalog').hidden = true;
     if (skivan) {
-        const dos = lagg_i_minnet(ROM.dos);
-        e.krets(0x6000, dos, ROM.dos.length);
-        e.slapp(dos);
+        if (!cpm) {
+            const dos = lagg_i_minnet(ROM.dos);
+            e.krets(0x6000, dos, ROM.dos.length);
+            e.slapp(dos);
+        }
         /* Kortet skriver i avbilden, så den ligger kvar (256 bytes över). */
         skivans_minne = lagg_i_minnet(skivan, 256);
         e.skiva(45, 0, skivans_minne, skivan.length, 0);
+    }
+    if (skiva_b) {
+        skiva_b_minne = lagg_i_minnet(skiva_b, 256);
+        e.skiva(45, 1, skiva_b_minne, skiva_b.length, 0);
     }
     const val = $('krets')?.value;
     const ex = EXEMPEL[val];
@@ -196,6 +247,11 @@ function starta(diskett = skivan_nu()) {
     if ($('tkn80').checked) {
         const p = lagg_i_minnet(ROM.tkn80);
         e.tkn80(p, ROM.tkn80.length);
+        e.slapp(p);
+    }
+    if (cpm) {
+        const p = lagg_i_minnet(ROM.cpm_start);
+        e.cpm(p, ROM.cpm_start.length);
         e.slapp(p);
     }
     papper_tomt();
@@ -845,6 +901,34 @@ function katalogen(d) {
     return rader.join('\n');
 }
 
+/* Katalogen på en CP/M-skiva som vår BIOS ordnar den (cpm/bios.asm):
+ * 64 poster om 32 bytes i början av spår 4. +0 är användaren ($E5 en
+ * ledig post), +1-+11 namnet och typen (bit 7 är attribut), +16-+31
+ * blocken om 1 KB, ett per byte. En fil med flera poster (över 16 KB)
+ * räknas ihop; block 0 och 1 är katalogen, så 70 block blir över. */
+function cpm_katalogen(d) {
+    const filer = new Map();
+    let anvanda = 0;
+    for (let k = 4 * 16 * 128; k < 4 * 16 * 128 + 64 * 32; k += 32) {
+        if (d[k] > 15)
+            continue;
+        const del = (a, b) => String.fromCharCode(...[...d.subarray(k + a, k + b)]
+                                                  .map(c => c & 0x7F)).trimEnd();
+        const typ = del(9, 12);
+        const namn = (d[k] ? d[k] + '/' : '') + del(1, 9) + (typ ? '.' + typ : '');
+        let block = 0;
+        for (let i = 16; i < 32; i++)
+            if (d[k + i])
+                block++;
+        filer.set(namn, (filer.get(namn) || 0) + block);
+        anvanda += block;
+    }
+    const rader = [...filer].map(([namn, kb]) => namn.padEnd(14) + String(kb).padStart(3) + 'k');
+    rader.push((rader.length ? '' : 'Inga filer. ') + rader.length +
+               (rader.length === 1 ? ' fil, ' : ' filer, ') + (70 - anvanda) + 'k lediga.');
+    return rader.join('\n');
+}
+
 $('katalog_knapp').addEventListener('click', () => {
     const d = skivan_nu();
     const ruta = $('katalog');
@@ -853,23 +937,37 @@ $('katalog_knapp').addEventListener('click', () => {
         meddela('Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.');
         return;
     }
-    ruta.textContent = skivans_namn + ' i DR0:\n' + katalogen(d);
+    if (cpm_valt())
+        ruta.textContent = skivans_namn + ' i A:\n' + cpm_katalogen(d) + '\n\n' +
+                           skiva_b_namn + ' i B:\n' + cpm_katalogen(skiva_b_nu());
+    else
+        ruta.textContent = skivans_namn + ' i DR0:\n' + katalogen(d);
     ruta.hidden = false;
     skarm.focus();
 });
 
+function ladda_ner(d, namn) {
+    const lank = document.createElement('a');
+    lank.href = URL.createObjectURL(new Blob([d], { type: 'application/octet-stream' }));
+    lank.download = namn;
+    lank.click();
+    setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
+}
+
+/* Med CP/M laddas A: ner, och B: också om något står på den. */
 $('spara_skiva').addEventListener('click', () => {
     const d = skivan_nu();
     if (!d) {
         meddela('Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.');
         return;
     }
-    const lank = document.createElement('a');
-    lank.href = URL.createObjectURL(new Blob([d], { type: 'application/octet-stream' }));
-    lank.download = skivans_namn;
-    lank.click();
-    setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
-    meddela(skivans_namn + ' laddas ner med det som har sparats på den.');
+    ladda_ner(d, skivans_namn);
+    const b = skiva_b_nu();
+    if (b && b.some(x => x !== 0xE5)) {
+        setTimeout(() => ladda_ner(b, skiva_b_namn), 500);
+        meddela(skivans_namn + ' (A:) och ' + skiva_b_namn + ' (B:) laddas ner med det som har sparats på dem.');
+    } else
+        meddela(skivans_namn + ' laddas ner med det som har sparats på den.');
     skarm.focus();
 });
 
@@ -897,7 +995,20 @@ async function oppna(fil, vad) {
         cmos_byt(data);
         meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'));
     }
-    else if (vad === 'skiva') {
+    else if (vad === 'skiva' && ar_cpm(data) && $('cpm')) {
+        if (!cpm_valt()) {
+            byt_lage(true);
+            skiva_b_namn = 'b.dsk';
+            starta(data, null);
+        } else
+            starta(data);
+        skivans_namn = namn;
+        meddela(namn + ' är en CP/M-systemskiva och sitter i A:. CP/M startar från den.');
+    } else if (vad === 'skiva' && cpm_valt()) {
+        skiva_b_namn = namn;
+        starta(skivan_nu(), data);
+        meddela(namn + ' sitter i B:, och CP/M startar om. DIR B: visar filerna.');
+    } else if (vad === 'skiva') {
         skivans_namn = namn;
         starta(data);
         meddela(namn + ' sitter i FD2 med ABC-DOS. Katalogen visar filerna; skriv RUN DR0:NAMN.');
@@ -934,7 +1045,7 @@ document.addEventListener('drop', (h) => {
 /* Knapparna                                                         */
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
-$('nystart').addEventListener('click', () => { starta(null); meddela(''); skarm.focus(); });
+$('nystart').addEventListener('click', () => { starta(null, null); meddela(''); skarm.focus(); });
 $('rom').addEventListener('change', () => { starta(); skarm.focus(); });
 $('tkn80').addEventListener('change', () => {
     starta();
@@ -943,8 +1054,45 @@ $('tkn80').addEventListener('change', () => {
         : '');
     skarm.focus();
 });
+/* Skivorna i det läge som inte är valt (ABC80 med ABC-DOS eller CP/M)
+ * ligger undan här: {a, b, namn, namn_b}. */
+const undan = { abc80: null, cpm: null };
+
+/* Byt till CP/M (cpm) eller ABC80 och ge skivorna som låg undan för
+ * det läget, eller null; starta() efteråt. */
+function byt_lage(cpm) {
+    undan[cpm ? 'abc80' : 'cpm'] = { a: skivan_nu(), b: skiva_b_nu(),
+                                     namn: skivans_namn, namn_b: skiva_b_namn };
+    const s = undan[cpm ? 'cpm' : 'abc80'];
+    undan[cpm ? 'cpm' : 'abc80'] = null;
+    $('cpm').checked = cpm;
+    skivans_minne = skiva_b_minne = 0;       /* starta() får skivorna som argument */
+    skivan = skiva_b = null;
+    return s;
+}
+
+/* Program för ABC80 (exempeldisketten, MÅLARE, demot) slår av CP/M. */
+function abc80_lage() {
+    if (cpm_valt())
+        byt_lage(false);
+}
+
+const CPM_TEXT = 'CP/M 2.2 med UNI-80: A: systemskivan, B: en tom skiva, C: ABC80:s RAM (15k). ' +
+                 'DIR, STAT, PIP B:=*.COM, ED, ASM; ^C startar om CP/M, RESET också.';
+
+$('cpm')?.addEventListener('change', () => {
+    const cpm = $('cpm').checked;
+    const s = byt_lage(cpm) || { a: null, b: null, namn: 'diskett.dsk', namn_b: 'b.dsk' };
+    skivans_namn = s.namn;
+    skiva_b_namn = s.namn_b;
+    starta(s.a, s.b);
+    meddela(cpm ? CPM_TEXT : 'ABC80 utan CP/M; CP/M-skivorna ligger undan till nästa gång.');
+    skarm.focus();
+});
+
 /* Exempeldisketten (exempel/program/), när den ligger i sidan. */
 $('exempel')?.addEventListener('click', () => {
+    abc80_lage();
     skivans_namn = 'exempel.dsk';
     starta(FILER.program.slice());
     meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.');
@@ -1142,6 +1290,7 @@ document.addEventListener('visibilitychange', () => {
 $('malare')?.addEventListener('click', () => {
     if (typeof FILER.malare_band === 'string')
         FILER.malare_band = base64(FILER.malare_band);
+    abc80_lage();
     starta(null);
     lagg_i_band(FILER.malare_band, 'MÅLARE');
     $('fjarr').checked = true;
@@ -1161,6 +1310,7 @@ const GENESIS = 'ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik
 $('genesis')?.addEventListener('click', () => {
     if (typeof FILER.genesis_band === 'string')
         FILER.genesis_band = base64(FILER.genesis_band);
+    abc80_lage();
     starta(null);
     lagg_i_band(FILER.genesis_band, 'Genesis-bandet');
     $('fjarr').checked = false;
@@ -1173,6 +1323,7 @@ $('genesis')?.addEventListener('click', () => {
 });
 
 $('genesis_skiva')?.addEventListener('click', () => {
+    abc80_lage();
     skivans_namn = 'genesis.dsk';
     starta(FILER.genesis.slice());
     e.paus(1000);
@@ -1192,6 +1343,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
     ROM.dos = base64(FILER.dos);
     ROM.p40 = base64(FILER.p40);
     ROM.tkn80 = base64(FILER.tkn80);
+    if (FILER.cpm_start) {
+        ROM.cpm_start = base64(FILER.cpm_start);
+        ROM.cpm_skiva = base64(FILER.cpm_skiva);
+    }
     if (FILER.program)
         FILER.program = base64(FILER.program);
     if (FILER.genesis)
@@ -1224,8 +1379,12 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('p40').checked = true;
     if (fraga.get('tkn80') === 'pa')
         $('tkn80').checked = true;
+    if (fraga.get('cpm') === 'pa' && $('cpm'))
+        $('cpm').checked = true;
     visa_ljudet();
-    starta(null);
+    starta(null, null);
+    if (cpm_valt())
+        meddela(CPM_TEXT);
     if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);
