@@ -83,9 +83,9 @@ cpm/bios.lst: cpm/bios.asm | $(Z80ASM)
 	$(Z80ASM) -o /dev/null -l $@ cpm/bios.asm
 
 cpm/system.dsk: cpm/cpm22.bin cpm/bios.bin cpm/systemskiva.py $(wildcard cpm/dr/*.COM) \
-                cpm/skriv.com cpm/ztolk.com
+                cpm/skriv.com cpm/skriv.txt cpm/ztolk.com
 	python3 -I cpm/systemskiva.py cpm/cpm22.bin cpm/bios.bin $@ $(wildcard cpm/dr/*.COM) \
-	        cpm/skriv.com cpm/ztolk.com
+	        cpm/skriv.com cpm/skriv.txt cpm/ztolk.com
 
 # Editorn SKRIV (cpm/skriv/skriv.asm), med BIOS:ens KOLUMNER ur listningen.
 cpm/skriv.com: cpm/skriv/skriv.asm cpm/bios.lst | $(Z80ASM)
@@ -93,6 +93,12 @@ cpm/skriv.com: cpm/skriv/skriv.asm cpm/bios.lst | $(Z80ASM)
 	    cpm/bios.lst > cpm/skriv/med_bios.asm
 	cat cpm/skriv/skriv.asm >> cpm/skriv/med_bios.asm
 	$(Z80ASM) -o $@ cpm/skriv/med_bios.asm
+
+# SKRIV:s bruksanvisning SKRIV.TXT, i ABC80:s tecken ({ | } [ \ ] för
+# ä ö å Ä Ö Å) och med CR LF.
+cpm/skriv.txt: cpm/skriv/handbok.txt
+	sed -e 's/ä/{/g; s/ö/|/g; s/å/}/g; s/Ä/[/g; s/Ö/\\/g; s/Å/]/g' \
+	    cpm/skriv/handbok.txt | awk '{ printf "%s\r\n", $$0 }' > $@
 
 # Z-maskintolken ZTOLK (cpm/zork/ztolk.asm), också med KOLUMNER.
 cpm/ztolk.com: cpm/zork/ztolk.asm cpm/bios.lst | $(Z80ASM)
@@ -129,7 +135,7 @@ cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin cpm/b.dsk cpm/skriv.com cpm/ztolk.com 
 
 clean:
 	rm -rf abc80 prov webb/abc80.wasm cpm/cpm22.asm cpm/system.dsk cpm/b.dsk \
-	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com \
+	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/skriv.txt cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com \
 	       cpm/zork/med_bios.asm cpm/ztolk.com cpm/d.dsk
 
 .PHONY: alla prov cpmprov webb clean

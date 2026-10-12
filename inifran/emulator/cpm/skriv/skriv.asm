@@ -3,8 +3,9 @@
 ;     SKRIV fil.typ
 ;
 ; En egen editor för hela skärmen, med WordStars tangenter (Ctrl-J visar
-; dem; ABC80 har inget ^, där står Ü). ESC och en bokstav gör samma sak
-; som Ctrl och bokstaven.
+; dem på tre sidor; ABC80 har inget ^, där står Ü). ESC och en bokstav gör
+; samma sak som Ctrl och bokstaven. Bruksanvisningen är handbok.txt, som
+; blir SKRIV.TXT på systemskivan.
 ; Rad 0-22 är texten och rad 23 statusraden: filen, * om den är ändrad,
 ; raden och kolumnen. Filen läses in i minnet i sin helhet; den sparas
 ; som fil.$$$, som byter namn till fil.typ när den är skriven, och den
@@ -790,15 +791,46 @@ PREFIX:   LD   DE,TEXTRADER*256
           CALL RADERA_RADSLUT
           JP   HAMTA
 
-; ^J: hjälpen, tills en tangent trycks ned.
-K_HJALP:  LD   A,26
+; ^J: hjälpen, tre sidor. En tangent visar nästa sida, och efter den
+; sista, eller med ESC, kommer texten tillbaka.
+K_HJALP:  LD   HL,HJALPSIDOR
+HJALP_SIDA:
+          LD   E,(HL)
+          INC  HL
+          LD   D,(HL)
+          INC  HL
+          LD   A,D
+          OR   E
+          JR   Z,HJALP_SLUT
+          PUSH HL
+          PUSH DE
+          LD   A,26
           CALL UT
-          LD   HL,T_HJALP
+          POP  HL
+          CALL UTTEXT
+          LD   DE,TEXTRADER*256
+          CALL POS
+          POP  HL
+          PUSH HL
+          LD   A,(HL)           ; fler sidor efter den här?
+          INC  HL
+          OR   (HL)
+          LD   HL,T_HJALP_NASTA
+          JR   NZ,HJALP_RAD
+          LD   HL,T_HJALP_SIST
+HJALP_RAD:
           CALL UTTEXT
           CALL HAMTA
+          POP  HL
+          CP   ESC
+          JR   NZ,HJALP_SIDA
+HJALP_SLUT:
           LD   A,26
           CALL UT
           JP   MARKERA_ALLA
+
+HJALPSIDOR:
+          DEFW T_HJALP1,T_HJALP2,T_HJALP3,0
 
 ; ----------------------------------------------------------------------
 ; Bufferten
@@ -1757,27 +1789,58 @@ T_KOL:    DEFB " kol ",0
 T_OVER:   DEFB " |ver",0
 T_TMP:    DEFB "$$$"
 T_BAK:    DEFB "BAK"
-T_HJALP:  DEFB "SKRIV, med Ctrl nedtryckt (WordStar):",13,10,13,10
-          DEFB "E X S D  upp ned v{nster h|ger",13,10
-          DEFB "A F      ett ord v{nster, h|ger",13,10
-          DEFB "R C      en sida upp, ned",13,10
-          DEFB "W Z      rulla en rad upp, ned",13,10
-          DEFB "QS QD    radens b|rjan, slut",13,10
-          DEFB "QR QC    filens b|rjan, slut",13,10
-          DEFB "G        radera tecknet (och DEL)",13,10
-          DEFB "T Y      radera ordet, raden",13,10
-          DEFB "QY       radera resten av raden",13,10
-          DEFB "U        raderna fr}n Y tillbaka",13,10
-          DEFB "N        dela raden",13,10
-          DEFB "V        infoga eller skriv |ver",13,10
-          DEFB "P        n{sta tangent som tecken",13,10
-          DEFB "QF L     s|k, s|k igen",13,10
-          DEFB "KS       spara",13,10
-          DEFB "KX KD    spara och sluta",13,10
-          DEFB "KQ       sluta utan att spara",13,10
-          DEFB "J        den h{r hj{lpen",13,10,13,10
-          DEFB "ESC (Ctrl-[) och bokstav: som med Ctrl",13,10
-          DEFB "Pilarna g}r ocks}. Tryck p} en tangent.",0
+; Hjälpen: högst 22 rader om högst 39 tecken per sida (40 kolumner),
+; rad 23 är T_HJALP_NASTA eller T_HJALP_SIST.
+T_HJALP1: DEFB "SKRIV 1/3: flytta mark|ren",13,10,13,10
+          DEFB "Med Ctrl nedtryckt, som i WordStar:",13,10,13,10
+          DEFB "E X    en rad upp, ned",13,10
+          DEFB "S D    ett tecken v{nster, h|ger",13,10
+          DEFB "A F    ett ord v{nster, h|ger",13,10
+          DEFB "R C    en sida upp, ned",13,10
+          DEFB "W Z    rulla en rad upp, ned",13,10
+          DEFB "QS QD  radens b|rjan, slut",13,10
+          DEFB "QR QC  filens b|rjan, slut",13,10
+          DEFB "QF     s|k: texten och RETURN",13,10
+          DEFB "       (ESC avbryter)",13,10
+          DEFB "L      s|k samma text igen",13,10,13,10
+          DEFB "Pilarna v{nster och h|ger g}r ocks}.",13,10,13,10
+          DEFB "ESC (Ctrl-[) och en bokstav {r som",13,10
+          DEFB "Ctrl och bokstaven: ESC K X {r",13,10
+          DEFB "Ctrl-K X.",0
+T_HJALP2: DEFB "SKRIV 2/3: {ndra texten",13,10,13,10
+          DEFB "Det som skrivs hamnar vid mark|ren.",13,10,13,10
+          DEFB "G      radera tecknet under mark|ren",13,10
+          DEFB "DEL    radera tecknet f|re",13,10
+          DEFB "T      radera ordet",13,10
+          DEFB "Y      radera raden",13,10
+          DEFB "QY     radera resten av raden",13,10
+          DEFB "U      s{tt in raderna fr}n Y igen",13,10
+          DEFB "N      dela raden vid mark|ren",13,10
+          DEFB "V      infoga eller skriv |ver",13,10
+          DEFB "P      n{sta tangent som tecken,",13,10
+          DEFB "       till exempel P I f|r TAB",13,10,13,10
+          DEFB "Flera Y i f|ljd samlas: med Y Y Y,",13,10
+          DEFB "mark|ren n}gon annanstans och U",13,10
+          DEFB "flyttas tre rader. U g}r att g|ra",13,10
+          DEFB "om, s} raderna kan kopieras.",0
+T_HJALP3: DEFB "SKRIV 3/3: filen",13,10,13,10
+          DEFB "KS     spara och forts{tt",13,10
+          DEFB "KX KD  spara och g} till CP/M",13,10
+          DEFB "KQ     sluta utan att spara; {r",13,10
+          DEFB "       texten {ndrad, KQ tv} g}nger",13,10
+          DEFB "J      den h{r hj{lpen",13,10,13,10
+          DEFB "Nedersta raden: filen, * om den {r",13,10
+          DEFB "{ndrad, raden och kolumnen, och",13,10
+          DEFB "|ver n{r V skriver |ver.",13,10,13,10
+          DEFB "Hela filen ligger i minnet, som",13,10
+          DEFB "rymmer omkring 50 KB. N{r den",13,10
+          DEFB "sparas blir den gamla fil.BAK.",13,10,13,10
+          DEFB "SKRIV fil.typ startar, med enheten",13,10
+          DEFB "f|re om den beh|vs: SKRIV B:BREV.TXT",0
+T_HJALP_NASTA:
+          DEFB "Tangent: n{sta sida, ESC: texten",0
+T_HJALP_SIST:
+          DEFB "Tangent: tillbaka till texten",0
 
 ; ----------------------------------------------------------------------
 ; Variablerna

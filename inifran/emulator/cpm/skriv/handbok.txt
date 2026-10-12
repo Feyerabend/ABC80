@@ -1,0 +1,117 @@
+SKRIV, en editor för CP/M på ABC80
+==================================
+
+SKRIV visar texten på hela skärmen
+och har WordStars tangenter. Den är
+skriven till emulatorn för boken
+ABC80 inifrån.
+
+Starta
+------
+
+    A>SKRIV BREV.TXT
+    A>SKRIV B:BREV.TXT
+
+Finns filen inte blir den ny när den
+sparas. Den här filen läses med
+
+    A>SKRIV SKRIV.TXT
+
+och SKRIV slutar med Ctrl-K Q.
+
+Skärmen
+-------
+
+Texten står på de 23 översta raderna.
+Den nedersta visar filen, * om texten
+är ändrad, raden och kolumnen, och
+"över" när Ctrl-V skriver över i
+stället för att infoga. Där står också
+meddelanden, och efter Ctrl-K, Ctrl-Q
+och Ctrl-P vad SKRIV väntar på. Rader
+som är bredare än skärmen rullar i
+sidled.
+
+Ctrl och ESC
+------------
+
+Alla kommandon är Ctrl och en bokstav.
+Här skrivs de utan Ctrl framför: E är
+Ctrl-E, och KX är Ctrl-K och sedan X,
+med eller utan Ctrl.
+
+ESC och en bokstav är detsamma som
+Ctrl och bokstaven: ESC K X är KX. ESC
+är Ctrl-Ä på ABC80, och ESC-tangenten
+i webbläsaren. Det behövs i webbläsare
+som tar Ctrl-W, Ctrl-N och Ctrl-T till
+sina egna flikar och fönster.
+
+Flytta markören
+---------------
+
+E X      en rad upp, ned
+S D      ett tecken vänster, höger
+A F      ett ord vänster, höger
+R C      en sida upp, ned
+W Z      rulla en rad upp, ned
+QS QD    radens början, slut
+QR QC    filens början, slut
+
+Vänster- och högerpilen går också. E S
+D X sitter i ett kors på tangentbordet,
+med A F och R C bredvid.
+
+Söka
+----
+
+QF frågar efter texten. RETURN söker
+framåt från markören och ESC avbryter.
+L söker samma text igen. Stora och små
+bokstäver skiljs åt.
+
+Ändra
+-----
+
+Det som skrivs hamnar vid markören.
+
+G        radera tecknet vid markören
+DEL      radera tecknet före
+T        radera ordet
+Y        radera raden
+QY       radera resten av raden
+N        dela raden vid markören
+V        infoga eller skriv över
+P        nästa tangent som tecken
+
+P och sedan I ger en TAB, som annars
+är högerpilen.
+
+Flytta och kopiera rader
+------------------------
+
+Raderna som Y raderar i följd samlas,
+och U sätter in dem där markören står.
+Tre rader flyttas så: Y tre gånger,
+markören dit de ska och U. U går att
+göra om, så raderna kan också
+kopieras: Y och U på samma ställe, och
+U igen där kopian ska stå. Bufferten
+rymmer 2 KB.
+
+Spara och sluta
+---------------
+
+KS       spara och fortsätt
+KX KD    spara och gå till CP/M
+KQ       sluta utan att spara
+J        hjälpen, tre sidor
+
+Är texten ändrad varnar KQ först, och
+SKRIV slutar vid nästa KQ. När filen
+sparas blir den gamla kvar som
+BREV.BAK, som med ED.
+
+Hela filen ligger i minnet, som rymmer
+omkring 50 KB. I filen slutar raderna
+med CR och LF, som i CP/M.

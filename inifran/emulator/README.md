@@ -106,6 +106,39 @@ där).
 I webbläsaren är det rutan *CP/M* under *Maskinen*, eller `?cpm=pa`, och
 Zork I knappen *Zork I* under *Disketten*, eller `?zork=pa`.
 
+SKRIV (`cpm/skriv/skriv.asm`) är en egen editor för hela skärmen på
+systemskivan, med WordStars tangenter, i 40 och 80 tecken. `SKRIV
+fil.typ` startar den; filen läses in i minnet i sin helhet (omkring
+50 KB ryms) och den gamla blir `fil.BAK` när den sparas. Ctrl-J visar
+tangenterna på tre sidor, och `SKRIV SKRIV.TXT` visar bruksanvisningen
+(`cpm/skriv/handbok.txt`, som Makefile skriver om till ABC80:s tecken).
+ESC och en bokstav gör samma sak som Ctrl och bokstaven, för
+webbläsare som tar Ctrl-W, Ctrl-N och Ctrl-T själva; ESC är Ctrl-Ä på
+ABC80. Nedersta raden visar filen, `*` om den är ändrad, raden och
+kolumnen.
+
+| Ctrl och          | gör                                        |
+|-------------------|--------------------------------------------|
+| E X S D           | upp, ned, vänster, höger (och pilarna)     |
+| A F               | ett ord vänster, höger                     |
+| R C               | en sida upp, ned                           |
+| W Z               | rulla en rad upp, ned                      |
+| Q S, Q D          | radens början, slut                        |
+| Q R, Q C          | filens början, slut                        |
+| Q F, L            | sök (RETURN, ESC avbryter), sök igen       |
+| G, DEL            | radera tecknet vid markören, före          |
+| T, Y, Q Y         | radera ordet, raden, resten av raden       |
+| U                 | sätt in raderna från Y (i följd) igen      |
+| N                 | dela raden                                 |
+| V                 | infoga eller skriv över                    |
+| P                 | nästa tangent som tecken (P I ger TAB)     |
+| K S               | spara                                      |
+| K X, K D          | spara och sluta                            |
+| K Q               | sluta utan att spara (två om ändrad)       |
+| J                 | hjälpen                                    |
+
+    ./abc80 -cpm cpm/system.dsk -k 'SKRIV SKRIV.TXT\r'
+
     make            # abc80
     make prov       # jämför med verktyg/abc80 i en rad fall
     make webb       # webb/abc80.html

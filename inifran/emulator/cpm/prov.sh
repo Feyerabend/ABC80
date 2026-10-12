@@ -127,6 +127,8 @@ else echo "FEL   SKRIV, ESC som Ctrl"; fel=1; fi
 skriv "ESC K X" "Rad 40slutet" 'SKRIV LANG.TXT\r\w1500\x1bqc\x08slutet\x1bKX\w1500TYPE LANG.TXT\r\w1500'
 skriv "sök" "rad 25 kol 1" 'SKRIV LANG.TXT\r\w1500\x11FRad 25\r'
 skriv "sluta osparad" "Inte sparad!" 'SKRIV LANG.TXT\r\w1500x\x0bQ'
+skriv "hjälpen" "SKRIV 3/3: filen" 'SKRIV LANG.TXT\r\w1500\x0a  '
+skriv "hjälpen, ESC" "LANG.TXT  rad 1" 'SKRIV LANG.TXT\r\w1500\x0a\x1b'
 skriv "80 tecken" "cdefgh abcdefgh abcdefgh abcdefgh abcdefgh abcdefgh" "SKRIV LANG.TXT\\r\\w1500\\x11D$(printf ' abcdefgh%.0s' $(seq 8))" -tkn80 ../roms/tkn80-iii.rom
 
 # Zork I med tolken ZTOLK (cpm/ztolk.com och cpm/d.dsk, make): starten,
