@@ -433,12 +433,12 @@ skarm.addEventListener('keydown', (h) => {
     if (h.ctrlKey && h.key.length === 1) {
         if (h.key === 'v' || h.key === 'V')
             return;                          /* klistra in */
-        kod = h.key.toUpperCase().charCodeAt(0) & 0x1F;
+        kod = tangent_kod(h.key.toUpperCase()) & 0x1F;   /* Ctrl-Ä är ESC */
     } else if (h.key.length === 1)
         kod = tangent_kod(h.key);
     else
         kod = { Enter: 0x0D, Backspace: 0x08, ArrowLeft: 0x08,
-                ArrowRight: 0x09, Escape: 0x1B, Tab: 0x09 }[h.key] || 0;
+                ArrowRight: 0x09, Escape: 0x1B, Tab: 0x09, Delete: 0x7F }[h.key] || 0;
     if (!kod)
         return;
     h.preventDefault();

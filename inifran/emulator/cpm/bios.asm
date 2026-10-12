@@ -292,6 +292,11 @@ KONIN:    CALL KOLLA
 ;   ESC T          radera till radens slut
 ;   ESC Y          radera till skärmens slut
 ;   ESC *          radera skärmen
+;   ESC E          infoga en tom rad där markören står; raderna under
+;                  flyttas ned och den sista försvinner
+;   ESC R          radera raden där markören står; raderna under flyttas
+;                  upp och den sista blir tom
+;   (ESC E och ESC R lämnar markören först på raden)
 ; Andra koder under $20 och $7F syns inte. $20-$7E skrivs som de är; i
 ; ABC80:s teckensats är [\]{|} ÄÖÅäöå. Efter sista kolumnen fortsätter
 ; texten på nästa rad. Markören är bit 7 i tecknet där den står.
@@ -443,30 +448,74 @@ HEMMA:    XOR  A
           LD   (KOL),A
           RET
 
-; Skärmen en rad upp: rad 1-23 till rad 0-22, och sista raden tom.
-RULLA:    LD   IX,RADTABELL
-          LD   B,23
+; RULLA: skärmen en rad upp, rad 1-23 till rad 0-22 och sista raden
+; tom. RADERA_RAD gör samma sak från markörens rad (ESC R).
+RULLA:    XOR  A
+          JR   UPP_FRAN
+RADERA_RAD:
+          XOR  A
+          LD   (KOL),A
+          LD   A,(RAD)
+UPP_FRAN: LD   C,A              ; raden A + 1 till A och så vidare
+          ADD  A,A
+          LD   E,A
+          LD   D,0
+          LD   IX,RADTABELL
+          ADD  IX,DE
+          LD   A,23
+          SUB  C
+          JR   Z,TOM_SISTA
+          LD   B,A
 RULLA_RAD:
           PUSH BC
           LD   E,(IX+0)
           LD   D,(IX+1)
           LD   L,(IX+2)
           LD   H,(IX+3)
-          LD   A,(KOLUMNER)
-          LD   C,A
-          LD   B,0
-          CALL SYSFLYTT
+          CALL RADKOPIA
           INC  IX
           INC  IX
           POP  BC
           DJNZ RULLA_RAD
+TOM_SISTA:
           LD   L,(IX+0)
           LD   H,(IX+1)
+TOM_RADEN:
           LD   A,(KOLUMNER)
           LD   C,A
           LD   B,0
           LD   A,' '
           JP   FYLLSYS
+
+; INFOGA_RAD: raderna från markörens en ned, den sista försvinner, och
+; markörens rad tom (ESC E).
+INFOGA_RAD:
+          XOR  A
+          LD   (KOL),A
+          LD   IX,RADTABELL+2*23
+          LD   A,(RAD)
+          LD   C,A
+          LD   A,23
+          SUB  C
+          JR   Z,TOM_SISTA
+          LD   B,A
+NED_RAD:  PUSH BC
+          LD   E,(IX+0)
+          LD   D,(IX+1)
+          LD   L,(IX-2)
+          LD   H,(IX-1)
+          CALL RADKOPIA
+          DEC  IX
+          DEC  IX
+          POP  BC
+          DJNZ NED_RAD
+          JR   TOM_SISTA
+
+; RADKOPIA: en rad från (HL) till (DE) i bildminnet.
+RADKOPIA: LD   A,(KOLUMNER)
+          LD   C,A
+          LD   B,0
+          JP   SYSFLYTT
 
 ; ESC och det som följer.
 ESCAPE:   CP   2
@@ -483,7 +532,11 @@ ESCAPE:   CP   2
           CP   'Y'
           JR   Z,SKARMSLUT
           CP   '*'
-          JR   Z,RENSA
+          JP   Z,RENSA
+          CP   'E'
+          JP   Z,INFOGA_RAD
+          CP   'R'
+          JP   Z,RADERA_RAD
           RET
 ESC_LIKA: LD   A,2
           LD   (ESCLAGE),A

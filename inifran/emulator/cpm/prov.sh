@@ -91,4 +91,34 @@ basic "INKEY och TIME" "T1" 'T%=TIME:A=INKEY(100):PRINT "T";(TIME-T%) DIV 100\r'
 basic "POS och VPOS" "P6 2" 'CLS\r\w300PRINT TAB(5,2);:PRINT "P";POS;" ";VPOS\r'
 basic "SAVE" "B: KVADRAT  BBC" '10 PRINT 12*12\r\w300SAVE "KVADRAT"\r\w1000*DIR\r'
 basic "LOAD" "       144" 'LOAD "KVADRAT"\r\w1000RUN\r'
+
+# Editorn SKRIV (cpm/skriv.com, make): en ny fil, en ändring med ^X ^F,
+# rullning, ^Y och ^U, sökning, ^KQ och 80 tecken med vänsterkanten.
+python3 -I systemskiva.py cpm22.bin bios.bin prov/skriv.dsk skriv.com || exit 1
+skriv() {                               # namn, väntad text, tangenter, flaggor
+  namn=$1; vantad=$2; tangenter=$3; shift 3
+  if ../abc80 -r $ROM -t 20000 -cpm prov/skriv.dsk -DS "$@" -k "\\w1000$tangenter" | grep -qF "$vantad"
+  then printf "rätt  SKRIV, %s: %s\n" "$namn" "$vantad"
+  else printf "FEL   SKRIV, %s %s: inget \"%s\"\n" "$namn" "$*" "$vantad"; fel=1; fi
+}
+skriv "ny fil" "A:HEJ.TXT* rad 3 kol 7" 'SKRIV HEJ.TXT\r\w1500Hej v{rlden\rRad tv}\rTredje'
+skriv "spara" "Rad två" 'SKRIV HEJ.TXT\r\w1500Hej v{rlden\rRad tv}\rTredje\x0bX\w1500TYPE HEJ.TXT\r'
+skriv "ändra" "XXTredje" 'SKRIV HEJ.TXT\r\w1500\x18\x06\x06XX\x0bX\w1500TYPE HEJ.TXT\r'
+skriv "BAK" "HEJ      BAK" 'DIR\r'
+L=$(printf 'Rad %d\\r' $(seq 1 40))
+skriv "40 rader" "Rad 40" "SKRIV LANG.TXT\\r\\w1500$L\\x0bX\\w3000TYPE LANG.TXT\\r"
+skriv "sida ned" "rad 41 kol 1" 'SKRIV LANG.TXT\r\w1500\x03\x03'
+skriv "rulla" "Rad 31" 'SKRIV LANG.TXT\r\w1500\x03\x12\x1a\x1a\x1a\x1a\x1a\x1a\x1a\x1a'
+if ../abc80 -r $ROM -t 20000 -cpm prov/skriv.dsk -k '\w1000SKRIV LANG.TXT\r\w1500\x19\x19\x18\x15' \
+     | sed -n '1,4{s/ *$//;p;}' | tr '\n' '/' | grep -qF 'Rad 3/_ad 1/Rad 2/Rad 4/'
+then echo "rätt  SKRIV, Y och U: Rad 3, Rad 1, Rad 2, Rad 4"
+else echo "FEL   SKRIV, Y och U"; fel=1; fi
+if ../abc80 -r $ROM -t 20000 -cpm prov/skriv.dsk -k '\w1000SKRIV LANG.TXT\r\w1500\x1bY\x1by\x1bX\x1bU' \
+     | sed -n '1,4{s/ *$//;p;}' | tr '\n' '/' | grep -qF 'Rad 3/_ad 1/Rad 2/Rad 4/'
+then echo "rätt  SKRIV, ESC Y ESC y ESC X ESC U: som med Ctrl"
+else echo "FEL   SKRIV, ESC som Ctrl"; fel=1; fi
+skriv "ESC K X" "Rad 40slutet" 'SKRIV LANG.TXT\r\w1500\x1bqc\x08slutet\x1bKX\w1500TYPE LANG.TXT\r\w1500'
+skriv "sök" "rad 25 kol 1" 'SKRIV LANG.TXT\r\w1500\x11FRad 25\r'
+skriv "sluta osparad" "Inte sparad!" 'SKRIV LANG.TXT\r\w1500x\x0bQ'
+skriv "80 tecken" "cdefgh abcdefgh abcdefgh abcdefgh abcdefgh abcdefgh" "SKRIV LANG.TXT\\r\\w1500\\x11D$(printf ' abcdefgh%.0s' $(seq 8))" -tkn80 ../roms/tkn80-iii.rom
 exit $fel
