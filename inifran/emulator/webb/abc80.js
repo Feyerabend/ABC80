@@ -78,8 +78,133 @@ function base64(text) {
     return b;
 }
 
-function meddela(text) {
-    $('meddelande').textContent = text;
+/* Språket: sv eller en. Mallens text står på båda med lang, och CSS
+ * döljer den som inte gäller; knappar och val har engelskan i data-en och
+ * title-texten i data-title-en. Här byts de, och texterna i koden går
+ * genom t(svenska, engelska). Valet sparas i webbläsaren; ?sprak= går
+ * före, och utan något val gäller webbläsarens språk. */
+const SPRAK_NYCKEL = 'abc80_sprak';
+let sprak = 'sv';
+let senaste = ['', ''];                      /* meddelandet på båda språken */
+
+function t(sv, en) {
+    return sprak === 'en' ? en : sv;
+}
+
+function meddela(sv = '', en = sv) {
+    senaste = [sv, en];
+    $('meddelande').textContent = t(sv, en);
+}
+
+function byt_sprak(nytt) {
+    sprak = nytt === 'en' ? 'en' : 'sv';
+    document.documentElement.lang = sprak;
+    for (const el of document.querySelectorAll('[data-en]')) {
+        if (el.dataset.sv === undefined)
+            el.dataset.sv = el.textContent;
+        el.textContent = t(el.dataset.sv, el.dataset.en);
+    }
+    for (const el of document.querySelectorAll('[data-title-en]')) {
+        if (el.dataset.titleSv === undefined)
+            el.dataset.titleSv = el.title;
+        el.title = t(el.dataset.titleSv, el.dataset.titleEn);
+    }
+    $('sprak').textContent = t('EN', 'SV');
+    $('meddelande').textContent = t(...senaste);
+    if (e) {
+        visa_ljudet();
+        papper_rubrik();
+        if (!$('katalog').hidden)
+            visa_katalogen();
+        visa_lagen(true);
+    }
+}
+
+$('sprak').addEventListener('click', () => {
+    byt_sprak(t('en', 'sv'));
+    try { localStorage.setItem(SPRAK_NYCKEL, sprak); } catch (fel) { /* sparas inte */ }
+    skarm.focus();
+});
+
+/* ---------------------------------------------------------------- */
+/* Panelerna                                                         */
+
+/* Vilka som är öppna sparas; från början bara Maskinen. ⓘ i listen
+ * fäller ut panelen och visar eller döljer dess hjälptext. */
+const PANEL_NYCKEL = 'abc80_paneler';
+const paneler = [...document.querySelectorAll('details.panel')];
+
+function paneler_spara() {
+    try {
+        localStorage.setItem(PANEL_NYCKEL,
+                             JSON.stringify(paneler.filter(p => p.open).map(p => p.id)));
+    } catch (fel) { /* sparas inte */ }
+}
+
+function paneler_las_in() {
+    try {
+        const oppna = JSON.parse(localStorage.getItem(PANEL_NYCKEL));
+        if (Array.isArray(oppna))
+            for (const p of paneler)
+                p.open = oppna.includes(p.id);
+    } catch (fel) { /* som i mallen */ }
+}
+
+/* Fäll ut en panel (när något händer i den). */
+function oppna_panel(id) {
+    const p = $(id);
+    if (p && !p.open) {
+        p.open = true;
+        paneler_spara();
+    }
+}
+
+for (const p of paneler) {
+    p.addEventListener('toggle', paneler_spara);
+    const info = p.querySelector('.info');
+    const text = p.querySelector('.hjalptext');
+    info?.addEventListener('click', (h) => {
+        h.preventDefault();                  /* annars fälls panelen */
+        h.stopPropagation();
+        text.hidden = p.open ? !text.hidden : false;
+        p.open = true;
+        info.classList.toggle('pa', !text.hidden);
+        if (!text.hidden)
+            text.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+}
+
+/* Lägena i panelernas listar, så att de syns också ihopfällda. */
+let lagen_nu = '';
+
+function visa_lagen(alltid = false) {
+    const delar = [t($('rom').value === 'gammal' ? 'gamla ROM:en' : 'nya ROM:en',
+                     $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
+    if ($('tkn80').checked)
+        delar.push('TKN80' + ($('fast').checked ? t(', fast', ', steady') : ''));
+    if (cpm_valt())
+        delar.push('CP/M');
+    const maskin = delar.join(' · ');
+    let disk = '';
+    if (skivan)
+        disk = cpm_valt() ? skivans_namn + ' · ' + skiva_b_namn : skivans_namn;
+    const krets = $('krets');
+    const program = krets && krets.value ? krets.options[krets.selectedIndex].textContent : '';
+    const p40 = $('p40').checked ? t('inkopplad', 'connected') + (papper_rader
+        ? ' · ' + papper_rader + t(papper_rader === 1 ? ' rad' : ' rader',
+                                    papper_rader === 1 ? ' line' : ' lines') : '') : '';
+    const cmos_text = $('cmos').checked ? t('på', 'on') : '';
+    const nytt = [maskin, disk, program, p40, cmos_text].join('|');
+    if (!alltid && nytt === lagen_nu)
+        return;
+    lagen_nu = nytt;
+    $('lage_maskin').textContent = maskin;
+    $('lage_disk').textContent = disk;
+    $('lage_program').textContent = program;
+    $('lage_p40').textContent = p40;
+    $('lage_cmos').textContent = cmos_text;
+    /* Fast markör gäller bara TKN80. */
+    $('fast').disabled = !$('tkn80').checked;
 }
 
 /* Bytes in i WebAssemblys minne (extra nollor efter); pekaren. */
@@ -408,14 +533,15 @@ function ljudet_star() {
 
 function visa_ljudet() {
     const knapp = $('ljud');
-    let text = 'Ljud: av';
+    let text = t('Ljud: av', 'Sound: off');
     if (!ljud)
-        text = 'Inget ljud';
+        text = t('Inget ljud', 'No sound');
     else if (ljud_valt)
-        text = ljud.state === 'running' && !ljudet_star() ? 'Ljud: på' : 'Ljud: klicka på skärmen';
+        text = ljud.state === 'running' && !ljudet_star() ? t('Ljud: på', 'Sound: on')
+            : t('Ljud: klicka på skärmen', 'Sound: click the screen');
     if (knapp.textContent !== text)
         knapp.textContent = text;
-    knapp.title = 'Ljudet från SN76477 (OUT 6) och bandet' +
+    knapp.title = t('Ljudet från SN76477 (OUT 6) och bandet', 'The sound from the SN76477 (OUT 6) and the tape') +
         (ljud ? ' (' + ljud.state + ', ' + ljud.sampleRate + ' Hz)' : '');
     knapp.classList.toggle('pa', ljud_valt && !!ljud);
 }
@@ -521,7 +647,13 @@ function papper_tomt() {
     papper_visa(false);
     $('p40_visa').disabled = true;
     $('p40_visa').classList.remove('nytt');
-    $('papper_rubrik').textContent = 'Papperet';
+    papper_rubrik();
+}
+
+function papper_rubrik() {
+    $('papper_rubrik').textContent = !papper_rader ? t('Papperet', 'The paper')
+        : t('Papperet, ' + papper_rader + (papper_rader === 1 ? ' rad' : ' rader'),
+            'The paper, ' + papper_rader + (papper_rader === 1 ? ' line' : ' lines'));
 }
 
 function papper_anslag(fran, till) {
@@ -568,8 +700,7 @@ function papper_rita() {
     }
     papper_ritat = antal;
     $('p40_visa').disabled = false;
-    $('papper_rubrik').textContent = 'Papperet, ' + papper_rader +
-        (papper_rader === 1 ? ' rad' : ' rader');
+    papper_rubrik();
     /* En ny utskrift tar fram lappen; stängs den under utskriften
      * lyser bara knappen. */
     if (ny_utskrift)
@@ -580,7 +711,7 @@ function papper_rita() {
     if (ny_utskrift || ruta.scrollTop + ruta.clientHeight >= ruta.scrollHeight - 80)
         ruta.scrollTop = ruta.scrollHeight;
     if (e.p40_fullt())
-        meddela('Papperet är fullt: riv av det.');
+        meddela('Papperet är fullt: riv av det.', 'The paper is full: tear it off.');
 }
 
 let anvande_ljud = false;
@@ -652,6 +783,7 @@ function varv() {
             rita();
     }
     visa_bandet();
+    visa_lagen();
     requestAnimationFrame(varv);
 }
 
@@ -668,15 +800,15 @@ let spelar_in = false, har_band = false;
 function visa_bandet() {
     let text;
     if (!har_band && !spelar_in)
-        text = 'inget band';
+        text = t('inget band', 'no tape');
     else if (spelar_in)
-        text = 'spelar in ' + sekunder(e.bandlage());
+        text = t('spelar in ', 'recording ') + sekunder(e.bandlage());
     else
         text = sekunder(e.bandlage()) + ' / ' + sekunder(e.bandlangd());
     if (e.motor())
-        text += ' · motorn går';
+        text += t(' · motorn går', ' · motor on');
     else if (e.bandet_gar())
-        text += ' · bandet går';
+        text += t(' · bandet går', ' · tape running');
     const status = $('bandstatus');
     if (status.textContent !== text)
         status.textContent = text;
@@ -719,7 +851,10 @@ function stanna_spolningen() {
 
 function spola_at(riktning) {
     if (spelar_in || !har_band) {
-        meddela(spelar_in ? 'Under inspelning går det inte att spola.' : 'Inget band i kassetten.');
+        if (spelar_in)
+            meddela('Under inspelning går det inte att spola.', 'The tape cannot be wound while recording.');
+        else
+            meddela('Inget band i kassetten.', 'No tape in the cassette.');
         return;
     }
     const igen = spolning === riktning;
@@ -746,16 +881,19 @@ function lagg_i_band(data, namn) {
     const flanker = e.band(p, data.length);
     e.slapp(p);
     if (flanker < 0) {
-        meddela(namn + ': ingen WAV-fil med PCM, 8 eller 16 bitar');
+        meddela(namn + ': ingen WAV-fil med PCM, 8 eller 16 bitar',
+                namn + ': not a WAV file with PCM, 8 or 16 bits');
         return;
     }
+    oppna_panel('panel_band');
     har_band = true;
     spelar_in = false;
     stanna_spolningen();
     rakneverk_noll = 0;
     knappar(true);
     $('spelain').classList.remove('pa');
-    meddela(namn + ' ligger i kassetten (' + flanker + ' flanker). Skriv LOAD CAS: eller RUN CAS:');
+    meddela(namn + ' ligger i kassetten (' + flanker + ' flanker). Skriv LOAD CAS: eller RUN CAS:',
+            namn + ' is in the cassette (' + flanker + ' edges). Type LOAD CAS: or RUN CAS:');
     bandljudet = avkoda_bandet(data);
 }
 
@@ -816,7 +954,7 @@ $('fjarr').addEventListener('change', () => { knappar(); skarm.focus(); });
 
 $('spelain').addEventListener('click', () => {
     if (!e.spela_in()) {
-        meddela('minnet räcker inte till inspelningen');
+        meddela('minnet räcker inte till inspelningen', 'not enough memory for the recording');
         return;
     }
     spelar_in = true;
@@ -825,18 +963,20 @@ $('spelain').addEventListener('click', () => {
     knappar(true);
     bandljudet = null;
     $('spelain').classList.add('pa');
-    meddela('Inspelningsknappen är nere. Skriv SAVE CAS:NAMN och tryck sedan Spara inspelning.');
+    meddela('Inspelningsknappen är nere. Skriv SAVE CAS:NAMN och tryck sedan Spara inspelning.',
+            'The record button is down. Type SAVE CAS:NAME and then press Save recording.');
     skarm.focus();
 });
 
 $('spara').addEventListener('click', () => {
     if (!spelar_in || !e.inspelade_flanker()) {
-        meddela('Inget har spelats in än: tryck Spela in och skriv SAVE CAS:NAMN.');
+        meddela('Inget har spelats in än: tryck Spela in och skriv SAVE CAS:NAMN.',
+                'Nothing has been recorded yet: press Record and type SAVE CAS:NAME.');
         return;
     }
     const p = e.inspelning();
     if (!p) {
-        meddela('minnet räcker inte till WAV-filen');
+        meddela('minnet räcker inte till WAV-filen', 'not enough memory for the WAV file');
         return;
     }
     const data = new Uint8Array(e.memory.buffer, p, e.inspelning_storlek()).slice();
@@ -887,16 +1027,22 @@ function katalogen(d) {
                     antal += (d[i + 1] & 31) + 1;
                 }
             rader.push(filnamn(d, k + 4).padEnd(14) +
-                       String(antal).padStart(4) + (antal === 1 ? ' sektor' : ' sektorer'));
+                       String(antal).padStart(4) + (antal === 1 ? t(' sektor', ' sector')
+                                                                 : t(' sektorer', ' sectors')));
         }
     let lediga = 0;
     for (let n = 0; n < sektorer; n++)
         if (!(d[6 * 256 + (n >> 3)] & 0x80 >> (n & 7)))
             lediga++;
-    rader.push((rader.length ? '' : 'Inga filer. ') + rader.length +
-               (rader.length === 1 ? ' fil, ' : ' filer, ') + lediga +
-               ' sektorer lediga (' + Math.floor(lediga / 4) + ' KB).');
+    rader.push(filer_summa(rader.length) + lediga +
+               t(' sektorer lediga (', ' sectors free (') + Math.floor(lediga / 4) + ' KB).');
     return rader.join('\n');
+}
+
+/* "Inga filer. 0 filer, " och så vidare, före det lediga. */
+function filer_summa(n) {
+    return (n ? '' : t('Inga filer. ', 'No files. ')) + n +
+        (n === 1 ? t(' fil, ', ' file, ') : t(' filer, ', ' files, '));
 }
 
 /* Katalogen på en CP/M-skiva som vår BIOS ordnar den (cpm/bios.asm):
@@ -922,25 +1068,34 @@ function cpm_katalogen(d) {
         anvanda += block;
     }
     const rader = [...filer].map(([namn, kb]) => namn.padEnd(14) + String(kb).padStart(3) + 'k');
-    rader.push((rader.length ? '' : 'Inga filer. ') + rader.length +
-               (rader.length === 1 ? ' fil, ' : ' filer, ') + (70 - anvanda) + 'k lediga.');
+    rader.push(filer_summa(rader.length) + (70 - anvanda) + t('k lediga.', 'k free.'));
     return rader.join('\n');
 }
 
-$('katalog_knapp').addEventListener('click', () => {
+const INGEN_SKIVA = ['Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.',
+                     'No disk in the FD2: insert one with Insert disk… or Example disk.'];
+
+/* Katalogen i panelen; false utan diskett. */
+function visa_katalogen() {
     const d = skivan_nu();
     const ruta = $('katalog');
     if (!d) {
         ruta.hidden = true;
-        meddela('Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.');
-        return;
+        return false;
     }
+    const i = t(' i ', ' in ');
     if (cpm_valt())
-        ruta.textContent = skivans_namn + ' i A:\n' + cpm_katalogen(d) + '\n\n' +
-                           skiva_b_namn + ' i B:\n' + cpm_katalogen(skiva_b_nu());
+        ruta.textContent = skivans_namn + i + 'A:\n' + cpm_katalogen(d) + '\n\n' +
+                           skiva_b_namn + i + 'B:\n' + cpm_katalogen(skiva_b_nu());
     else
-        ruta.textContent = skivans_namn + ' i DR0:\n' + katalogen(d);
+        ruta.textContent = skivans_namn + i + 'DR0:\n' + katalogen(d);
     ruta.hidden = false;
+    return true;
+}
+
+$('katalog_knapp').addEventListener('click', () => {
+    if (!visa_katalogen())
+        meddela(...INGEN_SKIVA);
     skarm.focus();
 });
 
@@ -956,16 +1111,18 @@ function ladda_ner(d, namn) {
 $('spara_skiva').addEventListener('click', () => {
     const d = skivan_nu();
     if (!d) {
-        meddela('Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.');
+        meddela(...INGEN_SKIVA);
         return;
     }
     ladda_ner(d, skivans_namn);
     const b = skiva_b_nu();
     if (b && b.some(x => x !== 0xE5)) {
         setTimeout(() => ladda_ner(b, skiva_b_namn), 500);
-        meddela(skivans_namn + ' (A:) och ' + skiva_b_namn + ' (B:) laddas ner med det som har sparats på dem.');
+        meddela(skivans_namn + ' (A:) och ' + skiva_b_namn + ' (B:) laddas ner med det som har sparats på dem.',
+                skivans_namn + ' (A:) and ' + skiva_b_namn + ' (B:) are downloaded with what has been saved on them.');
     } else
-        meddela(skivans_namn + ' laddas ner med det som har sparats på den.');
+        meddela(skivans_namn + ' laddas ner med det som har sparats på den.',
+                skivans_namn + ' is downloaded with what has been saved on it.');
     skarm.focus();
 });
 
@@ -991,7 +1148,8 @@ async function oppna(fil, vad) {
         lagg_i_band(data, namn);
     else if (vad === 'cmos') {
         cmos_byt(data);
-        meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'));
+        meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'),
+                namn + ' is in the CMOS memory' + ($('cmos').checked ? '.' : ' (switch it on).'));
     }
     else if (vad === 'skiva' && ar_cpm(data) && $('cpm')) {
         if (!cpm_valt()) {
@@ -1001,19 +1159,24 @@ async function oppna(fil, vad) {
         } else
             starta(data);
         skivans_namn = namn;
-        meddela(namn + ' är en CP/M-systemskiva och sitter i A:. CP/M startar från den.');
+        meddela(namn + ' är en CP/M-systemskiva och sitter i A:. CP/M startar från den.',
+                namn + ' is a CP/M system disk and sits in A:. CP/M starts from it.');
     } else if (vad === 'skiva' && cpm_valt()) {
         skiva_b_namn = namn;
         starta(skivan_nu(), data);
-        meddela(namn + ' sitter i B:, och CP/M startar om. DIR B: visar filerna.');
+        meddela(namn + ' sitter i B:, och CP/M startar om. DIR B: visar filerna.',
+                namn + ' sits in B:, and CP/M restarts. DIR B: shows the files.');
     } else if (vad === 'skiva') {
         skivans_namn = namn;
         starta(data);
-        meddela(namn + ' sitter i FD2 med ABC-DOS. Katalogen visar filerna; skriv RUN DR0:NAMN.');
+        meddela(namn + ' sitter i FD2 med ABC-DOS. Katalogen visar filerna; skriv RUN DR0:NAMN.',
+                namn + ' sits in the FD2 with ABC-DOS. Directory shows the files; type RUN DR0:NAME.');
     } else {
         skriv(new TextDecoder('utf-8').decode(data));
-        meddela(namn + ' skrivs in.');
+        meddela(namn + ' skrivs in.', namn + ' is being typed in.');
     }
+    if (vad === 'skiva')
+        oppna_panel('panel_disk');
     skarm.focus();
 }
 
@@ -1043,15 +1206,18 @@ document.addEventListener('drop', (h) => {
 /* Knapparna                                                         */
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
-$('nystart').addEventListener('click', () => { starta(null, null); meddela(''); skarm.focus(); });
+$('nystart').addEventListener('click', () => { starta(null, null); meddela(); skarm.focus(); });
 $('rom').addEventListener('change', () => { starta(); skarm.focus(); });
 $('tkn80').addEventListener('change', () => {
     starta();
-    meddela($('tkn80').checked
-        ? 'TKN80: 80 tecken per rad. PRINT INP(3);CHR$(12) ger 40, PRINT INP(4);CHR$(12) 80.'
-        : '');
+    if ($('tkn80').checked)
+        meddela('TKN80: 80 tecken per rad. PRINT INP(3);CHR$(12) ger 40, PRINT INP(4);CHR$(12) 80.',
+                'TKN80: 80 characters per line. PRINT INP(3);CHR$(12) gives 40, PRINT INP(4);CHR$(12) 80.');
+    else
+        meddela();
     skarm.focus();
 });
+$('fast').addEventListener('change', () => skarm.focus());
 /* Skivorna i det läge som inte är valt (ABC80 med ABC-DOS eller CP/M)
  * ligger undan här: {a, b, namn, namn_b}. */
 const undan = { abc80: null, cpm: null };
@@ -1075,8 +1241,14 @@ function abc80_lage() {
         byt_lage(false);
 }
 
-const CPM_TEXT = 'CP/M 2.2 med UNI-80: A: systemskivan, B: BBC BASIC, C: ABC80:s RAM (15k). ' +
-                 'DIR, STAT, PIP, ED, ASM, B: och BBCBASIC (*BYE slutar); ^C startar om CP/M, RESET också.';
+const CPM_TEXT = ['CP/M 2.2 med UNI-80. BBC BASIC: skriv först B: och sedan BBCBASIC ' +
+                  '(CP/M letar bara på skivan i prompten); *BYE går tillbaka. ' +
+                  'A: systemskivan med DIR, STAT, PIP, ED och ASM, C: ABC80:s RAM (15k). ' +
+                  '^C eller RESET startar om CP/M.',
+                  'CP/M 2.2 with UNI-80. BBC BASIC: first type B: and then BBCBASIC ' +
+                  '(CP/M only looks on the disk in the prompt); *BYE returns. ' +
+                  'A: the system disk with DIR, STAT, PIP, ED and ASM, C: the ABC80\'s RAM (15k). ' +
+                  '^C or RESET restarts CP/M.'];
 
 $('cpm')?.addEventListener('change', () => {
     const cpm = $('cpm').checked;
@@ -1084,7 +1256,11 @@ $('cpm')?.addEventListener('change', () => {
     skivans_namn = s.namn;
     skiva_b_namn = s.namn_b;
     starta(s.a, s.b);
-    meddela(cpm ? CPM_TEXT : 'ABC80 utan CP/M; CP/M-skivorna ligger undan till nästa gång.');
+    if (cpm)
+        meddela(...CPM_TEXT);
+    else
+        meddela('ABC80 utan CP/M; CP/M-skivorna ligger undan till nästa gång.',
+                'ABC80 without CP/M; the CP/M disks are put aside until next time.');
     skarm.focus();
 });
 
@@ -1093,16 +1269,20 @@ $('exempel')?.addEventListener('click', () => {
     abc80_lage();
     skivans_namn = 'exempel.dsk';
     starta(FILER.program.slice());
-    meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.');
+    meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.',
+            'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK or RUN DR0:AIRFIGHT.');
+    oppna_panel('panel_disk');
     skarm.focus();
 });
 
 /* Forth-kretsarna (exempel/krets/), när de ligger i sidan: maskinen
  * startas om med den valda kretsen eller utan. */
 const KRETSAR = {
-    '': '',
-    forth: 'Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
-    cmos: 'Forth med CMOS: Z=CALL(16384,3); orden sparas i CMOS-minnet på $5000.',
+    '': ['', ''],
+    forth: ['Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
+            'The Forth ROM at $4000: POKE 65052,0,208, NEW and Z=CALL(16384,3).'],
+    cmos: ['Forth med CMOS: Z=CALL(16384,3); orden sparas i CMOS-minnet på $5000.',
+           'Forth with CMOS: Z=CALL(16384,3); the words are saved in the CMOS memory at $5000.'],
 };
 
 /* Bokens exempel 1-6 (band 2, kapitlet Egna exempel; exempel/krets/),
@@ -1110,23 +1290,29 @@ const KRETSAR = {
  * -l och -b i bok/band2/exempel/eN.test. Med två filer är det banker. */
 const EXEMPEL = {
     e1: { filer: ['e1'], adress: 0x4000,
-          text: 'Exempel 1 på $4000: Z=CALL(16384) räknar tangenterna i hörnet, Z=CALL(16387) slutar.' },
+          text: ['Exempel 1 på $4000: Z=CALL(16384) räknar tangenterna i hörnet, Z=CALL(16387) slutar.',
+                 'Example 1 at $4000: Z=CALL(16384) counts the keys in the corner, Z=CALL(16387) stops.'] },
     e2: { filer: ['e2'], adress: 0x4000,
-          text: 'Exempel 2 på $4000: Z=CALL(16384) gör gemener till versaler i direktläge, Z=CALL(16387) slutar.' },
+          text: ['Exempel 2 på $4000: Z=CALL(16384) gör gemener till versaler i direktläge, Z=CALL(16387) slutar.',
+                 'Example 2 at $4000: Z=CALL(16384) turns lower case into capitals in direct mode, Z=CALL(16387) stops.'] },
     e3: { filer: ['e3'], adress: 0x4000,
-          text: 'Exempel 3 på $4000: Z=CALL(16384), och CTRL-L i direktläge blir LIST.' },
+          text: ['Exempel 3 på $4000: Z=CALL(16384), och CTRL-L i direktläge blir LIST.',
+                 'Example 3 at $4000: Z=CALL(16384), and CTRL-L in direct mode becomes LIST.'] },
     e4: { filer: ['e4a', 'e4b'], adress: 0x4000,
-          text: 'Exempel 4, två banker på $4000: Z=CALL(16384) anropar bank 1 från bank 0.' },
+          text: ['Exempel 4, två banker på $4000: Z=CALL(16384) anropar bank 1 från bank 0.',
+                 'Example 4, two banks at $4000: Z=CALL(16384) calls bank 1 from bank 0.'] },
     e5: { filer: ['e5'], adress: 0x7000,
-          text: 'Exempel 5 på $7000, IEC-kretsens plats: CMD "TEXT" skriver en statusrad.' },
+          text: ['Exempel 5 på $7000, IEC-kretsens plats: CMD "TEXT" skriver en statusrad.',
+                 'Example 5 at $7000, the place of the IEC ROM: CMD "TEXT" writes a status line.'] },
     e6: { filer: ['e6'], adress: 0x4000,
-          text: 'Exempel 6 på $4000: inkopplat (Z=CALL(16384)) ger tangenterna inget avbrott, så kör det i ett program som kopplar ur själv (Z=CALL(16387)); A=CALL(16390) ger tecknet från V24, -1 om inget. Fast: RESET.' },
+          text: ['Exempel 6 på $4000: inkopplat (Z=CALL(16384)) ger tangenterna inget avbrott, så kör det i ett program som kopplar ur själv (Z=CALL(16387)); A=CALL(16390) ger tecknet från V24, -1 om inget. Fast: RESET.',
+                 'Example 6 at $4000: hooked in (Z=CALL(16384)) the keys give no interrupt, so run it in a program that unhooks itself (Z=CALL(16387)); A=CALL(16390) gives the character from V24, -1 if none. Stuck: RESET.'] },
 };
 let v24_text = null;                         /* ?s=, sänds när tangenterna är skrivna */
 
 $('krets')?.addEventListener('change', () => {
     starta();
-    meddela(KRETSAR[$('krets').value] ?? EXEMPEL[$('krets').value].text);
+    meddela(...(KRETSAR[$('krets').value] ?? EXEMPEL[$('krets').value].text));
     skarm.focus();
 });
 
@@ -1135,14 +1321,17 @@ $('cmos').addEventListener('change', () => {
     if (!$('cmos').checked && $('krets')?.value === 'cmos')
         $('krets').value = '';
     starta();
-    meddela($('cmos').checked
-        ? 'CMOS-minnet på $5000-$57FF (20480-22527), sparat i webbläsaren.'
-        : 'CMOS-minnet är av; det som står där finns kvar till nästa gång.');
+    if ($('cmos').checked)
+        meddela('CMOS-minnet på $5000-$57FF (20480-22527), sparat i webbläsaren.',
+                'The CMOS memory at $5000-$57FF (20480-22527), saved in the browser.');
+    else
+        meddela('CMOS-minnet är av; det som står där finns kvar till nästa gång.',
+                'The CMOS memory is off; what is in it remains until next time.');
     skarm.focus();
 });
 $('cmos_tom').addEventListener('click', () => {
     cmos_byt(new Uint8Array(0));
-    meddela('CMOS-minnet är tomt.');
+    meddela('CMOS-minnet är tomt.', 'The CMOS memory is empty.');
     skarm.focus();
 });
 $('cmos_spara').addEventListener('click', () => {
@@ -1152,23 +1341,27 @@ $('cmos_spara').addEventListener('click', () => {
     lank.download = 'cmos.bin';
     lank.click();
     setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
-    meddela('cmos.bin laddas ner (som -M cmos.bin i terminalen).');
+    meddela('cmos.bin laddas ner (som -M cmos.bin i terminalen).',
+            'cmos.bin is downloaded (like -M cmos.bin in the terminal).');
     skarm.focus();
 });
 /* Skrivaren kopplas in och ur medan maskinen går: programmet ligger
  * kvar, och BASIC hittar drivrutinen när PR: öppnas. */
 $('p40').addEventListener('change', () => {
     p40_koppla();
-    meddela($('p40').checked
-        ? 'P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.'
-        : 'Skrivaren är urkopplad; papperet ligger kvar.');
+    if ($('p40').checked)
+        meddela('P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.',
+                'P40 on card 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HELLO", 30 CLOSE 1, or LIST PR:.');
+    else
+        meddela('Skrivaren är urkopplad; papperet ligger kvar.',
+                'The printer is disconnected; the paper stays.');
     skarm.focus();
 });
 $('p40_riv').addEventListener('click', () => {
     if ($('p40').checked)
         e.p40_riv();
     papper_tomt();
-    meddela('Papperet är avrivet.');
+    meddela('Papperet är avrivet.', 'The paper is torn off.');
     skarm.focus();
 });
 if (!med_popover)                            /* annars popovertarget */
@@ -1263,7 +1456,7 @@ document.addEventListener('keydown', h => {   /* Esc utan popover */
 });
 $('p40_spara').addEventListener('click', () => {
     if (!papper_ritat) {
-        meddela('Papperet är tomt.');
+        meddela('Papperet är tomt.', 'The paper is empty.');
         return;
     }
     pappret.toBlob(blob => {
@@ -1273,7 +1466,8 @@ $('p40_spara').addEventListener('click', () => {
         lank.click();
         setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
     });
-    meddela('papper.png laddas ner (som -CP papper.png i terminalen).');
+    meddela('papper.png laddas ner (som -CP papper.png i terminalen).',
+            'papper.png is downloaded (like -CP papper.png in the terminal).');
     skarm.focus();
 });
 $('cmos_ladda').addEventListener('click', () => valj_fil('cmos', '.bin'));
@@ -1296,11 +1490,14 @@ $('malare')?.addEventListener('click', () => {
     e.paus(1000);
     skriv('RUN CAS:\n');
     meddela('MÅLARE av Mikael Bonnier 1982 (GPL-3.0). Svara med ett tal och RETURN; '
-            + 'tangenterna runt F flyttar, Caps Lock på suddar, S tömmer skärmen.');
+            + 'tangenterna runt F flyttar, Caps Lock på suddar, S tömmer skärmen.',
+            'MÅLARE by Mikael Bonnier 1982 (GPL-3.0). Answer with a number and RETURN; '
+            + 'the keys around F move, Caps Lock on erases, S clears the screen.');
     skarm.focus();
 });
 
-const GENESIS = 'ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ';
+const GENESIS = ['ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ',
+                 'ABCDemo by Genesis Project (2015): code Shadow, graphics and music Mermaid. '];
 
 /* Från bandet: musiken ligger efter programmet och hörs utan
  * fjärrstyrning, så att bandet går vidare.
@@ -1316,7 +1513,8 @@ $('genesis')?.addEventListener('click', () => {
     play_vid_relaet = true;
     e.paus(1000);
     skriv('RUN CAS:\n');
-    meddela(GENESIS + 'Från bandet; musiken spelas av bandspelaren, utan fjärrstyrning.');
+    meddela(GENESIS[0] + 'Från bandet; musiken spelas av bandspelaren, utan fjärrstyrning.',
+            GENESIS[1] + 'From tape; the music is played by the tape recorder, without remote control.');
     skarm.focus();
 });
 
@@ -1326,7 +1524,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
     starta(FILER.genesis.slice());
     e.paus(1000);
     skriv('RUN DR0:A.B\n');
-    meddela(GENESIS + 'Från disketten, utan musik: den finns bara på bandet.');
+    meddela(GENESIS[0] + 'Från disketten, utan musik: den finns bara på bandet.',
+            GENESIS[1] + 'From disk, without music: it is only on the tape.');
     skarm.focus();
 });
 
@@ -1334,6 +1533,15 @@ $('genesis_skiva')?.addEventListener('click', () => {
 /* Starten                                                           */
 
 (async function () {
+    const fraga = new URLSearchParams(location.search);
+    let valt = fraga.get('sprak') || fraga.get('lang');
+    if (!valt)
+        try { valt = localStorage.getItem(SPRAK_NYCKEL); } catch (fel) { /* inget sparat */ }
+    if (!valt)
+        valt = /^sv/i.test(navigator.language || '') ? 'sv' : 'en';
+    byt_sprak(valt);
+    paneler_las_in();
+
     const { instance } = await WebAssembly.instantiate(base64(FILER.wasm), {});
     e = instance.exports;
     ROM.ny = base64(FILER.rom_ny);
@@ -1356,7 +1564,6 @@ $('genesis_skiva')?.addEventListener('click', () => {
     }
     cmos_las_in();
 
-    const fraga = new URLSearchParams(location.search);
     if (fraga.get('rom') === 'gammal')
         $('rom').value = 'gammal';
     if (fraga.get('ljud') === 'av')
@@ -1370,12 +1577,18 @@ $('genesis_skiva')?.addEventListener('click', () => {
     if ($('krets').options.length < 2)
         $('krets').hidden = true;            /* varken Forth eller exemplen */
     const krets = fraga.get('krets');
-    if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) || krets in EXEMPEL))
+    if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) || krets in EXEMPEL)) {
         $('krets').value = krets;
-    if (fraga.get('cmos') === 'pa')
+        oppna_panel('panel_program');
+    }
+    if (fraga.get('cmos') === 'pa') {
         $('cmos').checked = true;
-    if (fraga.get('p40') === 'pa')
+        oppna_panel('panel_cmos');
+    }
+    if (fraga.get('p40') === 'pa') {
         $('p40').checked = true;
+        oppna_panel('panel_p40');
+    }
     if (fraga.get('tkn80') === 'pa')
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')
@@ -1384,8 +1597,9 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('cpm').checked = true;
     visa_ljudet();
     starta(null, null);
+    visa_lagen(true);
     if (cpm_valt())
-        meddela(CPM_TEXT);
+        meddela(...CPM_TEXT);
     if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);

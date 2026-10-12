@@ -5,8 +5,9 @@
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
   exempeldisketten, Forth-kretsen, bokens exempel 1-6, MÅLARE-bandet och
-  Genesis-demot (band och diskett), om de finns, in som base64, och abc80.js efter. Då är abc80.html en enda fil som går
-  att öppna direkt i webbläsaren, utan server och utan att något installeras.
+  Genesis-demot (band och diskett), om de finns, in som base64, och
+  abc80.js efter. Då är abc80.html en enda fil som går att öppna direkt i
+  webbläsaren, utan server och utan att något installeras.
 
   Mellan MALL och /MALL står det som bara syns i mallen; bygg.sh tar
   bort det. Mellan PROGRAM och /PROGRAM står exempeldiskettens knapp och
@@ -14,9 +15,18 @@
   mellan KRETS och /KRETS Forth-kretsens, som tas bort när
   exempel/krets/forth.bin inte finns, mellan EXEMPEL och /EXEMPEL
   exemplens, som tas bort när exempel/krets/e1.bin med flera inte finns,
-  mellan MALARE och /MALARE bandet
-  MÅLAREs, som tas bort när exempel/malare/MALARE.wav inte finns, och mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
-  inte finns.
+  mellan MALARE och /MALARE bandet MÅLAREs, som tas bort när
+  exempel/malare/MALARE.wav inte finns, mellan CPM och /CPM CP/M:s, och
+  mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
+  inte finns. Markeringarna står på egna rader.
+
+  Sidan finns på svenska och engelska. Text står två gånger, med
+  lang="sv" och lang="en", och den som inte gäller döljs (html har
+  språket i lang). Knappar och val med bara text har den engelska i
+  data-en och rutornas title-text i data-title-en; abc80.js byter.
+
+  Knapparna ligger i paneler (details) som fälls ut och ihop; ⓘ i
+  panelens list visar panelens hjälptext.
 -->
 <html lang="sv">
 <head>
@@ -32,6 +42,7 @@
     --kant: #3a3a37;
     --accent: #d9a441;
   }
+  :root[lang=sv] [lang=en], :root[lang=en] [lang=sv] { display: none !important; }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -49,14 +60,14 @@
     width: min(calc(100vw - 32px - 16px - 300px), calc((100vh - 24px) / 0.7675));
     position: sticky; top: 12px;
   }
-  #hoger { flex: 0 0 300px; display: flex; flex-direction: column; gap: 8px; }
+  #hoger { flex: 0 0 300px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
   @media (max-width: 760px) {
     main { flex-direction: column; }
     #vanster { width: 100%; position: static; }
     #hoger { flex: none; width: 100%; }
   }
   h1 { font-size: 17px; font-weight: 600; margin: 0 0 2px; letter-spacing: .02em; line-height: 1.3; }
-  h1 span { display: block; color: var(--dampad); font-weight: 400; font-size: 13px; }
+  h1 > span { display: block; color: var(--dampad); font-weight: 400; font-size: 13px; }
   /* En svart ram runt bilden, som kanten på TV:n, så att tecknen
      längst ut inte hamnar i fönstrets kant. */
   #ram {
@@ -75,13 +86,37 @@
     image-rendering: pixelated;
     outline: none;
   }
-  .grupp {
-    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-    background: var(--yta); border: 1px solid var(--kant);
-    border-radius: 8px; padding: 6px 8px 8px;
+  /* Raden överst med det som alltid behövs. */
+  .rad { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  /* Panelerna: listen fäller ut och ihop, läget står till höger i den. */
+  .panel { background: var(--yta); border: 1px solid var(--kant); border-radius: 8px; }
+  .panel > summary {
+    display: flex; align-items: center; gap: 6px; padding: 5px 8px;
+    list-style: none; cursor: pointer; user-select: none; -webkit-user-select: none;
+    font-size: 14px; font-weight: 500; color: var(--text);
   }
-  .grupp b { flex-basis: 100%; font-weight: 500; color: var(--dampad); font-size: 13px; }
-  .grupp b .ikon { font-size: 16px; margin-right: 4px; }
+  .panel > summary::-webkit-details-marker { display: none; }
+  .panel > summary::before {
+    content: '▸'; color: var(--dampad); display: inline-block; width: 10px;
+    transition: transform .12s;
+  }
+  .panel[open] > summary::before { transform: rotate(90deg); }
+  .lage {
+    flex: 1; min-width: 0; text-align: right; color: var(--dampad);
+    font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .panel .info {
+    flex: none; width: 22px; height: 22px; padding: 0; border-radius: 50%;
+    font-size: 12px; line-height: 20px; color: var(--dampad); background: transparent;
+  }
+  .panel .info.pa { background: var(--accent); border-color: var(--accent); color: #1b1b1a; }
+  .knappar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 2px 8px 8px; }
+  .hjalptext {
+    margin: 0 8px 8px; padding-top: 2px; border-top: 1px solid var(--kant);
+    color: var(--dampad); font-size: 13.5px;
+  }
+  .hjalptext p { margin: 6px 0; }
   button, select {
     font: inherit; font-size: 14px;
     color: var(--text); background: #33332f;
@@ -91,20 +126,24 @@
   button:hover, select:hover { border-color: var(--dampad); }
   button.pa { background: var(--accent); color: #1b1b1a; border-color: var(--accent); }
   label { font-size: 14px; display: flex; gap: 4px; align-items: center; cursor: pointer; }
+  label:has(input:disabled) { opacity: .45; cursor: default; }
+  #sprak { font-size: 12px; padding: 2px 7px; }
   #rakneverk {
     font: 15px ui-monospace, Menlo, monospace; letter-spacing: 2px;
     color: var(--text); background: #111; border: 1px solid var(--kant);
     border-radius: 4px; padding: 2px 6px;
   }
-  #bandstatus { font-variant-numeric: tabular-nums; color: var(--dampad); font-size: 13px; min-width: 9em; }
-  #meddelande { margin: 0; color: var(--dampad); font-size: 13px; min-height: 1.4em; }
+  #meddelande {
+    margin: 0; color: var(--dampad); font-size: 13px; min-height: 1.4em;
+    border-left: 2px solid var(--kant); padding-left: 8px;
+  }
   #katalog {
-    margin: 0; padding: 8px 10px; font: 13px/1.4 ui-monospace, Menlo, monospace;
-    background: var(--yta); border: 1px solid var(--kant); border-radius: 8px;
+    margin: 0 8px 8px; padding: 8px 10px; font: 13px/1.4 ui-monospace, Menlo, monospace;
+    background: var(--bakgrund); border: 1px solid var(--kant); border-radius: 6px;
     overflow-x: auto;
   }
-  details { margin-top: 4px; color: var(--dampad); font-size: 14px; }
-  summary { cursor: pointer; color: var(--text); }
+  #mer { margin-top: 4px; color: var(--dampad); font-size: 14px; }
+  #mer summary { cursor: pointer; color: var(--text); }
   kbd {
     font: 12px ui-monospace, Menlo, monospace;
     border: 1px solid var(--kant); border-radius: 4px; padding: 0 4px;
@@ -162,207 +201,442 @@
 
   <div id="hoger">
     <div id="rubrik">
-      <h1>ABC80 <span>emulatorn till boken ABC80 inifrån</span></h1>
-      <button id="hjalp_visa" popovertarget="hjalp" title="Vad det här är och hur man kommer igång">Kom igång</button>
+      <h1>ABC80 <span lang="sv">emulatorn till boken ABC80 inifrån</span><span lang="en">the emulator for the book ABC80 inifrån</span></h1>
+      <button id="sprak" title="In English" data-title-en="På svenska">EN</button>
     </div>
-    <div class="grupp">
-      <b>Maskinen</b>
-      <select id="rom" title="ROM:en">
-        <option value="ny">Nya ROM:en</option>
-        <option value="gammal">Gamla ROM:en</option>
-      </select>
-      <label title="MyAB:s kort för 80 tecken per rad (band 2, kapitlet Skärmen): PRINT INP(3);CHR$(12) ger 40 tecken, PRINT INP(4);CHR$(12) 80 (som -tkn80 i terminalen)"><input type="checkbox" id="tkn80"> TKN80</label>
-      <label title="TKN80 med byglingen för fast markör (MyAB:s handbok: bryt mellan K6.6 och K6.7): tecken med bit 7 visas inverterade utan att blinka, som WordStar under CP/M vill ha det. Utan TKN80 blinkar markören alltid, som på ABC80. Terminalen och -B visar den alltid fast."><input type="checkbox" id="fast"> fast markör</label>
-      <label title="MyAB:s kort UNI-80 med CP/M 2.2 (band 2, kapitlet CP/M): A: systemskivan, B: BBC BASIC, C: ABC80:s RAM (som -cpm i terminalen)"><input type="checkbox" id="cpm"> CP/M</label>
-      <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar">RESET</button>
-      <button id="nystart" title="Töm minnet och starta om">Starta om</button>
-      <button id="ljud" title="Ljudet från SN76477 (OUT 6) och bandet">Ljud: på</button>
-      <button id="program" title="En textfil med ett BASIC-program skrivs in som tangenter">Skriv in…</button>
-      <select id="krets" title="En krets: Forth-tolken eller ett av bokens exempel">
-        <option value="">Ingen krets</option>
-        <option value="forth">Forth-kretsen</option>
-        <option value="cmos">Forth med CMOS</option>
-        <option value="e1">Exempel 1: tangentavbrottet</option>
-        <option value="e2">Exempel 2: versaler</option>
-        <option value="e3">Exempel 3: snabbtangenten</option>
-        <option value="e4">Exempel 4: två banker</option>
-        <option value="e5">Exempel 5: en egen sats</option>
-        <option value="e6">Exempel 6: V24 i program</option>
-      </select>
-    </div>
-    <div class="grupp">
-      <b>CMOS-minnet</b>
-      <label title="2 KB RAM med batteri på $5000-$57FF, som på Super Smartaid: innehållet sparas i webbläsaren"><input type="checkbox" id="cmos"> på $5000</label>
-      <button id="cmos_tom" title="Nollställ CMOS-minnet">Töm</button>
-      <button id="cmos_spara" title="Ladda ner CMOS-minnet (2 KB)">Spara</button>
-      <button id="cmos_ladda" title="Lägg in en fil i CMOS-minnet">Ladda…</button>
-    </div>
-    <div class="grupp">
-      <b>Skrivaren P40</b>
-      <label title="Nålskrivaren på kort 60 och drivrutinen på $7800: PRINT #1 efter OPEN &quot;PR:&quot; (som -CP i terminalen)"><input type="checkbox" id="p40"> på kort 60</label>
-      <button id="p40_visa" popovertarget="papper" title="Visa papperet; det kommer fram av sig självt när skrivaren börjar" disabled>Papperet</button>
-    </div>
-    <div class="grupp">
-      <b><span class="ikon">💾</span>Disketten</b>
-      <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva">Lägg i diskett…</button>
-      <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS">Exempeldisketten</button>
-      <button id="katalog_knapp" title="Filerna på disketten i FD2">Katalogen</button>
-      <button id="spara_skiva" title="Ladda ner disketten med det som har sparats på den (SAVE DR0:)">Spara disketten</button>
-    </div>
-    <div class="grupp">
-      <b><span class="ikon">📼</span>Kassetten</b>
-      <button id="band" title="En WAV-fil att spela upp (LOAD, RUN CAS:)">Lägg i band…</button>
-      <button id="spelain" title="Ett tomt band med inspelningsknappen nere (SAVE CAS:)">Spela in</button>
-      <button id="spara" title="Ladda ner det som har spelats in som WAV">Spara inspelning</button>
-      <label title="Kör tio gånger fortare medan motorn går"><input type="checkbox" id="snabbt" checked> snabbt</label>
-      <label title="Motorreläet i ABC80 startar och stoppar bandet; utan fjärrstyrning går bandet så länge PLAY är nere"><input type="checkbox" id="fjarr" checked> fjärrstyrd</label>
-      <button id="play" title="PLAY: tryck ned, och tryck igen för att släppa upp den (bandet stannar)">▶</button>
-      <button id="bakat" title="Spola bakåt (tryck igen för att stanna)">⏪</button>
-      <button id="framat" title="Spola framåt (tryck igen för att stanna)">⏩</button>
-      <button id="rakneverk" title="Räkneverket: klicka för att nollställa">000</button>
-      <span id="bandstatus">inget band</span>
-      <button id="malare" title="Ritprogrammet MÅLARE av Mikael Bonnier 1982, från bandet (GPL-3.0)">MÅLARE</button>
+    <div class="rad">
+      <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar" data-title-en="Like the RESET button: memory is kept">RESET</button>
+      <button id="nystart" title="Töm minnet och starta om" data-title-en="Clear memory and start again" data-en="Restart">Starta om</button>
+      <button id="ljud">Ljud: på</button>
+      <button id="hjalp_visa" popovertarget="hjalp" title="Vad det här är och hur man kommer igång" data-title-en="What this is and how to get started" data-en="Getting started">Kom igång</button>
     </div>
     <p id="meddelande"></p>
-    <pre id="katalog" hidden></pre>
 
-  <details>
-    <summary>Hur den används</summary>
-    <p>Klicka på skärmen och skriv. <kbd>Enter</kbd> är RETURN, <kbd>←</kbd> och
-    <kbd>Backsteg</kbd> backar, <kbd>→</kbd> går framåt, <kbd>Ctrl</kbd>+<kbd>C</kbd>
-    är BREAK. Å, Ä, Ö, É och Ü skrivs som vanligt. Text som klistras in
-    skrivs som tangenter, en rad i taget.</p>
-    <p>Filer går också att dra till sidan: en <code>.wav</code> blir ett band i
-    kassetten, en <code>.dsk</code> en diskett och annat ett program som skrivs in.
-    Disketten sitter i FD2 (kort 45) med ABC-DOS. Man stannar i BASIC:
-    DOS:en lägger bara till enheterna <code>DR0:</code>–<code>DR6:</code>,
-    så det är <code>LOAD DR0:A.B</code> eller <code>RUN DR0:A.B</code>.
-    <code>BYE</code> kör CMDINT.SYS från disketten, om den finns där.
-    BASIC:en kan inte lista katalogen (det gjorde programmet LIB på
-    systemskivan), så <i>Katalogen</i> visar filerna och hur många sektorer
-    de tar. Det som sparas med <code>SAVE DR0:NAMN</code> hamnar bara i
-    sidans minne; <i>Spara disketten</i> laddar ner den som en
-    <code>.dsk</code>, som går att lägga i igen.</p>
-    <p>Kassetten: lägg i ett band och skriv <code>LOAD CAS:</code> eller
-    <code>RUN CAS:</code>. Skriv inget medan blocken läses, det ger ERR 35. För
-    att spela in: tryck <i>Spela in</i>, skriv <code>SAVE CAS:NAMN</code> och
-    tryck sedan <i>Spara inspelning</i>.</p>
-    <p>⏪ och ⏩ spolar bandet, tjugo gånger fortare än det spelar, tills
-    du trycker igen eller bandet tar slut; PLAY släpps upp, så tryck ▶
-    igen efteråt, före <code>LOAD CAS:</code> (står bandet ger ROM:en
-    ERR 21). Räkneverket räknar varv på
-    spolen, som på en kassettbandspelare: det går fortare i början av
-    bandet än i slutet, och ett klick nollställer det. Skriv upp var
-    programmen börjar, så hittar du tillbaka, eller spola tillbaka och
-    försök igen efter ett läsfel. Under inspelning går det inte att spola.</p>
-    <p>Bandets eget ljud hörs med ljudet på, medan bandet går i vanlig fart.
-    ▶ är PLAY: den trycks ned när ett band läggs i, och ett tryck till
-    släpper upp den, så att bandet stannar. Är bandspelaren
-    <i>fjärrstyrd</i> (från början) startar och stoppar ABC80 bandet med
-    motorreläet, så det stannar efter programmet; utan fjärrstyrning går
-    det så länge PLAY är nere.</p>
-    <p><i>Exempeldisketten</i> lägger i en diskett med fyra program: skriv
-    <code>RUN DR0:GISSA</code> (gissa talet), <code>RUN DR0:KURVA</code>
-    (kurvor med <code>SETDOT</code>), <code>RUN DR0:MUSIK</code> (en orgel
-    från 1981 på tangenterna Z, X, C … med S, D, G … som de svarta, med
-    Caps Lock eftersom programmet väntar sig versaler) eller <code>RUN DR0:AIRFIGHT</code>
-    (spelet från 1981 i Z80-kod, för två: A, D och X mot J, L och M;
-    laddaren tar en halv minut). Samma fyra program finns också som band,
-    ett per program, i <code>exempel/program/kassett/</code> (<i>Lägg i
-    band…</i> och <code>RUN CAS:</code>), och som text i
-    <code>exempel/program/text/</code> (<i>Skriv in…</i> och
-    <code>RUN</code>).</p>
-    <p><i>MÅLARE</i> lägger i ett band med Mikael Bonniers ritprogram från
-    1982 och skriver <code>RUN CAS:</code>. Svara på tidsfördröjningen med
-    ett tal (till exempel 10) och RETURN. Markören flyttas med tangenterna
-    runt F: E, R, T, D, G, C, V och B. Med Caps Lock på suddar den, och
-    utan Caps Lock ritar den. S tömmer skärmen. Programmet är fri programvara
-    (GPL-3.0); bandet är gjort i emulatorn ur källan, och
-    <code>exempel/malare/LASMIG.md</code> berättar var det kommer ifrån.</p>
-    <p><i>CMOS-minnet</i> är 2 KB RAM på <code>$5000</code>–<code>$57FF</code>
-    (20480–22527), som det batteriförsedda minnet på Super Smartaid. Det
-    som står där sparas i webbläsaren och finns kvar när sidan laddas om
-    eller maskinen startas om: <code>POKE 20480,42</code>, ladda om, och
-    <code>PRINT PEEK(20480)</code> ger 42. <i>Spara</i> och <i>Ladda…</i>
-    flyttar det som en fil (i terminalen: <code>-M cmos.bin</code>).</p>
-    <p><i>Forth-kretsen</i> sätter Forth-tolken från exempel 7 (band 2) i
-    en krets på <code>$4000</code>, där Smartaid satt, och startar om
-    maskinen. Kretsen kan inte skrivas i, så de egna orden läggs i RAM från
-    <code>$C000</code>, och BOFA flyttas upp först:
-    <code>POKE 65052,0,208</code> och <code>NEW</code>. Sedan startar
-    <code>Z=CALL(16384,3)</code> tolken: <code>: KV DUP + ;</code> och
-    <code>7 KV .</code> ger 14. <code>WORDS</code> listar orden, och
-    <code>@</code> skrivs <code>É</code>. <code>BYE</code> går tillbaka
-    till BASIC och <code>Z=CALL(16384,4)</code> fortsätter med de egna
-    orden kvar. Samma tolk finns som band i bokens kodförråd
-    (<code>inifran/forth/FORTH.wav</code>), för RAM på <code>$C000</code>.</p>
-    <p><i>Forth med CMOS</i> är samma tolk, men de egna orden läggs i
-    CMOS-minnet, och radbufferten också, så ingen <code>POKE</code> behövs:
-    <code>Z=CALL(16384,3)</code> direkt. Orden finns kvar när sidan laddas
-    om. <code>EMPTY</code> tömmer ordlistan.</p>
-    <p><i>Exempel 1</i>–<i>6</i> är programmen i band 2, kapitlet Egna
-    exempel, i den tänkta kretsen: på <code>$4000</code>, exempel 4 med två
-    banker där och exempel 5 på <code>$7000</code>, IEC-kretsens plats.
-    Maskinen startas om med kretsen i, och raden under skärmen säger hur
-    programmet kopplas in, oftast <code>Z=CALL(16384)</code>. Exempel 6
-    läser det som kommer på V24; en länk med <code>?s=</code> sänder en
-    text dit. Medan det är inkopplat ger tangenterna inget avbrott, som i
-    texttelefonen, så det körs i ett program som kopplar ur själv med
-    <code>Z=CALL(16387)</code>; i direktläge står maskinen still tills
-    <i>RESET</i>.</p>
-    <p><i>TKN80</i> är MyAB:s kort för 80 tecken per rad, med EPROM:en
-    TKN80-III (band 2, kapitlet Skärmen). Maskinen startas om med kortet
-    i, och det startar i 80-teckensläget. <code>PRINT INP(3);CHR$(12)</code>
-    byter till 40 tecken och tömmer skärmen, <code>PRINT
-    INP(4);CHR$(12)</code> tillbaka till 80, som i MyAB:s
-    bruksanvisning. <code>PEEK(885)</code> är 88 med 80 tecken och 124
-    med 40. Program som skriver direkt i bildminnet på
-    <code>$7C00</code>, som Genesis-demot, behöver 40 tecken.</p>
-    <p><i>CP/M</i> sätter i MyAB:s kort UNI-80 (band 2, kapitlet CP/M)
-    och startar CP/M 2.2 från en systemskiva i FD2, som när RESET hålls
-    nere på den riktiga maskinen. Allt utom CCP:n, BDOS:en och programmen
-    är eget: start-PROM:en och BIOS:en är skrivna till emulatorn, och
-    MyAB:s kod är inte med. A: är systemskivan med Digital Researchs
-    program (ASM, DDT, DUMP, ED, LOAD, PIP, STAT, SUBMIT och XSUB), B:
-    en skiva med BBC BASIC (Z80) av R. T. Russell, fri under zlib-licensen,
-    och C: en RAM-skiva i ABC80:s eget minne (15k), som töms när CP/M
-    startar. <code>B:</code> och <code>BBCBASIC</code> startar BASIC,
-    <code>SAVE "NAMN"</code> sparar på B: och <code>*BYE</code> går
-    tillbaka till CP/M. CP/M-kartan har ingen klocka, så <code>TIME</code>
-    går fram när BASIC väntar på en tangent eller läser den, men inte
-    medan ett program räknar. Prova <code>DIR</code>, <code>STAT</code>,
-    <code>PIP B:=*.COM</code> och <code>DIR B:</code>. Ett eget program:
-    <code>ED HEJ.ASM</code>, <code>I</code>, texten, <kbd>Ctrl</kbd>+<kbd>Z</kbd>
-    och <code>E</code>, sedan <code>ASM HEJ</code>, <code>LOAD HEJ</code>
-    och <code>HEJ</code>. Med TKN80 blir skärmen 80 tecken bred.
-    <kbd>Ctrl</kbd>+<kbd>C</kbd> först på raden startar om CP/M (varmstart),
-    och <i>RESET</i> läser in det från skivan igen. Tecknen är ABC80:s, så
-    <code>$</code> syns som <code>¤</code> och <code>^</code> som
-    <code>Ü</code>. <i>Lägg i diskett…</i> sätter en skiva i B:, eller i A:
-    om den är en systemskiva, och CP/M startar om. <i>Katalogen</i> visar
-    filerna på A: och B:, och <i>Spara disketten</i> laddar ner dem. Slås
-    CP/M av ligger skivorna undan till nästa gång, och ABC-DOS-disketten
-    kommer tillbaka.</p>
-    <p><i>Skrivaren P40</i> är nålskrivaren från band 2, kapitlet
-    Skrivarna, på kort 60, med drivrutinen på <code>$7800</code>. Den kopplas
-    in och ur medan maskinen går, så programmet ligger kvar: BASIC letar
-    upp drivrutinen först när <code>PR:</code> öppnas. Den skriver det som går till
-    <code>PR:</code>: <code>10 OPEN "PR:" AS FILE 1</code>,
-    <code>20 PRINT #1,"HEJ"</code>, <code>30 CLOSE 1</code>, eller
-    <code>LIST PR:</code>. Papperet kommer fram som en lapp när skrivaren
-    börjar och försvinner med ett klick utanför eller <kbd>Esc</kbd>;
-    <i>Papperet</i> tar fram det igen, och <i>Spara</i> ger det som en
-    bild (i terminalen: <code>-CP papper.png</code>). Skrivarens mekanik är inte
-    bevarad, så den är antagen: vagnen går med fast fart, och var
-    punkterna hamnar avgörs bara av tiden, som på skrivaren. Raderna som
-    skrivs framåt hamnar drygt två kolumner till vänster om dem som
-    skrivs bakåt; <code>exempel/p40/LASMIG.md</code> berättar varför
-    (?).</p>
-    <p><i>Kom igång</i> visas av sig själv första gången sidan öppnas
-    (inte med <code>?k=</code>); knappen tar fram den igen. Papperet går
-    att flytta genom att dra i dess list, och det stället kommer
-    sidan ihåg.</p>
-    <p>Länkar kan ge tangenter att skriva efter starten:
+    <details class="panel" id="panel_maskin" open>
+      <summary><span lang="sv">Maskinen</span><span lang="en">The machine</span><span class="lage" id="lage_maskin"></span><button class="info" title="Mer om maskinen" data-title-en="More about the machine">i</button></summary>
+      <div class="knappar">
+        <select id="rom" title="BASIC-ROM:en" data-title-en="The BASIC ROM">
+          <option value="ny" data-en="New ROM">Nya ROM:en</option>
+          <option value="gammal" data-en="Old ROM">Gamla ROM:en</option>
+        </select>
+        <label title="MyAB:s kort för 80 tecken per rad" data-title-en="MyAB's card for 80 characters per line"><input type="checkbox" id="tkn80"> TKN80</label>
+        <label title="TKN80 med byglingen för fast markör" data-title-en="TKN80 with the jumper for a steady cursor"><input type="checkbox" id="fast"> <span lang="sv">fast markör</span><span lang="en">steady cursor</span></label>
+        <label title="MyAB:s kort UNI-80 med CP/M 2.2" data-title-en="MyAB's UNI-80 card with CP/M 2.2"><input type="checkbox" id="cpm"> CP/M</label>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>RESET</i> är som knappen på maskinen: programmet ligger
+        kvar. <i>Starta om</i> tömmer minnet. Den nya ROM:en är den som de
+        flesta maskiner har; den gamla finns med för jämförelsen i band 1.</p>
+        <p lang="en"><i>RESET</i> is like the button on the machine: the
+        program stays in memory. <i>Restart</i> clears memory. The new ROM is
+        the one most machines have; the old one is there for the comparison in
+        volume 1.</p>
+        <p lang="sv"><i>TKN80</i> är MyAB:s kort för 80 tecken per rad, med
+        EPROM:en TKN80-III (band 2, kapitlet Skärmen). Maskinen startas om med
+        kortet i, och det startar i 80-teckensläget. <code>PRINT
+        INP(3);CHR$(12)</code> byter till 40 tecken och tömmer skärmen,
+        <code>PRINT INP(4);CHR$(12)</code> tillbaka till 80, som i MyAB:s
+        bruksanvisning. <code>PEEK(885)</code> är 88 med 80 tecken och 124
+        med 40. Program som skriver direkt i bildminnet på <code>$7C00</code>,
+        som Genesis-demot, behöver 40 tecken. I terminalen:
+        <code>-tkn80</code>.</p>
+        <p lang="en"><i>TKN80</i> is MyAB's card for 80 characters per line,
+        with the TKN80-III EPROM (volume 2, the chapter on the screen). The
+        machine restarts with the card fitted, and the card starts in 80-column
+        mode. <code>PRINT INP(3);CHR$(12)</code> switches to 40 columns and
+        clears the screen, <code>PRINT INP(4);CHR$(12)</code> back to 80, as in
+        MyAB's manual. <code>PEEK(885)</code> is 88 with 80 columns and 124
+        with 40. Programs that write straight into screen memory at
+        <code>$7C00</code>, like the Genesis demo, need 40 columns. In the
+        terminal: <code>-tkn80</code>.</p>
+        <p lang="sv"><i>Fast markör</i> gäller TKN80. MyAB:s bruksanvisning
+        beskriver en bygling på kortet (bryt mellan K6.6 och K6.7) som gör
+        markören fast: tecken med bit 7 visas då inverterade i stället för
+        blinkande. Den rekommenderas med CP/M, där till exempel WordStar
+        använder inverterad text. Utan TKN80 blinkar markören alltid, som på
+        ABC80. Terminalen och <code>-B</code> visar den alltid fast.</p>
+        <p lang="en"><i>Steady cursor</i> applies to TKN80. MyAB's manual
+        describes a jumper on the card (cut between K6.6 and K6.7) that makes
+        the cursor steady: characters with bit 7 set are then shown inverted
+        instead of blinking. It is recommended with CP/M, where WordStar for
+        one uses inverted text. Without TKN80 the cursor always blinks, as on
+        the ABC80. The terminal and <code>-B</code> always show it steady.</p>
+        <p lang="sv"><i>CP/M</i> sätter i MyAB:s kort UNI-80 (band 2,
+        kapitlet CP/M) och startar CP/M 2.2 från en systemskiva i FD2, som när
+        RESET hålls nere på den riktiga maskinen. Allt utom CCP:n, BDOS:en och
+        programmen är eget: start-PROM:en och BIOS:en är skrivna till
+        emulatorn, och MyAB:s kod är inte med. A: är systemskivan med Digital
+        Researchs program (ASM, DDT, DUMP, ED, LOAD, PIP, STAT, SUBMIT och
+        XSUB), B: en skiva med BBC BASIC (Z80) av R. T. Russell, fri under
+        zlib-licensen, och C: en RAM-skiva i ABC80:s eget minne (15k), som
+        töms när CP/M startar.</p>
+        <p lang="en"><i>CP/M</i> fits MyAB's UNI-80 card (volume 2, the
+        chapter on CP/M) and starts CP/M 2.2 from a system disk in the FD2, as
+        when RESET is held down on the real machine. Everything except the
+        CCP, the BDOS and the programs is our own: the boot PROM and the BIOS
+        are written for the emulator, and none of MyAB's code is included. A:
+        is the system disk with Digital Research's programs (ASM, DDT, DUMP,
+        ED, LOAD, PIP, STAT, SUBMIT and XSUB), B: a disk with BBC BASIC (Z80)
+        by R. T. Russell, free under the zlib licence, and C: a RAM disk in the
+        ABC80's own memory (15k), cleared when CP/M starts.</p>
+        <p lang="sv">BBC BASIC startas med <code>B:</code> och sedan
+        <code>BBCBASIC</code>: CP/M letar bara på skivan i prompten, så
+        <code>BBCBASIC</code> vid <code>A&gt;</code> ger bara
+        <code>BBCBASIC?</code> tillbaka. <code>SAVE "NAMN"</code> sparar på
+        B: och <code>*BYE</code> går tillbaka till CP/M. CP/M-kartan har
+        ingen klocka, så <code>TIME</code> går fram när BASIC väntar på en
+        tangent eller läser den, men inte medan ett program räknar.</p>
+        <p lang="en">BBC BASIC is started with <code>B:</code> and then
+        <code>BBCBASIC</code>: CP/M only looks on the disk in the prompt, so
+        <code>BBCBASIC</code> at <code>A&gt;</code> only answers
+        <code>BBCBASIC?</code>. <code>SAVE "NAME"</code> saves on B: and
+        <code>*BYE</code> returns to CP/M. The CP/M memory map has no clock,
+        so <code>TIME</code> advances while BASIC waits for or reads a key,
+        but not while a program computes.</p>
+        <p lang="sv">Prova <code>DIR</code>, <code>STAT</code>, <code>PIP
+        B:=*.COM</code> och <code>DIR B:</code>. Ett eget program: <code>ED
+        HEJ.ASM</code>, <code>I</code>, texten, <kbd>Ctrl</kbd>+<kbd>Z</kbd>
+        och <code>E</code>, sedan <code>ASM HEJ</code>, <code>LOAD HEJ</code>
+        och <code>HEJ</code>. Med TKN80 blir skärmen 80 tecken bred.
+        <kbd>Ctrl</kbd>+<kbd>C</kbd> först på raden startar om CP/M
+        (varmstart), och <i>RESET</i> läser in det från skivan igen. Tecknen
+        är ABC80:s, så <code>$</code> syns som <code>¤</code> och
+        <code>^</code> som <code>Ü</code>. Skivorna finns under
+        <i>Disketten</i>.</p>
+        <p lang="en">Try <code>DIR</code>, <code>STAT</code>, <code>PIP
+        B:=*.COM</code> and <code>DIR B:</code>. A program of your own:
+        <code>ED HELLO.ASM</code>, <code>I</code>, the text,
+        <kbd>Ctrl</kbd>+<kbd>Z</kbd> and <code>E</code>, then <code>ASM
+        HELLO</code>, <code>LOAD HELLO</code> and <code>HELLO</code>. With
+        TKN80 the screen is 80 columns wide. <kbd>Ctrl</kbd>+<kbd>C</kbd> at
+        the start of a line restarts CP/M (warm boot), and <i>RESET</i> loads
+        it from the disk again. The character set is the ABC80's, so
+        <code>$</code> shows as <code>¤</code> and <code>^</code> as
+        <code>Ü</code>. The disks are under <i>Floppy disk</i>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_disk">
+      <summary><span lang="sv">Disketten</span><span lang="en">Floppy disk</span><span class="lage" id="lage_disk"></span><button class="info" title="Mer om disketten" data-title-en="More about the floppy disk">i</button></summary>
+      <div class="knappar">
+        <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva" data-title-en="A disk for ABC-DOS (FD2, 160 KB); with CP/M a disk in B:, or in A: if it is a system disk" data-en="Insert disk…">Lägg i diskett…</button>
+        <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS" data-title-en="GISSA, KURVA, MUSIK and AIRFIGHT on a disk with ABC-DOS" data-en="Example disk">Exempeldisketten</button>
+        <button id="katalog_knapp" title="Filerna på disketten i FD2" data-title-en="The files on the disk in the FD2" data-en="Directory">Katalogen</button>
+        <button id="spara_skiva" title="Ladda ner disketten med det som har sparats på den" data-title-en="Download the disk with what has been saved on it" data-en="Save disk">Spara disketten</button>
+      </div>
+      <pre id="katalog" hidden></pre>
+      <div class="hjalptext" hidden>
+        <p lang="sv">Disketten sitter i FD2 (kort 45) med ABC-DOS. Man stannar
+        i BASIC: DOS:en lägger bara till enheterna <code>DR0:</code>–<code>DR6:</code>,
+        så det är <code>LOAD DR0:A.B</code> eller <code>RUN DR0:A.B</code>.
+        <code>BYE</code> kör CMDINT.SYS från disketten, om den finns där.
+        BASIC:en kan inte lista katalogen (det gjorde programmet LIB på
+        systemskivan), så <i>Katalogen</i> visar filerna och hur många
+        sektorer de tar. Det som sparas med <code>SAVE DR0:NAMN</code> hamnar
+        bara i sidans minne; <i>Spara disketten</i> laddar ner den som en
+        <code>.dsk</code>, som går att lägga i igen. En <code>.dsk</code> går
+        också att dra till sidan.</p>
+        <p lang="en">The disk sits in the FD2 (card 45) with ABC-DOS. You stay
+        in BASIC: the DOS only adds the devices <code>DR0:</code>–<code>DR6:</code>,
+        so it is <code>LOAD DR0:A.B</code> or <code>RUN DR0:A.B</code>.
+        <code>BYE</code> runs CMDINT.SYS from the disk, if it is there. BASIC
+        cannot list the directory (the program LIB on the system disk did
+        that), so <i>Directory</i> shows the files and how many sectors they
+        take. What is saved with <code>SAVE DR0:NAME</code> only ends up in
+        the page's memory; <i>Save disk</i> downloads it as a
+        <code>.dsk</code>, which can be inserted again. A <code>.dsk</code>
+        can also be dropped on the page.</p>
+        <p lang="sv">Med CP/M sätter <i>Lägg i diskett…</i> en skiva i B:,
+        eller i A: om den är en systemskiva, och CP/M startar om.
+        <i>Katalogen</i> visar filerna på A: och B:, och <i>Spara
+        disketten</i> laddar ner dem. Slås CP/M av ligger skivorna undan till
+        nästa gång, och ABC-DOS-disketten kommer tillbaka.</p>
+        <p lang="en">With CP/M, <i>Insert disk…</i> puts a disk in B:, or in
+        A: if it is a system disk, and CP/M restarts. <i>Directory</i> shows
+        the files on A: and B:, and <i>Save disk</i> downloads them. When CP/M
+        is switched off the disks are put aside until next time, and the
+        ABC-DOS disk comes back.</p>
+        <p lang="sv"><i>Exempeldisketten</i> lägger i en diskett med fyra
+        program: <code>RUN DR0:GISSA</code> (gissa talet), <code>RUN
+        DR0:KURVA</code> (kurvor med <code>SETDOT</code>), <code>RUN
+        DR0:MUSIK</code> (en orgel från 1981 på tangenterna Z, X, C … med S,
+        D, G … som de svarta, med Caps Lock eftersom programmet väntar sig
+        versaler) eller <code>RUN DR0:AIRFIGHT</code> (spelet från 1981 i
+        Z80-kod, för två: A, D och X mot J, L och M; laddaren tar en halv
+        minut). Samma fyra program finns också som band, ett per program, i
+        <code>exempel/program/kassett/</code>, och som text i
+        <code>exempel/program/text/</code> (<i>Skriv in…</i> och
+        <code>RUN</code>).</p>
+        <p lang="en"><i>Example disk</i> inserts a disk with four programs
+        (in Swedish): <code>RUN DR0:GISSA</code> (guess the number),
+        <code>RUN DR0:KURVA</code> (curves with <code>SETDOT</code>),
+        <code>RUN DR0:MUSIK</code> (an organ from 1981 on the keys Z, X, C …
+        with S, D, G … as the black keys, with Caps Lock since the program
+        expects capitals) or <code>RUN DR0:AIRFIGHT</code> (the 1981 game in
+        Z80 code, for two: A, D and X against J, L and M; the loader takes
+        half a minute). The same four programs are also on tape, one per
+        program, in <code>exempel/program/kassett/</code>, and as text in
+        <code>exempel/program/text/</code> (<i>Type in…</i> and
+        <code>RUN</code>).</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_band">
+      <summary><span lang="sv">Kassetten</span><span lang="en">Cassette</span><span class="lage" id="bandstatus"></span><button class="info" title="Mer om kassetten" data-title-en="More about the cassette">i</button></summary>
+      <div class="knappar">
+        <button id="band" title="En WAV-fil att spela upp (LOAD, RUN CAS:)" data-title-en="A WAV file to play back (LOAD, RUN CAS:)" data-en="Insert tape…">Lägg i band…</button>
+        <button id="spelain" title="Ett tomt band med inspelningsknappen nere (SAVE CAS:)" data-title-en="A blank tape with the record button down (SAVE CAS:)" data-en="Record">Spela in</button>
+        <button id="spara" title="Ladda ner det som har spelats in som WAV" data-title-en="Download the recording as WAV" data-en="Save recording">Spara inspelning</button>
+        <button id="play" title="PLAY: tryck ned, och tryck igen för att släppa upp den (bandet stannar)" data-title-en="PLAY: press it down, and press again to release it (the tape stops)">▶</button>
+        <button id="bakat" title="Spola bakåt (tryck igen för att stanna)" data-title-en="Rewind (press again to stop)">⏪</button>
+        <button id="framat" title="Spola framåt (tryck igen för att stanna)" data-title-en="Fast forward (press again to stop)">⏩</button>
+        <button id="rakneverk" title="Räkneverket: klicka för att nollställa" data-title-en="The tape counter: click to reset">000</button>
+        <label title="Kör tio gånger fortare medan motorn går" data-title-en="Run ten times faster while the motor runs"><input type="checkbox" id="snabbt" checked> <span lang="sv">snabbt</span><span lang="en">fast</span></label>
+        <label title="ABC80 startar och stoppar bandet med motorreläet" data-title-en="The ABC80 starts and stops the tape with the motor relay"><input type="checkbox" id="fjarr" checked> <span lang="sv">fjärrstyrd</span><span lang="en">remote</span></label>
+        <button id="malare" title="Ritprogrammet MÅLARE av Mikael Bonnier 1982, från bandet (GPL-3.0)" data-title-en="The drawing program MÅLARE by Mikael Bonnier 1982, from tape (GPL-3.0)">MÅLARE</button>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv">Lägg i ett band och skriv <code>LOAD CAS:</code> eller
+        <code>RUN CAS:</code>. Skriv inget medan blocken läses, det ger ERR 35.
+        För att spela in: tryck <i>Spela in</i>, skriv <code>SAVE
+        CAS:NAMN</code> och tryck sedan <i>Spara inspelning</i>. En
+        <code>.wav</code> går också att dra till sidan.</p>
+        <p lang="en">Insert a tape and type <code>LOAD CAS:</code> or
+        <code>RUN CAS:</code>. Don't type while the blocks are read, that
+        gives ERR 35. To record: press <i>Record</i>, type <code>SAVE
+        CAS:NAME</code> and then press <i>Save recording</i>. A
+        <code>.wav</code> can also be dropped on the page.</p>
+        <p lang="sv">▶ är PLAY: den trycks ned när ett band läggs i, och ett
+        tryck till släpper upp den, så att bandet stannar. Är bandspelaren
+        <i>fjärrstyrd</i> (från början) startar och stoppar ABC80 bandet med
+        motorreläet, så det stannar efter programmet; utan fjärrstyrning går
+        det så länge PLAY är nere. Bandets eget ljud hörs med ljudet på, medan
+        bandet går i vanlig fart.</p>
+        <p lang="en">▶ is PLAY: it goes down when a tape is inserted, and
+        another press releases it, so the tape stops. When the recorder is
+        <i>remote</i> controlled (the default) the ABC80 starts and stops the
+        tape with the motor relay, so it stops after the program; without
+        remote control it runs as long as PLAY is down. The tape's own sound
+        is heard with sound on, while the tape runs at normal speed.</p>
+        <p lang="sv">⏪ och ⏩ spolar bandet, tjugo gånger fortare än det
+        spelar, tills du trycker igen eller bandet tar slut; PLAY släpps upp,
+        så tryck ▶ igen efteråt, före <code>LOAD CAS:</code> (står bandet ger
+        ROM:en ERR 21). Räkneverket räknar varv på spolen, som på en
+        kassettbandspelare: det går fortare i början av bandet än i slutet,
+        och ett klick nollställer det. Skriv upp var programmen börjar, så
+        hittar du tillbaka, eller spola tillbaka och försök igen efter ett
+        läsfel. Under inspelning går det inte att spola.</p>
+        <p lang="en">⏪ and ⏩ wind the tape, twenty times faster than it
+        plays, until you press again or the tape ends; PLAY is released, so
+        press ▶ again afterwards, before <code>LOAD CAS:</code> (with the tape
+        stopped the ROM gives ERR 21). The counter counts turns of the reel,
+        as on a cassette recorder: it goes faster at the start of the tape
+        than at the end, and a click resets it. Note where the programs
+        start, and you can find your way back, or rewind and try again after
+        a read error. Winding is not possible while recording.</p>
+        <p lang="sv"><i>MÅLARE</i> lägger i ett band med Mikael Bonniers
+        ritprogram från 1982 och skriver <code>RUN CAS:</code>. Svara på
+        tidsfördröjningen med ett tal (till exempel 10) och RETURN. Markören
+        flyttas med tangenterna runt F: E, R, T, D, G, C, V och B. Med Caps
+        Lock på suddar den, och utan Caps Lock ritar den. S tömmer skärmen.
+        Programmet är fri programvara (GPL-3.0); bandet är gjort i emulatorn
+        ur källan, och <code>exempel/malare/LASMIG.md</code> berättar var det
+        kommer ifrån.</p>
+        <p lang="en"><i>MÅLARE</i> (painter) inserts a tape with Mikael
+        Bonnier's drawing program from 1982 and types <code>RUN CAS:</code>.
+        Answer the delay question with a number (10, say) and RETURN. The
+        cursor moves with the keys around F: E, R, T, D, G, C, V and B. With
+        Caps Lock on it erases, without Caps Lock it draws. S clears the
+        screen. The program is free software (GPL-3.0); the tape was made in
+        the emulator from the source, and
+        <code>exempel/malare/LASMIG.md</code> tells where it comes from.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_program">
+      <summary><span lang="sv">Program och kretsar</span><span lang="en">Programs and ROMs</span><span class="lage" id="lage_program"></span><button class="info" title="Mer om program och kretsar" data-title-en="More about programs and ROMs">i</button></summary>
+      <div class="knappar">
+        <button id="program" title="En textfil med ett BASIC-program skrivs in som tangenter" data-title-en="A text file with a BASIC program is typed in as keys" data-en="Type in…">Skriv in…</button>
+        <select id="krets" title="En krets: Forth-tolken eller ett av bokens exempel" data-title-en="A ROM: the Forth interpreter or one of the book's examples">
+          <option value="" data-en="No ROM">Ingen krets</option>
+          <option value="forth" data-en="Forth ROM">Forth-kretsen</option>
+          <option value="cmos" data-en="Forth with CMOS">Forth med CMOS</option>
+          <option value="e1" data-en="Example 1: the key interrupt">Exempel 1: tangentavbrottet</option>
+          <option value="e2" data-en="Example 2: capitals">Exempel 2: versaler</option>
+          <option value="e3" data-en="Example 3: the hot key">Exempel 3: snabbtangenten</option>
+          <option value="e4" data-en="Example 4: two banks">Exempel 4: två banker</option>
+          <option value="e5" data-en="Example 5: a statement of your own">Exempel 5: en egen sats</option>
+          <option value="e6" data-en="Example 6: V24 in programs">Exempel 6: V24 i program</option>
+        </select>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>Skriv in…</i> läser en textfil, till exempel ett
+        BASIC-program, och skriver den som tangenter, en rad i taget. Text som
+        klistras in på skärmen eller en fil som dras till sidan skrivs in på
+        samma sätt.</p>
+        <p lang="en"><i>Type in…</i> reads a text file, a BASIC program for
+        example, and types it as keys, one line at a time. Text pasted on the
+        screen or a file dropped on the page is typed in the same way.</p>
+        <p lang="sv"><i>Forth-kretsen</i> sätter Forth-tolken från exempel 7
+        (band 2) i en krets på <code>$4000</code>, där Smartaid satt, och
+        startar om maskinen. Kretsen kan inte skrivas i, så de egna orden
+        läggs i RAM från <code>$C000</code>, och BOFA flyttas upp först:
+        <code>POKE 65052,0,208</code> och <code>NEW</code>. Sedan startar
+        <code>Z=CALL(16384,3)</code> tolken: <code>: KV DUP + ;</code> och
+        <code>7 KV .</code> ger 14. <code>WORDS</code> listar orden, och
+        <code>@</code> skrivs <code>É</code>. <code>BYE</code> går tillbaka
+        till BASIC och <code>Z=CALL(16384,4)</code> fortsätter med de egna
+        orden kvar. Samma tolk finns som band i bokens kodförråd
+        (<code>inifran/forth/FORTH.wav</code>), för RAM på
+        <code>$C000</code>.</p>
+        <p lang="en"><i>Forth ROM</i> puts the Forth interpreter from example
+        7 (volume 2) in a ROM at <code>$4000</code>, where the Smartaid sat,
+        and restarts the machine. The ROM cannot be written, so your own words
+        go in RAM from <code>$C000</code>, and BOFA is moved up first:
+        <code>POKE 65052,0,208</code> and <code>NEW</code>. Then
+        <code>Z=CALL(16384,3)</code> starts the interpreter: <code>: SQ DUP +
+        ;</code> and <code>7 SQ .</code> give 14. <code>WORDS</code> lists the
+        words, and <code>@</code> is typed <code>É</code>. <code>BYE</code>
+        returns to BASIC and <code>Z=CALL(16384,4)</code> continues with your
+        words still there. The same interpreter is on tape in the book's code
+        repository (<code>inifran/forth/FORTH.wav</code>), for RAM at
+        <code>$C000</code>.</p>
+        <p lang="sv"><i>Forth med CMOS</i> är samma tolk, men de egna orden
+        läggs i CMOS-minnet, och radbufferten också, så ingen
+        <code>POKE</code> behövs: <code>Z=CALL(16384,3)</code> direkt. Orden
+        finns kvar när sidan laddas om. <code>EMPTY</code> tömmer
+        ordlistan.</p>
+        <p lang="en"><i>Forth with CMOS</i> is the same interpreter, but your
+        own words go in the CMOS memory, and the line buffer too, so no
+        <code>POKE</code> is needed: <code>Z=CALL(16384,3)</code> at once. The
+        words remain when the page is reloaded. <code>EMPTY</code> empties the
+        dictionary.</p>
+        <p lang="sv"><i>Exempel 1</i>–<i>6</i> är programmen i band 2,
+        kapitlet Egna exempel, i den tänkta kretsen: på <code>$4000</code>,
+        exempel 4 med två banker där och exempel 5 på <code>$7000</code>,
+        IEC-kretsens plats. Maskinen startas om med kretsen i, och
+        meddelanderaden överst säger hur programmet kopplas in, oftast
+        <code>Z=CALL(16384)</code>. Exempel 6 läser det som kommer på V24; en
+        länk med <code>?s=</code> sänder en text dit. Medan det är inkopplat
+        ger tangenterna inget avbrott, som i texttelefonen, så det körs i ett
+        program som kopplar ur själv med <code>Z=CALL(16387)</code>; i
+        direktläge står maskinen still tills <i>RESET</i>.</p>
+        <p lang="en"><i>Examples 1</i>–<i>6</i> are the programs in volume 2,
+        the chapter on examples of your own, in the imagined ROM: at
+        <code>$4000</code>, example 4 with two banks there and example 5 at
+        <code>$7000</code>, the place of the IEC ROM. The machine restarts with
+        the ROM fitted, and the message line at the top says how the program
+        is hooked in, mostly <code>Z=CALL(16384)</code>. Example 6 reads what
+        arrives on V24; a link with <code>?s=</code> sends a text there. While
+        it is hooked in the keys give no interrupt, as in the text telephone,
+        so it is run in a program that unhooks itself with
+        <code>Z=CALL(16387)</code>; in direct mode the machine stands still
+        until <i>RESET</i>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_p40">
+      <summary><span lang="sv">Skrivaren P40</span><span lang="en">The P40 printer</span><span class="lage" id="lage_p40"></span><button class="info" title="Mer om skrivaren" data-title-en="More about the printer">i</button></summary>
+      <div class="knappar">
+        <label title="Nålskrivaren på kort 60 och drivrutinen på $7800" data-title-en="The dot matrix printer on card 60 and the driver at $7800"><input type="checkbox" id="p40"> <span lang="sv">på kort 60</span><span lang="en">on card 60</span></label>
+        <button id="p40_visa" popovertarget="papper" title="Visa papperet; det kommer fram av sig självt när skrivaren börjar" data-title-en="Show the paper; it appears by itself when the printer starts" data-en="The paper" disabled>Papperet</button>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>Skrivaren P40</i> är nålskrivaren från band 2,
+        kapitlet Skrivarna, på kort 60, med drivrutinen på
+        <code>$7800</code>. Den kopplas in och ur medan maskinen går, så
+        programmet ligger kvar: BASIC letar upp drivrutinen först när
+        <code>PR:</code> öppnas. Den skriver det som går till
+        <code>PR:</code>: <code>10 OPEN "PR:" AS FILE 1</code>, <code>20
+        PRINT #1,"HEJ"</code>, <code>30 CLOSE 1</code>, eller <code>LIST
+        PR:</code>. Papperet kommer fram som en lapp när skrivaren börjar och
+        försvinner med ett klick utanför eller <kbd>Esc</kbd>;
+        <i>Papperet</i> tar fram det igen, och <i>Spara</i> ger det som en
+        bild (i terminalen: <code>-CP papper.png</code>). Lappen går att
+        flytta genom att dra i dess list, och det stället kommer sidan
+        ihåg.</p>
+        <p lang="en"><i>The P40 printer</i> is the dot matrix printer from
+        volume 2, the chapter on printers, on card 60, with the driver at
+        <code>$7800</code>. It is connected and disconnected while the machine
+        runs, so the program stays: BASIC only looks for the driver when
+        <code>PR:</code> is opened. It prints what goes to <code>PR:</code>:
+        <code>10 OPEN "PR:" AS FILE 1</code>, <code>20 PRINT
+        #1,"HELLO"</code>, <code>30 CLOSE 1</code>, or <code>LIST PR:</code>.
+        The paper appears as a sheet when the printer starts and goes away
+        with a click outside or <kbd>Esc</kbd>; <i>The paper</i> brings it
+        back, and <i>Save</i> gives it as an image (in the terminal:
+        <code>-CP papper.png</code>). The sheet can be moved by dragging its
+        bar, and the page remembers where.</p>
+        <p lang="sv">Skrivarens mekanik är inte bevarad, så den är antagen:
+        vagnen går med fast fart, och var punkterna hamnar avgörs bara av
+        tiden, som på skrivaren. Raderna som skrivs framåt hamnar drygt två
+        kolumner till vänster om dem som skrivs bakåt;
+        <code>exempel/p40/LASMIG.md</code> berättar varför (?).</p>
+        <p lang="en">The printer's mechanics are not preserved, so they are
+        assumed: the carriage moves at a fixed speed, and where the dots land
+        is decided by timing alone, as on the printer. Lines printed forwards
+        end up a little more than two columns left of those printed
+        backwards; <code>exempel/p40/LASMIG.md</code> tells why (?).</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_cmos">
+      <summary><span lang="sv">CMOS-minnet</span><span lang="en">CMOS memory</span><span class="lage" id="lage_cmos"></span><button class="info" title="Mer om CMOS-minnet" data-title-en="More about the CMOS memory">i</button></summary>
+      <div class="knappar">
+        <label title="2 KB RAM med batteri på $5000-$57FF; innehållet sparas i webbläsaren" data-title-en="2 KB battery-backed RAM at $5000-$57FF; the contents are saved in the browser"><input type="checkbox" id="cmos"> <span lang="sv">på $5000</span><span lang="en">at $5000</span></label>
+        <button id="cmos_tom" title="Nollställ CMOS-minnet" data-title-en="Clear the CMOS memory" data-en="Clear">Töm</button>
+        <button id="cmos_spara" title="Ladda ner CMOS-minnet (2 KB)" data-title-en="Download the CMOS memory (2 KB)" data-en="Save">Spara</button>
+        <button id="cmos_ladda" title="Lägg in en fil i CMOS-minnet" data-title-en="Load a file into the CMOS memory" data-en="Load…">Ladda…</button>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>CMOS-minnet</i> är 2 KB RAM på
+        <code>$5000</code>–<code>$57FF</code> (20480–22527), som det
+        batteriförsedda minnet på Super Smartaid. Det som står där sparas i
+        webbläsaren och finns kvar när sidan laddas om eller maskinen startas
+        om: <code>POKE 20480,42</code>, ladda om, och <code>PRINT
+        PEEK(20480)</code> ger 42. <i>Spara</i> och <i>Ladda…</i> flyttar det
+        som en fil (i terminalen: <code>-M cmos.bin</code>).</p>
+        <p lang="en"><i>The CMOS memory</i> is 2 KB RAM at
+        <code>$5000</code>–<code>$57FF</code> (20480–22527), like the
+        battery-backed memory on the Super Smartaid. What is there is saved in
+        the browser and remains when the page is reloaded or the machine
+        restarted: <code>POKE 20480,42</code>, reload, and <code>PRINT
+        PEEK(20480)</code> gives 42. <i>Save</i> and <i>Load…</i> move it as
+        a file (in the terminal: <code>-M cmos.bin</code>).</p>
+      </div>
+    </details>
+
+  <details id="mer">
+    <summary><span lang="sv">Hur den används</span><span lang="en">How to use it</span></summary>
+    <p lang="sv">Klicka på skärmen och skriv. <kbd>Enter</kbd> är RETURN,
+    <kbd>←</kbd> och <kbd>Backsteg</kbd> backar, <kbd>→</kbd> går framåt,
+    <kbd>Ctrl</kbd>+<kbd>C</kbd> är BREAK. Å, Ä, Ö, É och Ü skrivs som
+    vanligt. Text som klistras in skrivs som tangenter, en rad i taget.</p>
+    <p lang="en">Click the screen and type. <kbd>Enter</kbd> is RETURN,
+    <kbd>←</kbd> and <kbd>Backspace</kbd> go back, <kbd>→</kbd> goes forward,
+    <kbd>Ctrl</kbd>+<kbd>C</kbd> is BREAK. The machine has a Swedish keyboard:
+    Å, Ä, Ö, É and Ü are typed as usual. BASIC's messages are in English,
+    but the example programs are in Swedish. Pasted text is typed as keys,
+    one line at a time.</p>
+    <p lang="sv">Panelerna fälls ut och ihop med ett klick på listen, och
+    sidan kommer ihåg vilka som är öppna. Listen visar läget även när panelen
+    är ihopfälld, och <i>i</i> visar mer om det som finns i den. Filer går
+    att dra till sidan: en <code>.wav</code> blir ett band i kassetten, en
+    <code>.dsk</code> en diskett och annat ett program som skrivs in.</p>
+    <p lang="en">The panels open and close with a click on their bar, and the
+    page remembers which are open. The bar shows the state even when the
+    panel is closed, and <i>i</i> tells more about what is in it. Files can be
+    dropped on the page: a <code>.wav</code> becomes a tape in the cassette, a
+    <code>.dsk</code> a floppy disk, and anything else a program that is typed
+    in.</p>
+    <p lang="sv"><i>Kom igång</i> visas av sig själv första gången sidan
+    öppnas (inte med <code>?k=</code>); knappen tar fram den igen.
+    <i>EN</i> och <i>SV</i> byter språk på sidan, och valet sparas.</p>
+    <p lang="en"><i>Getting started</i> appears by itself the first time the
+    page is opened (not with <code>?k=</code>); the button brings it back.
+    <i>EN</i> and <i>SV</i> switch the page's language, and the choice is
+    saved.</p>
+    <p lang="sv">Länkar kan ge tangenter att skriva efter starten:
     <code>abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r</code>, med
     <code>\r</code> för RETURN och <code>\w500</code> för en paus i ms.
     <code>?rom=gammal</code> väljer den gamla ROM:en, <code>?ljud=av</code>
@@ -374,16 +648,34 @@
     <code>-s</code>),
     <code>?cmos=pa</code> slår på CMOS-minnet, <code>?p40=pa</code>
     skrivaren,
-    <code>?cpm=pa</code> startar CP/M
-    <code>?tkn80=pa</code> sätter i TKN80 och <code>?fast=pa</code> ger
-    den fast markör.</p>
-    <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
-    klickat på sidan eller skrivit något.</p>
+    <code>?cpm=pa</code> startar CP/M,
+    <code>?tkn80=pa</code> sätter i TKN80, <code>?fast=pa</code> ger den
+    fast markör och <code>?sprak=en</code> visar sidan på engelska.</p>
+    <p lang="en">Links can give keys to type after the start:
+    <code>abc80.html?k=10 PRINT "HELLO"\r20 GOTO 10\rRUN\r</code>, with
+    <code>\r</code> for RETURN and <code>\w500</code> for a pause in ms.
+    <code>?rom=gammal</code> selects the old ROM, <code>?ljud=av</code>
+    starts without sound,
+    <code>?krets=forth</code> fits the Forth ROM,
+    <code>?krets=cmos</code> Forth with CMOS,
+    <code>?krets=e1</code> to <code>?krets=e6</code> the book's examples,
+    <code>?s=</code> a text to V24 (after the keys, like
+    <code>-s</code>),
+    <code>?cmos=pa</code> switches on the CMOS memory, <code>?p40=pa</code>
+    the printer,
+    <code>?cpm=pa</code> starts CP/M,
+    <code>?tkn80=pa</code> fits TKN80, <code>?fast=pa</code> gives it a
+    steady cursor and <code>?sprak=sv</code> shows the page in Swedish.</p>
+    <p lang="sv">Ljudet är på, men webbläsaren släpper inte fram det förrän
+    man har klickat på sidan eller skrivit något.</p>
+    <p lang="en">Sound is on, but the browser lets it through only after you
+    have clicked on the page or typed something.</p>
   </details>
 
     <input type="file" id="filval">
     <div id="hjalp" popover>
-      <button class="stang" popovertarget="hjalp" popovertargetaction="hide" title="Stäng (Esc, eller klicka utanför)">✕</button>
+      <button class="stang" popovertarget="hjalp" popovertargetaction="hide" title="Stäng (Esc, eller klicka utanför)" data-title-en="Close (Esc, or click outside)">✕</button>
+      <div lang="sv">
       <h2>Kom igång</h2>
       <p>Det här är en ABC80, Luxors dator från 1978, i webbläsaren.
       Processorn, skärmen, ljudet, kassetten och disketten är
@@ -401,24 +693,60 @@
 RUN</pre>
         <kbd>Ctrl</kbd>+<kbd>C</kbd> stoppar det, <code>LIST</code> visar
         det och <code>NEW</code> tar bort det.</li>
-        <li><i>Exempeldisketten</i>, och sedan <code>RUN DR0:GISSA</code>
-        eller <code>RUN DR0:KURVA</code>.</li>
-        <li><i>MÅLARE</i>, ett ritprogram från 1982 på band: svara 10
-        och RETURN, och rita med E, R, T, D, G, C, V och B.</li>
-        <li>Skrivaren: kryssa i <i>på kort 60</i> och skriv
-        <code>LIST PR:</code>.</li>
-        <li>CP/M: kryssa i <i>CP/M</i> och skriv <code>DIR</code>.</li>
+        <li><i>Exempeldisketten</i> under <i>Disketten</i>, och sedan
+        <code>RUN DR0:GISSA</code> eller <code>RUN DR0:KURVA</code>.</li>
+        <li><i>MÅLARE</i> under <i>Kassetten</i>, ett ritprogram från 1982
+        på band: svara 10 och RETURN, och rita med E, R, T, D, G, C, V och
+        B.</li>
+        <li>Skrivaren: kryssa i <i>på kort 60</i> under <i>Skrivaren
+        P40</i> och skriv <code>LIST PR:</code>.</li>
+        <li>CP/M: kryssa i <i>CP/M</i> under <i>Maskinen</i> och skriv
+        <code>DIR</code>.</li>
       </ul>
       <p>Har maskinen hängt sig: <i>RESET</i>, eller <i>Starta om</i>, som
-      också tömmer minnet. Mer om allt finns under <i>Hur den används</i>
-      längst ner.</p>
+      också tömmer minnet. Panelerna fälls ut med ett klick, och <i>i</i> i
+      varje panel berättar mer. <i>EN</i> överst visar sidan på
+      engelska.</p>
+      </div>
+      <div lang="en">
+      <h2>Getting started</h2>
+      <p>This is an ABC80, Luxor's computer from 1978, in the browser. The
+      processor, screen, sound, cassette and floppy disk are emulated and
+      run the machine's own ROMs, so it is the same BASIC as on the real
+      machine. The emulator belongs to the book <i>ABC80 inifrån</i> (the
+      ABC80 from the inside), which is in Swedish.</p>
+      <p>Click the black screen and type. Every line ends with
+      <kbd>Enter</kbd>, which is RETURN.</p>
+      <p>Try:</p>
+      <ul>
+        <li><code>PRINT 2+2</code></li>
+        <li>A program, line by line:
+<pre>10 PRINT "HELLO ";
+20 GOTO 10
+RUN</pre>
+        <kbd>Ctrl</kbd>+<kbd>C</kbd> stops it, <code>LIST</code> shows it
+        and <code>NEW</code> removes it.</li>
+        <li><i>Example disk</i> under <i>Floppy disk</i>, and then
+        <code>RUN DR0:GISSA</code> or <code>RUN DR0:KURVA</code>.</li>
+        <li><i>MÅLARE</i> under <i>Cassette</i>, a drawing program from
+        1982 on tape: answer 10 and RETURN, and draw with E, R, T, D, G, C, V
+        and B.</li>
+        <li>The printer: tick <i>on card 60</i> under <i>The P40
+        printer</i> and type <code>LIST PR:</code>.</li>
+        <li>CP/M: tick <i>CP/M</i> under <i>The machine</i> and type
+        <code>DIR</code>.</li>
+      </ul>
+      <p>If the machine has hung: <i>RESET</i>, or <i>Restart</i>, which
+      also clears memory. The panels open with a click, and <i>i</i> in each
+      panel tells more. <i>SV</i> at the top shows the page in Swedish.</p>
+      </div>
     </div>
     <div id="papper" popover>
       <header>
         <span id="papper_rubrik">Papperet</span>
-        <button id="p40_riv" title="Riv av papperet">Riv av</button>
-        <button id="p40_spara" title="Ladda ner papperet som PNG">Spara</button>
-        <button id="p40_stang" title="Stäng (Esc, eller klicka utanför)">✕</button>
+        <button id="p40_riv" title="Riv av papperet" data-title-en="Tear off the paper" data-en="Tear off">Riv av</button>
+        <button id="p40_spara" title="Ladda ner papperet som PNG" data-title-en="Download the paper as PNG" data-en="Save">Spara</button>
+        <button id="p40_stang" title="Stäng (Esc, eller klicka utanför)" data-title-en="Close (Esc, or click outside)">✕</button>
       </header>
       <div id="papper_rulle"><canvas id="pappret" width="1064" height="16"></canvas></div>
     </div>
@@ -531,8 +859,133 @@ function base64(text) {
     return b;
 }
 
-function meddela(text) {
-    $('meddelande').textContent = text;
+/* Språket: sv eller en. Mallens text står på båda med lang, och CSS
+ * döljer den som inte gäller; knappar och val har engelskan i data-en och
+ * title-texten i data-title-en. Här byts de, och texterna i koden går
+ * genom t(svenska, engelska). Valet sparas i webbläsaren; ?sprak= går
+ * före, och utan något val gäller webbläsarens språk. */
+const SPRAK_NYCKEL = 'abc80_sprak';
+let sprak = 'sv';
+let senaste = ['', ''];                      /* meddelandet på båda språken */
+
+function t(sv, en) {
+    return sprak === 'en' ? en : sv;
+}
+
+function meddela(sv = '', en = sv) {
+    senaste = [sv, en];
+    $('meddelande').textContent = t(sv, en);
+}
+
+function byt_sprak(nytt) {
+    sprak = nytt === 'en' ? 'en' : 'sv';
+    document.documentElement.lang = sprak;
+    for (const el of document.querySelectorAll('[data-en]')) {
+        if (el.dataset.sv === undefined)
+            el.dataset.sv = el.textContent;
+        el.textContent = t(el.dataset.sv, el.dataset.en);
+    }
+    for (const el of document.querySelectorAll('[data-title-en]')) {
+        if (el.dataset.titleSv === undefined)
+            el.dataset.titleSv = el.title;
+        el.title = t(el.dataset.titleSv, el.dataset.titleEn);
+    }
+    $('sprak').textContent = t('EN', 'SV');
+    $('meddelande').textContent = t(...senaste);
+    if (e) {
+        visa_ljudet();
+        papper_rubrik();
+        if (!$('katalog').hidden)
+            visa_katalogen();
+        visa_lagen(true);
+    }
+}
+
+$('sprak').addEventListener('click', () => {
+    byt_sprak(t('en', 'sv'));
+    try { localStorage.setItem(SPRAK_NYCKEL, sprak); } catch (fel) { /* sparas inte */ }
+    skarm.focus();
+});
+
+/* ---------------------------------------------------------------- */
+/* Panelerna                                                         */
+
+/* Vilka som är öppna sparas; från början bara Maskinen. ⓘ i listen
+ * fäller ut panelen och visar eller döljer dess hjälptext. */
+const PANEL_NYCKEL = 'abc80_paneler';
+const paneler = [...document.querySelectorAll('details.panel')];
+
+function paneler_spara() {
+    try {
+        localStorage.setItem(PANEL_NYCKEL,
+                             JSON.stringify(paneler.filter(p => p.open).map(p => p.id)));
+    } catch (fel) { /* sparas inte */ }
+}
+
+function paneler_las_in() {
+    try {
+        const oppna = JSON.parse(localStorage.getItem(PANEL_NYCKEL));
+        if (Array.isArray(oppna))
+            for (const p of paneler)
+                p.open = oppna.includes(p.id);
+    } catch (fel) { /* som i mallen */ }
+}
+
+/* Fäll ut en panel (när något händer i den). */
+function oppna_panel(id) {
+    const p = $(id);
+    if (p && !p.open) {
+        p.open = true;
+        paneler_spara();
+    }
+}
+
+for (const p of paneler) {
+    p.addEventListener('toggle', paneler_spara);
+    const info = p.querySelector('.info');
+    const text = p.querySelector('.hjalptext');
+    info?.addEventListener('click', (h) => {
+        h.preventDefault();                  /* annars fälls panelen */
+        h.stopPropagation();
+        text.hidden = p.open ? !text.hidden : false;
+        p.open = true;
+        info.classList.toggle('pa', !text.hidden);
+        if (!text.hidden)
+            text.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+}
+
+/* Lägena i panelernas listar, så att de syns också ihopfällda. */
+let lagen_nu = '';
+
+function visa_lagen(alltid = false) {
+    const delar = [t($('rom').value === 'gammal' ? 'gamla ROM:en' : 'nya ROM:en',
+                     $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
+    if ($('tkn80').checked)
+        delar.push('TKN80' + ($('fast').checked ? t(', fast', ', steady') : ''));
+    if (cpm_valt())
+        delar.push('CP/M');
+    const maskin = delar.join(' · ');
+    let disk = '';
+    if (skivan)
+        disk = cpm_valt() ? skivans_namn + ' · ' + skiva_b_namn : skivans_namn;
+    const krets = $('krets');
+    const program = krets && krets.value ? krets.options[krets.selectedIndex].textContent : '';
+    const p40 = $('p40').checked ? t('inkopplad', 'connected') + (papper_rader
+        ? ' · ' + papper_rader + t(papper_rader === 1 ? ' rad' : ' rader',
+                                    papper_rader === 1 ? ' line' : ' lines') : '') : '';
+    const cmos_text = $('cmos').checked ? t('på', 'on') : '';
+    const nytt = [maskin, disk, program, p40, cmos_text].join('|');
+    if (!alltid && nytt === lagen_nu)
+        return;
+    lagen_nu = nytt;
+    $('lage_maskin').textContent = maskin;
+    $('lage_disk').textContent = disk;
+    $('lage_program').textContent = program;
+    $('lage_p40').textContent = p40;
+    $('lage_cmos').textContent = cmos_text;
+    /* Fast markör gäller bara TKN80. */
+    $('fast').disabled = !$('tkn80').checked;
 }
 
 /* Bytes in i WebAssemblys minne (extra nollor efter); pekaren. */
@@ -861,14 +1314,15 @@ function ljudet_star() {
 
 function visa_ljudet() {
     const knapp = $('ljud');
-    let text = 'Ljud: av';
+    let text = t('Ljud: av', 'Sound: off');
     if (!ljud)
-        text = 'Inget ljud';
+        text = t('Inget ljud', 'No sound');
     else if (ljud_valt)
-        text = ljud.state === 'running' && !ljudet_star() ? 'Ljud: på' : 'Ljud: klicka på skärmen';
+        text = ljud.state === 'running' && !ljudet_star() ? t('Ljud: på', 'Sound: on')
+            : t('Ljud: klicka på skärmen', 'Sound: click the screen');
     if (knapp.textContent !== text)
         knapp.textContent = text;
-    knapp.title = 'Ljudet från SN76477 (OUT 6) och bandet' +
+    knapp.title = t('Ljudet från SN76477 (OUT 6) och bandet', 'The sound from the SN76477 (OUT 6) and the tape') +
         (ljud ? ' (' + ljud.state + ', ' + ljud.sampleRate + ' Hz)' : '');
     knapp.classList.toggle('pa', ljud_valt && !!ljud);
 }
@@ -974,7 +1428,13 @@ function papper_tomt() {
     papper_visa(false);
     $('p40_visa').disabled = true;
     $('p40_visa').classList.remove('nytt');
-    $('papper_rubrik').textContent = 'Papperet';
+    papper_rubrik();
+}
+
+function papper_rubrik() {
+    $('papper_rubrik').textContent = !papper_rader ? t('Papperet', 'The paper')
+        : t('Papperet, ' + papper_rader + (papper_rader === 1 ? ' rad' : ' rader'),
+            'The paper, ' + papper_rader + (papper_rader === 1 ? ' line' : ' lines'));
 }
 
 function papper_anslag(fran, till) {
@@ -1021,8 +1481,7 @@ function papper_rita() {
     }
     papper_ritat = antal;
     $('p40_visa').disabled = false;
-    $('papper_rubrik').textContent = 'Papperet, ' + papper_rader +
-        (papper_rader === 1 ? ' rad' : ' rader');
+    papper_rubrik();
     /* En ny utskrift tar fram lappen; stängs den under utskriften
      * lyser bara knappen. */
     if (ny_utskrift)
@@ -1033,7 +1492,7 @@ function papper_rita() {
     if (ny_utskrift || ruta.scrollTop + ruta.clientHeight >= ruta.scrollHeight - 80)
         ruta.scrollTop = ruta.scrollHeight;
     if (e.p40_fullt())
-        meddela('Papperet är fullt: riv av det.');
+        meddela('Papperet är fullt: riv av det.', 'The paper is full: tear it off.');
 }
 
 let anvande_ljud = false;
@@ -1105,6 +1564,7 @@ function varv() {
             rita();
     }
     visa_bandet();
+    visa_lagen();
     requestAnimationFrame(varv);
 }
 
@@ -1121,15 +1581,15 @@ let spelar_in = false, har_band = false;
 function visa_bandet() {
     let text;
     if (!har_band && !spelar_in)
-        text = 'inget band';
+        text = t('inget band', 'no tape');
     else if (spelar_in)
-        text = 'spelar in ' + sekunder(e.bandlage());
+        text = t('spelar in ', 'recording ') + sekunder(e.bandlage());
     else
         text = sekunder(e.bandlage()) + ' / ' + sekunder(e.bandlangd());
     if (e.motor())
-        text += ' · motorn går';
+        text += t(' · motorn går', ' · motor on');
     else if (e.bandet_gar())
-        text += ' · bandet går';
+        text += t(' · bandet går', ' · tape running');
     const status = $('bandstatus');
     if (status.textContent !== text)
         status.textContent = text;
@@ -1172,7 +1632,10 @@ function stanna_spolningen() {
 
 function spola_at(riktning) {
     if (spelar_in || !har_band) {
-        meddela(spelar_in ? 'Under inspelning går det inte att spola.' : 'Inget band i kassetten.');
+        if (spelar_in)
+            meddela('Under inspelning går det inte att spola.', 'The tape cannot be wound while recording.');
+        else
+            meddela('Inget band i kassetten.', 'No tape in the cassette.');
         return;
     }
     const igen = spolning === riktning;
@@ -1199,16 +1662,19 @@ function lagg_i_band(data, namn) {
     const flanker = e.band(p, data.length);
     e.slapp(p);
     if (flanker < 0) {
-        meddela(namn + ': ingen WAV-fil med PCM, 8 eller 16 bitar');
+        meddela(namn + ': ingen WAV-fil med PCM, 8 eller 16 bitar',
+                namn + ': not a WAV file with PCM, 8 or 16 bits');
         return;
     }
+    oppna_panel('panel_band');
     har_band = true;
     spelar_in = false;
     stanna_spolningen();
     rakneverk_noll = 0;
     knappar(true);
     $('spelain').classList.remove('pa');
-    meddela(namn + ' ligger i kassetten (' + flanker + ' flanker). Skriv LOAD CAS: eller RUN CAS:');
+    meddela(namn + ' ligger i kassetten (' + flanker + ' flanker). Skriv LOAD CAS: eller RUN CAS:',
+            namn + ' is in the cassette (' + flanker + ' edges). Type LOAD CAS: or RUN CAS:');
     bandljudet = avkoda_bandet(data);
 }
 
@@ -1269,7 +1735,7 @@ $('fjarr').addEventListener('change', () => { knappar(); skarm.focus(); });
 
 $('spelain').addEventListener('click', () => {
     if (!e.spela_in()) {
-        meddela('minnet räcker inte till inspelningen');
+        meddela('minnet räcker inte till inspelningen', 'not enough memory for the recording');
         return;
     }
     spelar_in = true;
@@ -1278,18 +1744,20 @@ $('spelain').addEventListener('click', () => {
     knappar(true);
     bandljudet = null;
     $('spelain').classList.add('pa');
-    meddela('Inspelningsknappen är nere. Skriv SAVE CAS:NAMN och tryck sedan Spara inspelning.');
+    meddela('Inspelningsknappen är nere. Skriv SAVE CAS:NAMN och tryck sedan Spara inspelning.',
+            'The record button is down. Type SAVE CAS:NAME and then press Save recording.');
     skarm.focus();
 });
 
 $('spara').addEventListener('click', () => {
     if (!spelar_in || !e.inspelade_flanker()) {
-        meddela('Inget har spelats in än: tryck Spela in och skriv SAVE CAS:NAMN.');
+        meddela('Inget har spelats in än: tryck Spela in och skriv SAVE CAS:NAMN.',
+                'Nothing has been recorded yet: press Record and type SAVE CAS:NAME.');
         return;
     }
     const p = e.inspelning();
     if (!p) {
-        meddela('minnet räcker inte till WAV-filen');
+        meddela('minnet räcker inte till WAV-filen', 'not enough memory for the WAV file');
         return;
     }
     const data = new Uint8Array(e.memory.buffer, p, e.inspelning_storlek()).slice();
@@ -1340,16 +1808,22 @@ function katalogen(d) {
                     antal += (d[i + 1] & 31) + 1;
                 }
             rader.push(filnamn(d, k + 4).padEnd(14) +
-                       String(antal).padStart(4) + (antal === 1 ? ' sektor' : ' sektorer'));
+                       String(antal).padStart(4) + (antal === 1 ? t(' sektor', ' sector')
+                                                                 : t(' sektorer', ' sectors')));
         }
     let lediga = 0;
     for (let n = 0; n < sektorer; n++)
         if (!(d[6 * 256 + (n >> 3)] & 0x80 >> (n & 7)))
             lediga++;
-    rader.push((rader.length ? '' : 'Inga filer. ') + rader.length +
-               (rader.length === 1 ? ' fil, ' : ' filer, ') + lediga +
-               ' sektorer lediga (' + Math.floor(lediga / 4) + ' KB).');
+    rader.push(filer_summa(rader.length) + lediga +
+               t(' sektorer lediga (', ' sectors free (') + Math.floor(lediga / 4) + ' KB).');
     return rader.join('\n');
+}
+
+/* "Inga filer. 0 filer, " och så vidare, före det lediga. */
+function filer_summa(n) {
+    return (n ? '' : t('Inga filer. ', 'No files. ')) + n +
+        (n === 1 ? t(' fil, ', ' file, ') : t(' filer, ', ' files, '));
 }
 
 /* Katalogen på en CP/M-skiva som vår BIOS ordnar den (cpm/bios.asm):
@@ -1375,25 +1849,34 @@ function cpm_katalogen(d) {
         anvanda += block;
     }
     const rader = [...filer].map(([namn, kb]) => namn.padEnd(14) + String(kb).padStart(3) + 'k');
-    rader.push((rader.length ? '' : 'Inga filer. ') + rader.length +
-               (rader.length === 1 ? ' fil, ' : ' filer, ') + (70 - anvanda) + 'k lediga.');
+    rader.push(filer_summa(rader.length) + (70 - anvanda) + t('k lediga.', 'k free.'));
     return rader.join('\n');
 }
 
-$('katalog_knapp').addEventListener('click', () => {
+const INGEN_SKIVA = ['Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.',
+                     'No disk in the FD2: insert one with Insert disk… or Example disk.'];
+
+/* Katalogen i panelen; false utan diskett. */
+function visa_katalogen() {
     const d = skivan_nu();
     const ruta = $('katalog');
     if (!d) {
         ruta.hidden = true;
-        meddela('Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.');
-        return;
+        return false;
     }
+    const i = t(' i ', ' in ');
     if (cpm_valt())
-        ruta.textContent = skivans_namn + ' i A:\n' + cpm_katalogen(d) + '\n\n' +
-                           skiva_b_namn + ' i B:\n' + cpm_katalogen(skiva_b_nu());
+        ruta.textContent = skivans_namn + i + 'A:\n' + cpm_katalogen(d) + '\n\n' +
+                           skiva_b_namn + i + 'B:\n' + cpm_katalogen(skiva_b_nu());
     else
-        ruta.textContent = skivans_namn + ' i DR0:\n' + katalogen(d);
+        ruta.textContent = skivans_namn + i + 'DR0:\n' + katalogen(d);
     ruta.hidden = false;
+    return true;
+}
+
+$('katalog_knapp').addEventListener('click', () => {
+    if (!visa_katalogen())
+        meddela(...INGEN_SKIVA);
     skarm.focus();
 });
 
@@ -1409,16 +1892,18 @@ function ladda_ner(d, namn) {
 $('spara_skiva').addEventListener('click', () => {
     const d = skivan_nu();
     if (!d) {
-        meddela('Ingen diskett i FD2: lägg i en med Lägg i diskett… eller Exempeldisketten.');
+        meddela(...INGEN_SKIVA);
         return;
     }
     ladda_ner(d, skivans_namn);
     const b = skiva_b_nu();
     if (b && b.some(x => x !== 0xE5)) {
         setTimeout(() => ladda_ner(b, skiva_b_namn), 500);
-        meddela(skivans_namn + ' (A:) och ' + skiva_b_namn + ' (B:) laddas ner med det som har sparats på dem.');
+        meddela(skivans_namn + ' (A:) och ' + skiva_b_namn + ' (B:) laddas ner med det som har sparats på dem.',
+                skivans_namn + ' (A:) and ' + skiva_b_namn + ' (B:) are downloaded with what has been saved on them.');
     } else
-        meddela(skivans_namn + ' laddas ner med det som har sparats på den.');
+        meddela(skivans_namn + ' laddas ner med det som har sparats på den.',
+                skivans_namn + ' is downloaded with what has been saved on it.');
     skarm.focus();
 });
 
@@ -1444,7 +1929,8 @@ async function oppna(fil, vad) {
         lagg_i_band(data, namn);
     else if (vad === 'cmos') {
         cmos_byt(data);
-        meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'));
+        meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'),
+                namn + ' is in the CMOS memory' + ($('cmos').checked ? '.' : ' (switch it on).'));
     }
     else if (vad === 'skiva' && ar_cpm(data) && $('cpm')) {
         if (!cpm_valt()) {
@@ -1454,19 +1940,24 @@ async function oppna(fil, vad) {
         } else
             starta(data);
         skivans_namn = namn;
-        meddela(namn + ' är en CP/M-systemskiva och sitter i A:. CP/M startar från den.');
+        meddela(namn + ' är en CP/M-systemskiva och sitter i A:. CP/M startar från den.',
+                namn + ' is a CP/M system disk and sits in A:. CP/M starts from it.');
     } else if (vad === 'skiva' && cpm_valt()) {
         skiva_b_namn = namn;
         starta(skivan_nu(), data);
-        meddela(namn + ' sitter i B:, och CP/M startar om. DIR B: visar filerna.');
+        meddela(namn + ' sitter i B:, och CP/M startar om. DIR B: visar filerna.',
+                namn + ' sits in B:, and CP/M restarts. DIR B: shows the files.');
     } else if (vad === 'skiva') {
         skivans_namn = namn;
         starta(data);
-        meddela(namn + ' sitter i FD2 med ABC-DOS. Katalogen visar filerna; skriv RUN DR0:NAMN.');
+        meddela(namn + ' sitter i FD2 med ABC-DOS. Katalogen visar filerna; skriv RUN DR0:NAMN.',
+                namn + ' sits in the FD2 with ABC-DOS. Directory shows the files; type RUN DR0:NAME.');
     } else {
         skriv(new TextDecoder('utf-8').decode(data));
-        meddela(namn + ' skrivs in.');
+        meddela(namn + ' skrivs in.', namn + ' is being typed in.');
     }
+    if (vad === 'skiva')
+        oppna_panel('panel_disk');
     skarm.focus();
 }
 
@@ -1496,15 +1987,18 @@ document.addEventListener('drop', (h) => {
 /* Knapparna                                                         */
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
-$('nystart').addEventListener('click', () => { starta(null, null); meddela(''); skarm.focus(); });
+$('nystart').addEventListener('click', () => { starta(null, null); meddela(); skarm.focus(); });
 $('rom').addEventListener('change', () => { starta(); skarm.focus(); });
 $('tkn80').addEventListener('change', () => {
     starta();
-    meddela($('tkn80').checked
-        ? 'TKN80: 80 tecken per rad. PRINT INP(3);CHR$(12) ger 40, PRINT INP(4);CHR$(12) 80.'
-        : '');
+    if ($('tkn80').checked)
+        meddela('TKN80: 80 tecken per rad. PRINT INP(3);CHR$(12) ger 40, PRINT INP(4);CHR$(12) 80.',
+                'TKN80: 80 characters per line. PRINT INP(3);CHR$(12) gives 40, PRINT INP(4);CHR$(12) 80.');
+    else
+        meddela();
     skarm.focus();
 });
+$('fast').addEventListener('change', () => skarm.focus());
 /* Skivorna i det läge som inte är valt (ABC80 med ABC-DOS eller CP/M)
  * ligger undan här: {a, b, namn, namn_b}. */
 const undan = { abc80: null, cpm: null };
@@ -1528,8 +2022,14 @@ function abc80_lage() {
         byt_lage(false);
 }
 
-const CPM_TEXT = 'CP/M 2.2 med UNI-80: A: systemskivan, B: BBC BASIC, C: ABC80:s RAM (15k). ' +
-                 'DIR, STAT, PIP, ED, ASM, B: och BBCBASIC (*BYE slutar); ^C startar om CP/M, RESET också.';
+const CPM_TEXT = ['CP/M 2.2 med UNI-80. BBC BASIC: skriv först B: och sedan BBCBASIC ' +
+                  '(CP/M letar bara på skivan i prompten); *BYE går tillbaka. ' +
+                  'A: systemskivan med DIR, STAT, PIP, ED och ASM, C: ABC80:s RAM (15k). ' +
+                  '^C eller RESET startar om CP/M.',
+                  'CP/M 2.2 with UNI-80. BBC BASIC: first type B: and then BBCBASIC ' +
+                  '(CP/M only looks on the disk in the prompt); *BYE returns. ' +
+                  'A: the system disk with DIR, STAT, PIP, ED and ASM, C: the ABC80\'s RAM (15k). ' +
+                  '^C or RESET restarts CP/M.'];
 
 $('cpm')?.addEventListener('change', () => {
     const cpm = $('cpm').checked;
@@ -1537,7 +2037,11 @@ $('cpm')?.addEventListener('change', () => {
     skivans_namn = s.namn;
     skiva_b_namn = s.namn_b;
     starta(s.a, s.b);
-    meddela(cpm ? CPM_TEXT : 'ABC80 utan CP/M; CP/M-skivorna ligger undan till nästa gång.');
+    if (cpm)
+        meddela(...CPM_TEXT);
+    else
+        meddela('ABC80 utan CP/M; CP/M-skivorna ligger undan till nästa gång.',
+                'ABC80 without CP/M; the CP/M disks are put aside until next time.');
     skarm.focus();
 });
 
@@ -1546,16 +2050,20 @@ $('exempel')?.addEventListener('click', () => {
     abc80_lage();
     skivans_namn = 'exempel.dsk';
     starta(FILER.program.slice());
-    meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.');
+    meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.',
+            'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK or RUN DR0:AIRFIGHT.');
+    oppna_panel('panel_disk');
     skarm.focus();
 });
 
 /* Forth-kretsarna (exempel/krets/), när de ligger i sidan: maskinen
  * startas om med den valda kretsen eller utan. */
 const KRETSAR = {
-    '': '',
-    forth: 'Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
-    cmos: 'Forth med CMOS: Z=CALL(16384,3); orden sparas i CMOS-minnet på $5000.',
+    '': ['', ''],
+    forth: ['Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
+            'The Forth ROM at $4000: POKE 65052,0,208, NEW and Z=CALL(16384,3).'],
+    cmos: ['Forth med CMOS: Z=CALL(16384,3); orden sparas i CMOS-minnet på $5000.',
+           'Forth with CMOS: Z=CALL(16384,3); the words are saved in the CMOS memory at $5000.'],
 };
 
 /* Bokens exempel 1-6 (band 2, kapitlet Egna exempel; exempel/krets/),
@@ -1563,23 +2071,29 @@ const KRETSAR = {
  * -l och -b i bok/band2/exempel/eN.test. Med två filer är det banker. */
 const EXEMPEL = {
     e1: { filer: ['e1'], adress: 0x4000,
-          text: 'Exempel 1 på $4000: Z=CALL(16384) räknar tangenterna i hörnet, Z=CALL(16387) slutar.' },
+          text: ['Exempel 1 på $4000: Z=CALL(16384) räknar tangenterna i hörnet, Z=CALL(16387) slutar.',
+                 'Example 1 at $4000: Z=CALL(16384) counts the keys in the corner, Z=CALL(16387) stops.'] },
     e2: { filer: ['e2'], adress: 0x4000,
-          text: 'Exempel 2 på $4000: Z=CALL(16384) gör gemener till versaler i direktläge, Z=CALL(16387) slutar.' },
+          text: ['Exempel 2 på $4000: Z=CALL(16384) gör gemener till versaler i direktläge, Z=CALL(16387) slutar.',
+                 'Example 2 at $4000: Z=CALL(16384) turns lower case into capitals in direct mode, Z=CALL(16387) stops.'] },
     e3: { filer: ['e3'], adress: 0x4000,
-          text: 'Exempel 3 på $4000: Z=CALL(16384), och CTRL-L i direktläge blir LIST.' },
+          text: ['Exempel 3 på $4000: Z=CALL(16384), och CTRL-L i direktläge blir LIST.',
+                 'Example 3 at $4000: Z=CALL(16384), and CTRL-L in direct mode becomes LIST.'] },
     e4: { filer: ['e4a', 'e4b'], adress: 0x4000,
-          text: 'Exempel 4, två banker på $4000: Z=CALL(16384) anropar bank 1 från bank 0.' },
+          text: ['Exempel 4, två banker på $4000: Z=CALL(16384) anropar bank 1 från bank 0.',
+                 'Example 4, two banks at $4000: Z=CALL(16384) calls bank 1 from bank 0.'] },
     e5: { filer: ['e5'], adress: 0x7000,
-          text: 'Exempel 5 på $7000, IEC-kretsens plats: CMD "TEXT" skriver en statusrad.' },
+          text: ['Exempel 5 på $7000, IEC-kretsens plats: CMD "TEXT" skriver en statusrad.',
+                 'Example 5 at $7000, the place of the IEC ROM: CMD "TEXT" writes a status line.'] },
     e6: { filer: ['e6'], adress: 0x4000,
-          text: 'Exempel 6 på $4000: inkopplat (Z=CALL(16384)) ger tangenterna inget avbrott, så kör det i ett program som kopplar ur själv (Z=CALL(16387)); A=CALL(16390) ger tecknet från V24, -1 om inget. Fast: RESET.' },
+          text: ['Exempel 6 på $4000: inkopplat (Z=CALL(16384)) ger tangenterna inget avbrott, så kör det i ett program som kopplar ur själv (Z=CALL(16387)); A=CALL(16390) ger tecknet från V24, -1 om inget. Fast: RESET.',
+                 'Example 6 at $4000: hooked in (Z=CALL(16384)) the keys give no interrupt, so run it in a program that unhooks itself (Z=CALL(16387)); A=CALL(16390) gives the character from V24, -1 if none. Stuck: RESET.'] },
 };
 let v24_text = null;                         /* ?s=, sänds när tangenterna är skrivna */
 
 $('krets')?.addEventListener('change', () => {
     starta();
-    meddela(KRETSAR[$('krets').value] ?? EXEMPEL[$('krets').value].text);
+    meddela(...(KRETSAR[$('krets').value] ?? EXEMPEL[$('krets').value].text));
     skarm.focus();
 });
 
@@ -1588,14 +2102,17 @@ $('cmos').addEventListener('change', () => {
     if (!$('cmos').checked && $('krets')?.value === 'cmos')
         $('krets').value = '';
     starta();
-    meddela($('cmos').checked
-        ? 'CMOS-minnet på $5000-$57FF (20480-22527), sparat i webbläsaren.'
-        : 'CMOS-minnet är av; det som står där finns kvar till nästa gång.');
+    if ($('cmos').checked)
+        meddela('CMOS-minnet på $5000-$57FF (20480-22527), sparat i webbläsaren.',
+                'The CMOS memory at $5000-$57FF (20480-22527), saved in the browser.');
+    else
+        meddela('CMOS-minnet är av; det som står där finns kvar till nästa gång.',
+                'The CMOS memory is off; what is in it remains until next time.');
     skarm.focus();
 });
 $('cmos_tom').addEventListener('click', () => {
     cmos_byt(new Uint8Array(0));
-    meddela('CMOS-minnet är tomt.');
+    meddela('CMOS-minnet är tomt.', 'The CMOS memory is empty.');
     skarm.focus();
 });
 $('cmos_spara').addEventListener('click', () => {
@@ -1605,23 +2122,27 @@ $('cmos_spara').addEventListener('click', () => {
     lank.download = 'cmos.bin';
     lank.click();
     setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
-    meddela('cmos.bin laddas ner (som -M cmos.bin i terminalen).');
+    meddela('cmos.bin laddas ner (som -M cmos.bin i terminalen).',
+            'cmos.bin is downloaded (like -M cmos.bin in the terminal).');
     skarm.focus();
 });
 /* Skrivaren kopplas in och ur medan maskinen går: programmet ligger
  * kvar, och BASIC hittar drivrutinen när PR: öppnas. */
 $('p40').addEventListener('change', () => {
     p40_koppla();
-    meddela($('p40').checked
-        ? 'P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.'
-        : 'Skrivaren är urkopplad; papperet ligger kvar.');
+    if ($('p40').checked)
+        meddela('P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.',
+                'P40 on card 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HELLO", 30 CLOSE 1, or LIST PR:.');
+    else
+        meddela('Skrivaren är urkopplad; papperet ligger kvar.',
+                'The printer is disconnected; the paper stays.');
     skarm.focus();
 });
 $('p40_riv').addEventListener('click', () => {
     if ($('p40').checked)
         e.p40_riv();
     papper_tomt();
-    meddela('Papperet är avrivet.');
+    meddela('Papperet är avrivet.', 'The paper is torn off.');
     skarm.focus();
 });
 if (!med_popover)                            /* annars popovertarget */
@@ -1716,7 +2237,7 @@ document.addEventListener('keydown', h => {   /* Esc utan popover */
 });
 $('p40_spara').addEventListener('click', () => {
     if (!papper_ritat) {
-        meddela('Papperet är tomt.');
+        meddela('Papperet är tomt.', 'The paper is empty.');
         return;
     }
     pappret.toBlob(blob => {
@@ -1726,7 +2247,8 @@ $('p40_spara').addEventListener('click', () => {
         lank.click();
         setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
     });
-    meddela('papper.png laddas ner (som -CP papper.png i terminalen).');
+    meddela('papper.png laddas ner (som -CP papper.png i terminalen).',
+            'papper.png is downloaded (like -CP papper.png in the terminal).');
     skarm.focus();
 });
 $('cmos_ladda').addEventListener('click', () => valj_fil('cmos', '.bin'));
@@ -1749,11 +2271,14 @@ $('malare')?.addEventListener('click', () => {
     e.paus(1000);
     skriv('RUN CAS:\n');
     meddela('MÅLARE av Mikael Bonnier 1982 (GPL-3.0). Svara med ett tal och RETURN; '
-            + 'tangenterna runt F flyttar, Caps Lock på suddar, S tömmer skärmen.');
+            + 'tangenterna runt F flyttar, Caps Lock på suddar, S tömmer skärmen.',
+            'MÅLARE by Mikael Bonnier 1982 (GPL-3.0). Answer with a number and RETURN; '
+            + 'the keys around F move, Caps Lock on erases, S clears the screen.');
     skarm.focus();
 });
 
-const GENESIS = 'ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ';
+const GENESIS = ['ABCDemo av Genesis Project (2015): kod Shadow, grafik och musik Mermaid. ',
+                 'ABCDemo by Genesis Project (2015): code Shadow, graphics and music Mermaid. '];
 
 /* Från bandet: musiken ligger efter programmet och hörs utan
  * fjärrstyrning, så att bandet går vidare.
@@ -1769,7 +2294,8 @@ $('genesis')?.addEventListener('click', () => {
     play_vid_relaet = true;
     e.paus(1000);
     skriv('RUN CAS:\n');
-    meddela(GENESIS + 'Från bandet; musiken spelas av bandspelaren, utan fjärrstyrning.');
+    meddela(GENESIS[0] + 'Från bandet; musiken spelas av bandspelaren, utan fjärrstyrning.',
+            GENESIS[1] + 'From tape; the music is played by the tape recorder, without remote control.');
     skarm.focus();
 });
 
@@ -1779,7 +2305,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
     starta(FILER.genesis.slice());
     e.paus(1000);
     skriv('RUN DR0:A.B\n');
-    meddela(GENESIS + 'Från disketten, utan musik: den finns bara på bandet.');
+    meddela(GENESIS[0] + 'Från disketten, utan musik: den finns bara på bandet.',
+            GENESIS[1] + 'From disk, without music: it is only on the tape.');
     skarm.focus();
 });
 
@@ -1787,6 +2314,15 @@ $('genesis_skiva')?.addEventListener('click', () => {
 /* Starten                                                           */
 
 (async function () {
+    const fraga = new URLSearchParams(location.search);
+    let valt = fraga.get('sprak') || fraga.get('lang');
+    if (!valt)
+        try { valt = localStorage.getItem(SPRAK_NYCKEL); } catch (fel) { /* inget sparat */ }
+    if (!valt)
+        valt = /^sv/i.test(navigator.language || '') ? 'sv' : 'en';
+    byt_sprak(valt);
+    paneler_las_in();
+
     const { instance } = await WebAssembly.instantiate(base64(FILER.wasm), {});
     e = instance.exports;
     ROM.ny = base64(FILER.rom_ny);
@@ -1809,7 +2345,6 @@ $('genesis_skiva')?.addEventListener('click', () => {
     }
     cmos_las_in();
 
-    const fraga = new URLSearchParams(location.search);
     if (fraga.get('rom') === 'gammal')
         $('rom').value = 'gammal';
     if (fraga.get('ljud') === 'av')
@@ -1823,12 +2358,18 @@ $('genesis_skiva')?.addEventListener('click', () => {
     if ($('krets').options.length < 2)
         $('krets').hidden = true;            /* varken Forth eller exemplen */
     const krets = fraga.get('krets');
-    if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) || krets in EXEMPEL))
+    if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) || krets in EXEMPEL)) {
         $('krets').value = krets;
-    if (fraga.get('cmos') === 'pa')
+        oppna_panel('panel_program');
+    }
+    if (fraga.get('cmos') === 'pa') {
         $('cmos').checked = true;
-    if (fraga.get('p40') === 'pa')
+        oppna_panel('panel_cmos');
+    }
+    if (fraga.get('p40') === 'pa') {
         $('p40').checked = true;
+        oppna_panel('panel_p40');
+    }
     if (fraga.get('tkn80') === 'pa')
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')
@@ -1837,8 +2378,9 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('cpm').checked = true;
     visa_ljudet();
     starta(null, null);
+    visa_lagen(true);
     if (cpm_valt())
-        meddela(CPM_TEXT);
+        meddela(...CPM_TEXT);
     if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);

@@ -141,6 +141,13 @@ med samma syntax som `-k`:
 och `?s=` en text till V24, med samma syntax som `-s`, när tangenterna
 är skrivna.
 
+Knapparna ligger i paneler (Maskinen, Disketten, Kassetten, Program och
+kretsar, Skrivaren P40, CMOS-minnet, Demot) som fälls ut och ihop; listen
+visar läget också ihopfälld, och *i* visar panelens hjälptext. Sidan
+finns på svenska och engelska: knappen *EN*/*SV* överst byter, valet
+sparas i webbläsaren, och `?sprak=en` eller `?sprak=sv` går före. Utan
+något val gäller webbläsarens språk.
+
 `make webb` bygger om den med clang och wasm-ld (lld), utan Emscripten
 och utan C-bibliotek: kärnan, `vard/wav.c` och `webb/webb.c` med
 `webb/libc.c` blir `abc80.wasm`, som `webb/bygg.sh` lägger i mallen
