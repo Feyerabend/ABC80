@@ -1,6 +1,7 @@
 """systemskiva.py -- en CP/M-skiva för FD2, till boken ABC80 inifrån
 
     python3 systemskiva.py cpm22.bin bios.bin ut.dsk [fil ...]
+    python3 systemskiva.py - - ut.dsk [fil ...]      (utan system)
 
 En FD2-avbild om 80 KB (40 spår à 8 sektorer à 256 bytes) som
 cpm/start.asm kan starta och cpm/bios.asm läsa:
@@ -25,17 +26,19 @@ KATALOGPOSTER = 64
 KATALOGBLOCK = KATALOGPOSTER * 32 // BLOCK                      # 2
 LADDA, STARTA = 0xE000, 0xF600
 
-cpm22 = open(sys.argv[1], "rb").read()[:0x1600]
-bios = open(sys.argv[2], "rb").read()
-assert len(cpm22) == 0x1600, "cpm22.bin ska börja på $E000 och räcka till $F600"
-system = cpm22 + bios
-antal = -(-len(system) // SEKTOR)
-assert antal <= SYSTEMSPAR * SEKTORER - 1, "systemet får inte plats i spår 0-3"
-assert LADDA + antal * SEKTOR <= 0xFF70, "systemet når det gemensamma minnet"
-
 skiva = bytearray(SPAR * SPARBYTES)
-skiva[0:9] = b"CP/M" + struct.pack("<HBH", LADDA, antal, STARTA)
-skiva[SEKTOR:SEKTOR + len(system)] = system
+if sys.argv[1] != "-":
+    cpm22 = open(sys.argv[1], "rb").read()[:0x1600]
+    bios = open(sys.argv[2], "rb").read()
+    assert len(cpm22) == 0x1600, "cpm22.bin ska börja på $E000 och räcka till $F600"
+    system = cpm22 + bios
+    antal = -(-len(system) // SEKTOR)
+    assert antal <= SYSTEMSPAR * SEKTORER - 1, "systemet får inte plats i spår 0-3"
+    assert LADDA + antal * SEKTOR <= 0xFF70, "systemet når det gemensamma minnet"
+    skiva[0:9] = b"CP/M" + struct.pack("<HBH", LADDA, antal, STARTA)
+    skiva[SEKTOR:SEKTOR + len(system)] = system
+else:
+    skiva[:] = b"\xE5" * len(skiva)
 
 data = SYSTEMSPAR * SPARBYTES                 # block 0
 skiva[data:] = b"\xE5" * (len(skiva) - data)

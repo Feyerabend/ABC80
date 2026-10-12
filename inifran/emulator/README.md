@@ -79,6 +79,9 @@ som en bild (640 × 480) när emulatorn slutar:
             -k 'PRINT PEEK(885)\r' -B skarm.png
 
 I webbläsaren är det rutan *TKN80* under *Maskinen*, eller `?tkn80=pa`.
+Markören blinkar där som på kortet; rutan *fast markör* (`?fast=pa`) är
+kortet med MyAB:s bygling för fast markör, och tecken med bit 7 visas då
+inverterade utan att blinka. Terminalen och `-B` visar markören fast.
 
 `-cpm cpm/system.dsk` sätter i MyAB:s kort UNI-80 (`karna/uni80.c`) och
 startar CP/M 2.2 från skivan, som när RESET hålls nere på den riktiga
@@ -88,16 +91,19 @@ programmen är Digital Researchs fria CP/M 2.2 (`cpm/dr/`). `make`
 assemblerar dem med `z80asm` ur `../verktyg/` och bygger systemskivan
 `cpm/system.dsk` (`cpm/systemskiva.py`): A: och B: är FD2, 80 KB per
 enhet, och C: en RAM-skiva i ABC80:s eget minne. Med `-tkn80` blir
-skärmen 80 tecken bred.
+skärmen 80 tecken bred. `cpm/b.dsk` är en skiva till B: med R. T.
+Russells BBC BASIC (Z80), fri under zlib-licensen, med en egen första
+sida för vår BIOS (`cpm/bbc/`, se `LASMIG.md` där).
 
     ./abc80 -cpm cpm/system.dsk -k 'DIR\r'
+    ./abc80 -cpm cpm/system.dsk -D cpm/b.dsk@45.1 -k 'B:\rBBCBASIC\r'
 
 I webbläsaren är det rutan *CP/M* under *Maskinen*, eller `?cpm=pa`.
 
     make            # abc80
     make prov       # jämför med verktyg/abc80 i en rad fall
     make webb       # webb/abc80.html
-    make cpmprov    # CP/M: start-PROM:en, BIOS:en och programmen
+    make cpmprov    # CP/M: start-PROM:en, BIOS:en, programmen och BBC BASIC
     make clean
 
 `make prov` behöver den gamla emulatorn i `../verktyg/` och ROM:arna i

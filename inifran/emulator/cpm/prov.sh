@@ -73,4 +73,22 @@ steg "HEJ.COM" "HEJ FRAN ASM" 'HEJ\r'
 steg "SAVE" "A>ERA HEJ.COM" 'HEJ\r\w1000SAVE 1 HEJ2.COM\r\w1000ERA HEJ.COM\r'
 steg "HEJ2.COM" "HEJ FRAN ASM" 'HEJ2\r'
 steg "ED, ändrad, och C: med 80 tecken" "HEJ IGEN ASM" 'ED HEJ.ASM\r\w1500#A\r\w300B\r\w300SFRAN\x1aIGEN\x1a\r\w300E\r\w2000ASM HEJ\r\w4000LOAD HEJ\r\w2000PIP C:=HEJ.COM\r\w2000C:\r\w500HEJ\r' -tkn80 ../roms/tkn80-iii.rom
+
+# BBC BASIC på B: (cpm/b.dsk, make): bredden efter skärmen, TIME under
+# INKEY, POS och VPOS ur BIOS:en, SAVE och LOAD på B:.
+cp b.dsk prov/bbc.dsk || exit 1
+basic() {                               # namn, väntad text, tangenter, flaggor
+  namn=$1; vantad=$2; tangenter=$3; shift 3
+  if ../abc80 -r $ROM -t 20000 -cpm prov/system.dsk "$@" -D prov/bbc.dsk@45.1 -DS \
+       -k "\\w1000B:\\r\\w300BBCBASIC\\r\\w3000\\r$tangenter" | grep -qF "$vantad"
+  then printf "rätt  BBC BASIC, %s: %s\n" "$namn" "$vantad"
+  else printf "FEL   BBC BASIC, %s %s: inget \"%s\"\n" "$namn" "$*" "$vantad"; fel=1; fi
+}
+basic "start" "BBC BASIC (Z80) Version 5.00" ''
+basic "bredden" "B40 42" 'PRINT "B";?&1F4;" ";6*7\r'
+basic "80 tecken" "B80" 'PRINT "B";?&1F4\r' -tkn80 ../roms/tkn80-iii.rom
+basic "INKEY och TIME" "T1" 'T%=TIME:A=INKEY(100):PRINT "T";(TIME-T%) DIV 100\r'
+basic "POS och VPOS" "P6 2" 'CLS\r\w300PRINT TAB(5,2);:PRINT "P";POS;" ";VPOS\r'
+basic "SAVE" "B: KVADRAT  BBC" '10 PRINT 12*12\r\w300SAVE "KVADRAT"\r\w1000*DIR\r'
+basic "LOAD" "       144" 'LOAD "KVADRAT"\r\w1000RUN\r'
 exit $fel

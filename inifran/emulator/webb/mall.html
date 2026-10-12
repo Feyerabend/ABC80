@@ -177,8 +177,9 @@
         <option value="gammal">Gamla ROM:en</option>
       </select>
       <label title="MyAB:s kort för 80 tecken per rad (band 2, kapitlet Skärmen): PRINT INP(3);CHR$(12) ger 40 tecken, PRINT INP(4);CHR$(12) 80 (som -tkn80 i terminalen)"><input type="checkbox" id="tkn80"> TKN80</label>
+      <label title="TKN80 med byglingen för fast markör (MyAB:s handbok: bryt mellan K6.6 och K6.7): tecken med bit 7 visas inverterade utan att blinka, som WordStar under CP/M vill ha det. Utan TKN80 blinkar markören alltid, som på ABC80. Terminalen och -B visar den alltid fast."><input type="checkbox" id="fast"> fast markör</label>
 <!-- CPM -->
-      <label title="MyAB:s kort UNI-80 med CP/M 2.2 (band 2, kapitlet CP/M): A: systemskivan, B: en tom skiva, C: ABC80:s RAM (som -cpm i terminalen)"><input type="checkbox" id="cpm"> CP/M</label>
+      <label title="MyAB:s kort UNI-80 med CP/M 2.2 (band 2, kapitlet CP/M): A: systemskivan, B: BBC BASIC, C: ABC80:s RAM (som -cpm i terminalen)"><input type="checkbox" id="cpm"> CP/M</label>
 <!-- /CPM -->
       <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar">RESET</button>
       <button id="nystart" title="Töm minnet och starta om">Starta om</button>
@@ -354,8 +355,13 @@
     är eget: start-PROM:en och BIOS:en är skrivna till emulatorn, och
     MyAB:s kod är inte med. A: är systemskivan med Digital Researchs
     program (ASM, DDT, DUMP, ED, LOAD, PIP, STAT, SUBMIT och XSUB), B:
-    en tom skiva och C: en RAM-skiva i ABC80:s eget minne (15k), som
-    töms när CP/M startar. Prova <code>DIR</code>, <code>STAT</code>,
+    en skiva med BBC BASIC (Z80) av R. T. Russell, fri under zlib-licensen,
+    och C: en RAM-skiva i ABC80:s eget minne (15k), som töms när CP/M
+    startar. <code>B:</code> och <code>BBCBASIC</code> startar BASIC,
+    <code>SAVE "NAMN"</code> sparar på B: och <code>*BYE</code> går
+    tillbaka till CP/M. CP/M-kartan har ingen klocka, så <code>TIME</code>
+    går fram när BASIC väntar på en tangent eller läser den, men inte
+    medan ett program räknar. Prova <code>DIR</code>, <code>STAT</code>,
     <code>PIP B:=*.COM</code> och <code>DIR B:</code>. Ett eget program:
     <code>ED HEJ.ASM</code>, <code>I</code>, texten, <kbd>Ctrl</kbd>+<kbd>Z</kbd>
     och <code>E</code>, sedan <code>ASM HEJ</code>, <code>LOAD HEJ</code>
@@ -412,7 +418,8 @@
 <!-- CPM -->
     <code>?cpm=pa</code> startar CP/M
 <!-- /CPM -->
-    och <code>?tkn80=pa</code> sätter i TKN80.</p>
+    <code>?tkn80=pa</code> sätter i TKN80 och <code>?fast=pa</code> ger
+    den fast markör.</p>
     <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
     klickat på sidan eller skrivit något.</p>
   </details>

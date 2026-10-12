@@ -29,8 +29,8 @@
  * ABC-DOS ordnar den (band 2, kapitlet om FD2).
  *
  * CP/M: UNI-80 med vår start-PROM (cpm/start.asm), som -cpm i
- * terminalen. Systemskivan sitter i FD2 enhet 0 (A:) och en tom skiva
- * i enhet 1 (B:); C: är ABC80:s eget RAM. Skivorna i det läge som inte
+ * terminalen. Systemskivan sitter i FD2 enhet 0 (A:) och skivan med BBC
+ * BASIC (cpm/b.dsk) i enhet 1 (B:); C: är ABC80:s eget RAM. Skivorna i det läge som inte
  * är valt ligger undan, så att ABC-DOS-disketten och CP/M-skivorna
  * finns kvar när man byter fram och tillbaka.
  *
@@ -169,17 +169,13 @@ function ar_cpm(d) {
     return d && d.length >= 4 && String.fromCharCode(...d.subarray(0, 4)) === 'CP/M';
 }
 
-/* En tom CP/M-skiva: $E5 överallt, som efter formateringen. */
-function tom_cpm_skiva() {
-    return new Uint8Array(CPM_SKIVA).fill(0xE5);
-}
 
 /* Starta maskinen; med en diskett sitter ABC-DOS på $6000 och
  * disketten i FD2 (kort 45). Utan argument sitter samma diskett kvar,
  * med det som har sparats på den. En krets sitter på $4000, som
  * Smartaid (-l forth.bin@4000); Forth med CMOS slår på CMOS-minnet.
  * Med CP/M är disketten A: (utan den systemskivan) och b B: (utan den
- * en tom skiva), och ABC-DOS sitter inte i. */
+ * skivan med BBC BASIC), och ABC-DOS sitter inte i. */
 function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
     cmos_spara();                            /* innan minnet töms */
     const cpm = cpm_valt();
@@ -198,7 +194,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
         skivans_namn = 'cpm.dsk';
     }
     if (cpm && !b) {
-        b = tom_cpm_skiva();
+        b = ROM.cpm_b.slice();
         skiva_b_namn = 'b.dsk';
     }
     skivan = diskett;
@@ -626,7 +622,9 @@ function varv() {
     if (nasta === null || med_ljud !== anvande_ljud || nu - nasta > 0.25 || nasta - nu > 0.5)
         nasta = nu + (med_ljud ? 0.05 : 0);
     anvande_ljud = med_ljud;
-    const markor = Math.floor(performance.now() / 330) % 2 === 0 ? 1 : 0;
+    /* Markören blinkar, utom på TKN80 med byglingen för fast markör. */
+    const markor = $('tkn80').checked && $('fast').checked ? 1
+        : Math.floor(performance.now() / 330) % 2 === 0 ? 1 : 0;
 
     if ($('snabbt').checked && e.motor()) {
         /* Kassetten: så många bilder som hinns, utan ljud. */
@@ -1077,8 +1075,8 @@ function abc80_lage() {
         byt_lage(false);
 }
 
-const CPM_TEXT = 'CP/M 2.2 med UNI-80: A: systemskivan, B: en tom skiva, C: ABC80:s RAM (15k). ' +
-                 'DIR, STAT, PIP B:=*.COM, ED, ASM; ^C startar om CP/M, RESET också.';
+const CPM_TEXT = 'CP/M 2.2 med UNI-80: A: systemskivan, B: BBC BASIC, C: ABC80:s RAM (15k). ' +
+                 'DIR, STAT, PIP, ED, ASM, B: och BBCBASIC (*BYE slutar); ^C startar om CP/M, RESET också.';
 
 $('cpm')?.addEventListener('change', () => {
     const cpm = $('cpm').checked;
@@ -1346,6 +1344,7 @@ $('genesis_skiva')?.addEventListener('click', () => {
     if (FILER.cpm_start) {
         ROM.cpm_start = base64(FILER.cpm_start);
         ROM.cpm_skiva = base64(FILER.cpm_skiva);
+        ROM.cpm_b = base64(FILER.cpm_b);
     }
     if (FILER.program)
         FILER.program = base64(FILER.program);
@@ -1379,6 +1378,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('p40').checked = true;
     if (fraga.get('tkn80') === 'pa')
         $('tkn80').checked = true;
+    if (fraga.get('fast') === 'pa')
+        $('fast').checked = true;
     if (fraga.get('cpm') === 'pa' && $('cpm'))
         $('cpm').checked = true;
     visa_ljudet();

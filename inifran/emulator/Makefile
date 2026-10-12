@@ -1,7 +1,8 @@
 # Den gemensamma emulatorn till ABC80 inifrån.
 #   make         bygg abc80 och CP/M: start-PROM:en (cpm/start.bin), CCP och
 #                BDOS (cpm/cpm22.bin), BIOS:en (cpm/bios.bin) och systemskivan
-#                med Digital Researchs program (cpm/system.dsk)
+#                med Digital Researchs program (cpm/system.dsk), och skivan
+#                till B: med BBC BASIC (cpm/b.dsk)
 #   make prov    kör den nya och den gamla (verktyg/abc80) med samma flaggor
 #                och jämför skärmarna
 #   make webb    bygg webb/abc80.html, emulatorn i en enda sida som går
@@ -34,7 +35,7 @@ WEBB_FLAGGOR = --target=wasm32 -std=c11 -O2 -Wall -Wextra -ffreestanding -nostdl
 VERKTYG ?= $(abspath $(firstword $(wildcard ../verktyg) $(HOME)/Documents/GitHub/ABC80/inifran/verktyg))
 Z80ASM ?= $(VERKTYG)/z80asm
 
-alla: abc80 cpm/start.bin cpm/cpm22.bin cpm/bios.bin cpm/system.dsk
+alla: abc80 cpm/start.bin cpm/cpm22.bin cpm/bios.bin cpm/system.dsk cpm/b.dsk
 
 $(Z80ASM):
 	$(MAKE) -C $(VERKTYG) z80asm
@@ -52,7 +53,7 @@ webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 # kommer med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
-                 roms/tkn80-iii.rom cpm/start.bin cpm/system.dsk \
+                 roms/tkn80-iii.rom cpm/start.bin cpm/system.dsk cpm/b.dsk \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \
                             exempel/krets/forth_cmos.bin \
@@ -75,16 +76,37 @@ cpm/cpm22.bin: cpm/cpm22.asm | $(Z80ASM)
 cpm/bios.bin: cpm/bios.asm | $(Z80ASM)
 	$(Z80ASM) -o $@ cpm/bios.asm
 
+# Listningen, för adresserna i BIOS:en; bios.bin kan finnas utan den.
+cpm/bios.lst: cpm/bios.asm | $(Z80ASM)
+	$(Z80ASM) -o /dev/null -l $@ cpm/bios.asm
+
 cpm/system.dsk: cpm/cpm22.bin cpm/bios.bin cpm/systemskiva.py $(wildcard cpm/dr/*.COM)
 	python3 -I cpm/systemskiva.py cpm/cpm22.bin cpm/bios.bin $@ $(wildcard cpm/dr/*.COM)
+
+# BBC BASIC med vår första sida (cpm/bbc/abc80.asm), som får adresserna
+# till BIOS:ens KOLUMNER, RAD och KOL ur listningen.
+cpm/bbc/sida.bin: cpm/bbc/abc80.asm cpm/bios.lst | $(Z80ASM)
+	awk '$$1 == "=" && ($$3 == "KOLUMNER" || $$3 == "RAD" || $$3 == "KOL") \
+	     { print $$3 " EQU $$" $$2 }' cpm/bios.lst > cpm/bbc/sida.asm
+	cat cpm/bbc/abc80.asm >> cpm/bbc/sida.asm
+	$(Z80ASM) -o $@ cpm/bbc/sida.asm
+	test `wc -c < $@` -eq 256
+
+cpm/bbcbasic.com: cpm/bbc/sida.bin cpm/bbc/BBCBASIC.COM
+	(cat cpm/bbc/sida.bin; tail -c +257 cpm/bbc/BBCBASIC.COM) > $@
+
+# Skivan till B:, utan system.
+cpm/b.dsk: cpm/bbcbasic.com cpm/systemskiva.py
+	python3 -I cpm/systemskiva.py - - $@ cpm/bbcbasic.com
 
 prov: abc80
 	@./prov.sh
 
-cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin | $(Z80ASM)
+cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin cpm/b.dsk | $(Z80ASM)
 	@Z80ASM=$(Z80ASM) cpm/prov.sh
 
 clean:
-	rm -rf abc80 prov webb/abc80.wasm cpm/cpm22.asm cpm/system.dsk
+	rm -rf abc80 prov webb/abc80.wasm cpm/cpm22.asm cpm/system.dsk cpm/b.dsk \
+	       cpm/bios.lst cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com
 
 .PHONY: alla prov cpmprov webb clean

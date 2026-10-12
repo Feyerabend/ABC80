@@ -11,8 +11,8 @@
 # exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
 # bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
 # exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
-# /MALARE). Finns cpm/start.bin och cpm/system.dsk (make) kommer CP/M
-# med UNI-80 med (CPM och /CPM). Finns exempel/genesis/ kommer Genesis-demot med
+# /MALARE). Finns cpm/start.bin, cpm/system.dsk och cpm/b.dsk (make)
+# kommer CP/M med UNI-80 med (CPM och /CPM). Finns exempel/genesis/ kommer Genesis-demot med
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
 # knappar och text bort (mellan GENESIS och /GENESIS). Det som bara syns i
 # mallen (mellan MALL och /MALL) tas alltid bort. Filen skrivs på
@@ -32,6 +32,7 @@ SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
 BAND=exempel/genesis/GenesisProject_ABCDemo_webb.wav
 CPM_START=cpm/start.bin
 CPM_SKIVA=cpm/system.dsk
+CPM_B=cpm/b.dsk
 
 base64_av() {
     base64 < "$1" | tr -d '\n'
@@ -63,7 +64,7 @@ sida() {
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
-        avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA")" |
+        avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B")" |
         avsnitt GENESIS "$(finns "$SKIVA" "$BAND")"
 }
 
@@ -92,9 +93,10 @@ fi
 if [ -f "$MALARE" ]; then
     printf '  malare_band: "%s",\n' "$(base64_av "$MALARE")"
 fi
-if [ -f "$CPM_START" ] && [ -f "$CPM_SKIVA" ]; then
+if [ -f "$CPM_START" ] && [ -f "$CPM_SKIVA" ] && [ -f "$CPM_B" ]; then
     printf '  cpm_start: "%s",\n' "$(base64_av "$CPM_START")"
     printf '  cpm_skiva: "%s",\n' "$(base64_av "$CPM_SKIVA")"
+    printf '  cpm_b: "%s",\n' "$(base64_av "$CPM_B")"
 fi
 if [ -f "$SKIVA" ] && [ -f "$BAND" ]; then
     printf '  genesis: "%s",\n' "$(base64_av "$SKIVA")"

@@ -8,3 +8,7 @@ cpm/cpm22.asm
 cpm/system.dsk
 cpm/prov/*.com
 cpm/*.lst
+cpm/b.dsk
+cpm/bbc/sida.asm
+cpm/bbc/sida.bin
+cpm/bbcbasic.com
