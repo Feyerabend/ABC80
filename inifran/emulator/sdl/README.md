@@ -54,6 +54,10 @@ Exempel:
     ./abc80f -k 'PRINT 2+2\r'
     ./abc80f -r ../roms/abc80new.rom -tkn80 ../roms/tkn80-iii.rom
     ./abc80f -cpm ../cpm/system.dsk
+    ./abc80f -r ../../utanfor/comal/ut/comal.rom -l ../../utanfor/comal/ut/comal.krets@4000
+
+Det sista är COMAL-försöket ur `utanfor/comal`, ABC80-BASIC med
+COMAL:s WHILE, REPEAT, PROC och CASE.
 
 ## Tangenterna
 
