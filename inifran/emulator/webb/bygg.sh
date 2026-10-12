@@ -11,8 +11,9 @@
 # exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
 # bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
 # exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
-# /MALARE). Finns cpm/start.bin, cpm/system.dsk och cpm/b.dsk (make)
-# kommer CP/M med UNI-80 med (CPM och /CPM). Finns exempel/genesis/ kommer Genesis-demot med
+# /MALARE). Finns cpm/start.bin, cpm/system.dsk, cpm/b.dsk och cpm/d.dsk
+# (make) kommer CP/M med UNI-80 med (CPM och /CPM); d.dsk, D: på kort 44
+# med Zork I, utan de $E5 som avslutar den (abc80.js fyller i dem). Finns exempel/genesis/ kommer Genesis-demot med
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
 # knappar och text bort (mellan GENESIS och /GENESIS). Det som bara syns i
 # mallen (mellan MALL och /MALL) tas alltid bort. Filen skrivs på
@@ -33,9 +34,16 @@ BAND=exempel/genesis/GenesisProject_ABCDemo_webb.wav
 CPM_START=cpm/start.bin
 CPM_SKIVA=cpm/system.dsk
 CPM_B=cpm/b.dsk
+CPM_D=cpm/d.dsk
 
 base64_av() {
     base64 < "$1" | tr -d '\n'
+}
+
+# Utan $E5 i slutet.
+base64_utan_slutet() {
+    python3 -I -c 'import sys; sys.stdout.buffer.write(open(sys.argv[1], "rb").read().rstrip(b"\xe5"))' "$1" |
+        base64 | tr -d '\n'
 }
 
 # Ta bort det som står mellan <!-- NAMN --> och <!-- /NAMN --> om villkoret
@@ -64,7 +72,7 @@ sida() {
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
-        avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B")" |
+        avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B" "$CPM_D")" |
         avsnitt GENESIS "$(finns "$SKIVA" "$BAND")"
 }
 
@@ -93,10 +101,11 @@ fi
 if [ -f "$MALARE" ]; then
     printf '  malare_band: "%s",\n' "$(base64_av "$MALARE")"
 fi
-if [ -f "$CPM_START" ] && [ -f "$CPM_SKIVA" ] && [ -f "$CPM_B" ]; then
+if [ "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B" "$CPM_D")" = ja ]; then
     printf '  cpm_start: "%s",\n' "$(base64_av "$CPM_START")"
     printf '  cpm_skiva: "%s",\n' "$(base64_av "$CPM_SKIVA")"
     printf '  cpm_b: "%s",\n' "$(base64_av "$CPM_B")"
+    printf '  cpm_d: "%s",\n' "$(base64_utan_slutet "$CPM_D")"
 fi
 if [ -f "$SKIVA" ] && [ -f "$BAND" ]; then
     printf '  genesis: "%s",\n' "$(base64_av "$SKIVA")"

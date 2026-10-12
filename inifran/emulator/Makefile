@@ -1,9 +1,10 @@
 # Den gemensamma emulatorn till ABC80 inifrån.
 #   make         bygg abc80 och CP/M: start-PROM:en (cpm/start.bin), CCP och
 #                BDOS (cpm/cpm22.bin), BIOS:en (cpm/bios.bin) och systemskivan
-#                med Digital Researchs program och editorn SKRIV
-#                (cpm/system.dsk), och skivan
-#                till B: med BBC BASIC (cpm/b.dsk)
+#                med Digital Researchs program, editorn SKRIV och
+#                Z-maskintolken ZTOLK (cpm/system.dsk), skivan
+#                till B: med BBC BASIC (cpm/b.dsk) och skivan till D:
+#                på kort 44 med Zork I (cpm/d.dsk)
 #   make prov    kör den nya och den gamla (verktyg/abc80) med samma flaggor
 #                och jämför skärmarna
 #   make webb    bygg webb/abc80.html, emulatorn i en enda sida som går
@@ -36,7 +37,7 @@ WEBB_FLAGGOR = --target=wasm32 -std=c11 -O2 -Wall -Wextra -ffreestanding -nostdl
 VERKTYG ?= $(abspath $(firstword $(wildcard ../verktyg) $(HOME)/Documents/GitHub/ABC80/inifran/verktyg))
 Z80ASM ?= $(VERKTYG)/z80asm
 
-alla: abc80 cpm/start.bin cpm/cpm22.bin cpm/bios.bin cpm/system.dsk cpm/b.dsk
+alla: abc80 cpm/start.bin cpm/cpm22.bin cpm/bios.bin cpm/system.dsk cpm/b.dsk cpm/d.dsk
 
 $(Z80ASM):
 	$(MAKE) -C $(VERKTYG) z80asm
@@ -54,7 +55,7 @@ webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 # kommer med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
-                 roms/tkn80-iii.rom cpm/start.bin cpm/system.dsk cpm/b.dsk \
+                 roms/tkn80-iii.rom cpm/start.bin cpm/system.dsk cpm/b.dsk cpm/d.dsk \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \
                             exempel/krets/forth_cmos.bin \
@@ -82,9 +83,9 @@ cpm/bios.lst: cpm/bios.asm | $(Z80ASM)
 	$(Z80ASM) -o /dev/null -l $@ cpm/bios.asm
 
 cpm/system.dsk: cpm/cpm22.bin cpm/bios.bin cpm/systemskiva.py $(wildcard cpm/dr/*.COM) \
-                cpm/skriv.com
+                cpm/skriv.com cpm/ztolk.com
 	python3 -I cpm/systemskiva.py cpm/cpm22.bin cpm/bios.bin $@ $(wildcard cpm/dr/*.COM) \
-	        cpm/skriv.com
+	        cpm/skriv.com cpm/ztolk.com
 
 # Editorn SKRIV (cpm/skriv/skriv.asm), med BIOS:ens KOLUMNER ur listningen.
 cpm/skriv.com: cpm/skriv/skriv.asm cpm/bios.lst | $(Z80ASM)
@@ -92,6 +93,13 @@ cpm/skriv.com: cpm/skriv/skriv.asm cpm/bios.lst | $(Z80ASM)
 	    cpm/bios.lst > cpm/skriv/med_bios.asm
 	cat cpm/skriv/skriv.asm >> cpm/skriv/med_bios.asm
 	$(Z80ASM) -o $@ cpm/skriv/med_bios.asm
+
+# Z-maskintolken ZTOLK (cpm/zork/ztolk.asm), också med KOLUMNER.
+cpm/ztolk.com: cpm/zork/ztolk.asm cpm/bios.lst | $(Z80ASM)
+	awk '$$1 == "=" && $$3 == "KOLUMNER" { print $$3 " EQU $$" $$2 }' \
+	    cpm/bios.lst > cpm/zork/med_bios.asm
+	cat cpm/zork/ztolk.asm >> cpm/zork/med_bios.asm
+	$(Z80ASM) -o $@ cpm/zork/med_bios.asm
 
 # BBC BASIC med vår första sida (cpm/bbc/abc80.asm), som får adresserna
 # till BIOS:ens KOLUMNER, RAD och KOL ur listningen.
@@ -109,14 +117,19 @@ cpm/bbcbasic.com: cpm/bbc/sida.bin cpm/bbc/BBCBASIC.COM
 cpm/b.dsk: cpm/bbcbasic.com cpm/systemskiva.py
 	python3 -I cpm/systemskiva.py - - $@ cpm/bbcbasic.com
 
+# Skivan till D: på kort 44 (640 KB), med Zork I (cpm/zork/).
+cpm/d.dsk: cpm/zork/zork1.z3 cpm/systemskiva.py
+	python3 -I cpm/systemskiva.py -44 $@ cpm/zork/zork1.z3
+
 prov: abc80
 	@./prov.sh
 
-cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin cpm/b.dsk cpm/skriv.com | $(Z80ASM)
+cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin cpm/b.dsk cpm/skriv.com cpm/ztolk.com cpm/d.dsk | $(Z80ASM)
 	@Z80ASM=$(Z80ASM) cpm/prov.sh
 
 clean:
 	rm -rf abc80 prov webb/abc80.wasm cpm/cpm22.asm cpm/system.dsk cpm/b.dsk \
-	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com
+	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com \
+	       cpm/zork/med_bios.asm cpm/ztolk.com cpm/d.dsk
 
 .PHONY: alla prov cpmprov webb clean

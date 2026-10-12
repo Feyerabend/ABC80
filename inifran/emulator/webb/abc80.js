@@ -30,7 +30,9 @@
  *
  * CP/M: UNI-80 med vår start-PROM (cpm/start.asm), som -cpm i
  * terminalen. Systemskivan sitter i FD2 enhet 0 (A:) och skivan med BBC
- * BASIC (cpm/b.dsk) i enhet 1 (B:); C: är ABC80:s eget RAM. Skivorna i det läge som inte
+ * BASIC (cpm/b.dsk) i enhet 1 (B:); C: är ABC80:s eget RAM och D: skivan
+ * med Zork I (cpm/d.dsk) på kort 44 (ABC 832, 640 KB). Den ligger i sidan
+ * utan de $E5 som avslutar den. Skivorna i det läge som inte
  * är valt ligger undan, så att ABC-DOS-disketten och CP/M-skivorna
  * finns kvar när man byter fram och tillbaka.
  *
@@ -68,6 +70,9 @@ let skivans_namn = 'diskett.dsk';            /* namnet när den sparas */
 let skiva_b = null;                          /* CP/M:s B: (FD2 enhet 1), eller null */
 let skiva_b_minne = 0;
 let skiva_b_namn = 'b.dsk';
+let skiva_d = null;                          /* CP/M:s D: (kort 44 enhet 0), eller null */
+let skiva_d_minne = 0;
+let skiva_d_namn = 'd.dsk';
 let bandljudet = null;                       /* bandets ljud i provtakten, eller null */
 
 function base64(text) {
@@ -187,7 +192,7 @@ function visa_lagen(alltid = false) {
     const maskin = delar.join(' · ');
     let disk = '';
     if (skivan)
-        disk = cpm_valt() ? skivans_namn + ' · ' + skiva_b_namn : skivans_namn;
+        disk = cpm_valt() ? [skivans_namn, skiva_b_namn, skiva_d_namn].join(' · ') : skivans_namn;
     const krets = $('krets');
     const program = krets && krets.value ? krets.options[krets.selectedIndex].textContent : '';
     const p40 = $('p40').checked ? t('inkopplad', 'connected') + (papper_rader
@@ -283,7 +288,14 @@ function skiva_b_nu() {
     return new Uint8Array(e.memory.buffer, skiva_b_minne, skiva_b.length).slice();
 }
 
+function skiva_d_nu() {
+    if (!skiva_d_minne)
+        return null;
+    return new Uint8Array(e.memory.buffer, skiva_d_minne, skiva_d.length).slice();
+}
+
 const CPM_SKIVA = 40 * 8 * 256;              /* FD2: 80 KB per enhet */
+const KORT44_SKIVA = 2560 * 256;             /* kort 44: 640 KB */
 
 function cpm_valt() {
     return !!$('cpm')?.checked;
@@ -299,9 +311,10 @@ function ar_cpm(d) {
  * disketten i FD2 (kort 45). Utan argument sitter samma diskett kvar,
  * med det som har sparats på den. En krets sitter på $4000, som
  * Smartaid (-l forth.bin@4000); Forth med CMOS slår på CMOS-minnet.
- * Med CP/M är disketten A: (utan den systemskivan) och b B: (utan den
- * skivan med BBC BASIC), och ABC-DOS sitter inte i. */
-function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
+ * Med CP/M är disketten A: (utan den systemskivan), b B: (utan den
+ * skivan med BBC BASIC) och d D: (utan den skivan med Zork I), och
+ * ABC-DOS sitter inte i. */
+function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
     cmos_spara();                            /* innan minnet töms */
     const cpm = cpm_valt();
     const rom = ROM[$('rom').value];
@@ -313,7 +326,9 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
         e.slapp(skivans_minne);
     if (skiva_b_minne)
         e.slapp(skiva_b_minne);
-    skivans_minne = skiva_b_minne = 0;
+    if (skiva_d_minne)
+        e.slapp(skiva_d_minne);
+    skivans_minne = skiva_b_minne = skiva_d_minne = 0;
     if (cpm && !diskett) {
         diskett = ROM.cpm_skiva.slice();
         skivans_namn = 'cpm.dsk';
@@ -323,7 +338,12 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
         skiva_b_namn = 'b.dsk';
     }
     skivan = diskett;
+    if (cpm && !d) {
+        d = ROM.cpm_d.slice();
+        skiva_d_namn = 'd.dsk';
+    }
     skiva_b = cpm ? b : null;
+    skiva_d = cpm ? d : null;
     $('katalog').hidden = true;
     if (skivan) {
         if (!cpm) {
@@ -338,6 +358,10 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu()) {
     if (skiva_b) {
         skiva_b_minne = lagg_i_minnet(skiva_b, 256);
         e.skiva(45, 1, skiva_b_minne, skiva_b.length, 0);
+    }
+    if (skiva_d) {
+        skiva_d_minne = lagg_i_minnet(skiva_d, 256);
+        e.skiva(44, 0, skiva_d_minne, skiva_d.length, 0);
     }
     const val = $('krets')?.value;
     const ex = EXEMPEL[val];
@@ -1050,10 +1074,15 @@ function filer_summa(n) {
  * ledig post), +1-+11 namnet och typen (bit 7 är attribut), +16-+31
  * blocken om 1 KB, ett per byte. En fil med flera poster (över 16 KB)
  * räknas ihop; block 0 och 1 är katalogen, så 70 block blir över. */
-function cpm_katalogen(d) {
+/* FD2: katalogen i spår 4, 64 poster, block om 1 KB med numren i en
+ * byte. Kort 44 (kort44): katalogen först, 128 poster, block om 2 KB
+ * med numren i två bytes. */
+function cpm_katalogen(d, kort44 = false) {
     const filer = new Map();
     let anvanda = 0;
-    for (let k = 4 * 16 * 128; k < 4 * 16 * 128 + 64 * 32; k += 32) {
+    const forst = kort44 ? 0 : 4 * 16 * 128;
+    const kb = kort44 ? 2 : 1;
+    for (let k = forst; k < forst + (kort44 ? 128 : 64) * 32; k += 32) {
         if (d[k] > 15)
             continue;
         const del = (a, b) => String.fromCharCode(...[...d.subarray(k + a, k + b)]
@@ -1061,14 +1090,14 @@ function cpm_katalogen(d) {
         const typ = del(9, 12);
         const namn = (d[k] ? d[k] + '/' : '') + del(1, 9) + (typ ? '.' + typ : '');
         let block = 0;
-        for (let i = 16; i < 32; i++)
-            if (d[k + i])
-                block++;
+        for (let i = 16; i < 32; i += kb)
+            if (d[k + i] || (kort44 && d[k + i + 1]))
+                block += kb;
         filer.set(namn, (filer.get(namn) || 0) + block);
         anvanda += block;
     }
     const rader = [...filer].map(([namn, kb]) => namn.padEnd(14) + String(kb).padStart(3) + 'k');
-    rader.push(filer_summa(rader.length) + (70 - anvanda) + t('k lediga.', 'k free.'));
+    rader.push(filer_summa(rader.length) + ((kort44 ? 636 : 70) - anvanda) + t('k lediga.', 'k free.'));
     return rader.join('\n');
 }
 
@@ -1086,7 +1115,8 @@ function visa_katalogen() {
     const i = t(' i ', ' in ');
     if (cpm_valt())
         ruta.textContent = skivans_namn + i + 'A:\n' + cpm_katalogen(d) + '\n\n' +
-                           skiva_b_namn + i + 'B:\n' + cpm_katalogen(skiva_b_nu());
+                           skiva_b_namn + i + 'B:\n' + cpm_katalogen(skiva_b_nu()) + '\n\n' +
+                           skiva_d_namn + i + 'D:\n' + cpm_katalogen(skiva_d_nu(), true);
     else
         ruta.textContent = skivans_namn + i + 'DR0:\n' + katalogen(d);
     ruta.hidden = false;
@@ -1107,7 +1137,8 @@ function ladda_ner(d, namn) {
     setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
 }
 
-/* Med CP/M laddas A: ner, och B: också om något står på den. */
+/* Med CP/M laddas A: ner, B: också om något står på den och D: om den
+ * har ändrats (ett sparat spel). */
 $('spara_skiva').addEventListener('click', () => {
     const d = skivan_nu();
     if (!d) {
@@ -1116,10 +1147,18 @@ $('spara_skiva').addEventListener('click', () => {
     }
     ladda_ner(d, skivans_namn);
     const b = skiva_b_nu();
-    if (b && b.some(x => x !== 0xE5)) {
-        setTimeout(() => ladda_ner(b, skiva_b_namn), 500);
-        meddela(skivans_namn + ' (A:) och ' + skiva_b_namn + ' (B:) laddas ner med det som har sparats på dem.',
-                skivans_namn + ' (A:) and ' + skiva_b_namn + ' (B:) are downloaded with what has been saved on them.');
+    const dd = skiva_d_nu();
+    const fler = [];
+    if (b && b.some(x => x !== 0xE5))
+        fler.push([b, skiva_b_namn, 'B:']);
+    if (dd && (dd.length !== ROM.cpm_d.length || dd.some((x, k) => x !== ROM.cpm_d[k])))
+        fler.push([dd, skiva_d_namn, 'D:']);
+    fler.forEach(([data, namn], k) => setTimeout(() => ladda_ner(data, namn), 500 * (k + 1)));
+    if (fler.length) {
+        const lista = [[d, skivans_namn, 'A:'], ...fler].map(([, namn, enhet]) => namn + ' (' + enhet + ')');
+        const och = (o) => lista.slice(0, -1).join(', ') + o + lista[lista.length - 1];
+        meddela(och(' och ') + ' laddas ner med det som har sparats på dem.',
+                och(' and ') + ' are downloaded with what has been saved on them.');
     } else
         meddela(skivans_namn + ' laddas ner med det som har sparats på den.',
                 skivans_namn + ' is downloaded with what has been saved on it.');
@@ -1151,11 +1190,21 @@ async function oppna(fil, vad) {
         meddela(namn + ' ligger i CMOS-minnet' + ($('cmos').checked ? '.' : ' (slå på det).'),
                 namn + ' is in the CMOS memory' + ($('cmos').checked ? '.' : ' (switch it on).'));
     }
-    else if (vad === 'skiva' && ar_cpm(data) && $('cpm')) {
+    else if (vad === 'skiva' && data.length === KORT44_SKIVA && $('cpm')) {
         if (!cpm_valt()) {
             byt_lage(true);
             skiva_b_namn = 'b.dsk';
-            starta(data, null);
+            starta(null, null, data);
+        } else
+            starta(skivan_nu(), skiva_b_nu(), data);
+        skiva_d_namn = namn;
+        meddela(namn + ' sitter i D: på kort 44, och CP/M startar om. DIR D: visar filerna.',
+                namn + ' sits in D: on card 44, and CP/M restarts. DIR D: shows the files.');
+    } else if (vad === 'skiva' && ar_cpm(data) && $('cpm')) {
+        if (!cpm_valt()) {
+            byt_lage(true);
+            skiva_b_namn = 'b.dsk';
+            starta(data, null, null);
         } else
             starta(data);
         skivans_namn = namn;
@@ -1206,7 +1255,7 @@ document.addEventListener('drop', (h) => {
 /* Knapparna                                                         */
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
-$('nystart').addEventListener('click', () => { starta(null, null); meddela(); skarm.focus(); });
+$('nystart').addEventListener('click', () => { starta(null, null, null); meddela(); skarm.focus(); });
 $('rom').addEventListener('change', () => { starta(); skarm.focus(); });
 $('tkn80').addEventListener('change', () => {
     starta();
@@ -1219,19 +1268,20 @@ $('tkn80').addEventListener('change', () => {
 });
 $('fast').addEventListener('change', () => skarm.focus());
 /* Skivorna i det läge som inte är valt (ABC80 med ABC-DOS eller CP/M)
- * ligger undan här: {a, b, namn, namn_b}. */
+ * ligger undan här: {a, b, d, namn, namn_b, namn_d}. */
 const undan = { abc80: null, cpm: null };
 
 /* Byt till CP/M (cpm) eller ABC80 och ge skivorna som låg undan för
  * det läget, eller null; starta() efteråt. */
 function byt_lage(cpm) {
-    undan[cpm ? 'abc80' : 'cpm'] = { a: skivan_nu(), b: skiva_b_nu(),
-                                     namn: skivans_namn, namn_b: skiva_b_namn };
+    undan[cpm ? 'abc80' : 'cpm'] = { a: skivan_nu(), b: skiva_b_nu(), d: skiva_d_nu(),
+                                     namn: skivans_namn, namn_b: skiva_b_namn,
+                                     namn_d: skiva_d_namn };
     const s = undan[cpm ? 'cpm' : 'abc80'];
     undan[cpm ? 'cpm' : 'abc80'] = null;
     $('cpm').checked = cpm;
-    skivans_minne = skiva_b_minne = 0;       /* starta() får skivorna som argument */
-    skivan = skiva_b = null;
+    skivans_minne = skiva_b_minne = skiva_d_minne = 0;   /* starta() får skivorna som argument */
+    skivan = skiva_b = skiva_d = null;
     return s;
 }
 
@@ -1243,24 +1293,54 @@ function abc80_lage() {
 
 const CPM_TEXT = ['CP/M 2.2 med UNI-80. BBC BASIC: skriv först B: och sedan BBCBASIC ' +
                   '(CP/M letar bara på skivan i prompten); *BYE går tillbaka. ' +
-                  'A: systemskivan med DIR, STAT, PIP, ED och ASM, C: ABC80:s RAM (15k). ' +
+                  'A: systemskivan med DIR, STAT, PIP, ED och ASM, C: ABC80:s RAM (15k), ' +
+                  'D: Zork I på kort 44 (ZTOLK D:ZORK1). ' +
                   '^C eller RESET startar om CP/M.',
                   'CP/M 2.2 with UNI-80. BBC BASIC: first type B: and then BBCBASIC ' +
                   '(CP/M only looks on the disk in the prompt); *BYE returns. ' +
-                  'A: the system disk with DIR, STAT, PIP, ED and ASM, C: the ABC80\'s RAM (15k). ' +
+                  'A: the system disk with DIR, STAT, PIP, ED and ASM, C: the ABC80\'s RAM (15k), ' +
+                  'D: Zork I on card 44 (ZTOLK D:ZORK1). ' +
                   '^C or RESET restarts CP/M.'];
+
+/* Byt till CP/M (cpm) eller ABC80 och starta med skivorna som låg undan. */
+function lage_med_skivorna(cpm) {
+    const s = byt_lage(cpm) || { a: null, b: null, d: null, namn: 'diskett.dsk',
+                                 namn_b: 'b.dsk', namn_d: 'd.dsk' };
+    skivans_namn = s.namn;
+    skiva_b_namn = s.namn_b;
+    skiva_d_namn = s.namn_d;
+    starta(s.a, s.b, s.d);
+}
 
 $('cpm')?.addEventListener('change', () => {
     const cpm = $('cpm').checked;
-    const s = byt_lage(cpm) || { a: null, b: null, namn: 'diskett.dsk', namn_b: 'b.dsk' };
-    skivans_namn = s.namn;
-    skiva_b_namn = s.namn_b;
-    starta(s.a, s.b);
+    lage_med_skivorna(cpm);
     if (cpm)
         meddela(...CPM_TEXT);
     else
         meddela('ABC80 utan CP/M; CP/M-skivorna ligger undan till nästa gång.',
                 'ABC80 without CP/M; the CP/M disks are put aside until next time.');
+    skarm.focus();
+});
+
+/* Zork I: CP/M med skivorna (D: har spelet) och ZTOLK D:ZORK1. */
+const ZORK_TEXT = ['Zork I (Infocom, MIT-licensen) med vår tolk ZTOLK från D: på kort 44. ' +
+                   'save och restore använder D:ZORK1.SAV; quit går tillbaka till CP/M.',
+                   'Zork I (Infocom, MIT licence) with our interpreter ZTOLK from D: on card 44. ' +
+                   'save and restore use D:ZORK1.SAV; quit returns to CP/M.'];
+
+function zork() {
+    if (cpm_valt())
+        starta();
+    else
+        lage_med_skivorna(true);
+    e.paus(1500);
+    skriv('ZTOLK D:ZORK1\n');
+    meddela(...ZORK_TEXT);
+}
+
+$('zork')?.addEventListener('click', () => {
+    zork();
     skarm.focus();
 });
 
@@ -1555,6 +1635,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
         ROM.cpm_start = base64(FILER.cpm_start);
         ROM.cpm_skiva = base64(FILER.cpm_skiva);
         ROM.cpm_b = base64(FILER.cpm_b);
+        ROM.cpm_d = new Uint8Array(KORT44_SKIVA).fill(0xE5);
+        ROM.cpm_d.set(base64(FILER.cpm_d));
     }
     if (FILER.program)
         FILER.program = base64(FILER.program);
@@ -1595,14 +1677,19 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')
         $('fast').checked = true;
-    if (fraga.get('cpm') === 'pa' && $('cpm'))
+    const med_zork = fraga.get('zork') === 'pa' && $('cpm');
+    if ((fraga.get('cpm') === 'pa' || med_zork) && $('cpm'))
         $('cpm').checked = true;
     visa_ljudet();
-    starta(null, null);
+    starta(null, null, null);
     visa_lagen(true);
     if (cpm_valt())
         meddela(...CPM_TEXT);
-    if (fraga.get('k')) {
+    if (med_zork) {
+        e.paus(1500);
+        skriv('ZTOLK D:ZORK1\n');
+        meddela(...ZORK_TEXT);
+    } else if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);
     } else if (!fraga.get('s'))

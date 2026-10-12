@@ -33,6 +33,11 @@
 ;             att skriva ($C000 med 16 KB, $8000 med 32 KB) till $FBFF:
 ;             15 eller 31 block om 1 KB, 32 katalogposter. Den töms vid
 ;             kallstart. $FC00-$FFFF lämnas åt ROM:en (NMI-klockan).
+;   D:        skivkortet 44 (ABC 832), enhet 0, om det finns vid
+;             kallstarten: 2 560 sektorer à 256 bytes (640 KB), som
+;             kortet vill ha som SECIO skickar dem för MF (32 * (N / 4) +
+;             (N AND 3)). CP/M ser 160 spår om 32 sektorer (16 av kortets)
+;             utan systemspår: 320 block om 2 KB, 128 katalogposter.
 ;   LST: PUN: V24 på PIO B, som BASIC:s PR: (karna/skrivarkort.h): en
 ;             OUT per bit på bit 3, 1 200 baud.
 ;   RDR:      ger alltid ^Z (slut).
@@ -48,7 +53,8 @@ IOBYTE    EQU  3
 AKTUELL   EQU  4                ; aktuella enheten (och användaren)
 TBUFF     EQU  $80              ; standardbufferten
 
-FD2       EQU  45               ; skivkortet
+FD2       EQU  45               ; skivkorten
+MF        EQU  44
 
 TANGENTER EQU  $38              ; PIO A: koden, bit 7 = nere
 PIOA_STYR EQU  $39
@@ -107,6 +113,7 @@ KALLSTART:
           LDIR
           CALL SKARMSTART
           CALL RAMSTART
+          CALL MFSTART
           XOR  A
           LD   (IOBYTE),A
           LD   (AKTUELL),A
@@ -126,6 +133,8 @@ SYSSEKTOR:
           PUSH BC
           XOR  A
           LD   (ENHET),A
+          LD   A,FD2
+          LD   (KORTET),A
           CALL FD2LAS
           POP  BC
           JR   NZ,SYSFEL
@@ -154,8 +163,14 @@ GA:       LD   A,$C3            ; JP
           CALL DMA
           LD   A,(AKTUELL)
           AND  $0F              ; enheten; finns den inte, A:
-          CP   3
-          JR   C,ENHETFINNS
+          LD   C,A
+          PUSH BC
+          CALL VALJ
+          POP  BC
+          LD   A,H
+          OR   L
+          LD   A,C
+          JR   NZ,ENHETFINNS
           XOR  A
 ENHETFINNS:
           LD   C,A
@@ -704,8 +719,16 @@ VALJ:     LD   HL,0
           LD   A,C
           CP   2
           JR   C,FD2ENHET
-          JR   NZ,VALJ_SLUT     ; D: och uppåt
-          LD   A,(RAMBLOCK)     ; C: bara med RAM-skiva
+          JR   Z,RAMENHET
+          CP   3
+          RET  NZ               ; E: och uppåt
+          LD   A,(MF_FINNS)     ; D: bara med kort 44
+          OR   A
+          RET  Z
+          LD   HL,DPH_D
+          LD   A,3
+          JR   VALD
+RAMENHET: LD   A,(RAMBLOCK)     ; C: bara med RAM-skiva
           OR   A
           RET  Z
           LD   HL,DPH_C
@@ -716,7 +739,6 @@ FD2ENHET: LD   HL,DPH_A
           JR   Z,VALD
           LD   HL,DPH_B
 VALD:     LD   (VALD_ENHET),A
-VALJ_SLUT:
           RET
 
 ; LAS och SKRIV: A = 0 om det gick bra, 1 vid fel.
@@ -767,7 +789,7 @@ HAMTA:    CALL FYSISK
           LD   A,(BUF_GILTIG)
           OR   A
           JR   Z,HAMTA_LAS
-          LD   A,(ENHET)
+          LD   A,(VALD_ENHET)
           LD   HL,BUF_ENHET
           CP   (HL)
           JR   NZ,HAMTA_LAS
@@ -781,7 +803,7 @@ HAMTA_LAS:
           LD   HL,BUFFERT
           CALL FD2LAS
           RET  NZ
-          LD   A,(ENHET)
+          LD   A,(VALD_ENHET)
           LD   (BUF_ENHET),A
           LD   (BUF_SEKTOR),DE
           LD   A,1
@@ -789,10 +811,15 @@ HAMTA_LAS:
           XOR  A
           RET
 
-; FYSISK: ENHET = den valda enheten, D = spåret och E = den fysiska
-; sektorn * 32 (CP/M-sektorn / 2 * 32).
+; FYSISK: KORTET och ENHET för den valda enheten, och sektorn i DE som
+; kortet vill ha den. FD2: D = spåret och E = den fysiska sektorn * 32
+; (CP/M-sektorn / 2 * 32).
 FYSISK:   LD   A,(VALD_ENHET)
+          CP   3
+          JR   Z,MFFYSISK
           LD   (ENHET),A
+          LD   A,FD2
+          LD   (KORTET),A
           LD   A,(SPARET)
           LD   D,A
           LD   A,(SEKTORN)
@@ -801,6 +828,31 @@ FYSISK:   LD   A,(VALD_ENHET)
           ADD  A,A
           ADD  A,A
           ADD  A,A
+          LD   E,A
+          RET
+
+; D: (kort 44, enhet 0): kortets sektor N = spåret * 16 + CP/M-sektorn
+; / 2 ska skickas som 32 * (N / 4) + (N AND 3). Med spåret T och s =
+; CP/M-sektorn / 2 blir det D = T / 2 och E = (T AND 1) * 128 + (s / 4)
+; * 32 + (s AND 3).
+MFFYSISK: XOR  A
+          LD   (ENHET),A
+          LD   A,MF
+          LD   (KORTET),A
+          LD   A,(SPARET)
+          SRL  A                ; C = T AND 1
+          LD   D,A
+          LD   A,(SEKTORN)
+          RRA                   ; (T AND 1) * 128 + s
+          LD   B,A
+          AND  $0C              ; s / 4 till bit 5-6
+          ADD  A,A
+          ADD  A,A
+          ADD  A,A
+          LD   E,A
+          LD   A,B
+          AND  $83
+          OR   E
           LD   E,A
           RET
 
@@ -857,10 +909,10 @@ SLUTSTATUS:
           OR   A
           RET
 
-; KOMMANDO: välj FD2 och skicka kommandot A för ENHET, D och E. Z om
-; kortet tog emot det, NZ om det inte svarar. Ändrar A, B och C.
+; KOMMANDO: välj KORTET och skicka kommandot A för ENHET, D och E. Z
+; om kortet tog emot det, NZ om det inte svarar. Ändrar A, B och C.
 KOMMANDO: LD   C,A
-          LD   A,FD2
+          LD   A,(KORTET)
           OUT  (1),A
           OUT  (2),A            ; C1: nytt kommando
           PUSH HL
@@ -885,6 +937,31 @@ SKICKA:   POP  HL
           LD   A,E
           OUT  (0),A
           XOR  A
+          RET
+
+; Kort 44 svarar som FD2 på statusen (bit 1 = 0: tar emot kommandot,
+; bit 2 = 0: data, bit 0: redo för en byte, bit 7: klart), så samma
+; rutiner räcker.
+
+; MFSTART: finns kort 44 med en skiva i enhet 0? MF_FINNS = 1 om
+; sektor 0 går att läsa. Ett kort som inte finns ger $FF på IN 1, och
+; då frågas det inte (KOMMANDO skulle vänta förgäves).
+MFSTART:  XOR  A
+          LD   (MF_FINNS),A
+          LD   (BUF_GILTIG),A
+          LD   (ENHET),A
+          LD   A,MF
+          LD   (KORTET),A
+          OUT  (1),A
+          IN   A,(1)
+          INC  A
+          RET  Z
+          LD   DE,0
+          LD   HL,BUFFERT
+          CALL FD2LAS
+          RET  NZ
+          LD   A,1
+          LD   (MF_FINNS),A
           RET
 
 ; ----------------------------------------------------------------------
@@ -997,6 +1074,7 @@ RAMHALVA_UT:                    ; HL = DMA, DE = RAM-skivan; båda + 64
 DPH_A:    DEFW 0,0,0,0,KATALOGBUF,DPB_FD2,CSV_A,ALV_A
 DPH_B:    DEFW 0,0,0,0,KATALOGBUF,DPB_FD2,CSV_B,ALV_B
 DPH_C:    DEFW 0,0,0,0,KATALOGBUF,DPB_C,0,ALV_C
+DPH_D:    DEFW 0,0,0,0,KATALOGBUF,DPB_D,CSV_D,ALV_D
 
 ; FD2: 16 sektorer per spår, block om 1 KB (BSH 3, BLM 7, EXM 0), 72
 ; block, 64 katalogposter i block 0-1, 16 bytes kontrollsumma, 4 spår
@@ -1016,6 +1094,15 @@ DPB_C:    DEFW 8
           DEFB $80,0
           DEFW 0,0
 
+; D: (kort 44): 32 sektorer per spår, block om 2 KB (BSH 4, BLM 15,
+; EXM 0 eftersom DSM > 255), 320 block, 128 katalogposter i block 0-1,
+; 32 bytes kontrollsumma, inga systemspår.
+DPB_D:    DEFW 32
+          DEFB 4,15,0
+          DEFW 319,127
+          DEFB $C0,0
+          DEFW 32,0
+
 SLUT_PA_SKIVAN EQU $            ; härifrån sparas inget på skivan
 
 ; ----------------------------------------------------------------------
@@ -1028,7 +1115,9 @@ CSV_B     EQU  CSV_A+16
 ALV_A     EQU  CSV_B+16         ; 72 block: 9 bytes
 ALV_B     EQU  ALV_A+9
 ALV_C     EQU  ALV_B+9          ; 31 block: 4 bytes
-RADTABELL EQU  ALV_C+4          ; 24 ord: radernas början i bildminnet
+CSV_D     EQU  ALV_C+4
+ALV_D     EQU  CSV_D+32         ; 320 block: 40 bytes
+RADTABELL EQU  ALV_D+40          ; 24 ord: radernas början i bildminnet
 BILDMINNE EQU  RADTABELL+48
 KOLUMNER  EQU  BILDMINNE+2
 RAD       EQU  KOLUMNER+1
@@ -1042,13 +1131,15 @@ SPARET    EQU  TANGENT+1        ; ord
 SEKTORN   EQU  SPARET+2         ; ord
 DMAADR    EQU  SEKTORN+2
 VALD_ENHET EQU DMAADR+2
-ENHET     EQU  VALD_ENHET+1     ; i kommandot till FD2
-BUF_GILTIG EQU ENHET+1
-BUF_ENHET EQU  BUF_GILTIG+1
+ENHET     EQU  VALD_ENHET+1     ; i kommandot till kortet
+KORTET    EQU  ENHET+1          ; FD2 eller MF
+MF_FINNS  EQU  KORTET+1         ; 1: D: finns
+BUF_GILTIG EQU MF_FINNS+1
+BUF_ENHET EQU  BUF_GILTIG+1     ; VALD_ENHET
 BUF_SEKTOR EQU BUF_ENHET+1      ; spåret och sektorn * 32, som DE
 RAMBAS    EQU  BUF_SEKTOR+2
 RAMBLOCK  EQU  RAMBAS+2         ; 0: ingen RAM-skiva
-BIOSSTACK EQU  RAMBLOCK+1+64    ; 64 bytes
+BIOSSTACK EQU  RAMBLOCK+1+32    ; 32 bytes, bara vid start
 BIOSSLUT  EQU  BIOSSTACK
 
           END

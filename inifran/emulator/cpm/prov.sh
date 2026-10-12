@@ -53,6 +53,13 @@ finns "B: STAT     COM : PIP      COM : KONSOL" '\w1000DIR B:\r' $S -D prov/b.ds
 finns "Bdos Err On B: Bad Sector" '\w1000PIP B:=A:STAT.COM\r' $S -DP prov/b.dsk@45.1   # skrivskyddad
 finns "A: STAT     COM : PIP      COM : KONSOL   COM" '\w1000DIR\r' $S -tkn80 ../roms/tkn80-iii.rom
 
+# D: på kort 44 (640 KB): tom, skriven med PIP och utan kortet.
+python3 -I systemskiva.py -44 prov/d.dsk || exit 1
+finns "Bytes Remaining On D: 636k" '\w1000STAT D:\r' $S -D prov/d.dsk
+../abc80 -r $ROM -t 3000 $S -D prov/d.dsk -DS -k '\w1000PIP D:=A:STAT.COM\r' >/dev/null
+finns "D: STAT     COM" '\w1000DIR D:\r' $S -D prov/d.dsk
+finns "Bdos Err On D: Select" '\w1000STAT D:\r' $S
+
 # Programmen: ED skriver HEJ.ASM, ASM och LOAD gör HEJ.COM, som körs,
 # sparas med SAVE (efter körningen, ur TPA) och ändras med ED:s S.
 # Skivan skrivs tillbaka (-DS) mellan körningarna; RAM-skivan C: töms
@@ -121,4 +128,26 @@ skriv "ESC K X" "Rad 40slutet" 'SKRIV LANG.TXT\r\w1500\x1bqc\x08slutet\x1bKX\w15
 skriv "sök" "rad 25 kol 1" 'SKRIV LANG.TXT\r\w1500\x11FRad 25\r'
 skriv "sluta osparad" "Inte sparad!" 'SKRIV LANG.TXT\r\w1500x\x0bQ'
 skriv "80 tecken" "cdefgh abcdefgh abcdefgh abcdefgh abcdefgh abcdefgh" "SKRIV LANG.TXT\\r\\w1500\\x11D$(printf ' abcdefgh%.0s' $(seq 8))" -tkn80 ../roms/tkn80-iii.rom
+
+# Zork I med tolken ZTOLK (cpm/ztolk.com och cpm/d.dsk, make): starten,
+# ett drag, tangenter i förväg, $verify, save och restore, quit och 80
+# tecken.
+python3 -I systemskiva.py cpm22.bin bios.bin prov/zork.dsk ztolk.com || exit 1
+cp d.dsk prov/zorkd.dsk
+zork() {                                # namn, väntad text, tangenter, flaggor
+  namn=$1; vantad=$2; tangenter=$3; shift 3
+  if ../abc80 -r $ROM -t 60000 -cpm prov/zork.dsk -D prov/zorkd.dsk -DS "$@" \
+       -k "\\w1000ZTOLK D:ZORK1\\r\\w8000$tangenter" | grep -qF "$vantad"
+  then printf "rätt  Zork, %s: %s\n" "$namn" "$vantad"
+  else printf "FEL   Zork, %s %s: inget \"%s\"\n" "$namn" "$*" "$vantad"; fel=1; fi
+}
+zork "start" "West of House" ''
+zork "statusraden" "Score:0 Moves:0" ''
+zork "brevlådan" "leaflet" 'open mailbox\r\w3000'
+zork "i förväg" "WELCOME TO ZORK" 'open mailbox\rtake leaflet\rread leaflet\r\w6000'
+zork "verify" "The disk is correct." '$verify\r\w20000'
+zork "save" "Ok." 'north\r\w3000save\r\w2000\r\w10000'
+zork "restore" "North of House" 'restore\r\w2000\r\w10000look\r\w3000'
+zork "quit" "A: ZTOLK    COM" 'quit\r\w2000y\r\w3000DIR\r\w2000'
+zork "80 tecken" "Score: 0  Moves: 0" '' -tkn80 ../roms/tkn80-iii.rom
 exit $fel

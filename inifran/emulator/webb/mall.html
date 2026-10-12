@@ -274,8 +274,9 @@
         emulatorn, och MyAB:s kod är inte med. A: är systemskivan med Digital
         Researchs program (ASM, DDT, DUMP, ED, LOAD, PIP, STAT, SUBMIT och
         XSUB), B: en skiva med BBC BASIC (Z80) av R. T. Russell, fri under
-        zlib-licensen, och C: en RAM-skiva i ABC80:s eget minne (15k), som
-        töms när CP/M startar.</p>
+        zlib-licensen, C: en RAM-skiva i ABC80:s eget minne (15k), som
+        töms när CP/M startar, och D: en skiva om 640 KB på kort 44 (ABC 832)
+        med Zork I.</p>
         <p lang="en"><i>CP/M</i> fits MyAB's UNI-80 card (volume 2, the
         chapter on CP/M) and starts CP/M 2.2 from a system disk in the FD2, as
         when RESET is held down on the real machine. Everything except the
@@ -283,8 +284,9 @@
         are written for the emulator, and none of MyAB's code is included. A:
         is the system disk with Digital Research's programs (ASM, DDT, DUMP,
         ED, LOAD, PIP, STAT, SUBMIT and XSUB), B: a disk with BBC BASIC (Z80)
-        by R. T. Russell, free under the zlib licence, and C: a RAM disk in the
-        ABC80's own memory (15k), cleared when CP/M starts.</p>
+        by R. T. Russell, free under the zlib licence, C: a RAM disk in the
+        ABC80's own memory (15k), cleared when CP/M starts, and D: a 640 KB
+        disk on card 44 (ABC 832) with Zork I.</p>
         <p lang="sv">BBC BASIC startas med <code>B:</code> och sedan
         <code>BBCBASIC</code>: CP/M letar bara på skivan i prompten, så
         <code>BBCBASIC</code> vid <code>A&gt;</code> ger bara
@@ -299,6 +301,25 @@
         <code>*BYE</code> returns to CP/M. The CP/M memory map has no clock,
         so <code>TIME</code> advances while BASIC waits for or reads a key,
         but not while a program computes.</p>
+        <p lang="sv"><i>Zork I</i> (under <i>Disketten</i>) startar Infocoms
+        Zork I från 1980, som Microsoft har släppt under MIT-licensen, med
+        <code>ZTOLK D:ZORK1</code>. ZTOLK är vår egen tolk för Z-maskinen
+        (version 3) på systemskivan, i 40 och 80 tecken. Spelet är på
+        engelska: <code>open mailbox</code>, <code>north</code>,
+        <code>take lamp</code>. Översta raden visar poängen och dragen, och
+        <code>(MER)</code> väntar på en tangent. <code>save</code> och
+        <code>restore</code> sparar på D: (standard <code>D:ZORK1.SAV</code>),
+        och <code>quit</code> går tillbaka till CP/M.</p>
+        <p lang="en"><i>Zork I</i> (under <i>Floppy disk</i>) starts
+        Infocom's Zork I from 1980, released by Microsoft under the MIT
+        licence, with <code>ZTOLK D:ZORK1</code>. ZTOLK is our own Z-machine
+        interpreter (version 3) on the system disk, in 40 and 80 columns.
+        Try <code>open mailbox</code>, <code>north</code>, <code>take
+        lamp</code>. The top line shows the score and the moves, and
+        <code>(MER)</code> (Swedish for more) waits for a key.
+        <code>save</code> and <code>restore</code> use D: (by default
+        <code>D:ZORK1.SAV</code>), and <code>quit</code> returns to
+        CP/M.</p>
         <p lang="sv">Prova <code>DIR</code>, <code>STAT</code>, <code>PIP
         B:=*.COM</code> och <code>DIR B:</code>. Ett eget program: <code>ED
         HEJ.ASM</code>, <code>I</code>, texten, <kbd>Ctrl</kbd>+<kbd>Z</kbd>
@@ -324,14 +345,14 @@
         ROM:en, <code>?tkn80=pa</code> sätter i TKN80 och
         <code>?fast=pa</code> ger den fast markör.
 <!-- CPM -->
-        <code>?cpm=pa</code> startar CP/M.
+        <code>?cpm=pa</code> startar CP/M och <code>?zork=pa</code> Zork I.
 <!-- /CPM -->
         </p>
         <p lang="en">In a link: <code>?rom=gammal</code> selects the old
         ROM, <code>?tkn80=pa</code> fits TKN80 and <code>?fast=pa</code> gives
         it a steady cursor.
 <!-- CPM -->
-        <code>?cpm=pa</code> starts CP/M.
+        <code>?cpm=pa</code> starts CP/M and <code>?zork=pa</code> Zork I.
 <!-- /CPM -->
         </p>
       </div>
@@ -344,6 +365,9 @@
 <!-- PROGRAM -->
         <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS" data-title-en="GISSA, KURVA, MUSIK and AIRFIGHT on a disk with ABC-DOS" data-en="Example disk">Exempeldisketten</button>
 <!-- /PROGRAM -->
+<!-- CPM -->
+        <button id="zork" title="Zork I i CP/M, från D: på kort 44" data-title-en="Zork I in CP/M, from D: on card 44">Zork I</button>
+<!-- /CPM -->
         <button id="katalog_knapp" title="Filerna på disketten i FD2" data-title-en="The files on the disk in the FD2" data-en="Directory">Katalogen</button>
         <button id="spara_skiva" title="Ladda ner disketten med det som har sparats på den" data-title-en="Download the disk with what has been saved on it" data-en="Save disk">Spara disketten</button>
       </div>
@@ -372,12 +396,14 @@
 <!-- CPM -->
         <p lang="sv">Med CP/M sätter <i>Lägg i diskett…</i> en skiva i B:,
         eller i A: om den är en systemskiva, och CP/M startar om.
-        <i>Katalogen</i> visar filerna på A: och B:, och <i>Spara
-        disketten</i> laddar ner dem. Slås CP/M av ligger skivorna undan till
+        En skiva om 640 KB hamnar i D: på kort 44. <i>Katalogen</i> visar
+        filerna på A:, B: och D:, och <i>Spara disketten</i> laddar ner dem
+        (D: när den har ändrats). Slås CP/M av ligger skivorna undan till
         nästa gång, och ABC-DOS-disketten kommer tillbaka.</p>
         <p lang="en">With CP/M, <i>Insert disk…</i> puts a disk in B:, or in
-        A: if it is a system disk, and CP/M restarts. <i>Directory</i> shows
-        the files on A: and B:, and <i>Save disk</i> downloads them. When CP/M
+        A: if it is a system disk, and CP/M restarts. A 640 KB disk goes in
+        D: on card 44. <i>Directory</i> shows the files on A:, B: and D:, and
+        <i>Save disk</i> downloads them (D: when it has changed). When CP/M
         is switched off the disks are put aside until next time, and the
         ABC-DOS disk comes back.</p>
 <!-- /CPM -->
@@ -734,6 +760,7 @@ RUN</pre>
 <!-- CPM -->
         <li>CP/M: kryssa i <i>CP/M</i> under <i>Maskinen</i> och skriv
         <code>DIR</code>.</li>
+        <li>Zork I: knappen <i>Zork I</i> under <i>Disketten</i>.</li>
 <!-- /CPM -->
       </ul>
       <p>Har maskinen hängt sig: <i>RESET</i>, eller <i>Starta om</i>, som
@@ -787,6 +814,7 @@ RUN</pre>
 <!-- CPM -->
         <li>CP/M: tick <i>CP/M</i> under <i>The machine</i> and type
         <code>DIR</code>.</li>
+        <li>Zork I: the <i>Zork I</i> button under <i>Floppy disk</i>.</li>
 <!-- /CPM -->
       </ul>
       <p>If the machine has hung: <i>RESET</i>, or <i>Restart</i>, which
