@@ -453,6 +453,8 @@ function skriv(text, flaggor = false, v24 = false) {
 skarm.addEventListener('keydown', (h) => {
     if (h.metaKey)
         return;
+    if (h.key === 'Escape' && $('hjalp').matches(':popover-open'))
+        return;                              /* Esc stänger Kom igång */
     let kod = 0;
     if (h.ctrlKey && h.key.length === 1) {
         if (h.key === 'v' || h.key === 'V')
