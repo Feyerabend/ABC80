@@ -21,6 +21,10 @@
  *     -M fil[@adr]   CMOS-minne med batteri, 2 KB på adr (standard 5000,
  *                    som Super Smartaid): läses ur filen, om den finns,
  *                    och skrivs tillbaka när emulatorn slutar
+ *     -tkn80 fil     MyAB:s kort för 80 tecken per rad med EPROM:en
+ *                    TKN80-III (roms/tkn80-iii.rom), till ROM:en 11273
+ *                    eller 9913; startar med 80 tecken, INP(3) byter till
+ *                    40 och INP(4) tillbaka (se karna/maskin.h)
  *
  * Tangenterna och V24:
  *     -k text        tangenter att skriva efter starten
@@ -67,6 +71,7 @@
  *     -t ms          kör så länge efter tangenterna och skriv sedan
  *                    skärmen på standard ut
  *     -d adr,n       skriv också n bytes av minnet från adr
+ *     -B fil.png     skärmen som bild efteråt, 640 x 480 punkter
  *     -F             filenheten TST: (bara BASIC II); -FD skriver filerna
  *     -x adr         anropsläget: anropa adr efter starten (se vard/anrop.c)
  *     -p adr=hh,..   lägg bytes i minnet före anropet
@@ -96,6 +101,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "../karna/bild.h"
 #include "../karna/p40.h"
 #include "../karna/tecken.h"
 #include "png.h"
@@ -266,6 +272,32 @@ static void cmos_skriv(void)
     fclose(f);
 }
 
+/* TKN80 (-tkn80 fil), efter ROM:en. */
+static void tkn80(Maskin *m, const char *namn)
+{
+    static uint8_t data[0x1001];
+    size_t storlek = las_fil(namn, data, sizeof data);
+    if (!maskin_tkn80(m, data, storlek))
+        vard_fel("TKN80-III ska vara 4 KB och passa ROM:en (11273 eller 9913): ", namn);
+}
+
+/* Skärmen som PNG (-B): 640 x 480 punkter, med 40 tecken per rad varje
+ * punkt två gånger två, med 80 en gång två. Markören syns. */
+static void skarmbild(const Maskin *m, const char *fil)
+{
+    static uint32_t punkter[2 * BILD_BREDD * BILD_HOJD];
+    static uint8_t bild[2 * BILD_BREDD * 2 * BILD_HOJD];
+    int kolumner;
+    const uint8_t *bildminne = maskin_skarm(m, &kolumner);
+    int bredd = kolumner * 8, steg = 2 * BILD_BREDD / bredd;
+    bild_rita(bildminne, kolumner, punkter, 0, 1, 1);
+    for (int y = 0; y < 2 * BILD_HOJD; y++)
+        for (int x = 0; x < 2 * BILD_BREDD; x++)
+            bild[y * 2 * BILD_BREDD + x] = (uint8_t)punkter[y / 2 * bredd + x / steg];
+    if (!png_skriv(fil, bild, 2 * BILD_BREDD, 2 * BILD_HOJD))
+        vard_fel("kan inte skriva", fil);
+}
+
 /* ROM:en ur en fil eller med ett av namnen 9913, 11273 och basicii80. */
 static void rom(Vard *v, const char *arg)
 {
@@ -352,10 +384,11 @@ static void andra_skiva(Vard *v, const char *arg)
 static void hjalp(void)
 {
     fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48] [-M fil[@adr]]\n"
+          "                  [-tkn80 tkn80-iii.rom]\n"
           "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L]\n"
           "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-CP fil.png]\n"
           "                  [-E adr[,text]] [-T band.wav] [-U inspelning.wav]\n"
-          "                  [-t ms [-d adr,n].. [-a fil.wav] [-x adr [-p ..] [-R ..]] ...]\n"
+          "                  [-t ms [-d adr,n].. [-B fil.png] [-a fil.wav] [-x adr [-p ..] [-R ..]] ...]\n"
           "utan -t körs ABC80 i terminalen (Ctrl-C två gånger avslutar); se huvudet i vard/abc80.c\n",
           stderr);
     exit(1);
@@ -389,6 +422,7 @@ int main(int argc, char **argv)
     Vard *v = &vard;
     const char *romfil = NULL, *v24 = NULL, *bankarg = NULL, *cmosfil = NULL;
     const char *pappersfil = NULL;           /* -CP */
+    const char *tkn80fil = NULL, *skarmfil = NULL;
     const char *kretsar[16];
     int antal_kretsar = 0, ram_kb = 16, utforlig = 0, utan_lyssnare = 0;
 
@@ -424,6 +458,7 @@ int main(int argc, char **argv)
         else if (!strcmp(f, "-b")) bankarg = a;
         else if (!strcmp(f, "-m")) ;                    /* läst ovan */
         else if (!strcmp(f, "-M")) cmosfil = a;
+        else if (!strcmp(f, "-tkn80")) tkn80fil = a;
         else if (!strcmp(f, "-k")) text(&maskin, a, 0); /* i ordning */
         else if (!strcmp(f, "-f")) textfil(&maskin, a);
         else if (!strcmp(f, "-K")) {
@@ -476,6 +511,7 @@ int main(int argc, char **argv)
         }
         else if (!strcmp(f, "-EN")) utan_lyssnare = 1;  /* -E kan stå efter */
         else if (!strcmp(f, "-t")) v->efter_ms = atol(a);
+        else if (!strcmp(f, "-B")) skarmfil = a;
         else if (!strcmp(f, "-d")) { if (v->antal_visa_minne < VARD_LISTA) v->visa_minne[v->antal_visa_minne++] = a; }
         else if (!strcmp(f, "-F")) v->tst = 1;
         else if (!strcmp(f, "-FD")) v->tst = v->tst_visa = 1;
@@ -505,6 +541,8 @@ int main(int argc, char **argv)
     if (v->kortets_bildminne)
         maskin_ram(&maskin, 0x4000, 0x400, ' ');
     rom(v, romfil);
+    if (tkn80fil)
+        tkn80(&maskin, tkn80fil);
     maskin_aterstall(&maskin);
     for (int k = 0; k < antal_kretsar; k++)
         krets(&maskin, kretsar[k]);
@@ -569,6 +607,8 @@ int main(int argc, char **argv)
         if (kassett.full)
             fprintf(stderr, "abc80: inspelningen fick inte plats; bara början är med\n");
     }
+    if (skarmfil)
+        skarmbild(&maskin, skarmfil);
     if (pappersfil) {
         int bredd, hojd;
         p40_papper(&p40, NULL, &bredd, &hojd);

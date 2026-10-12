@@ -176,6 +176,7 @@
         <option value="ny">Nya ROM:en</option>
         <option value="gammal">Gamla ROM:en</option>
       </select>
+      <label title="MyAB:s kort för 80 tecken per rad (band 2, kapitlet Skärmen): PRINT INP(3);CHR$(12) ger 40 tecken, PRINT INP(4);CHR$(12) 80 (som -tkn80 i terminalen)"><input type="checkbox" id="tkn80"> TKN80</label>
       <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar">RESET</button>
       <button id="nystart" title="Töm minnet och starta om">Starta om</button>
       <button id="ljud" title="Ljudet från SN76477 (OUT 6) och bandet">Ljud: på</button>
@@ -335,6 +336,14 @@
     <code>Z=CALL(16387)</code>; i direktläge står maskinen still tills
     <i>RESET</i>.</p>
 <!-- /EXEMPEL -->
+    <p><i>TKN80</i> är MyAB:s kort för 80 tecken per rad, med EPROM:en
+    TKN80-III (band 2, kapitlet Skärmen). Maskinen startas om med kortet
+    i, och det startar i 80-teckensläget. <code>PRINT INP(3);CHR$(12)</code>
+    byter till 40 tecken och tömmer skärmen, <code>PRINT
+    INP(4);CHR$(12)</code> tillbaka till 80, som i MyAB:s
+    bruksanvisning. <code>PEEK(885)</code> är 88 med 80 tecken och 124
+    med 40. Program som skriver direkt i bildminnet på
+    <code>$7C00</code>, som Genesis-demot, behöver 40 tecken.</p>
     <p><i>Skrivaren P40</i> är nålskrivaren från band 2, kapitlet
     Skrivarna, på kort 60, med drivrutinen på <code>$7800</code>. Den kopplas
     in och ur medan maskinen går, så programmet ligger kvar: BASIC letar
@@ -373,8 +382,8 @@
     <code>?s=</code> en text till V24 (efter tangenterna, som
     <code>-s</code>),
 <!-- /EXEMPEL -->
-    <code>?cmos=pa</code> slår på CMOS-minnet och <code>?p40=pa</code>
-    skrivaren.</p>
+    <code>?cmos=pa</code> slår på CMOS-minnet, <code>?p40=pa</code>
+    skrivaren och <code>?tkn80=pa</code> TKN80.</p>
     <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
     klickat på sidan eller skrivit något.</p>
   </details>

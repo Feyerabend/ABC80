@@ -193,6 +193,11 @@ function starta(diskett = skivan_nu()) {
         cmos_pekare = e.cmos(CMOS_ADRESS, p, CMOS_STORLEK);
         e.slapp(p);
     }
+    if ($('tkn80').checked) {
+        const p = lagg_i_minnet(ROM.tkn80);
+        e.tkn80(p, ROM.tkn80.length);
+        e.slapp(p);
+    }
     papper_tomt();
     p40_koppla();
     e.aterstall();
@@ -528,10 +533,17 @@ function papper_rita() {
 
 let anvande_ljud = false;
 
-const bilden = ritning.createImageData(320, 240);
+let bilden = ritning.createImageData(320, 240);
 
+/* Med TKN80 i 80-teckensläget är bilden 640 punkter bred; canvasen
+ * följer med, och CSS håller den lika stor. */
 function rita() {
-    bilden.data.set(new Uint8Array(e.memory.buffer, e.punkter(), 320 * 240 * 4));
+    const bredd = e.kolumner() * 8;
+    if (bredd !== bilden.width) {
+        skarm.width = bredd;
+        bilden = ritning.createImageData(bredd, 240);
+    }
+    bilden.data.set(new Uint8Array(e.memory.buffer, e.punkter(), bredd * 240 * 4));
     ritning.putImageData(bilden, 0, 0);
 }
 
@@ -924,6 +936,13 @@ document.addEventListener('drop', (h) => {
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
 $('nystart').addEventListener('click', () => { starta(null); meddela(''); skarm.focus(); });
 $('rom').addEventListener('change', () => { starta(); skarm.focus(); });
+$('tkn80').addEventListener('change', () => {
+    starta();
+    meddela($('tkn80').checked
+        ? 'TKN80: 80 tecken per rad. PRINT INP(3);CHR$(12) ger 40, PRINT INP(4);CHR$(12) 80.'
+        : '');
+    skarm.focus();
+});
 /* Exempeldisketten (exempel/program/), när den ligger i sidan. */
 $('exempel')?.addEventListener('click', () => {
     skivans_namn = 'exempel.dsk';
@@ -1172,6 +1191,7 @@ $('genesis_skiva')?.addEventListener('click', () => {
     ROM.gammal = base64(FILER.rom_gammal);
     ROM.dos = base64(FILER.dos);
     ROM.p40 = base64(FILER.p40);
+    ROM.tkn80 = base64(FILER.tkn80);
     if (FILER.program)
         FILER.program = base64(FILER.program);
     if (FILER.genesis)
@@ -1202,6 +1222,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('cmos').checked = true;
     if (fraga.get('p40') === 'pa')
         $('p40').checked = true;
+    if (fraga.get('tkn80') === 'pa')
+        $('tkn80').checked = true;
     visa_ljudet();
     starta(null);
     if (fraga.get('k')) {

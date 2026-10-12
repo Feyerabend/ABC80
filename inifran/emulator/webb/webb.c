@@ -7,11 +7,13 @@
  * (20 ms) i taget, skriver tangenter, lägger i kassettband som WAV och
  * spelar in. Filerna läser sidan själv; den lägger dem i minnet som
  * minne() ger och lämnar dem med slapp(). Efter varje bild finns
- * skärmen som punkter (punkter(), 320 x 240, RGBA) och ljudet som prov
+ * skärmen som punkter (punkter(), 320 x 240, RGBA; 640 x 240 med TKN80
+ * i 80-teckensläget, se kolumner()) och ljudet som prov
  * (ljudprov(), 16 bitar, med den provtakt som starta() fick).
  *
  * Det mesta motsvarar flaggorna i vard/abc80.c: krets() är -l, bank()
- * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP och v24() -s.
+ * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP, tkn80() -tkn80
+ * och v24() -s.
  */
 
 #include <stdlib.h>
@@ -39,7 +41,7 @@ static int skivkortet_kopplat;
 static P40 skrivaren;
 static int skrivaren_kopplad;
 
-static uint32_t bilden[BILD_BREDD * BILD_HOJD];
+static uint32_t bilden[2 * BILD_BREDD * BILD_HOJD];   /* 80 tecken: dubbelt */
 static int16_t proven[2048];                 /* en bild: 960 vid 48 kHz */
 static long long *bandet;                    /* flankerna som spelas upp */
 static long bandets_flanker;
@@ -82,6 +84,13 @@ EXPORT(starta) int starta(int ram_kb, const uint8_t *rom, long storlek, long pro
 EXPORT(krets) void krets(int adress, const uint8_t *data, long storlek)
 {
     maskin_krets(&maskin, (uint16_t)adress, data, (size_t)storlek);
+}
+
+/* TKN80 med EPROM:en TKN80-III (-tkn80), efter starta(). 0 om den inte
+ * passar ROM:en. */
+EXPORT(tkn80) int tkn80(const uint8_t *data, long storlek)
+{
+    return maskin_tkn80(&maskin, data, (size_t)storlek);
 }
 
 /* En bank i en krets med banker (-b fil,fil@adr), en gång per bank i
@@ -130,9 +139,21 @@ EXPORT(bild) int bild(int rita, int markor)
     }
     int n = (int)antal;
     ljud_prov(&ljud, proven, n);
-    if (rita)
-        bild_rita(maskin.minne + MASKIN_BILDMINNE, bilden, FORGRUND, BAKGRUND, markor);
+    if (rita) {
+        int kolumner;
+        const uint8_t *bildminne = maskin_skarm(&maskin, &kolumner);
+        bild_rita(bildminne, kolumner, bilden, FORGRUND, BAKGRUND, markor);
+    }
     return n;
+}
+
+/* Tecken per rad på skärmen: 40, eller 80 med TKN80 i 80-teckensläget;
+ * punkter() är då 640 punkter bred. */
+EXPORT(kolumner) int kolumner(void)
+{
+    int kolumner;
+    maskin_skarm(&maskin, &kolumner);
+    return kolumner;
 }
 
 EXPORT(punkter) uint32_t *punkter(void) { return bilden; }
@@ -257,10 +278,12 @@ EXPORT(bandlangd) double bandlangd(void)
          ? (double)kassett.spelas[kassett.antal_spelas - 1] / MASKIN_KLOCKA : 0;
 }
 
-/* Bildminnet (1 KB från $7C00), t.ex. för att kopiera skärmen som text. */
+/* Bildminnet som visas (1 KB från $7C00, eller med kolumner() == 80
+ * TKN80:s 2 KB från $5800), t.ex. för att kopiera skärmen som text. */
 EXPORT(bildminne) const uint8_t *bildminne(void)
 {
-    return maskin.minne + MASKIN_BILDMINNE;
+    int kolumner;
+    return maskin_skarm(&maskin, &kolumner);
 }
 
 /* ---------------------------------------------------------------- */

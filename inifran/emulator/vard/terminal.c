@@ -107,17 +107,22 @@ static int las_tangenter(Maskin *m)
 /* Rita skärmen om bildminnet har ändrats sedan förra gången. */
 static void rita(const Maskin *m)
 {
-    static uint8_t visad[0x400];
-    static int ritad;
-    const uint8_t *bild = m->minne + MASKIN_BILDMINNE;
-    if (ritad && !memcmp(visad, bild, sizeof visad))
+    static uint8_t visad[0x800];
+    static int ritad, visade_kolumner;
+    int kolumner;
+    const uint8_t *bild = maskin_skarm(m, &kolumner);
+    size_t storlek = kolumner == 80 ? 0x800 : 0x400;
+    if (ritad && kolumner == visade_kolumner && !memcmp(visad, bild, storlek))
         return;
-    memcpy(visad, bild, sizeof visad);
+    if (ritad && kolumner != visade_kolumner)
+        printf("\033[2J");                   /* TKN80 har bytt läge */
+    memcpy(visad, bild, storlek);
+    visade_kolumner = kolumner;
     ritad = 1;
-    char rad[TECKEN_RADLANGD + 40 * 10];
+    char rad[TECKEN_RADLANGD + TECKEN_KOLUMNER * 10];
     printf("\033[H");
     for (int r = 0; r < TECKEN_RADER; r++) {
-        tecken_rad(bild, r, rad, "\033[7m", "\033[27m");
+        tecken_rad(bild, kolumner, r, rad, "\033[7m", "\033[27m");
         printf("%s\033[K\r\n", rad);
     }
     printf("\033[2m-- ABC80 -- Ctrl-C två gånger avslutar --\033[0m\033[K");

@@ -28,6 +28,14 @@
  *     port 0-7       ABC-bussen (bussen.h): OUT 1 väljer kort, de andra
  *                    portarna går till det valda kortet
  *     port 6         ljudkretsen SN76477 (ljud.h), om värden har kopplat in den
+ * Med TKN80, MyAB:s kort för 80 tecken per rad (band 2, kapitlet Skärmen;
+ * MyAB:s bruksanvisning; MAME:s tkn80_state), finns dessutom:
+ *     $5800-$5FFF    kortets bildminne, 2 KB; $5C00-$5FFF är samma bytes
+ *                    som $7C00-$7FFF
+ *     $0000-$03FF,   i 80-teckensläget TKN80-III:s block för ROM:en (11273
+ *     $2000-$23FF    eller 9913), i 40-teckensläget ROM:ens egna
+ *     IN 3, IN 4     läsningen byter till 40 respektive 80 tecken och ger
+ *                    $FF; kortet startar i 80-teckensläget
  * Värden kan koppla in kort på bussen, en enhet på PIO B (V24-skrivaren),
  * kassetten (kassett.h) och krokar som anropas före och efter varje
  * instruktion.
@@ -49,6 +57,7 @@
 /* ms till T-cykler, exakt (2 995,2 per ms) */
 #define MASKIN_MS(ms)     ((long long)(ms) * MASKIN_KLOCKA / 1000)
 #define MASKIN_BILDMINNE  0x7C00
+#define MASKIN_TKN80      0x5800                 /* TKN80:s bildminne, 2 KB */
 
 #define TANGENTKO_STORLEK 65536
 #define V24_STORLEK       4096
@@ -141,6 +150,12 @@ struct Maskin {
     long long labb_tid[LABB_STORLEK];
     int antal_labb;
     uint8_t pio_b_skrivet;                   /* PIO B: det senast skrivna */
+
+    /* TKN80: blocken på $0000-$03FF och $2000-$23FF, [0] ROM:ens egna
+       (40 tecken) och [1] TKN80-III:s (80 tecken). */
+    int tkn80;                               /* kortet sitter i */
+    int tkn80_80;                            /* 80-teckensläget */
+    uint8_t tkn80_block[2][0x800];
 };
 
 /* Töm maskinen: minnet $FF och skrivskyddat, bildminnet blanksteg, RAM
@@ -167,6 +182,16 @@ void maskin_ram(Maskin *m, uint16_t adress, size_t storlek, uint8_t fyllnad);
  * står där efteråt och lägger tillbaka det nästa gång. Ger platsen i
  * minnet, där värden läser det. */
 uint8_t *maskin_cmos(Maskin *m, uint16_t adress, const uint8_t *data, size_t storlek);
+
+/* TKN80 med EPROM:en TKN80-III (4 KB), efter ROM:en: kortets bildminne
+ * och de block i EPROM:en som hör till ROM:en (11273 eller 9913).
+ * Kortet startar i 80-teckensläget. 0 om storleken är fel eller inget
+ * av blocken passar ROM:en (t.ex. BASIC II). */
+int maskin_tkn80(Maskin *m, const uint8_t *krets, size_t storlek);
+
+/* Skärmen som den visas: bildminnet och antalet tecken per rad, 40
+ * ($7C00) eller 80 (TKN80 i 80-teckensläget, $5800). */
+const uint8_t *maskin_skarm(const Maskin *m, int *kolumner);
 
 /* Processorn till startläget (efter att minnet är laddat). */
 void maskin_aterstall(Maskin *m);

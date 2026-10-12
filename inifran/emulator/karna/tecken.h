@@ -9,6 +9,10 @@
  * och mosaikgrafik (2 x 3 punkter) efter en grafikkod. Här blir varje
  * rad en sträng i UTF-8; mosaiken blir tecknen i Unicodes block
  * "Symbols for Legacy Computing" (U+1FB00-).
+ *
+ * Med TKN80 i 80-teckensläget är skärmen 24 rader om 80 tecken i
+ * kortets bildminne $5800-$5FFF, med samma mönster i dubbla steg:
+ *     $5800 + (r & 7) * $100 + (r >> 3) * 80
  */
 
 #ifndef TECKEN_H
@@ -17,19 +21,28 @@
 #include <stdint.h>
 
 #define TECKEN_RADER     24
-#define TECKEN_KOLUMNER  40
+#define TECKEN_KOLUMNER  80                      /* högst, med TKN80 */
 #define TECKEN_RADLANGD  (TECKEN_KOLUMNER * 16 + 1)  /* räcker för en rad */
 
-/* Raden rad (0-23) ur bildminnet (1 KB, från $7C00) som UTF-8 i ut, som
- * ska rymma TECKEN_RADLANGD bytes. Markören (bit 7; den syns inte på
+/* Var raden rad (0-23) börjar i bildminnet med kolumner (40 eller 80)
+ * tecken per rad. */
+static inline const uint8_t *tecken_radens_borjan(const uint8_t *bildminne,
+                                                  int kolumner, int rad)
+{
+    return bildminne + (rad & 7) * (kolumner == 80 ? 0x100 : 0x80) + (rad >> 3) * kolumner;
+}
+
+/* Raden rad (0-23) ur bildminnet (1 KB från $7C00 med 40 tecken per
+ * rad, 2 KB från $5800 med 80) som UTF-8 i ut, som ska rymma
+ * TECKEN_RADLANGD bytes. Markören (bit 7; den syns inte på
  * koder under $20, Isaksson och Kärrsgård 1980, s. 72-73) skrivs med fore
  * och efter runt tecknet, t.ex. "\033[7m" och "\033[27m" i en
  * terminal; med fore == NULL blir den ett '_'. */
-void tecken_rad(const uint8_t *bildminne, int rad, char *ut,
+void tecken_rad(const uint8_t *bildminne, int kolumner, int rad, char *ut,
                 const char *fore, const char *efter);
 
 /* Samma rad utan blanksteg i slutet. */
-void tecken_rad_kortad(const uint8_t *bildminne, int rad, char *ut);
+void tecken_rad_kortad(const uint8_t *bildminne, int kolumner, int rad, char *ut);
 
 /* ABC80:s kod för andra byten i ett UTF-8-tecken som börjar med $C3
  * (Å Ä Ö É Ü å ä ö é ü), eller 0 för andra tecken. */

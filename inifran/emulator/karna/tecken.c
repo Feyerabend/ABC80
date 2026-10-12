@@ -57,12 +57,12 @@ static unsigned mosaik(int punkter)
     return 0x1FB00 + punkter - 1 - (punkter > 21) - (punkter > 42);
 }
 
-void tecken_rad(const uint8_t *bildminne, int rad, char *ut,
+void tecken_rad(const uint8_t *bildminne, int kolumner, int rad, char *ut,
                 const char *fore, const char *efter)
 {
-    const uint8_t *p = bildminne + (rad & 7) * 0x80 + (rad >> 3) * TECKEN_KOLUMNER;
+    const uint8_t *p = tecken_radens_borjan(bildminne, kolumner, rad);
     int grafik = 0;
-    for (int k = 0; k < TECKEN_KOLUMNER; k++) {
+    for (int k = 0; k < kolumner; k++) {
         uint8_t kod = p[k] & 0x7F;
         int markor = p[k] & 0x80 && kod >= 0x20;  /* under $20 syns den inte */
         char tecknet[8];
@@ -95,9 +95,9 @@ void tecken_rad(const uint8_t *bildminne, int rad, char *ut,
     *ut = 0;
 }
 
-void tecken_rad_kortad(const uint8_t *bildminne, int rad, char *ut)
+void tecken_rad_kortad(const uint8_t *bildminne, int kolumner, int rad, char *ut)
 {
-    tecken_rad(bildminne, rad, ut, NULL, NULL);
+    tecken_rad(bildminne, kolumner, rad, ut, NULL, NULL);
     size_t n = strlen(ut);
     while (n > 0 && ut[n - 1] == ' ')
         ut[--n] = 0;

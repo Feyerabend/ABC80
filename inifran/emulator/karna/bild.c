@@ -15,18 +15,20 @@
  */
 
 #include "bild.h"
+#include "tecken.h"
 #include "teckensnitt.h"
 
 /* Mosaikens rader: var de börjar och slutar i rutan. */
 static const int mosaik_rad[4] = { 0, 3, 6, 10 };
 
-void bild_rita(const uint8_t *bildminne, uint32_t *punkter,
+void bild_rita(const uint8_t *bildminne, int kolumner, uint32_t *punkter,
                uint32_t forgrund, uint32_t bakgrund, int markor)
 {
+    int bredd = kolumner * 8;
     for (int rad = 0; rad < 24; rad++) {
-        const uint8_t *p = bildminne + (rad & 7) * 0x80 + (rad >> 3) * 40;
+        const uint8_t *p = tecken_radens_borjan(bildminne, kolumner, rad);
         int grafik = 0;
-        for (int kolumn = 0; kolumn < 40; kolumn++) {
+        for (int kolumn = 0; kolumn < kolumner; kolumn++) {
             uint8_t kod = p[kolumn] & 0x7F;
             int omvand = markor && (p[kolumn] & 0x80) && kod >= 0x20;
             uint32_t fg = omvand ? bakgrund : forgrund;
@@ -53,8 +55,8 @@ void bild_rita(const uint8_t *bildminne, uint32_t *punkter,
             if (kod >= 0x01 && kod <= 0x07)
                 grafik = 0;
 
-            uint32_t *ut = punkter + rad * 10 * BILD_BREDD + kolumn * 8;
-            for (int y = 0; y < 10; y++, ut += BILD_BREDD)
+            uint32_t *ut = punkter + rad * 10 * bredd + kolumn * 8;
+            for (int y = 0; y < 10; y++, ut += bredd)
                 for (int x = 0; x < 8; x++)
                     ut[x] = ruta[y] & 0x80 >> x ? fg : bg;
         }

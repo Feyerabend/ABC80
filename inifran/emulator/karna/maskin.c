@@ -26,9 +26,12 @@ static void skriv_minne(void *dator, uint16_t adress, uint8_t varde)
                (size_t)m->bankstorlek);
         return;
     }
-    if (!m->skydd[adress])
+    if (!m->skydd[adress]) {
         m->minne[adress] = varde;
-    else if (m->krokar.skyddad_skrivning)
+        /* TKN80: $5C00-$5FFF och $7C00-$7FFF är samma bytes. */
+        if (m->tkn80 && (adress & 0xDC00) == 0x5C00)
+            m->minne[adress ^ 0x2000] = varde;
+    } else if (m->krokar.skyddad_skrivning)
         m->krokar.skyddad_skrivning(m->krokar.data, m, adress, varde);
 }
 
@@ -62,11 +65,68 @@ static int labb_brytare(const Maskin *m)
 }
 
 /* ---------------------------------------------------------------- */
+/* TKN80                                                             */
+
+/* 40 eller 80 tecken: TKN80-III:s block eller ROM:ens egna på
+ * $0000-$03FF och $2000-$23FF. */
+static void tkn80_lage(Maskin *m, int atti)
+{
+    if (m->tkn80_80 == atti)
+        return;
+    m->tkn80_80 = atti;
+    memcpy(m->minne, m->tkn80_block[atti], 0x400);
+    memcpy(m->minne + 0x2000, m->tkn80_block[atti] + 0x400, 0x400);
+}
+
+int maskin_tkn80(Maskin *m, const uint8_t *krets, size_t storlek)
+{
+    if (storlek != 0x1000)
+        return 0;
+    /* EPROM:en har två block om 2 KB, för 9913 och för 11273. Båda är
+       ROM:ens kod med några få konstanter ändrade (52 bytes), så det
+       block som skiljer sig minst från ROM:en hör till den. */
+    int basta = 0, minst = 0x800;
+    for (int b = 0; b < 2; b++) {
+        int olika = 0;
+        for (int k = 0; k < 0x400; k++)
+            olika += (krets[b * 0x800 + k] != m->minne[k])
+                   + (krets[b * 0x800 + 0x400 + k] != m->minne[0x2000 + k]);
+        if (olika < minst) {
+            minst = olika;
+            basta = b;
+        }
+    }
+    if (minst >= 0x100)
+        return 0;
+    memcpy(m->tkn80_block[0], m->minne, 0x400);
+    memcpy(m->tkn80_block[0] + 0x400, m->minne + 0x2000, 0x400);
+    memcpy(m->tkn80_block[1], krets + basta * 0x800, 0x800);
+    maskin_ram(m, MASKIN_TKN80, 0x800, ' ');
+    memcpy(m->minne + 0x5C00, m->minne + MASKIN_BILDMINNE, 0x400);
+    m->tkn80 = 1;
+    m->tkn80_80 = 0;
+    tkn80_lage(m, 1);                        /* kortet startar med 80 tecken */
+    return 1;
+}
+
+const uint8_t *maskin_skarm(const Maskin *m, int *kolumner)
+{
+    *kolumner = m->tkn80_80 ? 80 : 40;
+    return m->minne + (m->tkn80_80 ? MASKIN_TKN80 : MASKIN_BILDMINNE);
+}
+
+/* ---------------------------------------------------------------- */
 /* Portarna                                                          */
 
 static uint8_t las_port(void *dator, uint16_t port)
 {
     Maskin *m = dator;
+    /* TKN80 läser port 3 och 4 (adressbit 3 och 5-7 spelar ingen roll,
+       som i MAME); på bussen går de bara att skriva till. */
+    if (m->tkn80 && ((port & 0x17) == 3 || (port & 0x17) == 4)) {
+        tkn80_lage(m, (port & 0x17) == 4);
+        return 0xFF;
+    }
     if (!(port & 0x10))                      /* adressbit 4 = 0: ABC-bussen */
         return bussen_in(&m->bussen, port & 0xFF);
     switch (port & 0xFF) {

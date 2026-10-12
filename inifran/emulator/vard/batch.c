@@ -28,13 +28,21 @@
 #include "../karna/tecken.h"
 #include "vard.h"
 
-static void skriv_skarm(const uint8_t *bildminne, const char *forst)
+static void skriv_skarm(const uint8_t *bildminne, int kolumner, const char *forst)
 {
     char rad[TECKEN_RADLANGD];
     for (int r = 0; r < TECKEN_RADER; r++) {
-        tecken_rad_kortad(bildminne, r, rad);
+        tecken_rad_kortad(bildminne, kolumner, r, rad);
         printf("%s%s\n", forst, rad);
     }
+}
+
+/* Skärmen som den visas, med 80 tecken per rad med TKN80. */
+static void skriv_maskinens_skarm(const Maskin *m)
+{
+    int kolumner;
+    const uint8_t *bildminne = maskin_skarm(m, &kolumner);
+    skriv_skarm(bildminne, kolumner, "");
 }
 
 void vard_skriv_minne(const Maskin *m, const char *omrade)
@@ -206,10 +214,10 @@ void batch_kor(Vard *v)
     if (v->anrop_adress >= 0) {
         anrop_skriv(v);
         if (v->skarmen_ocksa)
-            skriv_skarm(m->minne + MASKIN_BILDMINNE, "");
+            skriv_maskinens_skarm(m);
         return;
     }
-    skriv_skarm(m->minne + MASKIN_BILDMINNE, "");
+    skriv_maskinens_skarm(m);
     for (int k = 0; k < v->antal_visa_minne; k++)
         vard_skriv_minne(m, v->visa_minne[k]);
     if (v->tst_visa)
@@ -224,7 +232,7 @@ void batch_kor(Vard *v)
     if (v->ieckort && v->ieckort->logglangd)
         printf("%s\n", v->ieckort->logg);
     if (v->kortets_bildminne)
-        skriv_skarm(m->minne + 0x4000, "K:");
+        skriv_skarm(m->minne + 0x4000, 40, "K:");
     if (v->spara_skivor)
         spara_skivor(v);
 }

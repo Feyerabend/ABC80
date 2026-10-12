@@ -64,6 +64,16 @@ provprogram och vad det visar:
 
 I webbläsaren finns skrivaren i gruppen *Skrivaren P40*.
 
+`-tkn80 roms/tkn80-iii.rom` sätter i MyAB:s kort TKN80 för 80 tecken per
+rad, med 2 KB bildminne på $5800–$5FFF. Kortet startar i 80-teckensläget;
+`INP(3)` ger 40 tecken och `INP(4)` 80. `-B skarm.png` skriver skärmen
+som en bild (640 × 480) när emulatorn slutar:
+
+    ./abc80 -r roms/abc80new.rom -tkn80 roms/tkn80-iii.rom \
+            -k 'PRINT PEEK(885)\r' -B skarm.png
+
+I webbläsaren är det rutan *TKN80* under *Maskinen*, eller `?tkn80=pa`.
+
 `-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
 Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när
 emulatorn slutar (`-M fil@adr` för en annan adress). I webbläsaren sparas
