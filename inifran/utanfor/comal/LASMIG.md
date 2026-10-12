@@ -45,7 +45,7 @@ BASIC II:s WHILE/WEND. Bokens filer och ROM:arna i `emulator/roms/`
   2,9952 MHz, från CR efter `RUN` till `READY` ($00CC i ABC80, $0110 i
   BASIC II), mätt med `../tolkjamforelse/prof`. ABC80 har 16 KB RAM
   och BASIC II 32 KB.
-- *Platsen.* Kretsen ligger på $4000-$4865, där Superbasic låg
+- *Platsen.* Kretsen ligger på $4000-$48A6, där Superbasic låg
   ($4000-$57FF). ROM:en får bara hoppen dit: KWSRCH letar i kretsens
   ordlista, PRELNK länkar blocken och LIST drar in. Det är en krets till
   i maskinen, som i tolkjamforelse.
