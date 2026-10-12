@@ -18,7 +18,7 @@ Patch names start with `a_` for the ABC80 and `b_` for BASIC II.
 
 - *The ABC80 BASIC could have run 14-31 % faster without any change to
   the language.* It takes seven changes, about 730 bytes of code and
-  512 bytes of tables in an add-on ROM at $5000, plus a few jumps in the
+  512 bytes of tables in an add-on ROM at `$5000`, plus a few jumps in the
   old ROM. Every test gives the same screen, the same errors and the
   same numbers (B1 and FIZZ1 gain only 3.5-3.8 %).
 - *The time is spent in three places.* They are the BCD division, the
@@ -47,7 +47,7 @@ Patch names start with `a_` for the ABC80 and `b_` for BASIC II.
 
 - *The emulator, not a real machine.* The time is the emulator's
   T-states at 2.9952 MHz, from the moment CR after `RUN` is pressed
-  until the interpreter is back in `READY` ($00CC in the ABC80, $0110 in
+  until the interpreter is back in `READY` (`$00CC` in the ABC80, `$0110` in
   BASIC II). Everything written to the screen is included. BASIC II in
   the emulator agrees with the author's measurements on a real ABC 802:
   B3 5.98 against 5.91 s, B7 19.83 against 19.84, NOEL1 7.84 against
@@ -57,11 +57,11 @@ Patch names start with `a_` for the ABC80 and `b_` for BASIC II.
 - *The ABC80 ROM.* The changes apply to the old ROM (abc80old). The new
   one runs equally fast in every test.
 - *Where the changes go.* The ABC80 ROM is nearly full. The new
-  routines are therefore placed in a chip at $5000, like an add-on ROM,
+  routines are therefore placed in a chip at `$5000`, like an add-on ROM,
   and the ROM only gets the jumps that lead there. That is one more chip
-  in the machine. In BASIC II the patches are at $0450-$05D3. Only
-  zeros are there ($044A-$06A9), because the ABC800 M cassette driver
-  CAS: was removed in the ABC80 version. $7800-$7FFF is $FF in the ROM
+  in the machine. In BASIC II the patches are at `$0450-$05D3`. Only
+  zeros are there (`$044A-$06A9`), because the ABC800 M cassette driver
+  CAS: was removed in the ABC80 version. `$7800-$7FFF` is `$FF` in the ROM
   file but not free in the machine; see "What turned up along the way".
 - *Nothing in the language changes.* Numbers are computed with the same
   BCD and the same rounding, and the code written by the compiler is
@@ -94,7 +94,7 @@ Patch names start with `a_` for the ABC80 and `b_` for BASIC II.
 | `kor.sh`      | runs the tests in the old and new ABC80 ROM and in BASIC II |
 | `profil.py`   | sums a profile per routine (names from the listings)        |
 | `handelser.py`| counts lines, statements and expression codes per test      |
-| `lappa.py`    | builds patched ROMs (and for the ABC80 a chip at $5000)     |
+| `lappa.py`    | builds patched ROMs (and for the ABC80 a chip at `$5000`)     |
 | `lapp/*.asm`  | the changes, one file each, with a description at the top   |
 | `lapptid.sh`  | runs the tests with a patched ROM and compares time and screen |
 | `prov/*.BAS`  | the tests                                                   |
@@ -145,10 +145,10 @@ From the profiles (`profil.py`, the routines named in the listings):
   in BASIC II, 17 % to FDIV and 13 % to FMUL. The ABC80 multiplication
   already skips zero bits but builds a table (2a ... 80a) every time.
 - *The expression codes.* The ABC80 goes through EXEXP for every code:
-  RST $28, INC SP twice, JP, PUSH HL and the table lookup, about 135 T.
+  RST `$28`, INC SP twice, JP, PUSH HL and the table lookup, about 135 T.
   EXEXP is 17-25 % of the time in the integer tests. BASIC II's EXECA
   is an equally large share, but each code does more. There the codes
-  are chained with RST $28 (EXECNX), about 98 T per code.
+  are chained with RST `$28` (EXECNX), about 98 T per code.
 - *Lines and statements.* The ABC80 tests TRACE for every line and calls
   TSTBRK for every statement (82 T); RUNLIN and RUNSTM are 20 % of
   NOEL1. BASIC II tests everything (BREAK, TRACE, CTRL-S) on one flag
@@ -170,7 +170,7 @@ chip).
 | Patch    | Interpreter | Bytes | What |
 |----------|----------|------|-----|
 | `a_brk`  | ABC80    |    8 | the BREAK flag is read directly in RUNSTM (27 T instead of 82); TSTBRK's clearing is done only when BREAK has come |
-| `a_tab`  | ABC80    | 19+512 | EXEXP looks up the code in two tables on whole pages ($5E00, $5F00), 82 T instead of 91, with the same B, C and CY as before |
+| `a_tab`  | ABC80    | 19+512 | EXEXP looks up the code in two tables on whole pages (`$5E00`, `$5F00`), 82 T instead of 91, with the same B, C and CY as before |
 | `a_var`  | ABC80    |   35 | VAR0 checks whether the next code is GETF or GETI and fetches the value directly; the generated code is the same |
 | `a_sup`  | ABC80    |  297 | as `a_var`, and VAR0 also recognises `V=V+X` and `V=V-X` (X a constant or a variable of the same type) and does the whole statement itself |
 | `a_madd` | ABC80    |   37 | the addition in FMUL (MADD3 and the top byte) with HL instead of (IX+n) |
@@ -179,7 +179,7 @@ chip).
 | `a_fdiv` | ABC80    |   72 | the subtractions in FDIV (FDLOOP) with HL and DE instead of (IX+n) |
 | `b_mul`  | BASIC II |   28 | index times element size in ARRELM with a loop that stops when the size is used up (2-3 iterations) instead of MUL16 |
 | `b_nxt`  | BASIC II |   95 | NEXT for an integer variable with HL through the block instead of (IX+n) |
-| `b_sup`  | BASIC II |  257 | the statement loop recognises `V=V+X` and `V=V-X` (integer and floating point) and does the statement itself |
+| `b_sup`  | BASIC II |  260 | the statement loop recognises `V=V+X` and `V=V-X` (integer and floating point) and does the statement itself |
 
 The sets are:
 
@@ -304,14 +304,14 @@ before and after):
   and HL instead of IX up to the type.
 
   The first version computed the block and the variable's reference,
-  tested the type and then left floats to the ROM at $2816, where
+  tested the type and then left floats to the ROM at `$2816`, where
   everything was done again. It lost 130 T per NEXT, 5.1 % in B1 and
   2.4 % in NOEL. Two ways of avoiding that were tried:
   - the type first, with block + 6 computed in A before anything else:
     the loss becomes about 78 T (3.0 % in B1), but integers get 26 T
     more and NOEL1 gains only 0.3 %;
   - the variable's address and VFF36 before the type, and floats to the
-    ROM's floating-point path at $285E with IX and HL as the ROM has
+    ROM's floating-point path at `$285E` with IX and HL as the ROM has
     them there. No work is redone, and the integer path is the same.
     That is the patch now.
 - *`a_sup` is a pattern, not a new code.*
@@ -341,13 +341,13 @@ before and after):
 - *`b_sup` is the same pattern in BASIC II.* It gives less than in the
   ABC80, because BASIC II already has one code per variable.
   - *The code.* `S%=S%+J%` compiles to `C1 r | C1 r' | 9C | B5 r`, four
-    codes through EXECA. X can also be a small integer ($DD-$FF) or
+    codes through EXECA. X can also be a small integer (`$DD-$FF`) or
     INTCON (`C7 lo hi`). `K=K+X` compiles to `C0 r | X | 9B | B4 r` (9E
-    for minus), where X is a variable or a constant ($D5-$DC and 1-8
+    for minus), where X is a variable or a constant (`$D5-$DC` and 1-8
     bytes).
   - *Where it sits.* The statement loop calls EXECA for the statement's
-    first code ($1D1A). The patch takes that call. The codes inside an
-    expression and FOR's assignment (RST $20) do not go there and cost
+    first code (`$1D1A`). The patch takes that call. The codes inside an
+    expression and FOR's assignment (RST `$20`) do not go there and cost
     nothing.
   - *When the pattern does not match*, the patch goes straight to LDIVAR
     or LDFVAR, since the lookup in EXECA has already been done. The
@@ -372,7 +372,7 @@ ways.
   - `fprov` calls FMUL and FDIV in the unpatched and the patched ROM
     with the same numbers. It compares the result's five bytes, A, F,
     BC, DE, HL and error 4.
-  - The numbers are edge cases (exponent 1, 2, $7F-$82, $FE, $FF;
+  - The numbers are edge cases (exponent 1, 2, `$7F-$82`, `$FE`, `$FF`;
     mantissas such as 999999, 999995, 100001 and 500005), numbers with
     one to three digits, a·a and a/a, in both states of the rounding
     flag.
@@ -457,7 +457,7 @@ ways.
       DE and take the line from CURLIN, so EX DE,HL before the jump does
       not matter.
     - Error 0 always goes to READY, which calls TSTBRK after INLINE
-      ($00F0), so BRKFLG is cleared there anyway.
+      (`$00F0`), so BRKFLG is cleared there anyway.
 
     Both instructions are kept, as in TSTBRK, but are not needed.
   - *`b_nxt`.*
@@ -465,9 +465,9 @@ ways.
       step, four edge cases fail.
     - In the floating-point path, three faults each show up in three
       edge cases (for_flyt, for_flyt2, for_bland): HL not swapped with
-      DE, a jump past the addition ($2865), and IY instead of IX.
+      DE, a jump past the addition (`$2865`), and IY instead of IX.
     - Without the write to VFF36 nothing is noticed. VFF36 is written at
-      $22D1 and $2826 but read nowhere in the ROM, so the patch writes
+      `$22D1` and `$2826` but read nowhere in the ROM, so the patch writes
       it only because the ROM does.
   - *`a_tab`.*
     - With B ≠ 0 there are six failures (functions, strings).
@@ -495,12 +495,12 @@ ways.
 
     The six that are not noticed are explained by the listing:
     - Four remove the test for GETI or GETF after the first variable or
-      after X. PRIMARY always writes $D4 or $D5 directly after a
+      after X. PRIMARY always writes `$D4` or `$D5` directly after a
       variable in an expression, so the test is a safeguard that never
       triggers.
     - Two leave a wrong HL or B after the statement. The assignment is
       only received by LET, which returns to RUNSTM, and by FOR, which
-      overwrites HL and B with the next RST $38. Nobody reads them.
+      overwrites HL and B with the next RST `$38`. Nobody reads them.
 
     Both kinds are kept, as in the ROM.
   - *`b_sup`.* 18 of 25 faults give something different:
@@ -518,7 +518,7 @@ ways.
 
     Seven are not noticed:
     - B, C and HL wrong after the integer statement, and VFF36 not
-      written. FOR never goes through $1D1A, and the statement loop
+      written. FOR never goes through `$1D1A`, and the statement loop
       (L1D1D) overwrites B, C and HL before anyone reads them. VFF36 is
       read nowhere.
     - IX not set after a constant. Nothing after the statement reads IX
@@ -528,7 +528,7 @@ ways.
       changes the time: B2 runs 1.5 % slower instead of 4.6 % faster.
     - Only the low reference byte tested in the floating-point path.
       That is not a fault. STFVAR reads the target from the code, so
-      `A1=Q1+1` with Q1 = $1108 and A1 = $0108 comes out right
+      `A1=Q1+1` with Q1 = `$1108` and A1 = `$0108` comes out right
       (`sup_b2g`). The test only delimits the pattern.
 
 ## Would a rewrite have paid off?
@@ -569,8 +569,8 @@ parts.
   text, can be loaded and recompiled. With a new number format the
   numbers in the BAC files' constants change too.
 - *The add-ons.* The add-on ROMs call the ROM at fixed addresses. The
-  DOS ROMs (abcdos80, ufd80) call the jump vectors $000B-$0044 and three
-  internal routines ($0727, $0901 and LNKSRC $1074). SuperBASIC and
+  DOS ROMs (abcdos80, ufd80) call the jump vectors `$000B-$0044` and three
+  internal routines (`$0727`, `$0901` and LNKSRC `$1074`). SuperBASIC and
   Schoolaid each call 44 addresses inside the ROM (counted in the
   listings in `../../dis/build`). Machine-code programs using CALL do
   the same. A new interpreter would have to keep every such entry
@@ -583,7 +583,7 @@ parts.
   FOR with STEP 0.1 or `IF X=0.3`. That is a change of the language,
   not of the interpreter.
 - *Space.* 16 KB of ROM is nearly full. The patches already need an
-  extra chip at $5000 for 730 bytes of code and 512 bytes of tables.
+  extra chip at `$5000` for 730 bytes of code and 512 bytes of tables.
   BASIC II needs 30 KB. An interpreter with binary floating point and
   the same language in 16 KB would have required something else to be
   removed. In 1978 one more ROM chip cost money in every machine.
@@ -617,30 +617,30 @@ and users, that was a new machine, not another round.
 
 ## What turned up along the way
 
-- *The DIM bug in the ABC80 ROM.* When CMPARG fails in CMPDMI ($1BD5,
+- *The DIM bug in the ABC80 ROM.* When CMPARG fails in CMPDMI (`$1BD5`,
   e.g. `DIM A` without an index or `DIM B$(1,2,3)`), it jumps to CMPERR
-  with AF from $1BD1 still on the stack. POP BC takes AF instead of BC,
-  and RET jumps to VARNAM's result: the letter ($41-$5D) as the high
+  with AF from `$1BD1` still on the stack. POP BC takes AF instead of BC,
+  and RET jumps to VARNAM's result: the letter (`$41-$5D`) as the high
   byte, the digit and type as the low.
-  - On an ABC80 with nothing at $4100-$5DFF, $FF is read there. That is
-    RST $38, and the error becomes ERR 4 by chance. An add-on ROM with
+  - On an ABC80 with nothing at `$4100-$5DFF`, `$FF` is read there. That is
+    RST `$38`, and the error becomes ERR 4 by chance. An add-on ROM with
     code at those addresses runs that code.
-  - The first chip was at $4000, and the tables at $4100 and $4200 gave
+  - The first chip was at `$4000`, and the tables at `$4100` and `$4200` gave
     ERR 5 and ERR 14 in the book's test dim4.
-  - The chip is now at $5000 with the patches in the gaps $x93-$xEF,
+  - The chip is now at `$5000` with the patches in the gaps `$x93-$xEF`,
     and `lappa.py` refuses to build if any code lands on an address the
     bug can jump to.
-- *$7800-$7FFF is not free in BASIC II.* The area is $FF in the ROM
+- *`$7800-$7FFF` is not free in BASIC II.* The area is `$FF` in the ROM
   file, and the patches were there at first. But in the machine
-  $7800-$7BFF is RAM for the disk drives' DOS, with device entries and
-  buffers, and $7C00- is the screen. abc80host does the same with `-F`.
+  `$7800-$7BFF` is RAM for the disk drives' DOS, with device entries and
+  buffers, and `$7C00`- is the screen. abc80host does the same with `-F`.
   There the book's tests wrote their file buffers over the patch, and
   13 BASIC II tests failed. The patches are now in the zeros after the
-  cassette driver ($044A-$06A9), and `lappa.py` refuses to put them
+  cassette driver (`$044A-$06A9`), and `lappa.py` refuses to put them
   anywhere else.
-- *BREAK lost in the IEC ROM.* CHKBRK ($7028) reads BRKFLG, tests it and
+- *BREAK lost in the IEC ROM.* CHKBRK (`$7028`) reads BRKFLG, tests it and
   writes 0. If the keyboard interrupt comes between the read and the
-  write, BREAK disappears. TSTBRK ($033E) in the ABC80 ROM does the
+  write, BREAK disappears. TSTBRK (`$033E`) in the ABC80 ROM does the
   same. The unpatched ROM also loses BREAK with certain instruction
   timings in the emulator; the patch only moves where it happens.
 - *Integers that wrap around.* In both interpreters `FOR I%=... TO
@@ -653,8 +653,8 @@ and users, that was a new machine, not another round.
   FCMP only looks at the exponent when it is 0, so a comparison does not
   see it.
 - *BASIC II's references.* A variable's reference in the code (VARREF,
-  $0F63) is not a sequence number. It depends on the name: in one of
-  the edge cases A1 has the reference $0108 and Q1 $1108. Two variables
+  `$0F63`) is not a sequence number. It depends on the name: in one of
+  the edge cases A1 has the reference `$0108` and Q1 `$1108`. Two variables
   with the same digit therefore share a low byte, and that is how
   `sup_b2g` tests the reference comparison.
 

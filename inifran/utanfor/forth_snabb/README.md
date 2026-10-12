@@ -4,7 +4,7 @@
 example 7 in volume 2: how much of its slowness comes from the stack
 checking, and what does it cost in safety to make the checking cheaper?
 Everything else is as in the book; the comparison concerns the
-interpreter as a chip at $4000 (`e7ip`, the same as
+interpreter as a chip at `$4000` (`e7ip`, the same as
 `emulator/exempel/krets/forth.bin`).
 
 This is an English version of `LASMIG.md` ("läs mig", read me). File
@@ -13,7 +13,7 @@ names are Swedish: *gör* means make, *mätning* measurement, *tid* time.
 | File              | What                                                       |
 |-------------------|------------------------------------------------------------|
 | `gor.sh`          | builds `forth_snabb.bin` from a copy of the book's sources |
-| `forth_snabb.bin` | the interpreter as a chip at $4000 with the new `BRANCH`   |
+| `forth_snabb.bin` | the interpreter as a chip at `$4000` with the new `BRANCH`   |
 | `forth_snabb.lst` | the listing from z80asm                                    |
 | `matning.sh`      | measures BASIC, the book's interpreter and the variant     |
 | `TID.BAS`         | the BASIC part of the measurement                          |

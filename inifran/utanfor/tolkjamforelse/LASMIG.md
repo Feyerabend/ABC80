@@ -12,7 +12,7 @@ och ROM:arna i `emulator/roms/` ändras inte.
 
 - *ABC80-BASIC:en kunde ha gått 14-31 % fortare utan att språket
   ändrades.* Det kräver sju ändringar, omkring 730 byte kod och 512
-  byte tabeller i en tilläggs-ROM på $5000, plus några hopp i den gamla
+  byte tabeller i en tilläggs-ROM på `$5000`, plus några hopp i den gamla
   ROM:en. Varje prov ger samma skärm, samma fel och samma tal (B1 och
   FIZZ1 vinner bara 3,5-3,8 %).
 - *Tiden sitter på tre ställen.* Det är BCD-divisionen, satsslingan
@@ -38,7 +38,7 @@ och ROM:arna i `emulator/roms/` ändras inte.
 
 - *Emulatorn, inte en riktig maskin.* Tiden är emulatorns T-cykler vid
   2,9952 MHz, från att CR efter `RUN` trycks ned tills tolken är
-  tillbaka i `READY` ($00CC i ABC80, $0110 i BASIC II). Allt som skrivs
+  tillbaka i `READY` (`$00CC` i ABC80, `$0110` i BASIC II). Allt som skrivs
   på skärmen ingår. BASIC II i emulatorn stämmer med användarens
   mätningar på en riktig ABC 802: B3 5,98 mot 5,91 s, B7 19,83 mot 19,84,
   NOEL1 7,84 mot 8,01 och MANDEL 92,6 mot 93. Mot en riktig ABC80 är det
@@ -47,11 +47,11 @@ och ROM:arna i `emulator/roms/` ändras inte.
 - *ABC80-ROM:en.* Ändringarna gäller den gamla ROM:en (abc80old). Den
   nya går lika fort i alla prov.
 - *Platsen för ändringarna.* ABC80:s ROM är nästan full. De nya
-  rutinerna ligger därför i en krets på $5000, som en tilläggs-ROM, och
+  rutinerna ligger därför i en krets på `$5000`, som en tilläggs-ROM, och
   ROM:en får bara de hopp som leder dit. Det är en krets till i maskinen.
-  I BASIC II ligger lapparna i $0450-$05D3. Där står bara nollor
-  ($044A-$06A9), för ABC800 M:s kassettdrivrutin CAS: togs bort i
-  ABC80-versionen. $7800-$7FFF är $FF i ROM-filen men inte ledigt i
+  I BASIC II ligger lapparna i `$0450-$05D3`. Där står bara nollor
+  (`$044A-$06A9`), för ABC800 M:s kassettdrivrutin CAS: togs bort i
+  ABC80-versionen. `$7800-$7FFF` är `$FF` i ROM-filen men inte ledigt i
   maskinen, se "Vad som kom fram på vägen".
 - *Inget i språket ändras.* Talen räknas med samma BCD och samma
   avrundning, och koden som kompilatorn skriver är densamma. Ingen ny
@@ -83,7 +83,7 @@ och ROM:arna i `emulator/roms/` ändras inte.
 | `kor.sh`      | kör proven i gamla och nya ABC80-ROM:en och i BASIC II      |
 | `profil.py`   | summerar en profil per rutin (namnen ur listningarna)       |
 | `handelser.py`| räknar rader, satser och uttryckskoder per prov             |
-| `lappa.py`    | bygger lappade ROM:ar (och för ABC80 en krets på $5000)     |
+| `lappa.py`    | bygger lappade ROM:ar (och för ABC80 en krets på `$5000`)     |
 | `lapp/*.asm`  | ändringarna, en fil var, med en beskrivning överst          |
 | `lapptid.sh`  | kör proven med en lappad ROM och jämför tid och skärm        |
 | `prov/*.BAS`  | proven                                                       |
@@ -132,10 +132,10 @@ Ur profilerna (`profil.py`, rutinerna med namn i listningarna):
   (FDLOOP) och omkring 30 % till i multiplikationen och skiftningarna;
   i BASIC II 17 % i FDIV och 13 % i FMUL. ABC80:s multiplikation hoppar
   redan över nollbitar men bygger en tabell (2a ... 80a) för varje gång.
-- *Uttryckskoderna.* ABC80 går genom EXEXP för varje kod: RST $28,
+- *Uttryckskoderna.* ABC80 går genom EXEXP för varje kod: RST `$28`,
   INC SP två gånger, JP, PUSH HL och tabelluppslaget, omkring 135 T.
   EXEXP är 17-25 % av tiden i heltalsproven. BASIC II:s EXECA är lika
-  stor andel, men varje kod gör mer. Där kedjas koderna med RST $28
+  stor andel, men varje kod gör mer. Där kedjas koderna med RST `$28`
   (EXECNX), omkring 98 T per kod.
 - *Raderna och satserna.* ABC80 prövar TRACE för varje rad och
   anropar TSTBRK för varje sats (82 T); RUNLIN och RUNSTM är 20 % av
@@ -157,7 +157,7 @@ bygger `ut/namn.rom`, och för ABC80 också `ut/namn.krets`.
 | Lapp     | Tolk     | Byte | Vad |
 |----------|----------|------|-----|
 | `a_brk`  | ABC80    |    8 | BREAK-flaggan läses direkt i RUNSTM (27 T i stället för 82); TSTBRK:s nollställning görs bara när BREAK kommit |
-| `a_tab`  | ABC80    | 19+512 | EXEXP slår upp koden i två tabeller på hela sidor ($5E00, $5F00), 82 T i stället för 91, med samma B, C och CY som förut |
+| `a_tab`  | ABC80    | 19+512 | EXEXP slår upp koden i två tabeller på hela sidor (`$5E00`, `$5F00`), 82 T i stället för 91, med samma B, C och CY som förut |
 | `a_var`  | ABC80    |   35 | VAR0 ser efter om nästa kod är GETF eller GETI och hämtar värdet direkt; koden som genereras är densamma |
 | `a_sup`  | ABC80    |  297 | som `a_var`, och VAR0 känner dessutom igen `V=V+X` och `V=V-X` (X en konstant eller variabel av samma typ) och gör hela satsen själv |
 | `a_madd` | ABC80    |   37 | additionen i FMUL (MADD3 och den översta byten) med HL i stället för (IX+n) |
@@ -166,7 +166,7 @@ bygger `ut/namn.rom`, och för ABC80 också `ut/namn.krets`.
 | `a_fdiv` | ABC80    |   72 | subtraktionerna i FDIV (FDLOOP) med HL och DE i stället för (IX+n) |
 | `b_mul`  | BASIC II |   28 | index gånger steget i ARRELM med en slinga som slutar när steget är slut (2-3 varv) i stället för MUL16 |
 | `b_nxt`  | BASIC II |   95 | NEXT för en heltalsvariabel med HL genom blocket i stället för (IX+n) |
-| `b_sup`  | BASIC II |  257 | satsslingan känner igen `V=V+X` och `V=V-X` (heltal och flyttal) och gör satsen själv |
+| `b_sup`  | BASIC II |  260 | satsslingan känner igen `V=V+X` och `V=V-X` (heltal och flyttal) och gör satsen själv |
 
 Uppsättningarna är följande:
 
@@ -290,14 +290,14 @@ efter):
   till typen.
 
   Den första versionen räknade fram blocket och variabelns referens,
-  prövade typen och lämnade sedan flyttalen till ROM:en på $2816, där
+  prövade typen och lämnade sedan flyttalen till ROM:en på `$2816`, där
   allt gjordes om. Den förlorade 130 T per NEXT, 5,1 % i B1 och 2,4 % i
   NOEL. Två sätt att undvika det är prövade:
   - typen först, med blocket + 6 räknat i A före allt annat: förlusten
     blir omkring 78 T (3,0 % i B1), men heltalen får 26 T mer och NOEL1
     vinner bara 0,3 %;
   - variabelns adress och VFF36 före typen, och flyttalen till ROM:ens
-    flyttalsväg på $285E med IX och HL som ROM:en har dem där. Inget
+    flyttalsväg på `$285E` med IX och HL som ROM:en har dem där. Inget
     arbete görs om, och heltalsvägen är densamma. Det är lappen nu.
 - *`a_sup` är ett mönster, inte en ny kod.*
   - *Koden.* `C%=C%+1%` kompileras till
@@ -323,13 +323,13 @@ efter):
 - *`b_sup` är samma mönster i BASIC II.* Det ger mindre än i ABC80,
   eftersom BASIC II redan har en kod per variabel.
   - *Koden.* `S%=S%+J%` kompileras till `C1 r | C1 r' | 9C | B5 r`,
-    fyra koder genom EXECA. X kan också vara ett litet heltal ($DD-$FF)
+    fyra koder genom EXECA. X kan också vara ett litet heltal (`$DD-$FF`)
     eller INTCON (`C7 lo hi`). `K=K+X` kompileras till
     `C0 r | X | 9B | B4 r` (9E för minus), där X är en variabel eller en
-    konstant ($D5-$DC och 1-8 byte).
+    konstant (`$D5-$DC` och 1-8 byte).
   - *Var den sitter.* Satsslingan anropar EXECA för satsens första kod
-    ($1D1A). Lappen tar det anropet. Koderna inne i ett uttryck och FOR:s
-    tilldelning (RST $20) går inte dit och kostar inget.
+    (`$1D1A`). Lappen tar det anropet. Koderna inne i ett uttryck och FOR:s
+    tilldelning (RST `$20`) går inte dit och kostar inget.
   - *När mönstret inte stämmer* går lappen direkt till LDIVAR eller
     LDFVAR, för uppslaget i EXECA är redan gjort. Den första versionen
     satt i LDIVAR:s tabellpost och förlorade tid i SIEVE och FIZZ1.
@@ -351,7 +351,7 @@ de 16 proven gör. Ändringarna är därför prövade på fyra sätt till.
   - `fprov` anropar FMUL och FDIV i den olappade och den lappade ROM:en
     med samma tal. Den jämför resultatets fem byte, A, F, BC, DE, HL och
     fel 4.
-  - Talen är kanttal (exponent 1, 2, $7F-$82, $FE, $FF; mantissor som
+  - Talen är kanttal (exponent 1, 2, `$7F-$82`, `$FE`, `$FF`; mantissor som
     999999, 999995, 100001 och 500005), tal med en till tre siffror, a·a
     och a/a, i båda lägena av avrundningsflaggan.
   - Det blir 300 000 fall per rutin med `a_flt` och lika många med
@@ -430,7 +430,7 @@ de 16 proven gör. Ändringarna är därför prövade på fyra sätt till.
       och DE och tar raden ur CURLIN, så EX DE,HL före hoppet spelar
       ingen roll.
     - Fel 0 går alltid till READY, som anropar TSTBRK efter INLINE
-      ($00F0), så BRKFLG nollställs där ändå.
+      (`$00F0`), så BRKFLG nollställs där ändå.
 
     Båda instruktionerna är kvar, som i TSTBRK, men behövs inte.
   - *`b_nxt`.*
@@ -438,9 +438,9 @@ de 16 proven gör. Ändringarna är därför prövade på fyra sätt till.
       kantfall fel.
     - I flyttalsvägen ger tre fel var sitt utslag i tre kantfall
       (for_flyt, for_flyt2, for_bland): HL inte bytt mot DE, hopp förbi
-      additionen ($2865), och IY i stället för IX.
+      additionen (`$2865`), och IY i stället för IX.
     - Utan skrivningen till VFF36 märks ingenting. VFF36 skrivs på
-      $22D1 och $2826 men läses ingenstans i ROM:en, så lappen skriver
+      `$22D1` och `$2826` men läses ingenstans i ROM:en, så lappen skriver
       den bara för att ROM:en gör det.
   - *`a_tab`.*
     - Med B ≠ 0 blir det sex fel (funktioner, strängar).
@@ -465,12 +465,12 @@ de 16 proven gör. Ändringarna är därför prövade på fyra sätt till.
 
     De sex som inte märks förklaras av listningen:
     - Fyra tar bort prövningen av GETI eller GETF efter den första
-      variabeln eller efter X. PRIMARY skriver alltid $D4 eller $D5
+      variabeln eller efter X. PRIMARY skriver alltid `$D4` eller `$D5`
       direkt efter en variabel i ett uttryck, så prövningen är ett skydd
       som aldrig slår till.
     - Två lämnar fel HL eller B efter satsen. Tilldelningen tas bara
       emot av LET, som går tillbaka till RUNSTM, och av FOR, som skriver
-      över HL och B med nästa RST $38. Ingen läser dem.
+      över HL och B med nästa RST `$38`. Ingen läser dem.
 
     Båda sorterna är kvar, som i ROM:en.
   - *`b_sup`.* 18 av 25 fel ger något annat:
@@ -487,7 +487,7 @@ de 16 proven gör. Ändringarna är därför prövade på fyra sätt till.
 
     Sju märks inte:
     - B, C och HL fel efter heltalssatsen och VFF36 inte skriven. FOR
-      går aldrig genom $1D1A, och satsslingan (L1D1D) skriver över B, C
+      går aldrig genom `$1D1A`, och satsslingan (L1D1D) skriver över B, C
       och HL innan någon läser dem. VFF36 läses ingenstans.
     - IX inte satt efter en konstant. Inget efter satsen läser IX innan
       det sätts.
@@ -495,8 +495,8 @@ de 16 proven gör. Ändringarna är därför prövade på fyra sätt till.
       och ROM:en gör satsen som förut. Det ändrar bara tiden: B2 går
       1,5 % långsammare i stället för 4,6 % fortare.
     - Bara den låga referensbyten prövad i flyttalsvägen. Det är inget
-      fel. STFVAR läser målet ur koden, så `A1=Q1+1` med Q1 = $1108 och
-      A1 = $0108 blir rätt (`sup_b2g`). Prövningen avgränsar bara
+      fel. STFVAR läser målet ur koden, så `A1=Q1+1` med Q1 = `$1108` och
+      A1 = `$0108` blir rätt (`sup_b2g`). Prövningen avgränsar bara
       mönstret.
 
 ## Hade en omskrivning lönat sig?
@@ -534,8 +534,8 @@ en annan kod, och den behöver 30 KB ROM i stället för 16.
   som text, går att läsa in och kompilera om. Med en ny talform ändras
   också talen i BAC-filernas konstanter.
 - *Tilläggen.* Tilläggs-ROM:arna anropar ROM:en på fasta adresser.
-  DOS-ROM:arna (abcdos80, ufd80) anropar hoppvektorerna $000B-$0044 och
-  tre inre rutiner ($0727, $0901 och LNKSRC $1074). SuperBASIC och
+  DOS-ROM:arna (abcdos80, ufd80) anropar hoppvektorerna `$000B-$0044` och
+  tre inre rutiner (`$0727`, `$0901` och LNKSRC `$1074`). SuperBASIC och
   Schoolaid anropar 44 adresser var inne i ROM:en (räknat i listningarna
   i `../../dis/build`). Maskinkodsprogram med CALL gör detsamma. En ny
   tolk måste ha kvar varje sådan ingång, med samma register in och ut,
@@ -547,7 +547,7 @@ en annan kod, och den behöver 30 KB ROM i stället för 16.
   annan väg, till exempel FOR med STEP 0.1 eller `IF X=0.3`. Det är en
   ändring av språket, inte av tolken.
 - *Utrymmet.* 16 KB ROM är nästan fullt. Lapparna behöver redan en
-  krets till på $5000 för 730 byte kod och 512 byte tabeller. BASIC II
+  krets till på `$5000` för 730 byte kod och 512 byte tabeller. BASIC II
   behöver 30 KB. En tolk med binära flyttal och samma språk i 16 KB hade
   krävt att något annat togs bort. 1978 kostade en ROM-krets till
   pengar i varje maskin.
@@ -578,29 +578,29 @@ ny omgång.
 
 ## Vad som kom fram på vägen
 
-- *DIM-felet i ABC80:s ROM.* När CMPARG går fel i CMPDMI ($1BD5,
+- *DIM-felet i ABC80:s ROM.* När CMPARG går fel i CMPDMI (`$1BD5`,
   t.ex. `DIM A` utan index eller `DIM B$(1,2,3)`) hoppar den till
-  CMPERR med AF från $1BD1 kvar på stacken. POP BC tar AF i stället för
-  BC, och RET hoppar till VARNAM:s resultat: bokstaven ($41-$5D) som hög
+  CMPERR med AF från `$1BD1` kvar på stacken. POP BC tar AF i stället för
+  BC, och RET hoppar till VARNAM:s resultat: bokstaven (`$41-$5D`) som hög
   byte, siffran och typen som låg.
-  - På en ABC80 utan något på $4100-$5DFF läses $FF där. Det blir RST
-    $38, och felet blir ERR 4 av en slump. En tilläggs-ROM med kod på de
+  - På en ABC80 utan något på `$4100-$5DFF` läses `$FF` där. Det blir RST
+    `$38`, och felet blir ERR 4 av en slump. En tilläggs-ROM med kod på de
     adresserna kör den koden.
-  - Den första kretsen låg på $4000, och tabellerna på $4100 och $4200
+  - Den första kretsen låg på `$4000`, och tabellerna på `$4100` och `$4200`
     gav ERR 5 och ERR 14 i bokens prov dim4.
-  - Kretsen ligger nu på $5000 med lapparna i luckorna $x93-$xEF, och
+  - Kretsen ligger nu på `$5000` med lapparna i luckorna `$x93-$xEF`, och
     `lappa.py` vägrar bygga om en kod hamnar på en adress som felet kan
     hoppa till.
-- *$7800-$7FFF är inte ledigt i BASIC II.* Området är $FF i ROM-filen,
-  och lapparna låg där först. Men i maskinen är $7800-$7BFF RAM för
-  skivenheternas DOS, med enhetsposter och buffertar, och $7C00- är
+- *`$7800-$7FFF` är inte ledigt i BASIC II.* Området är `$FF` i ROM-filen,
+  och lapparna låg där först. Men i maskinen är `$7800-$7BFF` RAM för
+  skivenheternas DOS, med enhetsposter och buffertar, och `$7C00`- är
   skärmen. abc80host gör likadant med `-F`. Där skrev bokens prov sina
   filbuffertar över lappen, och 13 BASIC II-prov gav fel. Lapparna
-  ligger nu i nollorna efter kassettdrivrutinen ($044A-$06A9), och
+  ligger nu i nollorna efter kassettdrivrutinen (`$044A-$06A9`), och
   `lappa.py` vägrar lägga dem någon annanstans.
-- *BREAK som tappas i IEC-ROM:en.* CHKBRK ($7028) läser BRKFLG, prövar
+- *BREAK som tappas i IEC-ROM:en.* CHKBRK (`$7028`) läser BRKFLG, prövar
   den och skriver 0. Kommer tangentavbrottet mellan läsningen och
-  skrivningen försvinner BREAK. TSTBRK ($033E) i ABC80:s ROM gör
+  skrivningen försvinner BREAK. TSTBRK (`$033E`) i ABC80:s ROM gör
   likadant. Den olappade ROM:en tappar också BREAK med vissa
   instruktionstakter i emulatorn; lappen flyttar bara var det händer.
 - *Heltal som slår runt.* I båda tolkarna blir `FOR I%=... TO 32767`
@@ -612,8 +612,8 @@ ny omgång.
   ROM:en ger därför olika teckenbyte mot sig själv. FCMP ser bara på
   exponenten när den är 0, så en jämförelse ser det inte.
 - *BASIC II:s referenser.* En variabels referens i koden (VARREF,
-  $0F63) är inte ett löpnummer. Den beror på namnet: i ett av
-  kantfallen har A1 referensen $0108 och Q1 $1108. Två variabler med
+  `$0F63`) är inte ett löpnummer. Den beror på namnet: i ett av
+  kantfallen har A1 referensen `$0108` och Q1 `$1108`. Två variabler med
   samma siffra delar därför låg byte, och det är så `sup_b2g` prövar
   referensjämförelsen.
 

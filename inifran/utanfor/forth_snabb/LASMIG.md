@@ -3,13 +3,13 @@
 **Inte med i boken.** Ett experiment med Forth-tolken från exempel 7 i
 band 2: hur mycket av dess långsamhet kommer från stackprövningen, och
 vad kostar det i säkerhet att göra den billigare? Allt annat är som i
-boken; jämförelsen gäller tolken som krets på $4000 (`e7ip`, samma som
+boken; jämförelsen gäller tolken som krets på `$4000` (`e7ip`, samma som
 `emulator/exempel/krets/forth.bin`).
 
 | Fil               | Vad                                                   |
 |-------------------|-------------------------------------------------------|
 | `gor.sh`          | bygger `forth_snabb.bin` ur en kopia av bokens källor |
-| `forth_snabb.bin` | tolken som krets på $4000 med den nya `BRANCH`        |
+| `forth_snabb.bin` | tolken som krets på `$4000` med den nya `BRANCH`        |
 | `forth_snabb.lst` | listningen från z80asm                                |
 | `matning.sh`      | mäter BASIC, bokens tolk och varianten                |
 | `TID.BAS`         | BASIC-delen av mätningen                              |

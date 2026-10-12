@@ -147,7 +147,7 @@ Det säger inte att Compis kunde ha undvikits. Frågan i TUDIS var en ny
 skoldator, inte ett nytt språk. Försöket säger bara att språket inte var
 skälet att börja om från noll. Strukturerna hade gått att få på en krets
 till de datorer som redan stod i skolorna. Det var en sådan krets som
-Superbasic ($4000-$57FF) var för ABC 80.
+Superbasic (`$4000-$57FF`) var för ABC 80.
 
 
 ## Det som inte är säkert

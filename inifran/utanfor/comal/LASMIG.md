@@ -4,7 +4,7 @@
 (1978) hade fått COMAL:s styrstrukturer i stället för att ersättas av
 BASIC II: hur mycket hade det kostat i bytes och i tid? Försöket bygger
 strukturerna i en lappad kopia av den gamla ROM:en (abc80old) och en
-krets på $4000, och mäter dem i emulatorn mot GOTO och GOSUB och mot
+krets på `$4000`, och mäter dem i emulatorn mot GOTO och GOSUB och mot
 BASIC II:s WHILE/WEND. Bokens filer och ROM:arna i `emulator/roms/`
 ändras inte. Bakgrunden, COMAL och skoldatorn Compis, står i
 `BAKGRUND.md`.
@@ -42,11 +42,11 @@ BASIC II:s WHILE/WEND. Bokens filer och ROM:arna i `emulator/roms/`
   BCD-talen står kvar. Långa variabelnamn, FUNC på flera rader och
   REF-parametrar är inte med. Strängar går inte som parametrar.
 - *Emulatorn, inte en riktig maskin.* Tiden är emulatorns T-cykler vid
-  2,9952 MHz, från CR efter `RUN` till `READY` ($00CC i ABC80, $0110 i
+  2,9952 MHz, från CR efter `RUN` till `READY` (`$00CC` i ABC80, `$0110` i
   BASIC II), mätt med `../tolkjamforelse/prof`. ABC80 har 16 KB RAM
   och BASIC II 32 KB.
-- *Platsen.* Kretsen ligger på $4000-$48A6, där Superbasic låg
-  ($4000-$57FF). ROM:en får bara hoppen dit: KWSRCH letar i kretsens
+- *Platsen.* Kretsen ligger på `$4000-$48A6`, där Superbasic låg
+  (`$4000-$57FF`). ROM:en får bara hoppen dit: KWSRCH letar i kretsens
   ordlista, PRELNK länkar blocken och LIST drar in. Det är en krets till
   i maskinen, som i tolkjamforelse.
 - *Bara det som gick 1978.* Det är vanlig Z80-kod med ROM:ens egna
@@ -140,12 +140,12 @@ med binära flyttal, inte för att IF är snabbare (se tolkjamforelse).
   på stacken för varje värde. Det krävde uttryckens längder, och ENDTOK
   gick igenom uttryckskoden för att hitta dem varje gång (32,1 s).
   Längderna kunde ha skrivits in vid länkningen, men det behövs inte
-  när väljaren räknas en gång och värdet räknas där det står: RST $38
+  när väljaren räknas en gång och värdet räknas där det står: `RST $38`
   lämnar DE efter värdet (28,5 s). Ett heltal och ett flyttal jämförs
   genom att heltalet görs till flyttal (INTTOF) i fem bytes i CASE:s
-  ram. En sträng som räknas fram (CHR$, +) ligger kvar på stacken tills
+  ram. En sträng som räknas fram (`CHR$`, +) ligger kvar på stacken tills
   den är jämförd. prov/case2.
-- *CASE:s rest.* Ett flyttalsvärde i WHEN slutar med $B9, och ENDF
+- *CASE:s rest.* Ett flyttalsvärde i WHEN slutar med `$B9`, och ENDF
   flyttar då återhoppet under talet; IF:s jämförelse slutar med ett
   heltal. Det är det mesta av de 4,4 %. Snabbare än IF-kedjan blir
   CASE när väljaren är ett längre uttryck, som räknas en gång i stället
@@ -156,11 +156,11 @@ med binära flyttal, inte för att IF är snabbare (se tolkjamforelse).
 
 ## Vad som kom fram på vägen
 
-- *ROM:ens tabell 2 slutar på $95.* STKW2, STTAB2 och STEXE2 har 22
-  satser, `$86 $80` till `$86 $95`, men koden räcker till $FF om
+- *ROM:ens tabell 2 slutar på `$95`.* STKW2, STTAB2 och STEXE2 har 22
+  satser, `$86 $80` till `$86 $95`, men koden räcker till `$FF` om
   tabellerna flyttas. Kretsen har
   kopior av dem med de nya satserna efter, och ROM:en pekar dit.
-- *DIM-felet.* CMPDMI hoppar vid ett fel in i $41xx-$5Dxx med AF kvar på
+- *DIM-felet.* CMPDMI hoppar vid ett fel in i `$41xx-$5Dxx` med AF kvar på
   stacken (se `../tolkjamforelse/lappa.py`). Här lagas det med DIMFIX, så
   kretsen behöver inga förbjudna bytes.
 - *LIST pausar efter 22 rader.* Proven listar därför bara korta program.

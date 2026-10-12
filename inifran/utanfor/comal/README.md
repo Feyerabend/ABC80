@@ -4,7 +4,7 @@
 BASIC (1978) had been given COMAL's control structures instead of being
 replaced by BASIC II: what would it have cost in bytes and in time? The
 experiment builds the structures in a patched copy of the old ROM
-(abc80old) and an add-on ROM at $4000. It measures them in the emulator
+(abc80old) and an add-on ROM at `$4000`. It measures them in the emulator
 against GOTO and GOSUB, and against BASIC II's WHILE/WEND. The book's
 files and the ROMs in `emulator/roms/` are not changed. The background,
 COMAL and the Swedish school computer Compis, is in `BAKGRUND.md` (in
@@ -51,11 +51,11 @@ test, *mätt* measured, *ut* output, *krets* add-on ROM (circuit),
   names and the BCD numbers remain. Long variable names, multi-line FUNC
   and REF parameters are not included. Strings cannot be parameters.
 - *The emulator, not a real machine.* The time is the emulator's T
-  states at 2.9952 MHz, from CR after `RUN` to `READY` ($00CC in the
-  ABC80, $0110 in BASIC II), measured with `../tolkjamforelse/prof`. The
+  states at 2.9952 MHz, from CR after `RUN` to `READY` (`$00CC` in the
+  ABC80, `$0110` in BASIC II), measured with `../tolkjamforelse/prof`. The
   ABC80 has 16 KB RAM and BASIC II 32 KB.
-- *The location.* The add-on ROM is at $4000-$48A6, where Superbasic
-  was ($4000-$57FF). The ROM only gets the jumps there: KWSRCH searches
+- *The location.* The add-on ROM is at `$4000-$48A6`, where Superbasic
+  was (`$4000-$57FF`). The ROM only gets the jumps there: KWSRCH searches
   the add-on's keyword list, PRELNK links the blocks, and LIST indents.
   It is one more ROM in the machine, as in tolkjamforelse.
 - *Only what was possible in 1978.* It is plain Z80 code using the
@@ -75,7 +75,7 @@ test, *mätt* measured, *ut* output, *krets* add-on ROM (circuit),
 
 The programs are built with the emulator core (`../../emulator/karna`)
 and the patches with `../../dis/build/z80asm`. `ut/comal.rom` and
-`ut/comal.krets` (load at $4000) are the result.
+`ut/comal.krets` (load at `$4000`) are the result.
 
 ## The statements
 
@@ -153,12 +153,12 @@ tolkjamforelse).
   expressions, and ENDTOK went through the expression code to find them
   every time (32.1 s). The lengths could have been written in at link
   time, but that is not needed when the selector is evaluated once and
-  each value is evaluated where it stands: RST $38 leaves DE after the
+  each value is evaluated where it stands: `RST $38` leaves DE after the
   value (28.5 s). An integer and a floating-point number are compared
   by converting the integer to floating point (INTTOF) in five bytes in
-  the CASE frame. A computed string (CHR$, +) stays on the stack until
+  the CASE frame. A computed string (`CHR$`, +) stays on the stack until
   it has been compared. prov/case2.
-- *What CASE still costs.* A floating-point value in WHEN ends with $B9,
+- *What CASE still costs.* A floating-point value in WHEN ends with `$B9`,
   and ENDF then moves the return address below the number; the
   comparison in IF ends with an integer. That is most of the 4.4 %. CASE
   becomes faster than the IF chain when the selector is a longer
@@ -170,11 +170,11 @@ tolkjamforelse).
 
 ## What turned up on the way
 
-- *The ROM's table 2 ends at $95.* STKW2, STTAB2 and STEXE2 have 22
-  statements, `$86 $80` to `$86 $95`, but the code reaches $FF if the
+- *The ROM's table 2 ends at `$95`.* STKW2, STTAB2 and STEXE2 have 22
+  statements, `$86 $80` to `$86 $95`, but the code reaches `$FF` if the
   tables are moved. The add-on ROM has copies of them with the new
   statements after, and the ROM points there.
-- *The DIM bug.* On an error CMPDMI jumps into $41xx-$5Dxx with AF left
+- *The DIM bug.* On an error CMPDMI jumps into `$41xx-$5Dxx` with AF left
   on the stack (see `../tolkjamforelse/lappa.py`). Here it is fixed with
   DIMFIX, so the add-on ROM needs no forbidden bytes.
 - *LIST pauses after 22 lines.* The tests therefore only list short
