@@ -83,3 +83,14 @@ bredvid *Starta om*. `?k=` ger tangenterna med samma skrivsätt som
 `-k` (`\r` för RETURN, `\w50` för en paus i ms, `\x0c` för
 CTRL-L) och `?s=` en text till V24 som `-s`. Med `&rom=gammal` sist
 i länken körs exemplet med den gamla ROM:en.
+
+Samma sida kör också CP/M 2.2 med MyAB:s kort UNI-80 (band 2, kapitlet
+CP/M): en egen start-PROM och BIOS, och Digital Researchs fria CP/M
+(se [`../emulator/README.md`](../emulator/README.md)). `?cpm=pa`
+startar det och `&tkn80=pa` ger 80 tecken per rad. A: är systemskivan,
+B: en tom skiva och C: en RAM-skiva i ABC80:s eget minne.
+
+| Länk | Vad som händer |
+|---|---|
+| [CP/M](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?cpm=pa&k=DIR%5Cr) | CP/M startar från systemskivan och `DIR` visar programmen |
+| [CP/M med 80 tecken](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html?cpm=pa&tkn80=pa&k=DIR%5Cr%5Cw1000PIP%20B%3A%3D*.COM%5Cr) | med TKN80: `DIR`, och `PIP B:=*.COM` kopierar programmen till B:; skriv sedan `DIR B:` eller `STAT B:*.*` |
