@@ -1,0 +1,61 @@
+
+ABC80
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 FOR I=0 TO 6
+20   CASE I OF
+30   WHEN 1
+40     PRINT "ETT";
+50   WHEN 2,3
+60     PRINT "TVA/TRE";
+70   WHEN 4%
+80     PRINT "FYRA";
+90   OTHERWISE 
+100     PRINT "ANNAT";
+110   ENDCASE 
+120 NEXT I
+130 PRINT 
+
+ABC80
+
+ANNATETTTVA/TRETVA/TREFYRAANNATANNAT
+ETTTVATRE
+NEJ OCH SEX
+KLAR
+
+ABC80
+

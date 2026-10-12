@@ -1,0 +1,69 @@
+
+ABC80
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100 PROC VISA(K)
+110   LOCAL T,N%
+120   PRINT "IN";T;N%;
+130   T=K*10 : N%=K
+140   IF K>1 THEN EXEC VISA(K-1)
+150   PRINT "UT";T;N%;
+160 ENDPROC 
+
+ABC80
+
+IN 0 0IN 0 0IN 0 0UT 10 1UT 20 2UT 30 3T= 7N%= 3S= 100
+I= 5S= 10
+
+ABC80
+
+
+
+
+ERR 72 LINE 225
+ABC80
+
+
+
+
+ERR 72 LINE 5
+ABC80
+
+
+ERR 72
+ABC80
+
+ERR 72
+ABC80
+
+
+
+ERR 72 LINE 210
+ABC80
+
+
+IN 0 0IN 0 0IN 0 0UT 10 1UT 20 2UT 30 3T= 7N%= 3S= 100
+I= 5S= 10
+
+ABC80
+

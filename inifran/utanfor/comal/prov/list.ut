@@ -1,0 +1,63 @@
+
+ABC80
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 FOR I=1 TO 2
+20   J=0
+30   WHILE J<2
+40     IF J=0 THEN 
+50       PRINT "A";
+60     ELIF J=1
+70       PRINT "B";
+80     ELSE 
+90       REPEAT 
+100       UNTIL 1
+110     ENDIF 
+120     J=J+1 : WHILE 0 : ENDWHILE 
+130   ENDWHILE 
+140 NEXT I
+150 EXEC P(1)
+160 END 
+200 PROC P(X)
+210   PRINT X
+220 ENDPROC 
+
+ABC80
+
+40     IF J=0 THEN 
+50       PRINT "A";
+60     ELIF J=1
+70       PRINT "B";
+80     ELSE 
+90       REPEAT 
+100       UNTIL 1
+110     ENDIF 
+
+ABC80
+
+120     J=J+1 : WHILE 0 : ENDWHILE 
+
+ABC80
+
+ABAB 1
+
+ABC80
+

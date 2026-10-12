@@ -1,0 +1,22 @@
+
+ABC80
+
+
+
+
+
+
+
+10 I=1
+20 WHILE I<=5
+30   PRINT I;
+40   I=I+1
+50 ENDWHILE 
+60 PRINT "KLAR"
+
+ABC80
+
+ 1 2 3 4 5KLAR
+
+ABC80
+

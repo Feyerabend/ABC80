@@ -1,0 +1,5 @@
+10 I%=0%
+20 REPEAT
+30 I%=I%+1%
+40 UNTIL I%>=10000%
+50 PRINT I%

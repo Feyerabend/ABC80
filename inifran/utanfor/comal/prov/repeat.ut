@@ -1,0 +1,22 @@
+
+ABC80
+
+
+
+
+
+
+
+10 I=0
+20 REPEAT 
+30   I=I+1
+40   PRINT I;
+50 UNTIL I>=4
+60 PRINT "KLAR"
+
+ABC80
+
+ 1 2 3 4KLAR
+
+ABC80
+

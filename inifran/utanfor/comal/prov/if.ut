@@ -1,0 +1,45 @@
+
+ABC80
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 FOR I=1 TO 5
+20   IF I=1 THEN 
+30     PRINT "ETT";
+40   ELIF I=2 THEN 
+50     PRINT "TVA";
+60   ELIF I=3
+70     PRINT "TRE";
+80   ELSE 
+90     PRINT "MANGA";
+100   ENDIF 
+110   IF I=4 THEN PRINT "(4)";
+120   IF I<3 THEN 
+130     PRINT "<3";
+140   ENDIF 
+150 NEXT I
+160 PRINT 
+170 PRINT "KLAR"
+
+ABC80
+
+ETT<3TVA<3TREMANGA(4)MANGA
+KLAR
+
+ABC80
+
