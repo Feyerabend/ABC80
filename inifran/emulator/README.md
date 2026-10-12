@@ -20,6 +20,9 @@ delar:
   `tstenhet.c` filenheten TST: och `kassettfil.c` kassettbandet som
   WAV-fil (omvandlingen i `wav.c`); `png.c` skriver P40:s papper.
 - **`webb/`**: emulatorn i webbläsaren, se nedan.
+- **`sdl/`**: emulatorn i ett eget fönster med SDL3 (Linux, Windows,
+  macOS). SDL3 hämtas separat; se `sdl/README.md`. Den byggs med `make`
+  i `sdl/`, inte med `make` här.
 
 Flaggorna är de från `verktyg/abc80` och `dis/04/host/abc80host`; se
 huvudet i `vard/abc80.c`. Utan `-t` körs terminalen, om standard in är
