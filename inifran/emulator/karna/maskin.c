@@ -21,6 +21,9 @@ static uint8_t las_minne(void *dator, uint16_t adress)
             return m->uni80->ram[adress];
         case UNI80_KRETS:
             return m->uni80->startkrets[adress % UNI80_STARTKRETS];
+        case UNI80_EXTRA:
+            if (m->skydd[adress])            /* inget eget RAM här */
+                return m->uni80->ram[adress];
         }
     return m->minne[adress];
 }
@@ -30,6 +33,10 @@ static void skriv_minne(void *dator, uint16_t adress, uint8_t varde)
     Maskin *m = dator;
     if (m->uni80)
         switch (uni80_var(m->uni80, adress)) {
+        case UNI80_EXTRA:
+            if (!m->skydd[adress])
+                break;
+            /* fallthrough */
         case UNI80_RAM:
             m->uni80->ram[adress] = varde;
             return;

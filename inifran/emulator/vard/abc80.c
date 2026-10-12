@@ -27,7 +27,8 @@
  *                    40 och INP(4) tillbaka (se karna/maskin.h)
  *     -uni80         MyAB:s kort UNI-80 för CP/M: 64 KB RAM och OUT $EF
  *                    som väljer minneskarta (se karna/uni80.h); startar
- *                    som ABC80
+ *                    som ABC80, med kortets 16 KB extra på $8000-$BFFF
+ *                    tills porten skrivs
  *     -cpm fil.dsk   UNI-80 med vår start-PROM (cpm/start.bin bredvid
  *                    programmet) och skivan som FD2 enhet 0 (kort 45);
  *                    startar i startkartan, som när RESET hålls nere, och

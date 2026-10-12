@@ -109,6 +109,17 @@ där).
 I webbläsaren är det rutan *CP/M* under *Maskinen*, eller `?cpm=pa`, och
 Zork I knappen *Zork I* under *Disketten*, eller `?zork=pa`.
 
+Kortets tre minneskartor (port `$EF`: CP/M, ABC80 och start-PROM:en) är
+vår egen modell, byggd på vad en BIOS gör med porten. Kortets bevarade
+avkodnings-PROM, UNI80-13, avgör dem inte: den sitter i ABC80 och har
+ROM:en på `$0000-$3FFF` i alla sina fyra kartor (`roms/prom13.py`).
+Den visar däremot ABC80-läget med 16 KB extra: med `-uni80` och utan
+`-cpm` startar maskinen som ABC80 med kortets RAM på `$8000-$BFFF`, där
+en ABC80 med 16 KB inte har något, tills porten skrivs första gången.
+BASIC hittar då 32 KB:
+
+    ./abc80 -r roms/abc80new.rom -uni80 -k '10 DIM A(6000)\r20 PRINT "OK"\rRUN\r'
+
 SKRIV (`cpm/skriv/skriv.asm`) är en egen editor för hela skärmen på
 systemskivan, med WordStars tangenter, i 40 och 80 tecken. `SKRIV
 fil.typ` startar den; filen läses in i minnet i sin helhet (omkring
