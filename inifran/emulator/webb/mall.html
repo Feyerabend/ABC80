@@ -142,8 +142,6 @@
     background: var(--bakgrund); border: 1px solid var(--kant); border-radius: 6px;
     overflow-x: auto;
   }
-  #mer { margin-top: 4px; color: var(--dampad); font-size: 14px; }
-  #mer summary { cursor: pointer; color: var(--text); }
   kbd {
     font: 12px ui-monospace, Menlo, monospace;
     border: 1px solid var(--kant); border-radius: 4px; padding: 0 4px;
@@ -181,7 +179,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
   }
   #hjalp { display: none; }
-  #hjalp:popover-open { display: block; }
+  #hjalp:popover-open, #hjalp.oppen { display: block; position: fixed; inset: 0; }
   #hjalp h2 { font-size: 16px; margin: 0 0 8px; }
   #hjalp ul { padding-left: 20px; margin: 6px 0; }
   #hjalp li { margin: 4px 0; }
@@ -322,6 +320,20 @@
         <code>$</code> shows as <code>¤</code> and <code>^</code> as
         <code>Ü</code>. The disks are under <i>Floppy disk</i>.</p>
 <!-- /CPM -->
+        <p lang="sv">I en länk: <code>?rom=gammal</code> väljer den gamla
+        ROM:en, <code>?tkn80=pa</code> sätter i TKN80 och
+        <code>?fast=pa</code> ger den fast markör.
+<!-- CPM -->
+        <code>?cpm=pa</code> startar CP/M.
+<!-- /CPM -->
+        </p>
+        <p lang="en">In a link: <code>?rom=gammal</code> selects the old
+        ROM, <code>?tkn80=pa</code> fits TKN80 and <code>?fast=pa</code> gives
+        it a steady cursor.
+<!-- CPM -->
+        <code>?cpm=pa</code> starts CP/M.
+<!-- /CPM -->
+        </p>
       </div>
     </details>
 
@@ -559,6 +571,30 @@
         <code>Z=CALL(16387)</code>; in direct mode the machine stands still
         until <i>RESET</i>.</p>
 <!-- /EXEMPEL -->
+        <p lang="sv">I en länk:
+<!-- KRETS -->
+        <code>?krets=forth</code> sätter i Forth-kretsen och
+        <code>?krets=cmos</code> Forth med CMOS.
+<!-- /KRETS -->
+<!-- EXEMPEL -->
+        <code>?krets=e1</code> till <code>?krets=e6</code> sätter i bokens
+        exempel, och <code>?s=</code> sänder en text till V24 när
+        tangenterna är skrivna (som <code>-s</code>).
+<!-- /EXEMPEL -->
+        <code>?k=</code> skriver tangenter efter starten, som på
+        <i>Kom igång</i>.</p>
+        <p lang="en">In a link:
+<!-- KRETS -->
+        <code>?krets=forth</code> fits the Forth ROM and
+        <code>?krets=cmos</code> Forth with CMOS.
+<!-- /KRETS -->
+<!-- EXEMPEL -->
+        <code>?krets=e1</code> to <code>?krets=e6</code> fit the book's
+        examples, and <code>?s=</code> sends a text to V24 when the keys have
+        been typed (like <code>-s</code>).
+<!-- /EXEMPEL -->
+        <code>?k=</code> types keys after the start, as in <i>Getting
+        started</i>.</p>
       </div>
     </details>
 
@@ -604,6 +640,10 @@
         is decided by timing alone, as on the printer. Lines printed forwards
         end up a little more than two columns left of those printed
         backwards; <code>exempel/p40/LASMIG.md</code> tells why (?).</p>
+        <p lang="sv">I en länk kopplar <code>?p40=pa</code> in
+        skrivaren.</p>
+        <p lang="en">In a link, <code>?p40=pa</code> connects the
+        printer.</p>
       </div>
     </details>
 
@@ -622,14 +662,16 @@
         webbläsaren och finns kvar när sidan laddas om eller maskinen startas
         om: <code>POKE 20480,42</code>, ladda om, och <code>PRINT
         PEEK(20480)</code> ger 42. <i>Spara</i> och <i>Ladda…</i> flyttar det
-        som en fil (i terminalen: <code>-M cmos.bin</code>).</p>
+        som en fil (i terminalen: <code>-M cmos.bin</code>). I en länk slår
+        <code>?cmos=pa</code> på det.</p>
         <p lang="en"><i>The CMOS memory</i> is 2 KB RAM at
         <code>$5000</code>–<code>$57FF</code> (20480–22527), like the
         battery-backed memory on the Super Smartaid. What is there is saved in
         the browser and remains when the page is reloaded or the machine
         restarted: <code>POKE 20480,42</code>, reload, and <code>PRINT
         PEEK(20480)</code> gives 42. <i>Save</i> and <i>Load…</i> move it as
-        a file (in the terminal: <code>-M cmos.bin</code>).</p>
+        a file (in the terminal: <code>-M cmos.bin</code>). In a link,
+        <code>?cmos=pa</code> switches it on.</p>
       </div>
     </details>
 <!-- GENESIS -->
@@ -652,83 +694,6 @@
     </details>
 <!-- /GENESIS -->
 
-  <details id="mer">
-    <summary><span lang="sv">Hur den används</span><span lang="en">How to use it</span></summary>
-    <p lang="sv">Klicka på skärmen och skriv. <kbd>Enter</kbd> är RETURN,
-    <kbd>←</kbd> och <kbd>Backsteg</kbd> backar, <kbd>→</kbd> går framåt,
-    <kbd>Ctrl</kbd>+<kbd>C</kbd> är BREAK. Å, Ä, Ö, É och Ü skrivs som
-    vanligt. Text som klistras in skrivs som tangenter, en rad i taget.</p>
-    <p lang="en">Click the screen and type. <kbd>Enter</kbd> is RETURN,
-    <kbd>←</kbd> and <kbd>Backspace</kbd> go back, <kbd>→</kbd> goes forward,
-    <kbd>Ctrl</kbd>+<kbd>C</kbd> is BREAK. The machine has a Swedish keyboard:
-    Å, Ä, Ö, É and Ü are typed as usual. BASIC's messages are in English,
-    but the example programs are in Swedish. Pasted text is typed as keys,
-    one line at a time.</p>
-    <p lang="sv">Panelerna fälls ut och ihop med ett klick på listen, och
-    sidan kommer ihåg vilka som är öppna. Listen visar läget även när panelen
-    är ihopfälld, och <i>i</i> visar mer om det som finns i den. Filer går
-    att dra till sidan: en <code>.wav</code> blir ett band i kassetten, en
-    <code>.dsk</code> en diskett och annat ett program som skrivs in.</p>
-    <p lang="en">The panels open and close with a click on their bar, and the
-    page remembers which are open. The bar shows the state even when the
-    panel is closed, and <i>i</i> tells more about what is in it. Files can be
-    dropped on the page: a <code>.wav</code> becomes a tape in the cassette, a
-    <code>.dsk</code> a floppy disk, and anything else a program that is typed
-    in.</p>
-    <p lang="sv"><i>Kom igång</i> visas av sig själv första gången sidan
-    öppnas (inte med <code>?k=</code>); knappen tar fram den igen.
-    <i>EN</i> och <i>SV</i> byter språk på sidan, och valet sparas.</p>
-    <p lang="en"><i>Getting started</i> appears by itself the first time the
-    page is opened (not with <code>?k=</code>); the button brings it back.
-    <i>EN</i> and <i>SV</i> switch the page's language, and the choice is
-    saved.</p>
-    <p lang="sv">Länkar kan ge tangenter att skriva efter starten:
-    <code>abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r</code>, med
-    <code>\r</code> för RETURN och <code>\w500</code> för en paus i ms.
-    <code>?rom=gammal</code> väljer den gamla ROM:en, <code>?ljud=av</code>
-    startar utan ljud,
-<!-- KRETS -->
-    <code>?krets=forth</code> sätter i Forth-kretsen,
-    <code>?krets=cmos</code> Forth med CMOS,
-<!-- /KRETS -->
-<!-- EXEMPEL -->
-    <code>?krets=e1</code> till <code>?krets=e6</code> bokens exempel,
-    <code>?s=</code> en text till V24 (efter tangenterna, som
-    <code>-s</code>),
-<!-- /EXEMPEL -->
-    <code>?cmos=pa</code> slår på CMOS-minnet, <code>?p40=pa</code>
-    skrivaren,
-<!-- CPM -->
-    <code>?cpm=pa</code> startar CP/M,
-<!-- /CPM -->
-    <code>?tkn80=pa</code> sätter i TKN80, <code>?fast=pa</code> ger den
-    fast markör och <code>?sprak=en</code> visar sidan på engelska.</p>
-    <p lang="en">Links can give keys to type after the start:
-    <code>abc80.html?k=10 PRINT "HELLO"\r20 GOTO 10\rRUN\r</code>, with
-    <code>\r</code> for RETURN and <code>\w500</code> for a pause in ms.
-    <code>?rom=gammal</code> selects the old ROM, <code>?ljud=av</code>
-    starts without sound,
-<!-- KRETS -->
-    <code>?krets=forth</code> fits the Forth ROM,
-    <code>?krets=cmos</code> Forth with CMOS,
-<!-- /KRETS -->
-<!-- EXEMPEL -->
-    <code>?krets=e1</code> to <code>?krets=e6</code> the book's examples,
-    <code>?s=</code> a text to V24 (after the keys, like
-    <code>-s</code>),
-<!-- /EXEMPEL -->
-    <code>?cmos=pa</code> switches on the CMOS memory, <code>?p40=pa</code>
-    the printer,
-<!-- CPM -->
-    <code>?cpm=pa</code> starts CP/M,
-<!-- /CPM -->
-    <code>?tkn80=pa</code> fits TKN80, <code>?fast=pa</code> gives it a
-    steady cursor and <code>?sprak=sv</code> shows the page in Swedish.</p>
-    <p lang="sv">Ljudet är på, men webbläsaren släpper inte fram det förrän
-    man har klickat på sidan eller skrivit något.</p>
-    <p lang="en">Sound is on, but the browser lets it through only after you
-    have clicked on the page or typed something.</p>
-  </details>
 
     <input type="file" id="filval">
     <div id="hjalp" popover>
@@ -741,7 +706,11 @@
       på den riktiga maskinen. Emulatorn hör till boken <i>ABC80
       inifrån</i>.</p>
       <p>Klicka på den svarta skärmen och skriv. Varje rad avslutas med
-      <kbd>Enter</kbd>, som är RETURN.</p>
+      <kbd>Enter</kbd>, som är RETURN. <kbd>←</kbd> och
+      <kbd>Backsteg</kbd> backar, <kbd>→</kbd> går framåt och
+      <kbd>Ctrl</kbd>+<kbd>C</kbd> är BREAK. Å, Ä, Ö, É och Ü skrivs som
+      vanligt. Text som klistras in skrivs som tangenter, en rad i
+      taget.</p>
       <p>Prova:</p>
       <ul>
         <li><code>PRINT 2+2</code></li>
@@ -768,9 +737,18 @@ RUN</pre>
 <!-- /CPM -->
       </ul>
       <p>Har maskinen hängt sig: <i>RESET</i>, eller <i>Starta om</i>, som
-      också tömmer minnet. Panelerna fälls ut med ett klick, och <i>i</i> i
-      varje panel berättar mer. <i>EN</i> överst visar sidan på
+      också tömmer minnet. Panelerna fälls ut med ett klick på listen, och
+      <i>i</i> i varje panel berättar mer om det som finns där. Sidan
+      kommer ihåg vilka som är öppna. <i>EN</i> överst visar sidan på
       engelska.</p>
+      <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
+      klickat på sidan eller skrivit något.</p>
+      <p>En länk kan ge tangenter att skriva efter starten, med
+      <code>\r</code> för RETURN och <code>\w500</code> för en paus i ms:
+      <code>abc80.html?k=10 PRINT "HEJ"\r20 GOTO 10\rRUN\r</code>.
+      <code>?ljud=av</code> startar utan ljud och <code>?sprak=en</code>
+      på engelska; resten står under <i>i</i> i panelerna. Den här rutan
+      visas av sig själv första gången, men inte med <code>?k=</code>.</p>
       </div>
       <div lang="en">
       <h2>Getting started</h2>
@@ -780,7 +758,12 @@ RUN</pre>
       machine. The emulator belongs to the book <i>ABC80 inifrån</i> (the
       ABC80 from the inside), which is in Swedish.</p>
       <p>Click the black screen and type. Every line ends with
-      <kbd>Enter</kbd>, which is RETURN.</p>
+      <kbd>Enter</kbd>, which is RETURN. <kbd>←</kbd> and
+      <kbd>Backspace</kbd> go back, <kbd>→</kbd> goes forward and
+      <kbd>Ctrl</kbd>+<kbd>C</kbd> is BREAK. The machine has a Swedish
+      keyboard: Å, Ä, Ö, É and Ü are typed as usual. BASIC's messages are in
+      English, but the example programs are in Swedish. Pasted text is
+      typed as keys, one line at a time.</p>
       <p>Try:</p>
       <ul>
         <li><code>PRINT 2+2</code></li>
@@ -807,8 +790,18 @@ RUN</pre>
 <!-- /CPM -->
       </ul>
       <p>If the machine has hung: <i>RESET</i>, or <i>Restart</i>, which
-      also clears memory. The panels open with a click, and <i>i</i> in each
-      panel tells more. <i>SV</i> at the top shows the page in Swedish.</p>
+      also clears memory. The panels open with a click on their bar, and
+      <i>i</i> in each panel tells more about what is in it. The page
+      remembers which are open. <i>SV</i> at the top shows the page in
+      Swedish.</p>
+      <p>Sound is on, but the browser lets it through only after you have
+      clicked on the page or typed something.</p>
+      <p>A link can give keys to type after the start, with
+      <code>\r</code> for RETURN and <code>\w500</code> for a pause in ms:
+      <code>abc80.html?k=10 PRINT "HELLO"\r20 GOTO 10\rRUN\r</code>.
+      <code>?ljud=av</code> starts without sound and <code>?sprak=sv</code>
+      in Swedish; the rest is under <i>i</i> in the panels. This box appears
+      by itself the first time, but not with <code>?k=</code>.</p>
       </div>
     </div>
     <div id="papper" popover>

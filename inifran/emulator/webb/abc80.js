@@ -1383,8 +1383,10 @@ function kom_igang() {
     } catch (fel) { return; }
     hjalp.showPopover();
 }
+/* Utan popover: knappen och ✕ växlar klassen oppen. */
 if (typeof $('hjalp').showPopover !== 'function')
-    $('hjalp_visa').hidden = true;           /* utan popover: bara texten nedan */
+    for (const knapp of [$('hjalp_visa'), $('hjalp').querySelector('.stang')])
+        knapp.addEventListener('click', () => $('hjalp').classList.toggle('oppen'));
 $('hjalp').addEventListener('toggle', h => {
     if (h.newState === 'closed')
         skarm.focus();
