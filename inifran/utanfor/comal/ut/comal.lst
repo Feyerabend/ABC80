@@ -1,0 +1,1634 @@
+               ; comal.asm -- utanför boken: COMAL:s styrstrukturer i ABC80-BASIC:en
+               ; (gamla ROM:en, abc80old.rom) med en krets på $4000-$5FFF.
+               ; bygg.py lägger bytena under $4000 i en kopia av ROM:en och resten i
+               ; kretsen. Se LASMIG.md.
+               ;
+               ; De nya satserna är satser i tabell 2: $86 följd av en kod $96-. ROM:en
+               ; letar upp tabell 2 (STKW2, STTAB2, STEXE2) på fyra ställen, och de
+               ; pekar nu på kopior här med de nya satserna efter de gamla. En sats som
+               ; behöver en adress har en eller två platser $B9 lo hi, ett element som
+               ; SKPELM, LNKREF och DETOK redan hoppar över (FOR-posten).
+               ;
+               ;   WHILE v           $86 $96 v $B9 s $B9 r    s = ENDWHILE, r = dess rad
+               ;   ENDWHILE          $86 $97 $B9 s $B9 r      s = WHILE
+               ;   REPEAT            $86 $98 $B9 0 $B9 0
+               ;   UNTIL v           $86 $99 v $B9 s $B9 r    s = REPEAT
+               ;   IF v THEN         $86 $9A v $BD $B9 s $B9 r   s = nästa ELIF/ELSE/ENDIF
+               ;   ELIF v THEN       $86 $9B $B9 s $B9 r $86 $9F v $BD   s som IF
+               ;   ELSE              $86 $9C $B9 s $B9 r      s = ENDIF
+               ;   ENDIF             $86 $9D
+               ;   PROC namn(a,b)    $86 $A0 $B9 s $B9 r namn ( a , b )   s = ENDPROC
+               ;   ENDPROC           $86 $A1
+               ;   EXEC namn(x,y)    $86 $A2 $B9 s $B9 r namn ( x , y )   s = PROC
+               ;   CASE v OF         $86 $A3 $B9 s $B9 r v OF    s = första WHEN
+               ;   WHEN a,b          $86 $A4 $B9 s $B9 r a , b   s = nästa WHEN,
+               ;                                                 OTHERWISE eller ENDCASE
+               ;   OTHERWISE         $86 $A5 $B9 s $B9 r      s = ENDCASE
+               ;   ENDCASE           $86 $A6
+               ;   LOCAL a,b         $86 $A7 a , b            första satsen efter PROC
+               ;
+               ; Namnet står som tecken, som SKPELM, LNKELM och DETOK tar ett och ett.
+               ; Parametrarna är variabler med $BC/$BD (adressen, som i READ), och
+               ; argumenten uttryck med $B9/$BA (värdet); strängar går inte. EXEC
+               ; lägger argumenten på stacken och byter dem mot parametrarnas värden
+               ; (grund bindning), kör kroppen med RUNLIN som GOSUB och byter tillbaka
+               ; efter ENDPROC, som är RETURN. LOCAL på raden efter PROC är fler
+               ; parametrar, vars argument är noll. PROC i den vanliga följden hoppar förbi
+               ; ENDPROC.
+               ;
+               ; CASE prövar WHEN-delarna i tur och ordning. Koden för "v a =" (med
+               ; $DA där heltal och flyttal blandas) byggs på stacken och räknas av
+               ; RST $38, så att alla tre typerna jämförs som i ROM:en. Stämmer ingen
+               ; och OTHERWISE saknas blir det fel 73. En WHEN eller OTHERWISE i den
+               ; vanliga följden hoppar till efter ENDCASE.
+               ;
+               ; ELIF är två satser: $9B körs när THEN-delen före är klar och hoppar
+               ; till ENDIF, $9F är villkoret, dit ett falskt villkor före hoppar.
+               ; Platserna fylls vid RUN (PRELX, LNKX). Medan en struktur är öppen
+               ; håller dess plats den förra öppna strukturen och den egna raden, så
+               ; att strukturerna bildar en stack utan eget minne; stackens topp står
+               ; i två bytes först på heapen, på EOFA+1.
+               
+     = FE1C     BOFA    EQU  $FE1C
+     = FE1E     EOFA    EQU  $FE1E
+     = FE2C     CURLIN  EQU  $FE2C
+     = FE36     STMSP   EQU  $FE36
+               
+     = 062E     ERROR   EQU  $062E
+     = 09F5     KWSRCH  EQU  $09F5
+     = 0D92     RUNSTM  EQU  $0D92
+     = 0DBF     NODIR   EQU  $0DBF
+     = 0E6E     PRELNK  EQU  $0E6E
+     = 0EA6     LNKSKE  EQU  $0EA6              ; CALL SKPELM / RET C / LNKELM
+     = 1032     LNKEXP  EQU  $1032
+     = 10C3     SKPEXP  EQU  $10C3
+     = 197A     KWTHEN  EQU  $197A
+     = 1BF7     CMPERR  EQU  $1BF7
+     = 1DFB     CMPIF   EQU  $1DFB
+     = 2362     CMPEXB  EQU  $2362
+     = 2397     CMPVR   EQU  $2397
+     = 232F     TRCPRT  EQU  $232F
+     = 2370     CMPINX  EQU  $2370
+     = 264E     CMPARG  EQU  $264E
+     = 3374     ALLOC   EQU  $3374
+     = 0709     L0709   EQU  $0709              ; fel 8
+     = 1195     DETOK   EQU  $1195
+     = FE40     BUF1    EQU  $FE40
+     = 008B     T_FOR   EQU  $8B
+     = 008C     T_NEXT  EQU  $8C
+               
+     = 0096     T_WHL   EQU  $96
+     = 0097     T_EWH   EQU  $97
+     = 0098     T_REP   EQU  $98
+     = 0099     T_UNT   EQU  $99
+     = 009A     T_IF    EQU  $9A
+     = 009B     T_ELIF  EQU  $9B
+     = 009C     T_ELSE  EQU  $9C
+     = 009D     T_EIF   EQU  $9D
+     = 009F     T_VILL  EQU  $9F
+     = 00A0     T_PROC  EQU  $A0
+     = 00A1     T_EPRC  EQU  $A1
+     = 00A2     T_EXEC  EQU  $A2
+     = 00A3     T_CASE  EQU  $A3
+     = 00A4     T_WHEN  EQU  $A4
+     = 00A5     T_OTHW  EQU  $A5
+     = 00A6     T_ECAS  EQU  $A6
+     = 00A7     T_LOC   EQU  $A7
+               
+     = 00C6     E_OPPEN EQU  $C6                ; fel 70: strukturen slutar aldrig
+     = 00C7     E_SLUT  EQU  $C7                ; fel 71: slut utan början, eller fel slag
+     = 00C8     E_PROC  EQU  $C8                ; fel 72: PROC saknas, fel namn eller parametrar
+     = 00C9     E_CASE  EQU  $C9                ; fel 73: ingen WHEN stämmer
+     = 0091     E_TYP   EQU  $91                ; fel 17: sträng och tal blandade
+     = 2A93     FCMP    EQU  $2A93              ; HL, DE = två flyttals exponenter: Z om lika
+     = 3F18     INTTOF  EQU  $3F18              ; HL = heltalet, DE = flyttalets exponent
+     = 3389     STKCHK  EQU  $3389
+     = 0D71     RUNLIN  EQU  $0D71
+     = 0EFB     SKPELM  EQU  $0EFB
+               
+               ; --- lapparna i ROM:en ---
+               
+0D58                   ORG  $0D58
+0D58 CDAA42            CALL PRELX              ; RUN: förlänkningen
+0DB3                   ORG  $0DB3
+0DB3 012141            LD   BC,EXE2            ; EXEST2
+0EBF                   ORG  $0EBF
+0EBF FE86              CP   $86                ; LNKELM: $8D (fel 8) aldrig i koden
+0EC1 CACA42            JP   Z,LNKX
+11D5                   ORG  $11D5
+11D5 010040            LD   BC,KW2             ; DETOK
+18E0                   ORG  $18E0
+18E0 110040            LD   DE,KW2             ; TOKKW
+18E6                   ORG  $18E6
+18E6 01D140            LD   BC,TAB2
+1A18                   ORG  $1A18
+1A18 6E42              DEFW CMPIFX             ; STTAB1: IF
+1BD2                   ORG  $1BD2
+1BD2 CDA042            CALL DIMFIX             ; CMPDMI
+0AF7                   ORG  $0AF7
+0AF7 CDBD47            CALL LINIT              ; LIST: indragets minne
+0AFA 00                NOP
+0B5E                   ORG  $0B5E
+0B5E CDCA47            CALL LDETOK             ; LIST: raden med indrag
+               
+4000                   ORG  $4000
+               
+               ; --- tabell 2, de gamla satserna och de nya ---
+               ; De nya med END först står före END, så att KWSRCH inte tar END i
+               ; ENDWHILE. $9A (IF-block) och $9F (ELIF:s villkor) står efter $FF:
+               ; DETOK hittar dem med CPIR, men KWSRCH når dem aldrig.
+4000 96574849  KW2:    DEFB T_WHL,"WHILE"
+4004 4C45      
+4006 97454E44          DEFB T_EWH,"ENDWHILE"
+400A 5748494C  
+400E 45        
+400F 98524550          DEFB T_REP,"REPEAT"
+4013 454154    
+4016 99554E54          DEFB T_UNT,"UNTIL"
+401A 494C      
+401C 9B454C49          DEFB T_ELIF,"ELIF"
+4020 46        
+4021 9C454C53          DEFB T_ELSE,"ELSE"
+4025 45        
+4026 9D454E44          DEFB T_EIF,"ENDIF"
+402A 4946      
+402C A1454E44          DEFB T_EPRC,"ENDPROC"
+4030 50524F43  
+4034 A050524F          DEFB T_PROC,"PROC"
+4038 43        
+4039 A2455845          DEFB T_EXEC,"EXEC"
+403D 43        
+403E A6454E44          DEFB T_ECAS,"ENDCASE"
+4042 43415345  
+4046 A3434153          DEFB T_CASE,"CASE"
+404A 45        
+404B A4574845          DEFB T_WHEN,"WHEN"
+404F 4E        
+4050 A54F5448          DEFB T_OTHW,"OTHERWISE"
+4054 45525749  
+4058 5345      
+405A A74C4F43          DEFB T_LOC,"LOCAL"
+405E 414C      
+4060 8044494D          DEFB $80,"DIM"
+4064 81504F4B          DEFB $81,"POKE"
+4068 45        
+4069 824F5554          DEFB $82,"OUT"
+406D 8452454D          DEFB $84,"REM"
+4071 854F5045          DEFB $85,"OPEN"
+4075 4E        
+4076 86505245          DEFB $86,"PREPARE"
+407A 50415245  
+407E 87434C4F          DEFB $87,"CLOSE"
+4082 5345      
+4084 8852414E          DEFB $88,"RANDOMIZE"
+4088 444F4D49  
+408C 5A45      
+408E 8953544F          DEFB $89,"STOP"
+4092 50        
+4093 8A454E44          DEFB $8A,"END"
+4097 8B434D44          DEFB $8B,"CMD"
+409B 8E534554          DEFB $8E,"SETDOT"
+409F 444F54    
+40A2 8F434C52          DEFB $8F,"CLRDOT"
+40A6 444F54    
+40A9 90474554          DEFB $90,"GET"
+40AD 91434841          DEFB $91,"CHAIN"
+40B1 494E      
+40B3 924B494C          DEFB $92,"KILL"
+40B7 4C        
+40B8 934E414D          DEFB $93,"NAME"
+40BC 45        
+40BD 94545241          DEFB $94,"TRACE"
+40C1 4345      
+40C3 954E4F54          DEFB $95,"NOTRACE"
+40C7 52414345  
+40CB FF                DEFB $FF
+40CC 9A4946            DEFB T_IF,"IF"
+40CF 9F                DEFB T_VILL
+40D0 FF                DEFB $FF
+               
+40D1 AA1B0421  TAB2:   DEFW $1BAA,$2104,$20FF,$2370,$226B,$205D,$205D,$2071
+40D5 FF207023  
+40D9 6B225D20  
+40DD 5D207120  
+40E1 6A22B522          DEFW $226A,$22B5,$22B5,$0147,$0709,$0709,$22B6,$22B6
+40E5 B5224701  
+40E9 09070907  
+40ED B622B622  
+40F1 A8236C23          DEFW $23A8,$236C,$236C,$0151,$22B5,$22B5
+40F5 6C235101  
+40F9 B522B522  
+40FD 71417541          DEFW CWHILE,CSLOT,CSLOT,CWHILE,L0709,CELIF,CSLOT,CINGET
+4101 75417141  
+4105 09078641  
+4109 75418441  
+410D 09070907          DEFW L0709,L0709,CPROC,CINGET,CEXEC,CCASE,CWHEN,CSLOT
+4111 A6418441  
+4115 EB410B42  
+4119 2C427541  
+411D 8441DD41          DEFW CINGET,CLOCAL
+               
+4121 FA1B4421  EXE2:   DEFW $1BFA,$2144,$212A,$0709,$2276,$2074,$2077,$20BF
+4125 2A210907  
+4129 76227420  
+412D 7720BF20  
+4131 58222023          DEFW $2258,$2320,$00C9,$0166,$0709,$0709,$22C7,$22CF
+4135 C9006601  
+4139 09070907  
+413D C722CF22  
+4141 B11D3F0D          DEFW $1DB1,$0D3F,$0170,$0175,$2325,$232A
+4145 70017501  
+4149 25232A23  
+414D E844FF44          DEFW WHILEX,ENDWX,SKIP6,UNTILX,IFX,ELIFX,ELSEX,ENDIFX
+4151 ED441745  
+4155 30454F45  
+4159 4F455E45  
+415D 09071E45          DEFW L0709,VILLX,PROCX,ENDPX,EXECX,CASEX,WHENX,WHENX
+4161 87458F45  
+4165 9A456F46  
+4169 01470147  
+416D 5E459245          DEFW ENDIFX,LOCALX
+               
+               ; --- kompileringen ---
+               ; In: DE = koden efter satsens kod, HL = texten. Ut: CY och A = fel.
+               
+4171 CD7023    CWHILE: CALL CMPINX             ; WHILE v, UNTIL v: villkoret
+4174 D8                RET  C
+4175 EB        CSLOT:  EX   DE,HL              ; två tomma platser
+4176 0602              LD   B,$02
+4178 36B9      CSL1:   LD   (HL),$B9
+417A 23                INC  HL
+417B 3600              LD   (HL),$00
+417D 23                INC  HL
+417E 3600              LD   (HL),$00
+4180 23                INC  HL
+4181 10F5              DJNZ CSL1
+4183 EB                EX   DE,HL
+4184 A7        CINGET: AND  A
+4185 C9                RET
+               
+4186 CD7541    CELIF:  CALL CSLOT              ; ELIF v [THEN]: platsen först
+4189 EB                EX   DE,HL
+418A 3686              LD   (HL),$86
+418C 23                INC  HL
+418D 369F              LD   (HL),T_VILL
+418F 23                INC  HL
+4190 EB                EX   DE,HL
+4191 CD7023            CALL CMPINX
+4194 D8                RET  C
+4195 CD9A41            CALL CTHEN
+4198 18EA              JR   CINGET
+               
+419A D5        CTHEN:  PUSH DE                 ; THEN, om det står där
+419B 117A19            LD   DE,KWTHEN
+419E CDF509            CALL KWSRCH
+41A1 D1                POP  DE
+41A2 C0                RET  NZ
+41A3 12                LD   (DE),A             ; $BD
+41A4 13                INC  DE
+41A5 C9                RET
+               
+               ; PROC namn(a,b): variabler utan index, inte strängar
+41A6 CD7541    CPROC:  CALL CSLOT
+41A9 CD3E42            CALL CNAME
+41AC D8                RET  C
+41AD FE28              CP   '('
+41AF 2014              JR   NZ,CPR3
+41B1 12        CPR1:   LD   (DE),A             ; "(" eller ","
+41B2 13                INC  DE
+41B3 23                INC  HL
+41B4 CDC741            CALL CVAR
+41B7 D8                RET  C
+41B8 E7        CPR2:   RST  $20
+41B9 FE2C              CP   ','
+41BB 28F4              JR   Z,CPR1
+41BD FE29              CP   ')'
+41BF C25442            JP   NZ,CNFEL
+41C2 12                LD   (DE),A
+41C3 13                INC  DE
+41C4 23                INC  HL
+41C5 A7        CPR3:   AND  A
+41C6 C9                RET
+               
+               ; en variabel utan index, inte en sträng
+41C7 D5        CVAR:   PUSH DE
+41C8 CD9723            CALL CMPVR
+41CB C1                POP  BC
+41CC D8                RET  C
+41CD 7B                LD   A,E
+41CE 91                SUB  C
+41CF FE06              CP   $06
+41D1 C25442            JP   NZ,CNFEL           ; index: mer än variabeln och $BC
+41D4 1B                DEC  DE
+41D5 1A                LD   A,(DE)
+41D6 13                INC  DE
+41D7 FEBE              CP   $BE
+41D9 2879              JR   Z,CNFEL            ; sträng
+41DB A7                AND  A
+41DC C9                RET
+               
+               ; LOCAL a,b: som PROC:s parametrar
+41DD CDC741    CLOCAL: CALL CVAR
+41E0 D8                RET  C
+41E1 E7                RST  $20
+41E2 FE2C              CP   ','
+41E4 20DF              JR   NZ,CPR3
+41E6 12                LD   (DE),A
+41E7 13                INC  DE
+41E8 23                INC  HL
+41E9 18F2              JR   CLOCAL
+               
+               ; EXEC namn(x,y): tal, inte strängar
+41EB CD7541    CEXEC:  CALL CSLOT
+41EE CD3E42            CALL CNAME
+41F1 D8                RET  C
+41F2 FE28              CP   '('
+41F4 20CF              JR   NZ,CPR3
+41F6 12        CEX1:   LD   (DE),A
+41F7 13                INC  DE
+41F8 23                INC  HL
+41F9 CD6223            CALL CMPEXB
+41FC D8                RET  C
+41FD 1B                DEC  DE
+41FE 1A                LD   A,(DE)
+41FF 13                INC  DE
+4200 FEBB              CP   $BB
+4202 2850              JR   Z,CNFEL            ; sträng
+4204 E7                RST  $20
+4205 FE2C              CP   ','
+4207 28ED              JR   Z,CEX1
+4209 18AD              JR   CPR2
+               
+               ; CASE v [OF]: OF står som tecken efter v
+420B CD7541    CCASE:  CALL CSLOT
+420E CD6223            CALL CMPEXB
+4211 D8                RET  C
+4212 E7                RST  $20
+4213 FE4F              CP   'O'
+4215 20AE              JR   NZ,CPR3
+4217 23                INC  HL
+4218 7E                LD   A,(HL)
+4219 2B                DEC  HL
+421A FE46              CP   'F'
+421C 20A7              JR   NZ,CPR3
+421E 3E20              LD   A,' '
+4220 12                LD   (DE),A
+4221 13                INC  DE
+4222 0602              LD   B,$02
+4224 7E        CCA1:   LD   A,(HL)
+4225 12                LD   (DE),A
+4226 13                INC  DE
+4227 23                INC  HL
+4228 10FA              DJNZ CCA1
+422A A7                AND  A
+422B C9                RET
+               
+               ; WHEN a,b: uttryck av vilken typ som helst
+422C CD7541    CWHEN:  CALL CSLOT
+422F CD6223    CWH1:   CALL CMPEXB
+4232 D8                RET  C
+4233 E7                RST  $20
+4234 FE2C              CP   ','
+4236 C2C541            JP   NZ,CPR3
+4239 12                LD   (DE),A
+423A 13                INC  DE
+423B 23                INC  HL
+423C 18F1              JR   CWH1
+               
+               ; namnet: en bokstav, sedan bokstäver och siffror. Ut: A = tecknet efter
+423E E7        CNAME:  RST  $20
+423F FE41              CP   'A'
+4241 3811              JR   C,CNFEL
+4243 CD5842            CALL ISNAME
+4246 300C              JR   NC,CNFEL
+4248 12        CN1:    LD   (DE),A
+4249 13                INC  DE
+424A 23                INC  HL
+424B 7E                LD   A,(HL)
+424C CD5842            CALL ISNAME
+424F 38F7              JR   C,CN1
+4251 E7                RST  $20
+4252 A7                AND  A
+4253 C9                RET
+4254 3EC8      CNFEL:  LD   A,E_PROC
+4256 37                SCF
+4257 C9                RET
+               
+               ; CY om A är en siffra eller bokstav ($41-$7D)
+4258 FE30      ISNAME: CP   '0'
+425A 3F                CCF
+425B D0                RET  NC
+425C FE3A              CP   '9'+1
+425E D8                RET  C
+425F FE41              CP   'A'
+4261 3F                CCF
+4262 D0                RET  NC
+4263 FE7E              CP   $7E
+4265 C9                RET
+               
+4266 7E        SKNAM:  LD   A,(HL)
+4267 CD5842            CALL ISNAME
+426A D0                RET  NC
+426B 23                INC  HL
+426C 18F8              JR   SKNAM
+               
+               ; IF: står inget efter THEN är det ett IF-block, annars som förut.
+426E E5        CMPIFX: PUSH HL
+426F D5                PUSH DE
+4270 1B                DEC  DE                 ; $88 -> $86 $9A
+4271 3E86              LD   A,$86
+4273 12                LD   (DE),A
+4274 13                INC  DE
+4275 3E9A              LD   A,T_IF
+4277 12                LD   (DE),A
+4278 13                INC  DE
+4279 CD7023            CALL CMPINX
+427C 3818              JR   C,CIF1             ; felet ger CMPIF själv
+427E D5                PUSH DE
+427F 117A19            LD   DE,KWTHEN
+4282 CDF509            CALL KWSRCH
+4285 D1                POP  DE
+4286 200E              JR   NZ,CIF1
+4288 47                LD   B,A
+4289 7E                LD   A,(HL)
+428A FE0D              CP   $0D
+428C 2008              JR   NZ,CIF1
+428E 78                LD   A,B
+428F 12                LD   (DE),A             ; $BD
+4290 13                INC  DE
+4291 F1                POP  AF
+4292 F1                POP  AF
+4293 C37541            JP   CSLOT
+4296 D1        CIF1:   POP  DE
+4297 E1                POP  HL
+4298 1B                DEC  DE
+4299 3E88              LD   A,$88
+429B 12                LD   (DE),A
+429C 13                INC  DE
+429D C3FB1D            JP   CMPIF
+               
+               ; CMPDMI gick till CMPERR med AF kvar på stacken (se
+               ; utanfor/tolkjamforelse/lappa.py); här tas den bort först.
+42A0 CD4E26    DIMFIX: CALL CMPARG
+42A3 D0                RET  NC
+42A4 C1                POP  BC                 ; återhoppet till $1BD5
+42A5 C1                POP  BC                 ; AF från $1BD1
+42A6 37                SCF
+42A7 C3F71B            JP   CMPERR
+               
+               ; --- förlänkningen ---
+               
+42AA 110200    PRELX:  LD   DE,$0002           ; stackens topp, på EOFA+1
+42AD CD7433            CALL ALLOC
+42B0 CD6E0E            CALL PRELNK
+42B3 CDC542            CALL HEAD
+42B6 5E                LD   E,(HL)
+42B7 23                INC  HL
+42B8 56                LD   D,(HL)
+42B9 7A                LD   A,D
+42BA B3                OR   E
+42BB C8                RET  Z
+42BC ED532CFE          LD   (CURLIN),DE        ; en adress i raden som inte slutar
+42C0 3EC6              LD   A,E_OPPEN
+42C2 C32E06            JP   ERROR
+               
+42C5 2A1EFE    HEAD:   LD   HL,(EOFA)
+42C8 23                INC  HL
+42C9 C9                RET
+               
+               ; LNKELM med HL på $86. På stacken: LNKELM som återhopp.
+42CA 23        LNKX:   INC  HL
+42CB 7E                LD   A,(HL)
+42CC 2B                DEC  HL
+42CD FE96              CP   T_WHL
+42CF 3005              JR   NC,LX1
+42D1 E3                EX   (SP),HL            ; en gammal sats: som förut
+42D2 E1                POP  HL
+42D3 C3A60E            JP   LNKSKE
+42D6 CDBF0D    LX1:    CALL NODIR
+42D9 E5                PUSH HL                 ; S = satsen
+42DA 23                INC  HL
+42DB 7E                LD   A,(HL)
+42DC 23                INC  HL                 ; HL = S+2
+42DD FE96              CP   T_WHL
+42DF 285C              JR   Z,LWHILE
+42E1 FE98              CP   T_REP
+42E3 285B              JR   Z,LOPEN
+42E5 FE9A              CP   T_IF
+42E7 284C              JR   Z,LIF
+42E9 FE97              CP   T_EWH
+42EB 2868              JR   Z,LENDW
+42ED FE99              CP   T_UNT
+42EF 2878              JR   Z,LUNTIL
+42F1 FE9B              CP   T_ELIF
+42F3 CA7843            JP   Z,LELIF
+42F6 FE9C              CP   T_ELSE
+42F8 CA7E43            JP   Z,LELSE
+42FB FEA0              CP   T_PROC
+42FD 2841              JR   Z,LOPEN
+42FF FEA2              CP   T_EXEC
+4301 CA0544            JP   Z,LEXEC
+4304 FEA7              CP   T_LOC
+4306 CAAB44            JP   Z,LLOCAL
+4309 FEA3              CP   T_CASE
+430B 2833              JR   Z,LOPEN
+430D 01A4A3            LD   BC,T_CASE<<8|T_WHEN
+4310 FEA4              CP   T_WHEN
+4312 286D              JR   Z,LPART
+4314 FEA5              CP   T_OTHW
+4316 2869              JR   Z,LPART
+4318 01A5A3            LD   BC,T_CASE<<8|T_OTHW
+431B FEA6              CP   T_ECAS
+431D 280A              JR   Z,LEND
+431F 01A0A0            LD   BC,T_PROC<<8|T_PROC
+4322 FEA1              CP   T_EPRC
+4324 2803              JR   Z,LEND
+4326 019C9A            LD   BC,T_IF<<8|T_ELSE  ; ENDIF
+4329 CD9743    LEND:   CALL LCLOSE
+432C D1                POP  DE                 ; S
+432D D5                PUSH DE
+432E CDC343            CALL LFILL
+4331 E1                POP  HL
+4332 23                INC  HL
+4333 23                INC  HL
+4334 C9                RET
+               
+4335 CD3210    LIF:    CALL LNKEXP
+4338 CDDF43            CALL SKPTHN
+433B 1803              JR   LOPEN
+433D CD3210    LWHILE: CALL LNKEXP
+               ; öppna: S överst på stacken, HL = platsen
+4340 D1        LOPEN:  POP  DE                 ; S
+4341 E5                PUSH HL
+4342 CDC542            CALL HEAD
+4345 4E                LD   C,(HL)             ; BC = förra toppen
+4346 23                INC  HL
+4347 46                LD   B,(HL)
+4348 72                LD   (HL),D             ; toppen = S
+4349 2B                DEC  HL
+434A 73                LD   (HL),E
+434B E1                POP  HL
+434C 50                LD   D,B
+434D 59                LD   E,C
+434E ED4B2CFE          LD   BC,(CURLIN)
+4352 C3FA43            JP   WRSLOT             ; (förra toppen, egen rad), HL efter
+               
+4355 019696    LENDW:  LD   BC,T_WHL<<8|T_WHL
+4358 CD9743            CALL LCLOSE             ; DE = WHILE, BC = dess rad, HL = dess plats
+435B E3                EX   (SP),HL            ; HL = S
+435C E5                PUSH HL
+435D 23                INC  HL
+435E 23                INC  HL
+435F CDFA43            CALL WRSLOT             ; ENDWHILE -> WHILE
+4362 D1                POP  DE                 ; S
+4363 E3                EX   (SP),HL            ; WHILE:s plats, efter ENDWHILE på stacken
+4364 CDC343            CALL LFILL              ; WHILE -> ENDWHILE
+4367 E1                POP  HL
+4368 C9                RET
+               
+4369 CD3210    LUNTIL: CALL LNKEXP
+436C E5                PUSH HL                 ; den egna platsen
+436D 019898            LD   BC,T_REP<<8|T_REP
+4370 CD9743            CALL LCLOSE             ; DE = REPEAT, BC = dess rad
+4373 E1                POP  HL
+4374 F1                POP  AF                 ; S
+4375 C3FA43            JP   WRSLOT             ; UNTIL -> REPEAT
+               
+4378 D1        LELIF:  POP  DE                 ; S
+4379 018F43            LD   BC,LELIF1          ; villkoret efter platsen
+437C C5                PUSH BC
+437D D5                PUSH DE
+437E 019B9A    LELSE:  LD   BC,T_IF<<8|T_ELIF  ; HL = platsen
+               ; en ny del (ELIF, ELSE, WHEN, OTHERWISE): stäng den förra, B..C
+4381 E5        LPART:  PUSH HL                 ; den egna platsen
+4382 CD9743            CALL LCLOSE             ; HL = förra delens plats
+4385 C1                POP  BC
+4386 D1                POP  DE                 ; S
+4387 D5                PUSH DE
+4388 C5                PUSH BC
+4389 CDC343            CALL LFILL              ; förra delen -> den här
+438C E1                POP  HL
+438D 18B1              JR   LOPEN
+438F 23        LELIF1: INC  HL                 ; förbi $86 $9F
+4390 23                INC  HL
+4391 CD3210            CALL LNKEXP
+4394 C3DF43            JP   SKPTHN
+               
+               ; Stäng: toppen T måste ha en kod i B..C. Ut: DE = T, BC = T:s rad,
+               ; HL = T:s plats; toppen blir strukturen före T.
+4397 C5        LCLOSE: PUSH BC
+4398 CDC542            CALL HEAD
+439B 5E                LD   E,(HL)
+439C 23                INC  HL
+439D 56                LD   D,(HL)
+439E C1                POP  BC
+439F 7A                LD   A,D
+43A0 B3                OR   E
+43A1 281B              JR   Z,LFEL
+43A3 13                INC  DE
+43A4 1A                LD   A,(DE)
+43A5 1B                DEC  DE
+43A6 B8                CP   B
+43A7 3815              JR   C,LFEL
+43A9 3D                DEC  A
+43AA B9                CP   C
+43AB 3011              JR   NC,LFEL
+43AD CDCA43            CALL SLOTOF
+43B0 E5                PUSH HL
+43B1 D5                PUSH DE
+43B2 CDEF43            CALL RDSLOT             ; DE = förra toppen, BC = T:s rad
+43B5 CDC542            CALL HEAD
+43B8 73                LD   (HL),E
+43B9 23                INC  HL
+43BA 72                LD   (HL),D
+43BB D1                POP  DE
+43BC E1                POP  HL
+43BD C9                RET
+43BE 3EC7      LFEL:   LD   A,E_SLUT
+43C0 C32E06            JP   ERROR
+               
+               ; T:s plats ← (S, raden som länkas nu). DE = S, HL = T:s plats.
+43C3 ED4B2CFE  LFILL:  LD   BC,(CURLIN)
+43C7 C3FA43            JP   WRSLOT
+               
+               ; HL = platsen i satsen DE (WHILE, REPEAT, IF, ELIF, ELSE)
+43CA 62        SLOTOF: LD   H,D
+43CB 6B                LD   L,E
+43CC 23                INC  HL
+43CD 7E                LD   A,(HL)
+43CE 23                INC  HL
+43CF FE96              CP   T_WHL
+43D1 2803              JR   Z,SKPVLL
+43D3 FE9A              CP   T_IF
+43D5 C0                RET  NZ
+               ; förbi ett villkor och THEN
+43D6 C5        SKPVLL: PUSH BC
+43D7 D5                PUSH DE
+43D8 CDC310    SKV1:   CALL SKPEXP
+43DB 30FB              JR   NC,SKV1
+43DD D1                POP  DE
+43DE C1                POP  BC
+43DF 7E        SKPTHN: LD   A,(HL)
+43E0 FEBD              CP   $BD
+43E2 C0                RET  NZ
+43E3 23                INC  HL
+43E4 C9                RET
+               
+               ; förbi WHEN:s värden
+43E5 CDD643    SKPLST: CALL SKPVLL
+43E8 7E                LD   A,(HL)
+43E9 FE2C              CP   ','
+43EB C0                RET  NZ
+43EC 23                INC  HL
+43ED 18F6              JR   SKPLST
+               
+               ; HL på $B9 s $B9 r: DE = s, BC = r, HL efter
+43EF 23        RDSLOT: INC  HL
+43F0 5E                LD   E,(HL)
+43F1 23                INC  HL
+43F2 56                LD   D,(HL)
+43F3 23                INC  HL
+43F4 23                INC  HL
+43F5 4E                LD   C,(HL)
+43F6 23                INC  HL
+43F7 46                LD   B,(HL)
+43F8 23                INC  HL
+43F9 C9                RET
+               
+43FA 23        WRSLOT: INC  HL
+43FB 73                LD   (HL),E
+43FC 23                INC  HL
+43FD 72                LD   (HL),D
+43FE 23                INC  HL
+43FF 23                INC  HL
+4400 71                LD   (HL),C
+4401 23                INC  HL
+4402 70                LD   (HL),B
+4403 23                INC  HL
+4404 C9                RET
+               
+               ; EXEC: platsen får PROC och dess rad; parametrarna prövas mot
+               ; argumenten. Argumenten länkas sedan av LNKELM.
+4405 E5        LEXEC:  PUSH HL                 ; platsen
+4406 110600            LD   DE,$0006
+4409 19                ADD  HL,DE
+440A E5                PUSH HL                 ; namnet
+440B CD1C44            CALL FINDPR             ; DE = PROC, BC = dess rad
+440E E1                POP  HL
+440F C5                PUSH BC
+4410 D5                PUSH DE
+4411 CD6944            CALL CHKPAR
+4414 D1                POP  DE
+4415 C1                POP  BC
+4416 E1                POP  HL
+4417 CDFA43            CALL WRSLOT
+441A F1                POP  AF                 ; S
+441B C9                RET
+               
+               ; PROC med namnet HL. Ut: DE = PROC, BC = dess rad
+441C EB        FINDPR: EX   DE,HL
+441D 2A1CFE            LD   HL,(BOFA)
+4420 7E        FP1:    LD   A,(HL)
+4421 3D                DEC  A
+4422 282E              JR   Z,PFEL
+4424 44                LD   B,H
+4425 4D                LD   C,L
+4426 23                INC  HL
+4427 23                INC  HL
+4428 23                INC  HL
+4429 7E        FP2:    LD   A,(HL)
+442A FE86              CP   $86
+442C 2019              JR   NZ,FP3
+442E 23                INC  HL
+442F 7E                LD   A,(HL)
+4430 2B                DEC  HL
+4431 FEA0              CP   T_PROC
+4433 2012              JR   NZ,FP3
+4435 E5                PUSH HL
+4436 D5                PUSH DE
+4437 3E08              LD   A,$08
+4439 85                ADD  A,L
+443A 6F                LD   L,A
+443B 3001              JR   NC,FP4
+443D 24                INC  H
+443E CD5744    FP4:    CALL NAMEQ
+4441 D1                POP  DE
+4442 E1                POP  HL
+4443 2002              JR   NZ,FP3
+4445 EB                EX   DE,HL
+4446 C9                RET
+4447 C5        FP3:    PUSH BC
+4448 D5                PUSH DE
+4449 CDFB0E            CALL SKPELM
+444C D1                POP  DE
+444D C1                POP  BC
+444E 30D9              JR   NC,FP2
+4450 18CE              JR   FP1
+4452 3EC8      PFEL:   LD   A,E_PROC
+4454 C32E06            JP   ERROR
+               
+               ; Z om namnen på HL och DE är lika
+4457 1A        NAMEQ:  LD   A,(DE)
+4458 CD5842            CALL ISNAME
+445B 3006              JR   NC,NQ1
+445D BE                CP   (HL)
+445E C0                RET  NZ
+445F 23                INC  HL
+4460 13                INC  DE
+4461 18F4              JR   NAMEQ
+4463 7E        NQ1:    LD   A,(HL)
+4464 CD5842            CALL ISNAME
+4467 9F                SBC  A,A
+4468 C9                RET
+               
+               ; EXEC:s namn HL, PROC DE: lika många parametrar, och samma typ
+4469 CD6642    CHKPAR: CALL SKNAM
+446C EB                EX   DE,HL
+446D 010800            LD   BC,$0008
+4470 09                ADD  HL,BC
+4471 CD6642            CALL SKNAM
+4474 EB                EX   DE,HL
+4475 1A                LD   A,(DE)
+4476 FE28              CP   '('
+4478 7E                LD   A,(HL)
+4479 2805              JR   Z,CHP1
+447B FE28              CP   '('
+447D C0                RET  NZ                 ; ingen har parametrar
+447E 18D2              JR   PFEL
+4480 FE28      CHP1:   CP   '('
+4482 20CE              JR   NZ,PFEL
+4484 23        CHP2:   INC  HL
+4485 13                INC  DE
+4486 CD9E44            CALL ENDTOK             ; argumentet: $B9 eller $BA
+4489 F5                PUSH AF
+448A EB                EX   DE,HL
+448B CD9E44            CALL ENDTOK             ; parametern: $BC eller $BD
+448E EB                EX   DE,HL
+448F C1                POP  BC
+4490 D603              SUB  $03
+4492 B8                CP   B
+4493 20BD              JR   NZ,PFEL
+4495 1A                LD   A,(DE)
+4496 BE                CP   (HL)
+4497 20B9              JR   NZ,PFEL
+4499 FE2C              CP   ','
+449B 28E7              JR   Z,CHP2
+449D C9                RET
+               
+               ; förbi ett uttryck; A = dess sluttoken
+449E C5        ENDTOK: PUSH BC
+449F D5                PUSH DE
+44A0 CDC310    ET1:    CALL SKPEXP
+44A3 30FB              JR   NC,ET1
+44A5 D1                POP  DE
+44A6 C1                POP  BC
+44A7 2B                DEC  HL
+44A8 7E                LD   A,(HL)
+44A9 23                INC  HL
+44AA C9                RET
+               
+               ; LOCAL: först på raden efter PROC, medan PROC är öppen
+44AB E5        LLOCAL: PUSH HL                 ; S+2
+44AC CDC542            CALL HEAD
+44AF 5E                LD   E,(HL)
+44B0 23                INC  HL
+44B1 56                LD   D,(HL)             ; DE = toppen
+44B2 7A                LD   A,D
+44B3 B3                OR   E
+44B4 281D              JR   Z,LLFEL
+44B6 13                INC  DE
+44B7 1A                LD   A,(DE)
+44B8 1B                DEC  DE
+44B9 FEA0              CP   T_PROC
+44BB 2016              JR   NZ,LLFEL
+44BD CDCA43            CALL SLOTOF
+44C0 CDEF43            CALL RDSLOT             ; BC = PROC:s rad
+44C3 60                LD   H,B
+44C4 69                LD   L,C
+44C5 CDD644            CALL LOCOF
+44C8 D1                POP  DE
+44C9 D5                PUSH DE
+44CA 1B                DEC  DE
+44CB A7                AND  A
+44CC ED52              SBC  HL,DE
+44CE E1                POP  HL
+44CF 2002              JR   NZ,LLFEL
+44D1 F1                POP  AF                 ; S
+44D2 C9                RET
+44D3 C35244    LLFEL:  JP   PFEL
+               
+               ; HL = PROC:s rad. Z och HL på $A7 om nästa rad börjar med LOCAL
+44D6 7E        LOCOF:  LD   A,(HL)
+44D7 85                ADD  A,L
+44D8 6F                LD   L,A
+44D9 3001              JR   NC,LO1
+44DB 24                INC  H
+44DC 23        LO1:    INC  HL
+44DD 23                INC  HL
+44DE 23                INC  HL
+44DF 7E                LD   A,(HL)
+44E0 FE86              CP   $86
+44E2 C0                RET  NZ
+44E3 23                INC  HL
+44E4 7E                LD   A,(HL)
+44E5 FEA7              CP   T_LOC
+44E7 C9                RET
+               
+               ; --- körningen ---
+               ; In: DE efter satsens kod. På stacken RUNSTM ($0DA1) och RUNLIN ($0D8F).
+               
+44E8 FF        WHILEX: RST  $38
+44E9 7C                LD   A,H
+44EA B5                OR   L
+44EB 2807              JR   Z,WFALSK
+44ED EB        SKIP6:  EX   DE,HL              ; förbi platsen
+44EE 010600            LD   BC,$0006
+44F1 09                ADD  HL,BC
+44F2 EB                EX   DE,HL
+44F3 C9                RET
+44F4 EB        WFALSK: EX   DE,HL              ; efter ENDWHILE (UNTIL: efter REPEAT)
+44F5 CDEF43            CALL RDSLOT
+44F8 210800            LD   HL,$0008
+44FB 19                ADD  HL,DE
+44FC EB                EX   DE,HL
+44FD 1860              JR   HOPP
+               
+               ; ENDWHILE räknar WHILE:s villkor själv: sant, till efter WHILE;
+               ; falskt, vidare efter ENDWHILE utan hopp
+44FF EB        ENDWX:  EX   DE,HL
+4500 CDEF43            CALL RDSLOT             ; DE = WHILE, BC = dess rad
+4503 E5                PUSH HL
+4504 13                INC  DE
+4505 13                INC  DE
+4506 C5                PUSH BC
+4507 FF                RST  $38
+4508 C1                POP  BC
+4509 7C                LD   A,H
+450A B5                OR   L
+450B E1                POP  HL
+450C 2002              JR   NZ,SKIP6H
+450E EB                EX   DE,HL
+450F C9                RET
+4510 210600    SKIP6H: LD   HL,$0006
+4513 19                ADD  HL,DE
+4514 EB                EX   DE,HL
+4515 1848              JR   HOPP
+               
+4517 FF        UNTILX: RST  $38
+4518 7C                LD   A,H
+4519 B5                OR   L
+451A 20D1              JR   NZ,SKIP6
+451C 18D6              JR   WFALSK
+               
+               ; ELIF:s villkor, platsen står före: $B9 s $B9 r $86 $9F v
+451E D5        VILLX:  PUSH DE
+451F FF                RST  $38
+4520 1A                LD   A,(DE)
+4521 FEBD              CP   $BD
+4523 2001              JR   NZ,VX1
+4525 13                INC  DE
+4526 7C        VX1:    LD   A,H
+4527 B5                OR   L
+4528 E1                POP  HL
+4529 C0                RET  NZ
+452A 01F8FF            LD   BC,-8
+452D 09                ADD  HL,BC
+452E 180C              JR   IFX3
+               
+               ; IF:s villkor
+4530 FF        IFX:    RST  $38
+4531 1A                LD   A,(DE)
+4532 FEBD              CP   $BD
+4534 2001              JR   NZ,IFX1
+4536 13                INC  DE
+4537 7C        IFX1:   LD   A,H
+4538 B5                OR   L
+4539 20B2              JR   NZ,SKIP6
+453B EB                EX   DE,HL
+453C CDEF43    IFX3:   CALL RDSLOT             ; nästa del
+453F 62                LD   H,D
+4540 6B                LD   L,E
+4541 23                INC  HL
+4542 7E                LD   A,(HL)
+4543 23                INC  HL                 ; ENDIF: efter
+4544 FE9D              CP   T_EIF
+4546 2804              JR   Z,IFX2
+4548 210800            LD   HL,$0008           ; ELIF och ELSE: efter platsen
+454B 19                ADD  HL,DE
+454C EB        IFX2:   EX   DE,HL
+454D 1810              JR   HOPP
+               
+               ; ELIF och ELSE efter en THEN-del: följ platserna till ENDIF
+454F           ELIFX:
+454F EB        ELSEX:  EX   DE,HL
+4550 CDEF43    EL1:    CALL RDSLOT
+4553 62                LD   H,D
+4554 6B                LD   L,E
+4555 23                INC  HL
+4556 7E                LD   A,(HL)
+4557 23                INC  HL
+4558 FE9D              CP   T_EIF
+455A 28F0              JR   Z,IFX2
+455C 18F2              JR   EL1                ; ELIF och ELSE
+               
+455E C9        ENDIFX: RET
+               
+               ; Fortsätt på DE i raden BC. Samma rad: bara DE. Annars som RUNLIN:
+               ; CURLIN, STMSP och TRACE, och RUNSTM med RUNLIN:s återhopp.
+455F 2A2CFE    HOPP:   LD   HL,(CURLIN)
+4562 A7                AND  A
+4563 ED42              SBC  HL,BC
+4565 C8                RET  Z
+4566 E1                POP  HL
+4567 E1                POP  HL
+4568 ED432CFE          LD   (CURLIN),BC
+456C 210000            LD   HL,$0000
+456F 39                ADD  HL,SP
+4570 2236FE            LD   (STMSP),HL
+4573 FDCB0F66          BIT  4,(IY+$0F)
+4577 2807              JR   Z,HOPP1
+4579 D5                PUSH DE
+457A 50                LD   D,B
+457B 59                LD   E,C
+457C CD2F23            CALL TRCPRT
+457F D1                POP  DE
+4580 218F0D    HOPP1:  LD   HL,$0D8F
+4583 E5                PUSH HL
+4584 C3920D            JP   RUNSTM
+               
+               ; PROC i den vanliga följden: förbi ENDPROC
+4587 EB        PROCX:  EX   DE,HL
+4588 CDEF43            CALL RDSLOT
+458B 13                INC  DE
+458C 13                INC  DE
+458D 18D0              JR   HOPP
+               
+458F E1        ENDPX:  POP  HL                 ; som RETURN
+4590 E1                POP  HL
+4591 C9                RET
+               
+               ; LOCAL i följden: förbi variablerna
+4592 FF        LOCALX: RST  $38                ; adressen, gör inget
+4593 1A                LD   A,(DE)
+4594 FE2C              CP   ','
+4596 C0                RET  NZ
+4597 13                INC  DE
+4598 18F8              JR   LOCALX
+               
+               ; EXEC. Stacken under körningen av kroppen:
+               ;   [RUNSTM] [PROC:s rad] [PROC] = M, argumenten (nu parametrarnas
+               ;   gamla värden), [fortsättningen] [M] [CURLIN] [STMSP] [återhoppet]
+               ; M står under argumenten i två bytes på EOFA+1, som efter länkningen
+               ; är lediga.
+459A EB        EXECX:  EX   DE,HL
+459B CDEF43            CALL RDSLOT             ; DE = PROC, BC = dess rad, HL = namnet
+459E C5                PUSH BC
+459F D5                PUSH DE
+45A0 E5                PUSH HL
+45A1 210200            LD   HL,$0002
+45A4 39                ADD  HL,SP              ; M = PROC-ordet
+45A5 EB                EX   DE,HL
+45A6 CDC542            CALL HEAD
+45A9 73                LD   (HL),E
+45AA 23                INC  HL
+45AB 72                LD   (HL),D
+45AC E1                POP  HL
+45AD CD6642            CALL SKNAM
+45B0 7E                LD   A,(HL)
+45B1 FE28              CP   '('
+45B3 200E              JR   NZ,EXC3
+45B5 23        EXC1:   INC  HL
+45B6 EB                EX   DE,HL
+45B7 FF                RST  $38                ; flyttal: 5 bytes på stacken; heltal: HL
+45B8 05                DEC  B
+45B9 2001              JR   NZ,EXC2
+45BB E5                PUSH HL
+45BC EB        EXC2:   EX   DE,HL
+45BD 7E                LD   A,(HL)
+45BE FE2C              CP   ','
+45C0 28F3              JR   Z,EXC1
+45C2 23                INC  HL                 ; förbi ")"
+45C3 EB        EXC3:   EX   DE,HL              ; LOCAL: nollor, 5 bytes för ett flyttal
+45C4 CDC542            CALL HEAD
+45C7 7E                LD   A,(HL)
+45C8 23                INC  HL
+45C9 66                LD   H,(HL)
+45CA 6F                LD   L,A                ; M
+45CB 23                INC  HL
+45CC 23                INC  HL
+45CD 7E                LD   A,(HL)
+45CE 23                INC  HL
+45CF 66                LD   H,(HL)
+45D0 6F                LD   L,A                ; PROC:s rad
+45D1 CDD644            CALL LOCOF
+45D4 2014              JR   NZ,EXC6
+45D6 23        EXC5:   INC  HL
+45D7 CD9E44            CALL ENDTOK
+45DA 010000            LD   BC,$0000
+45DD C5                PUSH BC
+45DE FEBD              CP   $BD
+45E0 2803              JR   Z,EXC51
+45E2 C5                PUSH BC
+45E3 C5                PUSH BC
+45E4 33                INC  SP
+45E5 7E        EXC51:  LD   A,(HL)
+45E6 FE2C              CP   ','
+45E8 28EC              JR   Z,EXC5
+45EA EB        EXC6:   EX   DE,HL
+45EB E5                PUSH HL                 ; fortsättningen
+45EC CDC542            CALL HEAD
+45EF 5E                LD   E,(HL)
+45F0 23                INC  HL
+45F1 56                LD   D,(HL)
+45F2 D5                PUSH DE                 ; M
+45F3 CD2646            CALL PSWAPM
+45F6 E1                POP  HL
+45F7 E5                PUSH HL
+45F8 23                INC  HL
+45F9 23                INC  HL
+45FA 5E                LD   E,(HL)
+45FB 23                INC  HL
+45FC 56                LD   D,(HL)             ; PROC:s rad
+45FD 1A                LD   A,(DE)
+45FE 83                ADD  A,E                ; raden efter
+45FF 5F                LD   E,A
+4600 3001              JR   NC,EXC4
+4602 14                INC  D
+4603 2A2CFE    EXC4:   LD   HL,(CURLIN)
+4606 E5                PUSH HL
+4607 2A36FE            LD   HL,(STMSP)
+460A E5                PUSH HL
+460B CD8933            CALL STKCHK
+460E CD710D            CALL RUNLIN             ; kroppen, till ENDPROC
+4611 E1                POP  HL
+4612 2236FE            LD   (STMSP),HL
+4615 E1                POP  HL
+4616 222CFE            LD   (CURLIN),HL
+4619 D1                POP  DE                 ; M
+461A D5                PUSH DE
+461B CD2646            CALL PSWAPM             ; de gamla värdena tillbaka
+461E E1                POP  HL
+461F D1                POP  DE                 ; fortsättningen
+4620 23                INC  HL                 ; förbi PROC och raden
+4621 23                INC  HL
+4622 23                INC  HL
+4623 23                INC  HL
+4624 F9                LD   SP,HL
+4625 C9                RET
+               
+               ; Byt parametrarnas värden mot argumenten under M (DE)
+               ; och sedan LOCAL:s variabler mot nollorna
+4626 42        PSWAPM: LD   B,D                ; BC = P, slutet på argumentet
+4627 4B                LD   C,E
+4628 EB                EX   DE,HL
+4629 E5                PUSH HL
+462A 5E                LD   E,(HL)
+462B 23                INC  HL
+462C 56                LD   D,(HL)
+462D 210800            LD   HL,$0008
+4630 19                ADD  HL,DE
+4631 CD6642            CALL SKNAM
+4634 FE28              CP   '('
+4636 CC4446            CALL Z,PSW1
+4639 E1                POP  HL
+463A 23                INC  HL
+463B 23                INC  HL
+463C 7E                LD   A,(HL)
+463D 23                INC  HL
+463E 66                LD   H,(HL)
+463F 6F                LD   L,A                ; PROC:s rad
+4640 CDD644            CALL LOCOF
+4643 C0                RET  NZ
+4644 23        PSW1:   INC  HL
+4645 EB                EX   DE,HL
+4646 C5                PUSH BC
+4647 FF                RST  $38                ; HL = variabeln, B = typ
+4648 78                LD   A,B
+4649 C1                POP  BC
+464A D5                PUSH DE
+464B 1E02              LD   E,$02
+464D B7                OR   A
+464E 2006              JR   NZ,PSW2
+4650 2B                DEC  HL                 ; flyttal: 5 bytes till exponenten
+4651 2B                DEC  HL
+4652 2B                DEC  HL
+4653 2B                DEC  HL
+4654 1E05              LD   E,$05
+4656 79        PSW2:   LD   A,C
+4657 93                SUB  E
+4658 4F                LD   C,A
+4659 3001              JR   NC,PSW3
+465B 05                DEC  B
+465C C5        PSW3:   PUSH BC
+465D 0A        PSW4:   LD   A,(BC)
+465E 56                LD   D,(HL)
+465F 77                LD   (HL),A
+4660 7A                LD   A,D
+4661 02                LD   (BC),A
+4662 03                INC  BC
+4663 23                INC  HL
+4664 1D                DEC  E
+4665 20F6              JR   NZ,PSW4
+4667 C1                POP  BC
+4668 E1                POP  HL
+4669 7E                LD   A,(HL)
+466A FE2C              CP   ','
+466C 28D6              JR   Z,PSW1
+466E C9                RET
+               
+               ; CASE räknar väljaren P en gång och lägger den i en ram på stacken:
+               ; F+0 P:s slag (i F+1: 0 flyttal, 1 heltal, 2 sträng), F+2 platsen i
+               ; den WHEN som prövas, F+4 dess rad, F+6 SP före CASE, F+8 T (5 bytes
+               ; för ett heltal som görs till flyttal), F+13 P.
+466F D5        CASEX:  PUSH DE                 ; platsen
+4670 210600            LD   HL,$0006
+4673 19                ADD  HL,DE
+4674 EB                EX   DE,HL
+4675 FF                RST  $38                ; P, B = slaget
+4676 78                LD   A,B
+4677 3D                DEC  A
+4678 2001              JR   NZ,CX0
+467A E5                PUSH HL                 ; heltalet på stacken som de andra
+467B 210000    CX0:    LD   HL,$0000
+467E 39                ADD  HL,SP
+467F 78                LD   A,B
+4680 CDEC46            CALL SIZE               ; HL = platsen på stacken
+4683 5E                LD   E,(HL)
+4684 23                INC  HL
+4685 56                LD   D,(HL)
+4686 23                INC  HL
+4687 EB                EX   DE,HL              ; HL = platsen, DE = SP före CASE
+4688 F5                PUSH AF                 ; T
+4689 F5                PUSH AF
+468A 3B                DEC  SP
+468B D5                PUSH DE
+468C D5                PUSH DE                 ; raden och platsen fylls i av CX2
+468D E5                PUSH HL
+468E C5                PUSH BC
+468F CDEF43    CX1:    CALL RDSLOT             ; DE = nästa del, BC = dess rad
+4692 13                INC  DE
+4693 1A                LD   A,(DE)
+4694 13                INC  DE                 ; delens plats
+4695 FEA4              CP   T_WHEN
+4697 280B              JR   Z,CX2
+4699 FEA5              CP   T_OTHW
+469B 204A              JR   NZ,CXFEL           ; ENDCASE: ingen stämde
+469D 210600            LD   HL,$0006           ; OTHERWISE: efter platsen
+46A0 19                ADD  HL,DE
+46A1 EB                EX   DE,HL
+46A2 1837              JR   CXUT
+46A4 210200    CX2:    LD   HL,$0002
+46A7 39                ADD  HL,SP
+46A8 73                LD   (HL),E
+46A9 23                INC  HL
+46AA 72                LD   (HL),D
+46AB 23                INC  HL
+46AC 71                LD   (HL),C
+46AD 23                INC  HL
+46AE 70                LD   (HL),B
+46AF 210600            LD   HL,$0006
+46B2 19                ADD  HL,DE
+46B3 EB                EX   DE,HL              ; DE = första värdet
+46B4 CD1247    CX3:    CALL WHENEQ
+46B7 2010              JR   NZ,CX4
+46B9 1A                LD   A,(DE)
+46BA 13                INC  DE
+46BB FE2C              CP   ','
+46BD 28F5              JR   Z,CX3
+46BF 210200            LD   HL,$0002           ; ingen: nästa del, från platsen
+46C2 39                ADD  HL,SP
+46C3 7E                LD   A,(HL)
+46C4 23                INC  HL
+46C5 66                LD   H,(HL)
+46C6 6F                LD   L,A
+46C7 18C6              JR   CX1
+46C9 EB        CX4:    EX   DE,HL              ; lika: förbi resten av värdena
+46CA 7E                LD   A,(HL)
+46CB FE2C              CP   ','
+46CD 2004              JR   NZ,CX5
+46CF 23                INC  HL
+46D0 CDE543            CALL SKPLST
+46D3 EB        CX5:    EX   DE,HL
+46D4 210400            LD   HL,$0004
+46D7 39                ADD  HL,SP
+46D8 4E                LD   C,(HL)
+46D9 23                INC  HL
+46DA 46                LD   B,(HL)             ; raden
+46DB 210600    CXUT:   LD   HL,$0006           ; stacken som före CASE
+46DE 39                ADD  HL,SP
+46DF 7E                LD   A,(HL)
+46E0 23                INC  HL
+46E1 66                LD   H,(HL)
+46E2 6F                LD   L,A
+46E3 F9                LD   SP,HL
+46E4 C35F45            JP   HOPP
+46E7 3EC9      CXFEL:  LD   A,E_CASE
+46E9 C32E06            JP   ERROR
+               
+               ; A = slaget, HL = värdet på stacken. Ut: HL efter värdet; DE ändras
+46EC 110500    SIZE:   LD   DE,$0005
+46EF B7                OR   A
+46F0 280D              JR   Z,SZ1
+46F2 1E02              LD   E,$02
+46F4 3D                DEC  A
+46F5 2808              JR   Z,SZ1
+46F7 5E                LD   E,(HL)             ; sträng: n + 6
+46F8 23                INC  HL
+46F9 56                LD   D,(HL)
+46FA 2B                DEC  HL
+46FB 19                ADD  HL,DE
+46FC 110600            LD   DE,$0006
+46FF 19        SZ1:    ADD  HL,DE
+4700 C9                RET
+               
+               ; WHEN och OTHERWISE i den vanliga följden: följ platserna till ENDCASE
+4701 EB        WHENX:  EX   DE,HL
+4702 CDEF43    WX1:    CALL RDSLOT
+4705 62                LD   H,D
+4706 6B                LD   L,E
+4707 23                INC  HL
+4708 7E                LD   A,(HL)
+4709 23                INC  HL
+470A FEA6              CP   T_ECAS
+470C 20F4              JR   NZ,WX1
+470E EB                EX   DE,HL
+470F C35F45            JP   HOPP
+               
+               ; Är värdet (DE) lika med P? Värdet räknas direkt ur koden och jämförs
+               ; med P i CASE:s ram, under återhoppet. Ut: DE efter värdet, NZ om lika.
+4712 FF        WHENEQ: RST  $38                ; B = värdets slag
+4713 78                LD   A,B
+4714 3D                DEC  A
+4715 2001              JR   NZ,WE1
+4717 E5                PUSH HL
+4718 D5        WE1:    PUSH DE                 ; koden efter värdet
+4719 210200            LD   HL,$0002
+471C 39                ADD  HL,SP
+471D E5                PUSH HL
+471E DDE1              POP  IX                 ; IX = värdet
+4720 48                LD   C,B
+4721 78                LD   A,B
+4722 CDEC46            CALL SIZE               ; HL = återhoppets plats
+4725 E5                PUSH HL
+4726 23                INC  HL
+4727 23                INC  HL
+4728 23                INC  HL
+4729 46                LD   B,(HL)             ; P:s slag
+472A 110700            LD   DE,$0007
+472D 19                ADD  HL,DE              ; HL = T
+472E 78                LD   A,B
+472F B9                CP   C
+4730 2838              JR   Z,WESAME
+4732 FE02              CP   $02                ; sträng mot tal
+4734 2871              JR   Z,WETYP
+4736 79                LD   A,C
+4737 FE02              CP   $02
+4739 286C              JR   Z,WETYP
+473B E5                PUSH HL                 ; heltal mot flyttal: heltalet till T
+473C 110500            LD   DE,$0005
+473F 19                ADD  HL,DE              ; P
+4740 100F              DJNZ WE2
+4742 7E                LD   A,(HL)             ; P heltal
+4743 23                INC  HL
+4744 66                LD   H,(HL)
+4745 6F                LD   L,A
+4746 D1                POP  DE
+4747 D5                PUSH DE
+4748 CDAC47            CALL ITOT
+474B E1                POP  HL                 ; T
+474C DDE5              PUSH IX
+474E D1                POP  DE                 ; värdet
+474F 180E              JR   WEF
+4751 E3        WE2:    EX   (SP),HL            ; värdet heltal
+4752 EB                EX   DE,HL
+4753 DD6E00            LD   L,(IX+$00)
+4756 DD6601            LD   H,(IX+$01)
+4759 D5                PUSH DE
+475A CDAC47            CALL ITOT
+475D D1                POP  DE                 ; T
+475E E1                POP  HL                 ; P
+475F 010400    WEF:    LD   BC,$0004           ; till exponenterna
+4762 09                ADD  HL,BC
+4763 EB                EX   DE,HL
+4764 09                ADD  HL,BC
+4765 CD932A            CALL FCMP
+4768 1833              JR   WEUT
+476A 110500    WESAME: LD   DE,$0005
+476D 19                ADD  HL,DE              ; P
+476E DDE5              PUSH IX
+4770 D1                POP  DE                 ; värdet
+4771 3D                DEC  A
+4772 2821              JR   Z,WEINT
+4774 3D                DEC  A
+4775 20E8              JR   NZ,WEF
+4777 D5                PUSH DE                 ; strängar: längden och tecknen
+4778 CDB347            CALL STRD
+477B E1                POP  HL
+477C D5                PUSH DE
+477D C5                PUSH BC
+477E CDB347            CALL STRD
+4781 E1                POP  HL
+4782 A7                AND  A
+4783 ED42              SBC  HL,BC
+4785 E1                POP  HL
+4786 2015              JR   NZ,WEUT
+4788 78        WS1:    LD   A,B
+4789 B1                OR   C
+478A 2811              JR   Z,WEUT
+478C 1A                LD   A,(DE)
+478D BE                CP   (HL)
+478E 200D              JR   NZ,WEUT
+4790 23                INC  HL
+4791 13                INC  DE
+4792 0B                DEC  BC
+4793 18F3              JR   WS1
+4795 1A        WEINT:  LD   A,(DE)
+4796 BE                CP   (HL)
+4797 2004              JR   NZ,WEUT
+4799 23                INC  HL
+479A 13                INC  DE
+479B 1A                LD   A,(DE)
+479C BE                CP   (HL)
+479D 3E00      WEUT:   LD   A,$00              ; Z = lika
+479F 2001              JR   NZ,WE9
+47A1 3D                DEC  A
+47A2 E1        WE9:    POP  HL                 ; återhoppets plats
+47A3 D1                POP  DE                 ; koden
+47A4 F9                LD   SP,HL              ; bort med värdet
+47A5 B7                OR   A
+47A6 C9                RET
+47A7 3E91      WETYP:  LD   A,E_TYP
+47A9 C32E06            JP   ERROR
+               
+               ; HL = heltalet, DE = T: flyttalet i T
+47AC 13        ITOT:   INC  DE
+47AD 13                INC  DE
+47AE 13                INC  DE
+47AF 13                INC  DE
+47B0 C3183F            JP   INTTOF
+               
+               ; HL = en sträng på stacken: DE = adressen, BC = längden
+47B3 23        STRD:   INC  HL
+47B4 23                INC  HL
+47B5 5E                LD   E,(HL)
+47B6 23                INC  HL
+47B7 56                LD   D,(HL)
+47B8 23                INC  HL
+47B9 4E                LD   C,(HL)
+47BA 23                INC  HL
+47BB 46                LD   B,(HL)
+47BC C9                RET
+               
+               ; --- LIST med indrag ---
+               ; Två blanka per nivå efter radnumret, i FOR-, WHILE-, REPEAT-, IF-
+               ; och PROC-block. En rad som börjar med en stängare (NEXT, ENDWHILE,
+               ; UNTIL, ENDIF, ENDPROC) eller ELIF/ELSE dras in en nivå mindre.
+               ; LIST:s ram (IX) har räknaren på +0 och filflaggan på +$0F; här
+               ; används +1..+3: nästa rad och djupet där, så att bara den första
+               ; listade raden räknas från programmets början.
+47BD DD360016  LINIT:  LD   (IX+$00),$16
+47C1 DD360100          LD   (IX+$01),$00
+47C5 DD360200          LD   (IX+$02),$00
+47C9 C9                RET
+               
+               ; HL = raden, DE = BUF1. Ut som DETOK: HL = nästa rad, DE efter CR
+47CA E5        LDETOK: PUSH HL
+47CB D5                PUSH DE
+47CC CD1248            CALL DEPTH              ; A = nivåer
+47CF D1                POP  DE
+47D0 E1                POP  HL
+47D1 F5                PUSH AF
+47D2 CD9511            CALL DETOK
+47D5 F1                POP  AF
+47D6 87                ADD  A,A
+47D7 C8                RET  Z
+47D8 E5                PUSH HL                 ; nästa rad
+47D9 4F                LD   C,A
+47DA 0600              LD   B,$00              ; BC = antal blanka
+47DC 21FCFE            LD   HL,$FEFC
+47DF A7                AND  A
+47E0 ED52              SBC  HL,DE
+47E2 382C              JR   C,IN9
+47E4 ED42              SBC  HL,BC
+47E6 3828              JR   C,IN9              ; ryms inte: inget indrag
+47E8 2140FE            LD   HL,BUF1
+47EB 7E        IN1:    LD   A,(HL)
+47EC 23                INC  HL
+47ED FE20              CP   ' '
+47EF 20FA              JR   NZ,IN1             ; HL = efter blanken efter numret
+47F1 E5                PUSH HL                 ; p
+47F2 C5                PUSH BC                 ; n
+47F3 EB                EX   DE,HL              ; HL = slutet, DE = p
+47F4 E5                PUSH HL
+47F5 A7                AND  A
+47F6 ED52              SBC  HL,DE
+47F8 44                LD   B,H
+47F9 4D                LD   C,L                ; antal tecken från p
+47FA E1                POP  HL
+47FB D1                POP  DE                 ; n
+47FC D5                PUSH DE
+47FD 2B                DEC  HL                 ; källan: sista tecknet
+47FE E5                PUSH HL
+47FF 19                ADD  HL,DE
+4800 EB                EX   DE,HL              ; DE = målet
+4801 E1                POP  HL
+4802 D5                PUSH DE
+4803 EDB8              LDDR
+4805 E1                POP  HL
+4806 23                INC  HL                 ; nya slutet
+4807 C1                POP  BC                 ; n
+4808 EB                EX   DE,HL
+4809 E1                POP  HL                 ; p
+480A 3620      IN2:    LD   (HL),' '
+480C 23                INC  HL
+480D 0D                DEC  C
+480E 20FA              JR   NZ,IN2
+4810 E1        IN9:    POP  HL
+4811 C9                RET
+               
+               ; HL = raden. Ut: A = radens indrag; IX+1..3 = nästa rad och djupet
+4812 DD7E01    DEPTH:  LD   A,(IX+$01)
+4815 BD                CP   L
+4816 2009              JR   NZ,DP1
+4818 DD7E02            LD   A,(IX+$02)
+481B BC                CP   H
+481C DD4E03            LD   C,(IX+$03)
+481F 2811              JR   Z,DP3
+4821 EB        DP1:    EX   DE,HL              ; från början
+4822 2A1CFE            LD   HL,(BOFA)
+4825 0E00              LD   C,$00
+4827 A7        DP2:    AND  A
+4828 ED52              SBC  HL,DE
+482A 19                ADD  HL,DE
+482B 2805              JR   Z,DP3
+482D CD4048            CALL NETTO
+4830 18F5              JR   DP2
+4832 CD4048    DP3:    CALL NETTO
+4835 DD7501            LD   (IX+$01),L
+4838 DD7402            LD   (IX+$02),H
+483B DD7103            LD   (IX+$03),C
+483E 78                LD   A,B
+483F C9                RET
+               
+               ; HL = raden, C = djupet före. Ut: HL = nästa rad, B = indraget,
+               ; C = djupet efter
+4840 D5        NETTO:  PUSH DE
+4841 41                LD   B,C
+4842 23                INC  HL
+4843 23                INC  HL
+4844 23                INC  HL
+4845 CD6948            CALL CLASS
+4848 FE02              CP   $02
+484A 3805              JR   C,NT1
+484C 78                LD   A,B
+484D B7                OR   A
+484E 2801              JR   Z,NT1
+4850 05                DEC  B
+4851 CD6948    NT1:    CALL CLASS
+4854 3D                DEC  A
+4855 2001              JR   NZ,NT2
+4857 0C                INC  C                  ; öppnar
+4858 3D        NT2:    DEC  A
+4859 2005              JR   NZ,NT3
+485B 79                LD   A,C                ; stänger
+485C B7                OR   A
+485D 2801              JR   Z,NT3
+485F 0D                DEC  C
+4860 C5        NT3:    PUSH BC
+4861 CDFB0E            CALL SKPELM
+4864 C1                POP  BC
+4865 30EA              JR   NC,NT1
+4867 D1                POP  DE
+4868 C9                RET
+               
+               ; elementet HL: A = 0 annat, 1 öppnar, 2 stänger, 3 ELIF/ELSE
+4869 7E        CLASS:  LD   A,(HL)
+486A FE8B              CP   T_FOR
+486C 2821              JR   Z,CL1
+486E FE8C              CP   T_NEXT
+4870 2820              JR   Z,CL2
+4872 FE86              CP   $86
+4874 2017              JR   NZ,CL0
+4876 23                INC  HL
+4877 7E                LD   A,(HL)
+4878 2B                DEC  HL
+4879 D696              SUB  T_WHL
+487B 3810              JR   C,CL0
+487D FE12              CP   T_LOC-T_WHL+1
+487F 300C              JR   NC,CL0
+4881 E5                PUSH HL
+4882 219548            LD   HL,KLASS
+4885 85                ADD  A,L
+4886 6F                LD   L,A
+4887 3001              JR   NC,CL3
+4889 24                INC  H
+488A 7E        CL3:    LD   A,(HL)
+488B E1                POP  HL
+488C C9                RET
+488D AF        CL0:    XOR  A
+488E C9                RET
+488F 3E01      CL1:    LD   A,$01
+4891 C9                RET
+4892 3E02      CL2:    LD   A,$02
+4894 C9                RET
+               ;              WHL EWH REP UNT IF ELIF ELSE EIF - VILL PROC EPRC EXEC
+4895 01020102  KLASS:  DEFB   1,  2,  1,  2,  1, 3,   3,   2,  0, 0,  1,   2,   0
+4899 01030302  
+489D 00000102  
+48A1 00        
+               ;              CASE WHEN OTHW ECAS LOC
+48A2 01030302          DEFB   1,   3,   3,   2,   0
+48A6 00        
+
+Symboler:
+ALLOC            3374   BOFA             FE1C   BUF1             FE40   CASEX            466F
+CCA1             4224   CCASE            420B   CELIF            4186   CEX1             41F6
+CEXEC            41EB   CHKPAR           4469   CHP1             4480   CHP2             4484
+CIF1             4296   CINGET           4184   CL0              488D   CL1              488F
+CL2              4892   CL3              488A   CLASS            4869   CLOCAL           41DD
+CMPARG           264E   CMPERR           1BF7   CMPEXB           2362   CMPIF            1DFB
+CMPIFX           426E   CMPINX           2370   CMPVR            2397   CN1              4248
+CNAME            423E   CNFEL            4254   CPR1             41B1   CPR2             41B8
+CPR3             41C5   CPROC            41A6   CSL1             4178   CSLOT            4175
+CTHEN            419A   CURLIN           FE2C   CVAR             41C7   CWH1             422F
+CWHEN            422C   CWHILE           4171   CX0              467B   CX1              468F
+CX2              46A4   CX3              46B4   CX4              46C9   CX5              46D3
+CXFEL            46E7   CXUT             46DB   DEPTH            4812   DETOK            1195
+DIMFIX           42A0   DP1              4821   DP2              4827   DP3              4832
+EL1              4550   ELIFX            454F   ELSEX            454F   ENDIFX           455E
+ENDPX            458F   ENDTOK           449E   ENDWX            44FF   EOFA             FE1E
+ERROR            062E   ET1              44A0   EXC1             45B5   EXC2             45BC
+EXC3             45C3   EXC4             4603   EXC5             45D6   EXC51            45E5
+EXC6             45EA   EXE2             4121   EXECX            459A   E_CASE           00C9
+E_OPPEN          00C6   E_PROC           00C8   E_SLUT           00C7   E_TYP            0091
+FCMP             2A93   FINDPR           441C   FP1              4420   FP2              4429
+FP3              4447   FP4              443E   HEAD             42C5   HOPP             455F
+HOPP1            4580   IFX              4530   IFX1             4537   IFX2             454C
+IFX3             453C   IN1              47EB   IN2              480A   IN9              4810
+INTTOF           3F18   ISNAME           4258   ITOT             47AC   KLASS            4895
+KW2              4000   KWSRCH           09F5   KWTHEN           197A   L0709            0709
+LCLOSE           4397   LDETOK           47CA   LELIF            4378   LELIF1           438F
+LELSE            437E   LEND             4329   LENDW            4355   LEXEC            4405
+LFEL             43BE   LFILL            43C3   LIF              4335   LINIT            47BD
+LLFEL            44D3   LLOCAL           44AB   LNKEXP           1032   LNKSKE           0EA6
+LNKX             42CA   LO1              44DC   LOCALX           4592   LOCOF            44D6
+LOPEN            4340   LPART            4381   LUNTIL           4369   LWHILE           433D
+LX1              42D6   NAMEQ            4457   NETTO            4840   NODIR            0DBF
+NQ1              4463   NT1              4851   NT2              4858   NT3              4860
+PFEL             4452   PRELNK           0E6E   PRELX            42AA   PROCX            4587
+PSW1             4644   PSW2             4656   PSW3             465C   PSW4             465D
+PSWAPM           4626   RDSLOT           43EF   RUNLIN           0D71   RUNSTM           0D92
+SIZE             46EC   SKIP6            44ED   SKIP6H           4510   SKNAM            4266
+SKPELM           0EFB   SKPEXP           10C3   SKPLST           43E5   SKPTHN           43DF
+SKPVLL           43D6   SKV1             43D8   SLOTOF           43CA   STKCHK           3389
+STMSP            FE36   STRD             47B3   SZ1              46FF   TAB2             40D1
+TRCPRT           232F   T_CASE           00A3   T_ECAS           00A6   T_EIF            009D
+T_ELIF           009B   T_ELSE           009C   T_EPRC           00A1   T_EWH            0097
+T_EXEC           00A2   T_FOR            008B   T_IF             009A   T_LOC            00A7
+T_NEXT           008C   T_OTHW           00A5   T_PROC           00A0   T_REP            0098
+T_UNT            0099   T_VILL           009F   T_WHEN           00A4   T_WHL            0096
+UNTILX           4517   VILLX            451E   VX1              4526   WE1              4718
+WE2              4751   WE9              47A2   WEF              475F   WEINT            4795
+WESAME           476A   WETYP            47A7   WEUT             479D   WFALSK           44F4
+WHENEQ           4712   WHENX            4701   WHILEX           44E8   WRSLOT           43FA
+WS1              4788   WX1              4702

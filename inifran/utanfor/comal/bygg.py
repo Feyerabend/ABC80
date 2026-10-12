@@ -3,31 +3,59 @@
 ut/comal.rom (kopia av abc80old.rom med lapparna under $4000) och
 ut/comal.krets (8 KB på $4000-$5FFF). Prövar att kopiorna av tabell 2
 i kretsen börjar som ROM:ens.
+
+Assemblern är dis/build/z80asm i bokens arkiv. Finns den inte, som i det
+publika förrådet, används verktyg/z80asm där (byggs med make om den
+saknas); den tar -l fil.lst och skriver alla bytes i listningen.
 """
 import os, re, subprocess, sys
 
 HÄR = os.path.dirname(os.path.abspath(__file__))
 Z80ASM = os.path.join(HÄR, "../../dis/build/z80asm")
+VERKTYG = os.path.join(HÄR, "../../verktyg")
 ROM = os.path.join(HÄR, "../../emulator/roms/abc80old.rom")
 KRETS = 0x4000
 
-def main():
-    os.makedirs(os.path.join(HÄR, "ut"), exist_ok=True)
-    r = subprocess.run([Z80ASM, "-l", "-o", os.path.join(HÄR, "ut", "comal.bin"),
-                        os.path.join(HÄR, "comal.asm")], capture_output=True, text=True)
-    open(os.path.join(HÄR, "ut", "comal.lst"), "w").write(r.stdout)
+def assemblera():
+    """Listningens rader och kretsens bytes ($4000-$5FFF, eller None)."""
+    lst = os.path.join(HÄR, "ut", "comal.lst")
+    asm = os.path.join(HÄR, "comal.asm")
+    bin_ = os.path.join(HÄR, "ut", "comal.bin")
+    if os.path.exists(Z80ASM):
+        # dis/build/z80asm: listningen på stdout, högst 8 bytes per rad;
+        # bin-filen är minnet från adress 0
+        r = subprocess.run([Z80ASM, "-l", "-o", bin_, asm], capture_output=True, text=True)
+        open(lst, "w").write(r.stdout)
+        if r.returncode:
+            sys.exit(r.stdout + r.stderr)
+        return r.stdout.splitlines(), open(bin_, "rb").read()[KRETS:KRETS + 0x2000]
+    # verktyg/z80asm: alla bytes i listningen, långa rader fortsätter
+    z80asm = os.path.join(VERKTYG, "z80asm")
+    if not os.path.exists(z80asm):
+        subprocess.run(["make", "-C", VERKTYG, "z80asm"], check=True,
+                       stdout=subprocess.DEVNULL)
+    r = subprocess.run([z80asm, "-l", lst, "-o", bin_, asm], capture_output=True, text=True)
     if r.returncode:
         sys.exit(r.stdout + r.stderr)
+    return [re.sub(r"^([0-9A-F]{4}) ([0-9A-F]+)",
+                   lambda m: m.group(1) + "  " + " ".join(m.group(2)[i:i + 2]
+                                                      for i in range(0, len(m.group(2)), 2)) + " ",
+                   rad) for rad in open(lst).read().splitlines()], None
+
+def main():
+    os.makedirs(os.path.join(HÄR, "ut"), exist_ok=True)
+    rader, bild = assemblera()
     rom = bytearray(open(ROM, "rb").read())
     orig = bytes(rom)
     krets = bytearray(b"\xFF" * 0x2000)
     sym = {}
-    for rad in r.stdout.splitlines():
+    for rad in rader:
         m = re.match(r"([0-9A-F]{4})  ((?:[0-9A-F]{2} )+)", rad)
         if m:
             adr, data = int(m.group(1), 16), bytes.fromhex(m.group(2))
             if KRETS <= adr < KRETS + 0x2000:
-                pass                        # ur bin-filen nedan
+                if bild is None:            # verktyg/z80asm: ur listningen
+                    krets[adr - KRETS:adr - KRETS + len(data)] = data
             elif adr + len(data) <= 0x4000:
                 rom[adr:adr + len(data)] = data
             else:
@@ -35,10 +63,8 @@ def main():
         m = re.match(r"([0-9A-F]{4})  [0-9A-F ]*\s+([A-Z0-9_]+):", rad)
         if m:
             sym[m.group(2)] = int(m.group(1), 16)
-    # listningen visar högst 8 bytes per rad; kretsen tas ur bin-filen,
-    # som är minnet från adress 0
-    bild = open(os.path.join(HÄR, "ut", "comal.bin"), "rb").read()[KRETS:KRETS + 0x2000]
-    krets[:len(bild)] = bild
+    if bild is not None:                    # dis/build/z80asm: ur bin-filen
+        krets[:len(bild)] = bild
     k = lambda a: krets[a - KRETS:]
     # tabell 2 ur ROM:en: STKW2 $199C-$1A06, STTAB2 $1A36, STEXE2 $0E42
     if bytes(k(sym["TAB2"])[:44]) != orig[0x1A36:0x1A62] or \
