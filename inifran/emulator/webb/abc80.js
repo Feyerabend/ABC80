@@ -41,6 +41,9 @@
  * en gång i sekunden när det har ändrats och när sidan stängs. Forth
  * med CMOS är tolken från exempel 7 med de egna orden där.
  *
+ * Skärmen är en vit fosforskärm som i SDL-fönstret (se fosfor()),
+ * eller med rutan skarp skarpa punkter.
+ *
  * Tangenterna går som i terminalen (vard/terminal.c): Enter är RETURN
  * ($0D), backsteg och vänsterpil $08, högerpil $09, Ctrl-C BREAK ($03),
  * och å ä ö é ü Å Ä Ö É Ü blir ABC80:s koder. Ett program som skrivs in
@@ -187,6 +190,8 @@ function visa_lagen(alltid = false) {
                      $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
     if ($('tkn80').checked)
         delar.push('TKN80' + ($('fast').checked ? t(', fast', ', steady') : ''));
+    if ($('skarp').checked)
+        delar.push(t('skarp', 'sharp'));
     if (cpm_valt())
         delar.push('CP/M');
     const maskin = delar.join(' · ');
@@ -742,19 +747,75 @@ function papper_rita() {
 
 let anvande_ljud = false;
 
-let bilden = ritning.createImageData(320, 240);
+/* Skärmen ritas som i sdl/fonster.c, som en vit fosforskärm: punkterna
+ * (320 x 240, eller 640 x 240 med TKN80 i 80-teckensläget) läggs på en
+ * egen canvas, punktbild, och ritas förstorade på skarm (640 x 480).
+ * Det som tänds lyser direkt, och det som släcks klingar av med
+ * tidskonstanten EFTERLYS: varje gång skärmen ritas läggs svart över med
+ * täckningen 1 - exp(-dt / EFTERLYS), och sedan punkterna med
+ * 'lighten', så att de svarta inte täcker det som klingar av. Skenet är
+ * samma bild på canvasen sken, som täcker hela ramen, suddad med CSS
+ * (filter: blur, med radien räknad om till skärmens storlek) och lagd
+ * ovanpå. Med rutan skarp ritas punkterna utan sken och efterlysning. */
+const EFTERLYS = 0.020;                      /* efterlysningens tidskonstant, s */
+const SKEN = 2;                              /* skenets standardavvikelse, av 640 punkter */
+const sken = $('sken');
+const sken_ritning = sken.getContext('2d');
+const punktbild = document.createElement('canvas');
+const punktritning = punktbild.getContext('2d');
+let bilden = null;
+let fosfor_ritad = 0;                        /* performance.now() när skärmen senast ritades */
 
-/* Med TKN80 i 80-teckensläget är bilden 640 punkter bred; canvasen
- * följer med, och CSS håller den lika stor. */
+/* Den senaste bilden ur WebAssembly till punktbild. */
 function rita() {
     const bredd = e.kolumner() * 8;
-    if (bredd !== bilden.width) {
-        skarm.width = bredd;
-        bilden = ritning.createImageData(bredd, 240);
+    if (!bilden || bredd !== bilden.width) {
+        punktbild.width = bredd;
+        punktbild.height = 240;
+        bilden = punktritning.createImageData(bredd, 240);
     }
     bilden.data.set(new Uint8Array(e.memory.buffer, e.punkter(), bredd * 240 * 4));
-    ritning.putImageData(bilden, 0, 0);
+    punktritning.putImageData(bilden, 0, 0);
 }
+
+/* Skärmen och skenet, en gång per varv. */
+function fosfor() {
+    if (!bilden)
+        return;
+    const nu = performance.now();
+    const dt = fosfor_ritad ? (nu - fosfor_ritad) / 1000 : 1;
+    fosfor_ritad = nu;
+    const skarp = $('skarp').checked;
+    ritning.globalCompositeOperation = 'source-over';
+    ritning.globalAlpha = skarp ? 1 : 1 - Math.exp(-dt / EFTERLYS);
+    ritning.fillStyle = '#000';
+    ritning.fillRect(0, 0, skarm.width, skarm.height);
+    ritning.globalAlpha = 1;
+    ritning.globalCompositeOperation = 'lighten';
+    ritning.imageSmoothingEnabled = false;
+    ritning.drawImage(punktbild, 0, 0, skarm.width, skarm.height);
+    ritning.globalCompositeOperation = 'source-over';
+    if (!skarp) {
+        sken_ritning.clearRect(0, 0, sken.width, sken.height);
+        sken_ritning.drawImage(skarm, skarm.offsetLeft, skarm.offsetTop,
+                               skarm.clientWidth, skarm.clientHeight);
+    }
+}
+
+/* Skenets canvas har ramens storlek i CSS-punkter, och radien följer
+ * skärmens storlek på sidan. */
+function skenets_storlek() {
+    sken.width = $('ram').clientWidth;
+    sken.height = $('ram').clientHeight;
+    sken.style.filter = 'blur(' + (SKEN * skarm.clientWidth / 640).toFixed(2) + 'px)';
+}
+new ResizeObserver(skenets_storlek).observe($('ram'));
+
+$('skarp').addEventListener('change', () => {
+    $('ram').classList.toggle('skarp', $('skarp').checked);
+    visa_lagen();
+    skarm.focus();
+});
 
 function varv() {
     if (v24_text !== null && e.tangenter_klara()) {
@@ -808,6 +869,7 @@ function varv() {
         if (ritad)
             rita();
     }
+    fosfor();
     visa_bandet();
     visa_lagen();
     requestAnimationFrame(varv);
@@ -1679,6 +1741,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')
         $('fast').checked = true;
+    if (fraga.get('skarp') === 'pa') {
+        $('skarp').checked = true;
+        $('ram').classList.add('skarp');
+    }
     const med_zork = fraga.get('zork') === 'pa' && $('cpm');
     if ((fraga.get('cpm') === 'pa' || med_zork) && $('cpm'))
         $('cpm').checked = true;

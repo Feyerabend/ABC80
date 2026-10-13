@@ -2,8 +2,11 @@
  * fonster.c -- ABC80 i ett eget fönster med SDL3, till boken ABC80 inifrån
  *
  * En värd till kärnan (../karna) som webbsidan, men som ett vanligt
- * program för Linux, Windows och macOS: skärmen i ett fönster (4:3,
- * punkterna förstorade utan utjämning), tangentbordet och ljudet.
+ * program för Linux, Windows och macOS: skärmen i ett fönster (4:3),
+ * tangentbordet och ljudet. Skärmen liknar en vit fosforskärm: varje
+ * punkt har ett mjukt sken runt sig, det som släcks klingar av under
+ * några hundradelar (efterlysningen), och runt bilden finns en svart
+ * kant. Med -skarp blir punkterna skarpa rutor, utan sken.
  * Maskinen körs en bild (20 ms) i taget. Med ljudet följer tiden
  * ljudkortet, som på webbsidan; utan ljud följer den klockan. Medan
  * det finns kvar i tangentkön (-k, inklistrad text) går den så fort
@@ -26,9 +29,10 @@
  *     -T band.wav    ett band i bandspelaren
  *     -U fil.wav     spela in det som sparas på band, skrivs vid slutet
  *     -k text        tangenter efter starten (\r RETURN, \wN paus N ms)
- *     -z n           förstoring: fönstret är n x 320 x n x 240 (standard 3)
+ *     -z n           förstoring: fönstret är n x 352 x n x 264 (standard 3)
  *     -tyst          utan ljud
  *     -fast          fast markör (TKN80 med byglingen)
+ *     -skarp         skarpa punkter, utan sken och efterlysning
  *
  * Tangenterna: som på webbsidan. RETURN, ← och → (backsteg är ←), ESC,
  * TAB, DEL och Ctrl-A till Ctrl-Z; å ä ö é ü och Å Ä Ö É Ü blir ABC80:s
@@ -36,6 +40,7 @@
  * text, med en paus efter varje rad. Fönstret stängs som vanligt.
  */
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,8 +58,14 @@
 
 #define PROVTAKT   48000
 #define LJUD_FORE  0.06                      /* så långt före ljudet körs vi, s */
-#define FORGRUND   0xFFF0F0F0u               /* ARGB */
-#define BAKGRUND   0xFF000000u
+#define FARG       240                       /* vit fosfor, #F0F0F0 */
+#define KANT_X     32                        /* svart kant runt bilden */
+#define KANT_Y     24
+#define SB         (2 * BILD_BREDD + 2 * KANT_X)  /* fönstret: 704 x 528 */
+#define SH         (2 * BILD_HOJD + 2 * KANT_Y)
+#define EFTERLYS   0.020                     /* tidskonstanten, s */
+#define SKEN       4                         /* skenets radie, punkter */
+#define SKEN_STYRKA 0.8f
 #define INSPELNING (1L << 21)                /* flanker, ungefär 600 block */
 
 static Maskin maskin;
@@ -207,6 +218,64 @@ static void text_in(const char *s)
 }
 
 /* ---------------------------------------------------------------- */
+/* Fosforn                                                           */
+
+static float lys[SB * SH], halv[SB * SH], sken[SB * SH];
+
+/* Punkterna från bild_rita (1 = tänd; bredd 320 eller 640) till
+ * fönstrets bild, 640 x 480 inom kanten. Det som tänds lyser direkt,
+ * det som släcks avtar med EFTERLYS över tiden dt (s). Skenet är en
+ * gaussisk oskärpa av det som lyser, lagd ovanpå. */
+static void fosfor(const uint32_t *punkter, int bredd, double dt, int skarp, uint32_t *ut)
+{
+    float kvar = skarp ? 0.0f : (float)exp(-dt / EFTERLYS);
+    int steg = 2 * BILD_BREDD / bredd;
+    for (int y = 0; y < 2 * BILD_HOJD; y++) {
+        const uint32_t *rad = punkter + y / 2 * bredd;
+        float *l = lys + (y + KANT_Y) * SB + KANT_X;
+        for (int x = 0; x < 2 * BILD_BREDD; x++) {
+            float avtar = l[x] * kvar;
+            l[x] = rad[x / steg] ? 1.0f : avtar;
+        }
+    }
+
+    if (!skarp) {
+        float vikt[SKEN + 1], summa = 0;
+        for (int k = 0; k <= SKEN; k++) {
+            float d = (float)k / (SKEN / 2.0f);
+            vikt[k] = expf(-d * d / 2);
+            summa += k ? 2 * vikt[k] : vikt[k];
+        }
+        for (int k = 0; k <= SKEN; k++)
+            vikt[k] /= summa;
+        for (int y = 0; y < SH; y++) {       /* vågrätt */
+            const float *l = lys + y * SB;
+            float *h = halv + y * SB;
+            for (int x = 0; x < SB; x++) {
+                float v = vikt[0] * l[x];
+                for (int k = 1; k <= SKEN; k++)
+                    v += vikt[k] * ((x >= k ? l[x - k] : 0) + (x + k < SB ? l[x + k] : 0));
+                h[x] = v;
+            }
+        }
+        for (int y = 0; y < SH; y++)         /* lodrätt */
+            for (int x = 0; x < SB; x++) {
+                float v = vikt[0] * halv[y * SB + x];
+                for (int k = 1; k <= SKEN; k++)
+                    v += vikt[k] * ((y >= k ? halv[(y - k) * SB + x] : 0)
+                                    + (y + k < SH ? halv[(y + k) * SB + x] : 0));
+                sken[y * SB + x] = v;
+            }
+    }
+
+    for (int k = 0; k < SB * SH; k++) {
+        float v = lys[k] + (skarp ? 0 : SKEN_STYRKA * sken[k]);
+        uint32_t c = (uint32_t)(FARG * (v > 1 ? 1 : v));
+        ut[k] = 0xFF000000u | c << 16 | c << 8 | c;
+    }
+}
+
+/* ---------------------------------------------------------------- */
 /* Flaggorna                                                         */
 
 static void skiva(const char *arg, int kort_standard, int enhet_standard)
@@ -249,7 +318,7 @@ static void hjalp(void)
 {
     fputs("användning: abc80f [-r rom] [-l fil@adr].. [-m 16|32|48] [-tkn80 fil] [-cpm system.dsk]\n"
           "                   [-D fil[@kort[.enhet]]].. [-DS] [-T band.wav] [-U fil.wav]\n"
-          "                   [-k text] [-z n] [-tyst] [-fast]\n"
+          "                   [-k text] [-z n] [-tyst] [-fast] [-skarp]\n"
           "F12 är RESET; se huvudet i sdl/fonster.c\n", stderr);
     exit(1);
 }
@@ -261,7 +330,7 @@ int main(int argc, char **argv)
     const char *romfil = NULL, *tkn80fil = NULL, *cpmskiva = NULL;
     const char *bandfil = NULL, *inspelningsfil = NULL, *tangenter = NULL;
     const char *kretsar[16];
-    int antal_kretsar = 0, ram_kb = 16, skala = 3, tyst = 0, fast = 0, spara = 0;
+    int antal_kretsar = 0, ram_kb = 16, skala = 3, tyst = 0, fast = 0, spara = 0, skarp = 0;
     const char *skivor[SKIVKORT_ENHETER];
     int antal_skivargument = 0;
 
@@ -270,6 +339,7 @@ int main(int argc, char **argv)
         if (!strcmp(f, "-DS")) { spara = 1; continue; }
         if (!strcmp(f, "-tyst")) { tyst = 1; continue; }
         if (!strcmp(f, "-fast")) { fast = 1; continue; }
+        if (!strcmp(f, "-skarp")) { skarp = 1; continue; }
         if (k + 1 >= argc)
             hjalp();
         const char *a = argv[++k];
@@ -356,10 +426,10 @@ int main(int argc, char **argv)
         vard_fel("SDL: ", SDL_GetError());
     SDL_Window *fonster;
     SDL_Renderer *ritare;
-    if (!SDL_CreateWindowAndRenderer("ABC80", skala * BILD_BREDD, skala * BILD_HOJD,
+    if (!SDL_CreateWindowAndRenderer("ABC80", skala * SB / 2, skala * SH / 2,
                                      SDL_WINDOW_RESIZABLE, &fonster, &ritare))
         vard_fel("SDL: ", SDL_GetError());
-    SDL_SetRenderLogicalPresentation(ritare, 2 * BILD_BREDD, 2 * BILD_HOJD,
+    SDL_SetRenderLogicalPresentation(ritare, SB, SH,
                                      SDL_LOGICAL_PRESENTATION_LETTERBOX);
     SDL_SetRenderVSync(ritare, 1);
     SDL_StartTextInput(fonster);
@@ -376,12 +446,15 @@ int main(int argc, char **argv)
     ljud_starta(&ljud, PROVTAKT, MASKIN_KLOCKA, 0x00A5C301);
     maskin.ljud = &ljud;
 
-    static uint32_t punkter[2 * BILD_BREDD * BILD_HOJD];
+    static uint32_t punkter[2 * BILD_BREDD * BILD_HOJD], farger[SB * SH];
     static int16_t prov[2048];
-    SDL_Texture *bild = NULL;
-    int bildens_kolumner = 0;
+    SDL_Texture *bild = SDL_CreateTexture(ritare, SDL_PIXELFORMAT_ARGB8888,
+                                          SDL_TEXTUREACCESS_STREAMING, SB, SH);
+    if (!bild)
+        vard_fel("SDL: ", SDL_GetError());
+    SDL_SetTextureScaleMode(bild, skarp ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
     const double bildtid = 0.02;
-    double nasta = 0;
+    double nasta = 0, ritad = 0;
     int slut = 0;
 
     while (!slut) {
@@ -435,19 +508,12 @@ int main(int argc, char **argv)
         /* Skärmen. */
         int kolumner;
         const uint8_t *bildminne = maskin_skarm(&maskin, &kolumner);
-        if (kolumner != bildens_kolumner) {
-            if (bild)
-                SDL_DestroyTexture(bild);
-            bild = SDL_CreateTexture(ritare, SDL_PIXELFORMAT_ARGB8888,
-                                     SDL_TEXTUREACCESS_STREAMING, kolumner * 8, BILD_HOJD);
-            if (!bild)
-                vard_fel("SDL: ", SDL_GetError());
-            SDL_SetTextureScaleMode(bild, SDL_SCALEMODE_NEAREST);
-            bildens_kolumner = kolumner;
-        }
         int markor = fast || (SDL_GetTicks() / 330) % 2 == 0;
-        bild_rita(bildminne, kolumner, punkter, FORGRUND, BAKGRUND, markor);
-        SDL_UpdateTexture(bild, NULL, punkter, kolumner * 8 * 4);
+        bild_rita(bildminne, kolumner, punkter, 1, 0, markor);
+        double dt = ritad ? nu - ritad : 1;
+        ritad = nu;
+        fosfor(punkter, kolumner * 8, dt, skarp, farger);
+        SDL_UpdateTexture(bild, NULL, farger, SB * 4);
         SDL_SetRenderDrawColor(ritare, 0, 0, 0, 255);
         SDL_RenderClear(ritare);
         SDL_RenderTexture(ritare, bild, NULL, NULL);

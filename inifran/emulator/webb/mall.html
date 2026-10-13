@@ -27,6 +27,12 @@
 
   Knapparna ligger i paneler (details) som fälls ut och ihop; ⓘ i
   panelens list visar panelens hjälptext.
+
+  Skärmen är två canvas: skarm har punkterna med efterlysningen, och
+  sken, som täcker hela ramen, är samma bild suddig (CSS filter: blur),
+  lagd ovanpå med mix-blend-mode: screen, som skenet runt punkterna i
+  SDL-fönstret (sdl/fonster.c). Med rutan skarp syns bara skarm, med
+  skarpa punkter.
 -->
 <html lang="sv">
 <head>
@@ -71,6 +77,8 @@
   /* En svart ram runt bilden, som kanten på TV:n, så att tecknen
      längst ut inte hamnar i fönstrets kant. */
   #ram {
+    position: relative;
+    overflow: hidden;
     background: #000;
     padding: 3.5%;
     border-radius: 10px;
@@ -83,9 +91,14 @@
     width: 100%;
     aspect-ratio: 4 / 3;
     background: #000;
-    image-rendering: pixelated;
     outline: none;
   }
+  #sken {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; mix-blend-mode: screen; opacity: .8;
+  }
+  #ram.skarp #skarm { image-rendering: pixelated; }
+  #ram.skarp #sken { display: none; }
   /* Raden överst med det som alltid behövs. */
   .rad { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   /* Panelerna: listen fäller ut och ihop, läget står till höger i den. */
@@ -194,7 +207,7 @@
 <body>
 <main>
   <div id="vanster">
-    <div id="ram"><canvas id="skarm" width="320" height="240" tabindex="0"></canvas></div>
+    <div id="ram"><canvas id="skarm" width="640" height="480" tabindex="0"></canvas><canvas id="sken"></canvas></div>
   </div>
 
   <div id="hoger">
@@ -224,6 +237,7 @@
         </select>
         <label title="MyAB:s kort för 80 tecken per rad" data-title-en="MyAB's card for 80 characters per line"><input type="checkbox" id="tkn80"> TKN80</label>
         <label title="TKN80 med byglingen för fast markör" data-title-en="TKN80 with the jumper for a steady cursor"><input type="checkbox" id="fast"> <span lang="sv">fast markör</span><span lang="en">steady cursor</span></label>
+        <label title="Skarpa punkter, utan fosforns sken och efterlysning" data-title-en="Sharp dots, without the phosphor's glow and afterglow"><input type="checkbox" id="skarp"> <span lang="sv">skarp</span><span lang="en">sharp</span></label>
 <!-- CPM -->
         <label title="MyAB:s kort UNI-80 med CP/M 2.2" data-title-en="MyAB's UNI-80 card with CP/M 2.2"><input type="checkbox" id="cpm"> CP/M</label>
 <!-- /CPM -->
@@ -266,6 +280,16 @@
         instead of blinking. It is recommended with CP/M, where WordStar for
         one uses inverted text. Without TKN80 the cursor always blinks, as on
         the ABC80. The terminal and <code>-B</code> always show it steady.</p>
+        <p lang="sv">Skärmen liknar en vit fosforskärm, som i SDL-fönstret:
+        punkterna har ett mjukt sken runt sig, och det som släcks klingar av
+        på omkring 20 ms, så att markören och det som rullar drar en svans
+        efter sig. <i>Skarp</i> visar punkterna utan sken och
+        efterlysning, som <code>-skarp</code> i fönstret.</p>
+        <p lang="en">The screen looks like a white phosphor screen, as in
+        the SDL window: the dots glow softly, and what is switched off fades
+        over about 20 ms, so the cursor and scrolling text leave a trail.
+        <i>Sharp</i> shows the dots without glow and afterglow, like
+        <code>-skarp</code> in the window.</p>
 <!-- CPM -->
         <p lang="sv"><i>CP/M</i> sätter i MyAB:s kort UNI-80 (band 2,
         kapitlet CP/M) och startar CP/M 2.2 från en systemskiva i FD2, som när
@@ -363,14 +387,15 @@
 <!-- /CPM -->
         <p lang="sv">I en länk: <code>?rom=gammal</code> väljer den gamla
         ROM:en, <code>?tkn80=pa</code> sätter i TKN80 och
-        <code>?fast=pa</code> ger den fast markör.
+        <code>?fast=pa</code> ger den fast markör. <code>?skarp=pa</code>
+        ger skarpa punkter.
 <!-- CPM -->
         <code>?cpm=pa</code> startar CP/M och <code>?zork=pa</code> Zork I.
 <!-- /CPM -->
         </p>
         <p lang="en">In a link: <code>?rom=gammal</code> selects the old
         ROM, <code>?tkn80=pa</code> fits TKN80 and <code>?fast=pa</code> gives
-        it a steady cursor.
+        it a steady cursor. <code>?skarp=pa</code> gives sharp dots.
 <!-- CPM -->
         <code>?cpm=pa</code> starts CP/M and <code>?zork=pa</code> Zork I.
 <!-- /CPM -->

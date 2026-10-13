@@ -2,8 +2,11 @@
 
 `fonster.c` är en värd till emulatorns kärna (`../karna`), som
 webbsidan, men som ett vanligt program. Skärmen visas i ett fönster i
-4:3 med punkterna förstorade utan utjämning. Tangentbordet och ljudet
-fungerar som på webbsidan. Programmet går på Linux, Windows och macOS.
+4:3 och liknar en vit fosforskärm: punkterna har ett mjukt sken, det
+som släcks klingar av under några hundradelar, och runt bilden finns en
+svart kant, så att tecknen i kanterna syns (`-skarp` ger skarpa
+punkter utan sken). Tangentbordet och ljudet fungerar som på
+webbsidan. Programmet går på Linux, Windows och macOS.
 Kärnan, `abc80` och `make` i `../` berörs inte.
 
 ## SDL3 hämtas separat
@@ -45,9 +48,10 @@ programmet ligger. CP/M-skivorna (`../cpm/system.dsk`, `b.dsk`,
 | `-T band.wav`           | ett band i bandspelaren                                |
 | `-U fil.wav`            | spela in det som sparas på band                        |
 | `-k text`               | tangenter efter starten (`\r` RETURN, `\wN` paus N ms) |
-| `-z n`                  | förstoring, n gånger 320 × 240 (standard 3)            |
+| `-z n`                  | förstoring, n gånger 352 × 264 (standard 3)            |
 | `-tyst`                 | utan ljud                                              |
 | `-fast`                 | fast markör (TKN80 med byglingen)                      |
+| `-skarp`                | skarpa punkter, utan sken och efterlysning             |
 
 Exempel:
 

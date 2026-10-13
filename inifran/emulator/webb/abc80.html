@@ -27,6 +27,12 @@
 
   Knapparna ligger i paneler (details) som fälls ut och ihop; ⓘ i
   panelens list visar panelens hjälptext.
+
+  Skärmen är två canvas: skarm har punkterna med efterlysningen, och
+  sken, som täcker hela ramen, är samma bild suddig (CSS filter: blur),
+  lagd ovanpå med mix-blend-mode: screen, som skenet runt punkterna i
+  SDL-fönstret (sdl/fonster.c). Med rutan skarp syns bara skarm, med
+  skarpa punkter.
 -->
 <html lang="sv">
 <head>
@@ -71,6 +77,8 @@
   /* En svart ram runt bilden, som kanten på TV:n, så att tecknen
      längst ut inte hamnar i fönstrets kant. */
   #ram {
+    position: relative;
+    overflow: hidden;
     background: #000;
     padding: 3.5%;
     border-radius: 10px;
@@ -83,9 +91,14 @@
     width: 100%;
     aspect-ratio: 4 / 3;
     background: #000;
-    image-rendering: pixelated;
     outline: none;
   }
+  #sken {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; mix-blend-mode: screen; opacity: .8;
+  }
+  #ram.skarp #skarm { image-rendering: pixelated; }
+  #ram.skarp #sken { display: none; }
   /* Raden överst med det som alltid behövs. */
   .rad { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   /* Panelerna: listen fäller ut och ihop, läget står till höger i den. */
@@ -194,7 +207,7 @@
 <body>
 <main>
   <div id="vanster">
-    <div id="ram"><canvas id="skarm" width="320" height="240" tabindex="0"></canvas></div>
+    <div id="ram"><canvas id="skarm" width="640" height="480" tabindex="0"></canvas><canvas id="sken"></canvas></div>
   </div>
 
   <div id="hoger">
@@ -219,6 +232,7 @@
         </select>
         <label title="MyAB:s kort för 80 tecken per rad" data-title-en="MyAB's card for 80 characters per line"><input type="checkbox" id="tkn80"> TKN80</label>
         <label title="TKN80 med byglingen för fast markör" data-title-en="TKN80 with the jumper for a steady cursor"><input type="checkbox" id="fast"> <span lang="sv">fast markör</span><span lang="en">steady cursor</span></label>
+        <label title="Skarpa punkter, utan fosforns sken och efterlysning" data-title-en="Sharp dots, without the phosphor's glow and afterglow"><input type="checkbox" id="skarp"> <span lang="sv">skarp</span><span lang="en">sharp</span></label>
         <label title="MyAB:s kort UNI-80 med CP/M 2.2" data-title-en="MyAB's UNI-80 card with CP/M 2.2"><input type="checkbox" id="cpm"> CP/M</label>
       </div>
       <div class="hjalptext" hidden>
@@ -259,6 +273,16 @@
         instead of blinking. It is recommended with CP/M, where WordStar for
         one uses inverted text. Without TKN80 the cursor always blinks, as on
         the ABC80. The terminal and <code>-B</code> always show it steady.</p>
+        <p lang="sv">Skärmen liknar en vit fosforskärm, som i SDL-fönstret:
+        punkterna har ett mjukt sken runt sig, och det som släcks klingar av
+        på omkring 20 ms, så att markören och det som rullar drar en svans
+        efter sig. <i>Skarp</i> visar punkterna utan sken och
+        efterlysning, som <code>-skarp</code> i fönstret.</p>
+        <p lang="en">The screen looks like a white phosphor screen, as in
+        the SDL window: the dots glow softly, and what is switched off fades
+        over about 20 ms, so the cursor and scrolling text leave a trail.
+        <i>Sharp</i> shows the dots without glow and afterglow, like
+        <code>-skarp</code> in the window.</p>
         <p lang="sv"><i>CP/M</i> sätter i MyAB:s kort UNI-80 (band 2,
         kapitlet CP/M) och startar CP/M 2.2 från en systemskiva i FD2, som när
         RESET hålls nere på den riktiga maskinen. Allt utom CCP:n, BDOS:en och
@@ -354,12 +378,13 @@
         <code>Ü</code>. The disks are under <i>Floppy disk</i>.</p>
         <p lang="sv">I en länk: <code>?rom=gammal</code> väljer den gamla
         ROM:en, <code>?tkn80=pa</code> sätter i TKN80 och
-        <code>?fast=pa</code> ger den fast markör.
+        <code>?fast=pa</code> ger den fast markör. <code>?skarp=pa</code>
+        ger skarpa punkter.
         <code>?cpm=pa</code> startar CP/M och <code>?zork=pa</code> Zork I.
         </p>
         <p lang="en">In a link: <code>?rom=gammal</code> selects the old
         ROM, <code>?tkn80=pa</code> fits TKN80 and <code>?fast=pa</code> gives
-        it a steady cursor.
+        it a steady cursor. <code>?skarp=pa</code> gives sharp dots.
         <code>?cpm=pa</code> starts CP/M and <code>?zork=pa</code> Zork I.
         </p>
       </div>
@@ -881,6 +906,9 @@ const FILER = {
  * en gång i sekunden när det har ändrats och när sidan stängs. Forth
  * med CMOS är tolken från exempel 7 med de egna orden där.
  *
+ * Skärmen är en vit fosforskärm som i SDL-fönstret (se fosfor()),
+ * eller med rutan skarp skarpa punkter.
+ *
  * Tangenterna går som i terminalen (vard/terminal.c): Enter är RETURN
  * ($0D), backsteg och vänsterpil $08, högerpil $09, Ctrl-C BREAK ($03),
  * och å ä ö é ü Å Ä Ö É Ü blir ABC80:s koder. Ett program som skrivs in
@@ -1027,6 +1055,8 @@ function visa_lagen(alltid = false) {
                      $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
     if ($('tkn80').checked)
         delar.push('TKN80' + ($('fast').checked ? t(', fast', ', steady') : ''));
+    if ($('skarp').checked)
+        delar.push(t('skarp', 'sharp'));
     if (cpm_valt())
         delar.push('CP/M');
     const maskin = delar.join(' · ');
@@ -1582,19 +1612,75 @@ function papper_rita() {
 
 let anvande_ljud = false;
 
-let bilden = ritning.createImageData(320, 240);
+/* Skärmen ritas som i sdl/fonster.c, som en vit fosforskärm: punkterna
+ * (320 x 240, eller 640 x 240 med TKN80 i 80-teckensläget) läggs på en
+ * egen canvas, punktbild, och ritas förstorade på skarm (640 x 480).
+ * Det som tänds lyser direkt, och det som släcks klingar av med
+ * tidskonstanten EFTERLYS: varje gång skärmen ritas läggs svart över med
+ * täckningen 1 - exp(-dt / EFTERLYS), och sedan punkterna med
+ * 'lighten', så att de svarta inte täcker det som klingar av. Skenet är
+ * samma bild på canvasen sken, som täcker hela ramen, suddad med CSS
+ * (filter: blur, med radien räknad om till skärmens storlek) och lagd
+ * ovanpå. Med rutan skarp ritas punkterna utan sken och efterlysning. */
+const EFTERLYS = 0.020;                      /* efterlysningens tidskonstant, s */
+const SKEN = 2;                              /* skenets standardavvikelse, av 640 punkter */
+const sken = $('sken');
+const sken_ritning = sken.getContext('2d');
+const punktbild = document.createElement('canvas');
+const punktritning = punktbild.getContext('2d');
+let bilden = null;
+let fosfor_ritad = 0;                        /* performance.now() när skärmen senast ritades */
 
-/* Med TKN80 i 80-teckensläget är bilden 640 punkter bred; canvasen
- * följer med, och CSS håller den lika stor. */
+/* Den senaste bilden ur WebAssembly till punktbild. */
 function rita() {
     const bredd = e.kolumner() * 8;
-    if (bredd !== bilden.width) {
-        skarm.width = bredd;
-        bilden = ritning.createImageData(bredd, 240);
+    if (!bilden || bredd !== bilden.width) {
+        punktbild.width = bredd;
+        punktbild.height = 240;
+        bilden = punktritning.createImageData(bredd, 240);
     }
     bilden.data.set(new Uint8Array(e.memory.buffer, e.punkter(), bredd * 240 * 4));
-    ritning.putImageData(bilden, 0, 0);
+    punktritning.putImageData(bilden, 0, 0);
 }
+
+/* Skärmen och skenet, en gång per varv. */
+function fosfor() {
+    if (!bilden)
+        return;
+    const nu = performance.now();
+    const dt = fosfor_ritad ? (nu - fosfor_ritad) / 1000 : 1;
+    fosfor_ritad = nu;
+    const skarp = $('skarp').checked;
+    ritning.globalCompositeOperation = 'source-over';
+    ritning.globalAlpha = skarp ? 1 : 1 - Math.exp(-dt / EFTERLYS);
+    ritning.fillStyle = '#000';
+    ritning.fillRect(0, 0, skarm.width, skarm.height);
+    ritning.globalAlpha = 1;
+    ritning.globalCompositeOperation = 'lighten';
+    ritning.imageSmoothingEnabled = false;
+    ritning.drawImage(punktbild, 0, 0, skarm.width, skarm.height);
+    ritning.globalCompositeOperation = 'source-over';
+    if (!skarp) {
+        sken_ritning.clearRect(0, 0, sken.width, sken.height);
+        sken_ritning.drawImage(skarm, skarm.offsetLeft, skarm.offsetTop,
+                               skarm.clientWidth, skarm.clientHeight);
+    }
+}
+
+/* Skenets canvas har ramens storlek i CSS-punkter, och radien följer
+ * skärmens storlek på sidan. */
+function skenets_storlek() {
+    sken.width = $('ram').clientWidth;
+    sken.height = $('ram').clientHeight;
+    sken.style.filter = 'blur(' + (SKEN * skarm.clientWidth / 640).toFixed(2) + 'px)';
+}
+new ResizeObserver(skenets_storlek).observe($('ram'));
+
+$('skarp').addEventListener('change', () => {
+    $('ram').classList.toggle('skarp', $('skarp').checked);
+    visa_lagen();
+    skarm.focus();
+});
 
 function varv() {
     if (v24_text !== null && e.tangenter_klara()) {
@@ -1648,6 +1734,7 @@ function varv() {
         if (ritad)
             rita();
     }
+    fosfor();
     visa_bandet();
     visa_lagen();
     requestAnimationFrame(varv);
@@ -2519,6 +2606,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')
         $('fast').checked = true;
+    if (fraga.get('skarp') === 'pa') {
+        $('skarp').checked = true;
+        $('ram').classList.add('skarp');
+    }
     const med_zork = fraga.get('zork') === 'pa' && $('cpm');
     if ((fraga.get('cpm') === 'pa' || med_zork) && $('cpm'))
         $('cpm').checked = true;
