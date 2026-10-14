@@ -1,7 +1,7 @@
-% abc80rom.tex -- den kommenterade disassembleringen av ABC80:s BASIC-ROM
-% för det publika förrådet (inifran/disass/abc80/abc80rom.pdf). Byggs ur
-% band 1:s frysta kapitel, så att texten är densamma som i boken:
-% bok/inifran/abc80rom.sh -> bok/inifran/abc80rom.pdf
+% abc80rom.tex -- den kommenterade disassembleringen av ABC80:s BASIC-ROM,
+% byggd ur mallen (inifran/mall/bygg.sh abc80). Bara listningen och tabellerna
+% som hör till den: systemvariablerna, felkoderna, tokens och symbolerna.
+% Bokens löptext är inte med.
 
 \documentclass[10pt,oneside]{report}
 \usepackage{abc80stil}
@@ -15,12 +15,10 @@
 {\Huge\bfseries ABC80 BASIC-ROM\par}
 \vspace{6mm}
 {\LARGE Kommenterad disassemblering\par}
-\vspace{4mm}
-{\large med skillnaderna i den senare versionen 9913\par}
 \vspace{14mm}
-{\large Z80-kod, \$0000--\$3FFF (16 KB)\par}
+{\large Z80-kod, \$0000--\$3FFF (16 KB), version 11273\par}
 \vfill
-{\small Ur boken \emph{ABC80 inifrån}, band 1.\par}
+{\small Hör till boken \emph{ABC80 inifrån}.\par}
 \end{titlepage}
 \hypersetup{pageanchor=true}
 \pagenumbering{roman}
@@ -28,32 +26,14 @@
 \cleardoublepage\pagenumbering{arabic}
 
 \chapter{Inledning}
-\par\noindent Det här är ABC80:s BASIC-ROM, 16 kilobyte Z80-kod på \adr{0000}–\adrx{3FFF}, genomgången instruktion för instruktion. Listningen återassembleras till exakt samma byte som ROM:en. Texten är densamma som i band 1 av boken \emph{ABC80 inifrån}, men här står bara listningen och de kapitel och bilagor som hör till den.\par
-\section{Versionerna}
-\par\noindent ABC80 levererades med minst två versioner av BASIC-ROM:en. De har inget versionsnummer utan kallas efter sin kontrollsumma: summan av alla 16\,384 byten, räknad med 16 bitar. Listningen gäller den första, 11273 (\texttt{abc80old.rom}). Den senare, 9913 (\texttt{abc80new.rom}), redovisas i en bilaga som skillnader mot den första.\par
-\section{Att läsa listningen}
-\par\noindent Varje rad i listningen visar adressen, de byte som står där, eventuellt ett namn och instruktionen, följd av en kommentar. Så här börjar rutinen \namn{INIT}, som körs när datorn slås på:\par
-\begin{Verb}
-\VL{\SP{4}0068\SP{2}DB\SP{1}07\SP{3}\namn{INIT}:\SP{2}IN\SP{3}A,(\$07)\SP{3};\SP{1}port\SP{1}7:\SP{1}återställ\SP{1}ABC-bussen}
-\VL{\SP{4}006A\SP{2}ED\SP{1}5E\SP{10}IM\SP{3}2}
-\VL{\SP{4}006C\SP{2}3E\SP{1}CF\SP{10}LD\SP{3}A,\$CF\SP{5};\SP{1}PIO\SP{1}B:\SP{1}bitläge\SP{1}...}
-\VL{\SP{4}006E\SP{2}D3\SP{1}3B\SP{10}OUT\SP{2}(\$3B),A}
-\end{Verb}
-\par\noindent På adress \adr{0068} står byten \adrx{DB} och \adrx{07}. Tillsammans är de instruktionen \kw{IN A,(\$07)}, som läser port 7, och här har rutinen fått namnet \namn{INIT}. Nästa instruktion börjar två byte längre fram, på \adr{006A}. Talen skrivs hexadecimalt med \$ framför, som \adr{7C00}, och decimalt utan. Namn på rutiner och variabler, som \namn{INIT} eller \namn{CLOCK}, är valda här; ROM:en själv innehåller inga namn. Längre förklaringar står som block före den rutin de gäller.\par
-\par\noindent När texten säger att något ligger över eller under, uppåt eller nedåt i minnet, menas adresserna: högre adresser ligger över, och \adrx{FFFF} är minnets topp. Stacken växer därför nedåt, mot lägre adresser, och heapen uppåt mot den.\par
-\BildTikz{bilder/minnesstege.tex}{minnesstege.tex}{ABC80:s adressrymd med de högsta adresserna överst, och RAM:et \adrx{C000}–\adrx{FFFF} förstorat till höger. Med RAM-utbyggnaden börjar programmet, \namn{BOFA}, på \adrx{8000}. Blocken är inte ritade i skala.}
-\par\noindent En rad visar högst fyra byte; har instruktionen eller tabellen fler står det tre punkter. Namnen och adresserna i ROM:en är länkar i PDF-filen. Tolkningar som är osäkra är markerade med (?). Allt är härlett ur koden i ROM:en; uppgifter från andra källor har källan inom parentes, som (Finnved 1979), och källorna står i förteckningen Källor.\par
-\par\noindent Instruktionernas namn är Zilogs. DIAB skrev inte så: BASIC:en utvecklades på en Interdata 7/32 med en egen assembler, och i originalets listor står sådant som \kw{LR}, \kw{CR} och \kw{JZS} i stället för \kw{LD}, \kw{CP} och \kw{JR Z}, med adresser och koder oktalt (Finnved 1979, s.~20). Det är samma maskinkod, bara skriven på ett annat sätt.\par
+\par\noindent ABC80:s BASIC-ROM, 16 kilobyte Z80-kod på \adr{0000}–\adrx{3FFF}, i versionen med kontrollsumman 11273. Koden i listningen är inte publicerad med dokumentet utan fylldes i ur ROM:en när dokumentet byggdes; namnen och kommentarerna kommer ur arbetet med boken \emph{ABC80 inifrån}, där ROM:ens uppbyggnad och arbetssätt beskrivs.\par
+\par\noindent Varje rad visar adressen, byten, eventuellt ett namn och instruktionen, följd av en kommentar. En rad visar högst fyra byte; har instruktionen eller tabellen fler står det tre punkter. Talen skrivs hexadecimalt med \$ framför och decimalt utan. Namnen på rutiner och variabler är valda för genomgången; ROM:en själv innehåller inga. Längre förklaringar står som block före den rutin de gäller. Instruktionernas namn är Zilogs.\par
+\par\noindent Namnen och adresserna är länkar i PDF-filen. Osäkra tolkningar är markerade med (?). Uppgifter från andra källor har källan inom parentes; källförteckningen finns i boken.\par
 
-\input{kapitel/arkitektur}
 \input{kapitel/variabler}
 \input{kapitel/listning}
 \appendix
 \input{kapitel/felkoder}
 \input{kapitel/tokens}
-\input{kapitel/version9913}
-\input{kapitel/oklara}
-\input{kapitel/felegen}
-\input{kapitel/kallor}
 \input{kapitel/symboler}
 \end{document}

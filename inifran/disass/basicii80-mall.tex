@@ -1,4 +1,4 @@
-%% ROM sha256 101c933117ac32368db70bdd848c7a7da29eb7a54dccfe9a0f6e5e0040742bf6 org 0000
+%% ROM sha256 778e7c8e2916e2d4c524a6aee4a64513db6c96d362d5a82ed72487c09a31fe26 org 0000
 %% LÄNK l:ABORT l:ABS l:ADDS l:ADRREF l:ALLOC l:ALLOCC l:ALNUM l:ARRELM
 %% LÄNK l:ASC l:ATN l:AUTO l:AUTODM v:AUTOST l:BASDIG l:BASSTR l:BCDADD
 %% LÄNK l:BCDARG l:BCDCMP l:BCDEND l:BCDER3 l:BCDERR l:BCDFIX l:BCDLEN l:BCDNUL
@@ -389,9 +389,9 @@
 \VL{\SP{15}i\SP{1}\hyperlink{a:6000}{\$6000}-\$77FF\SP{1}som\SP{1}börjar\SP{1}med\SP{1}JP\SP{1}(\$C3).\SP{1}Här\SP{1}finns\SP{1}två:}
 \VL{\SP{15}\hyperlink{a:6000}{\$6000}\SP{1}(DOS\SP{1}för\SP{1}ABC800:s\SP{1}skivminnen,\SP{1}JP-tabell\SP{1}med\SP{1}35}
 \VL{\SP{15}ingångar)\SP{1}och\SP{1}\hyperlink{a:7000}{\$7000}\SP{1}(enheten\SP{1}PR:,\SP{1}skrivare\SP{1}via\SP{1}V24\SP{1}eller}
-\VL{\SP{15}Centronics;\SP{1}\hyperlink{a:7370}{\$7370}-\$77FF\SP{1}är\SP{1}rester)}
-\VL{\SP{2}\$7800-\$7BFF\SP{2}oanvänt\SP{1}(\$FF\SP{1}i\SP{1}ROM-filen)}
-\VL{\SP{2}\$7C00-\$7FFF\SP{2}bildminne,\SP{1}24\SP{1}rader\SP{1}x\SP{1}40\SP{1}tecken\SP{1}(se\SP{1}\hyperlink{l:ROWTAB}{ROWTAB})}
+\VL{\SP{15}Centronics;\SP{1}\hyperlink{a:7370}{\$7370}-\$77FF\SP{1}är\SP{1}tomma,\SP{1}\$FF)}
+\VL{\SP{2}\hyperlink{a:7800}{\$7800}-\$7BFF\SP{2}oanvänt\SP{1}(\$FF\SP{1}i\SP{1}ROM-filen)}
+\VL{\SP{2}\hyperlink{a:7C00}{\$7C00}-\$7FFF\SP{2}bildminne,\SP{1}24\SP{1}rader\SP{1}x\SP{1}40\SP{1}tecken\SP{1}(se\SP{1}\hyperlink{l:ROWTAB}{ROWTAB})}
 \VL{\SP{2}\$8000-\SP{7}RAM\SP{1}(\hyperlink{v:BOTRAM}{BOTRAM}):\SP{1}nedifrån\SP{1}COMMON-området\SP{1}och\SP{1}variablerna}
 \VL{\SP{15}(\hyperlink{v:VARBEG}{VARBEG},\SP{1}\hyperlink{v:FREPTR}{FREPTR}),\SP{1}överst\SP{1}under\SP{1}\hyperlink{v:MEMTOP}{MEMTOP}\SP{1}(=\SP{1}\hyperlink{v:STKTOP}{STKTOP}\SP{1}-\SP{1}\$276)}
 \VL{\SP{15}programmet\SP{1}(\hyperlink{v:PRGBEG}{PRGBEG}-\hyperlink{v:PRGEND}{PRGEND},\SP{1}se\SP{1}\hyperlink{l:NEW}{NEW})}
@@ -773,7 +773,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:00DA}\Ad{00DA}\SP{2}\By{?}\SP{2}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:00DE}\Ad{00DE}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{CLS}\SP{14}}{ABC800: \texttt{CALL} \texttt{\$0299} (bildkretsen, sedan \hyperlink{l:CLS}{\texttt{CLS}})}
 \Gap
-\begin{Cmt}\par\noindent Tilläggsprogram: varje sida \hyperlink{a:6000}{\texttt{\$6000}}, \hyperlink{a:6100}{\texttt{\$6100}} .. \texttt{\$7700} som börjar med \texttt{\$C3} (\texttt{JP}) anropas (\texttt{JP} (HL) i \hyperlink{a:1DBC}{\texttt{\$1DBC}}).\par\end{Cmt}
+\begin{Cmt}\par\noindent Tilläggsprogram: varje sida \hyperlink{a:6000}{\texttt{\$6000}}, \hyperlink{a:6100}{\texttt{\$6100}} .. \hyperlink{a:7700}{\texttt{\$7700}} som börjar med \texttt{\$C3} (\texttt{JP}) anropas (\texttt{JP} (HL) i \hyperlink{a:1DBC}{\texttt{\$1DBC}}).\par\end{Cmt}
 \CL{\T{a:00E1}\Ad{00E1}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:00E4}\Ad{00E4}\SP{2}\By{?}\SP{8}\T{l:EXTSCN}\label{l:EXTSCN}\Lb{EXTSCN:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:00E6}\Ad{00E6}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
@@ -781,7 +781,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:00EA}\Ad{00EA}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{16}}{nästa sida}
 \CL{\T{a:00EB}\Ad{00EB}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:00ED}\Ad{00ED}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
-\CL{\T{a:00EE}\Ad{00EE}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{EXTSCN}\SP{8}}{till och med \texttt{\$7700}}
+\CL{\T{a:00EE}\Ad{00EE}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{EXTSCN}\SP{8}}{till och med \hyperlink{a:7700}{\texttt{\$7700}}}
 \Gap
 \begin{Cmt}\par\noindent \hyperlink{v:STKTOP}{\texttt{STKTOP}} = SP: \texttt{\$FD00}, eller lägre om ett tilläggsprogram har flyttat stacken (med DOS:en på \hyperlink{a:6000}{\texttt{\$6000}} blir det \texttt{\$F4DE}). \hyperlink{v:MEMTOP}{\texttt{MEMTOP}} = SP - \texttt{\$276}. \hyperlink{l:NEW}{\texttt{NEW}}. Sedan kopieras startkommandot (\hyperlink{v:AUTOST}{\texttt{AUTOST}}, normalt \texttt{!} CR) till radbufferten och körs som om det hade skrivits in.\par\end{Cmt}
 \CL{\T{a:00F0}\Ad{00F0}\SP{2}\By{?}\SP{2}\SP{8}\Fy{c}{STKTOP}}{}
@@ -1054,7 +1054,7 @@ sist ger adress och sida för varje etikett.
 \Gap
 \CL{\T{a:02B0}\Ad{02B0}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:CLS}{\texttt{CLS}}: markören till 0,0 och \texttt{\$7C00}-\texttt{\$7FFF} fylls med blanktecken.\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:CLS}{\texttt{CLS}}: markören till 0,0 och \hyperlink{a:7C00}{\texttt{\$7C00}}-\texttt{\$7FFF} fylls med blanktecken.\par\end{Cmt}
 \CL{\T{a:02B2}\Ad{02B2}\SP{2}\By{?}\SP{11}\T{l:CLS}\label{l:CLS}\Lb{CLS:}\SP{4}\Fy{c}{}}{}
 \CL{\T{a:02B3}\Ad{02B3}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:02B4}\Ad{02B4}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}}{}
@@ -1246,7 +1246,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:03E2}\Ad{03E2}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:03E4}\Ad{03E4}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L03DB}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:ROWTAB}{\texttt{ROWTAB}}: skärmradernas adresser. ABC80:s bildminne är sammanflätat: rad 0\mbox{-}7 på \texttt{\$7C00}+\texttt{\$80}*n, rad 8\mbox{-}15 +\texttt{\$28}, rad 16\mbox{-}23 +\texttt{\$50}.\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:ROWTAB}{\texttt{ROWTAB}}: skärmradernas adresser. ABC80:s bildminne är sammanflätat: rad 0\mbox{-}7 på \hyperlink{a:7C00}{\texttt{\$7C00}}+\texttt{\$80}*n, rad 8\mbox{-}15 +\texttt{\$28}, rad 16\mbox{-}23 +\texttt{\$50}.\par\end{Cmt}
 \CL{\T{a:03E6}\Ad{03E6}\SP{2}\By{?}\SP{8}\T{l:ROWTAB}\label{l:ROWTAB}\Lb{ROWTAB:}\SP{1}\Fy{w}{}}{}
 \CL{\T{a:03E8}\Ad{03E8}\SP{2}\By{?}\SP{8}\SP{8}\Fy{w}{}}{}
 \CL{\T{a:03EA}\Ad{03EA}\SP{2}\By{?}\SP{8}\SP{8}\Fy{w}{}}{}
@@ -18155,7 +18155,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:6FFE}\Ad{6FFE}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
 \Gap
 \Sec{Tilläggsprogrammet på \$7000: enheten PR: (skrivare)}{Tilläggsprogrammet på \texttt{\$7000}: enheten PR: (skrivare)}{7000}
-\begin{Note}\par\noindent Startas av \hyperlink{l:EXTSCN}{\texttt{EXTSCN}} vid \hyperlink{l:RESET}{\texttt{RESET}}. \hyperlink{l:PRINIT}{\texttt{PRINIT}} länkar in enhetsposten \hyperlink{l:PRDEV}{\texttt{PRDEV}} (\texttt{{\char34}PR\ {\char34}}, drivrutin \hyperlink{l:PRDRV}{\texttt{PRDRV}}) i \hyperlink{v:DEVLST}{\texttt{DEVLST}}, reserverar ett arbetsområde under stacken (\hyperlink{l:PRAREA}{\texttt{PRAREA}}) och kopierar standardinställningen \hyperlink{l:PRDEF}{\texttt{PRDEF}} till PRDEFR (\texttt{\$FFC0}, i den oanvända delen av \texttt{IM} 2-tabellen). HL = \texttt{\$7600} tillbaka, så att \hyperlink{l:EXTSCN}{\texttt{EXTSCN}} fortsätter på \texttt{\$7700}: sidorna \hyperlink{a:7100}{\texttt{\$7100}}-\texttt{\$76FF} hör till programmet och undersöks inte.\par
+\begin{Note}\par\noindent Startas av \hyperlink{l:EXTSCN}{\texttt{EXTSCN}} vid \hyperlink{l:RESET}{\texttt{RESET}}. \hyperlink{l:PRINIT}{\texttt{PRINIT}} länkar in enhetsposten \hyperlink{l:PRDEV}{\texttt{PRDEV}} (\texttt{{\char34}PR\ {\char34}}, drivrutin \hyperlink{l:PRDRV}{\texttt{PRDRV}}) i \hyperlink{v:DEVLST}{\texttt{DEVLST}}, reserverar ett arbetsområde under stacken (\hyperlink{l:PRAREA}{\texttt{PRAREA}}) och kopierar standardinställningen \hyperlink{l:PRDEF}{\texttt{PRDEF}} till PRDEFR (\texttt{\$FFC0}, i den oanvända delen av \texttt{IM} 2-tabellen). HL = \hyperlink{a:7600}{\texttt{\$7600}} tillbaka, så att \hyperlink{l:EXTSCN}{\texttt{EXTSCN}} fortsätter på \hyperlink{a:7700}{\texttt{\$7700}}: sidorna \hyperlink{a:7100}{\texttt{\$7100}}-\texttt{\$76FF} hör till programmet och undersöks inte.\par
 \par\noindent Skrivaren kan vara seriell (V24, bitvis via PIO B, port \texttt{\$3A}) eller parallell (Centronics-kort på ABC-bussen, portarna \texttt{\$00}-\texttt{\$03}).\par
 \par\noindent Filnamnet efter \texttt{PR:} är en inställning, t.ex. \texttt{PR:VSA30D72.4}. Namnet och tillägget (8 + 3 tecken, se S4AB6) läses som en följd:\par
 \begin{Verb}
@@ -18690,247 +18690,12 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:7365}\Ad{7365}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
 \CL{\T{a:736D}\Ad{736D}\SP{2}\By{?}\SP{5}\SP{8}\Fy{bxxx}{}}{}
 \Gap
-\begin{Cmt}\par\noindent Resten av sidorna \hyperlink{a:7370}{\texttt{\$7370}}-\texttt{\$77FF} används inte: rester av äldre kod (delar av \hyperlink{l:PROUT}{\texttt{PROUT}} och \hyperlink{l:CENOUT}{\texttt{CENOUT}}), en BASIC-programtext (\texttt{{\char34}UFLOADER{\char34}}, laddar UFORTH.DAT), en kopia av \texttt{\$7309}-\hyperlink{a:73A0}{\texttt{\$73A0}} på \texttt{\$7600} och sedan \texttt{\$E5} (samma värde som på en nyformaterad diskett) till \texttt{\$77FF}.\par\end{Cmt}
+\begin{Cmt}\par\noindent Resten av sidorna \hyperlink{a:7370}{\texttt{\$7370}}-\texttt{\$77FF} används inte och är \texttt{\$FF}. (I basicii80.rom ur abc80sim ligger där i stället rester av äldre kod.)\par\end{Cmt}
 \CL{\T{a:7370}\Ad{7370}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7378}\Ad{7378}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7380}\Ad{7380}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7388}\Ad{7388}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7390}\Ad{7390}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7398}\Ad{7398}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:73A0}\Ad{73A0}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:73A2}\Ad{73A2}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:73A8}\Ad{73A8}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:73A9}\Ad{73A9}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m8}{}}{}
-\CL{\T{a:73B1}\Ad{73B1}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:73B3}\Ad{73B3}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:73B9}\Ad{73B9}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:73BA}\Ad{73BA}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m32}{}}{}
-\CL{\T{a:73DA}\Ad{73DA}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m7}{}}{}
-\CL{\T{a:73E1}\Ad{73E1}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:73E3}\Ad{73E3}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m32}{}}{}
-\CL{\T{a:7403}\Ad{7403}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m20}{}}{}
-\CL{\T{a:7417}\Ad{7417}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7418}\Ad{7418}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m14}{}}{}
-\CL{\T{a:7426}\Ad{7426}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7427}\Ad{7427}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:742D}\Ad{742D}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:742E}\Ad{742E}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m28}{}}{}
-\CL{\T{a:744A}\Ad{744A}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:744C}\Ad{744C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:7452}\Ad{7452}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7453}\Ad{7453}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m19}{}}{}
-\CL{\T{a:7466}\Ad{7466}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:7468}\Ad{7468}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m8}{}}{}
-\CL{\T{a:7470}\Ad{7470}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7471}\Ad{7471}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:7477}\Ad{7477}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7478}\Ad{7478}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:747E}\Ad{747E}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:747F}\Ad{747F}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m30}{}}{}
-\CL{\T{a:749D}\Ad{749D}\SP{2}\By{?}\SP{5}\SP{8}\Fy{bxxx}{}}{}
-\CL{\T{a:74A0}\Ad{74A0}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:74A6}\Ad{74A6}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:74A7}\Ad{74A7}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m12}{}}{}
-\CL{\T{a:74B3}\Ad{74B3}\SP{2}\By{?}\SP{5}\SP{8}\Fy{bxxx}{}}{}
-\CL{\T{a:74B6}\Ad{74B6}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m27}{}}{}
-\CL{\T{a:74D1}\Ad{74D1}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:74D2}\Ad{74D2}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m10}{}}{}
-\CL{\T{a:74DC}\Ad{74DC}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:74DD}\Ad{74DD}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:74E3}\Ad{74E3}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:74E4}\Ad{74E4}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m26}{}}{}
-\CL{\T{a:74FE}\Ad{74FE}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:7500}\Ad{7500}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:7506}\Ad{7506}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7507}\Ad{7507}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m9}{}}{}
-\CL{\T{a:7510}\Ad{7510}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7511}\Ad{7511}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m10}{}}{}
-\CL{\T{a:751B}\Ad{751B}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:751C}\Ad{751C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m10}{}}{}
-\CL{\T{a:7526}\Ad{7526}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7527}\Ad{7527}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m19}{}}{}
-\CL{\T{a:753A}\Ad{753A}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:753B}\Ad{753B}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m32}{}}{}
-\CL{\T{a:755B}\Ad{755B}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m14}{}}{}
-\CL{\T{a:7569}\Ad{7569}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:756A}\Ad{756A}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m32}{}}{}
-\CL{\T{a:758A}\Ad{758A}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m6}{}}{}
-\CL{\T{a:7590}\Ad{7590}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7591}\Ad{7591}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m9}{}}{}
-\CL{\T{a:759A}\Ad{759A}\SP{2}\By{?}\SP{2}\SP{8}\Fy{bxxxx}{}}{}
-\CL{\T{a:759E}\Ad{759E}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m32}{}}{}
-\CL{\T{a:75BE}\Ad{75BE}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m32}{}}{}
-\CL{\T{a:75DE}\Ad{75DE}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m16}{}}{}
-\CL{\T{a:75EE}\Ad{75EE}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:75F6}\Ad{75F6}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:75FE}\Ad{75FE}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7606}\Ad{7606}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:760E}\Ad{760E}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7616}\Ad{7616}\SP{2}\By{?}\SP{8}\SP{8}\Fy{bxx}{}}{}
-\CL{\T{a:7618}\Ad{7618}\SP{2}\By{?}\SP{2}\SP{8}\Fy{m4}{}}{}
-\CL{\T{a:761C}\Ad{761C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxx}{}}{}
-\CL{\T{a:7623}\Ad{7623}\SP{2}\By{?}\SP{2}\SP{8}\Fy{m4}{}}{}
-\CL{\T{a:7627}\Ad{7627}\SP{2}\By{?}\SP{11}\SP{8}\Fy{bx}{}}{}
-\CL{\T{a:7628}\Ad{7628}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m15}{}}{}
-\CL{\T{a:7637}\Ad{7637}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:763F}\Ad{763F}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7647}\Ad{7647}\SP{2}\By{?}\SP{5}\SP{8}\Fy{bxxx}{}}{}
-\CL{\T{a:764A}\Ad{764A}\SP{2}\By{?}\SP{1}\SP{8}\Fy{m18}{}}{}
-\CL{\T{a:765C}\Ad{765C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7664}\Ad{7664}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:766C}\Ad{766C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7674}\Ad{7674}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:767C}\Ad{767C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7684}\Ad{7684}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:768C}\Ad{768C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7694}\Ad{7694}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:769C}\Ad{769C}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\begin{Cmt}\T{a:76A4}\T{a:76AC}\T{a:76B4}\T{a:76BC}\T{a:76C4}\T{a:76CC}\T{a:76D4}\T{a:76DC}\T{a:76E4}\T{a:76EC}\T{a:76F4}\T{a:76FC}\T{a:7704}\T{a:770C}\T{a:7714}\T{a:771C}\T{a:7724}\T{a:772C}\T{a:7734}\T{a:773C}\T{a:7744}\T{a:774C}\T{a:7754}\T{a:775C}\T{a:7764}\T{a:776C}\T{a:7774}\T{a:777C}\T{a:7784}\T{a:778C}\T{a:7794}\T{a:779C}\T{a:77A4}\T{a:77AC}\T{a:77B4}\T{a:77BC}\T{a:77C4}\T{a:77CC}\T{a:77D4}\T{a:77DC}\T{a:77E4}\T{a:77EC}\T{a:77F4}\textit{\$76A4--\$77FB: bara \$E5 (344 bytes), utelämnas här.}\end{Cmt}
-\CL{\T{a:77FC}\Ad{77FC}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\CL{\T{a:7804}\Ad{7804}\SP{2}\By{?}\SP{1}\SP{8}\Fy{bxxxxxxxx}{}}{}
-\begin{Cmt}\T{a:780C}\T{a:7814}\T{a:781C}\T{a:7824}\T{a:782C}\T{a:7834}\T{a:783C}\T{a:7844}\T{a:784C}\T{a:7854}\T{a:785C}\T{a:7864}\T{a:786C}\T{a:7874}\T{a:787C}\T{a:7884}\T{a:788C}\T{a:7894}\T{a:789C}\T{a:78A4}\T{a:78AC}\T{a:78B4}\T{a:78BC}\T{a:78C4}\T{a:78CC}\T{a:78D4}\T{a:78DC}\T{a:78E4}\T{a:78EC}\T{a:78F4}\T{a:78FC}\T{a:7904}\T{a:790C}\T{a:7914}\T{a:791C}\T{a:7924}\T{a:792C}\T{a:7934}\T{a:793C}\T{a:7944}\T{a:794C}\T{a:7954}\T{a:795C}\T{a:7964}\T{a:796C}\T{a:7974}\T{a:797C}\T{a:7984}\T{a:798C}\T{a:7994}\T{a:799C}\T{a:79A4}\T{a:79AC}\T{a:79B4}\T{a:79BC}\T{a:79C4}\T{a:79CC}\T{a:79D4}\T{a:79DC}\T{a:79E4}\T{a:79EC}\T{a:79F4}\T{a:79FC}\T{a:7A04}\T{a:7A0C}\T{a:7A14}\T{a:7A1C}\T{a:7A24}\T{a:7A2C}\T{a:7A34}\T{a:7A3C}\T{a:7A44}\T{a:7A4C}\T{a:7A54}\T{a:7A5C}\T{a:7A64}\T{a:7A6C}\T{a:7A74}\T{a:7A7C}\T{a:7A84}\T{a:7A8C}\T{a:7A94}\T{a:7A9C}\T{a:7AA4}\T{a:7AAC}\T{a:7AB4}\T{a:7ABC}\T{a:7AC4}\T{a:7ACC}\T{a:7AD4}\T{a:7ADC}\T{a:7AE4}\T{a:7AEC}\T{a:7AF4}\T{a:7AFC}\T{a:7B04}\T{a:7B0C}\T{a:7B14}\T{a:7B1C}\T{a:7B24}\T{a:7B2C}\T{a:7B34}\T{a:7B3C}\T{a:7B44}\T{a:7B4C}\T{a:7B54}\T{a:7B5C}\T{a:7B64}\T{a:7B6C}\T{a:7B74}\T{a:7B7C}\T{a:7B84}\T{a:7B8C}\T{a:7B94}\T{a:7B9C}\T{a:7BA4}\T{a:7BAC}\T{a:7BB4}\T{a:7BBC}\T{a:7BC4}\T{a:7BCC}\T{a:7BD4}\T{a:7BDC}\T{a:7BE4}\T{a:7BEC}\T{a:7BF4}\T{a:7BFC}\T{a:7C04}\T{a:7C0C}\T{a:7C14}\T{a:7C1C}\T{a:7C24}\T{a:7C2C}\T{a:7C34}\T{a:7C3C}\T{a:7C44}\T{a:7C4C}\T{a:7C54}\T{a:7C5C}\T{a:7C64}\T{a:7C6C}\T{a:7C74}\T{a:7C7C}\T{a:7C84}\T{a:7C8C}\T{a:7C94}\T{a:7C9C}\T{a:7CA4}\T{a:7CAC}\T{a:7CB4}\T{a:7CBC}\T{a:7CC4}\T{a:7CCC}\T{a:7CD4}\T{a:7CDC}\T{a:7CE4}\T{a:7CEC}\T{a:7CF4}\T{a:7CFC}\T{a:7D04}\T{a:7D0C}\T{a:7D14}\T{a:7D1C}\T{a:7D24}\T{a:7D2C}\T{a:7D34}\T{a:7D3C}\T{a:7D44}\T{a:7D4C}\T{a:7D54}\T{a:7D5C}\T{a:7D64}\T{a:7D6C}\T{a:7D74}\T{a:7D7C}\T{a:7D84}\T{a:7D8C}\T{a:7D94}\T{a:7D9C}\T{a:7DA4}\T{a:7DAC}\T{a:7DB4}\T{a:7DBC}\T{a:7DC4}\T{a:7DCC}\T{a:7DD4}\T{a:7DDC}\T{a:7DE4}\T{a:7DEC}\T{a:7DF4}\T{a:7DFC}\T{a:7E04}\T{a:7E0C}\T{a:7E14}\T{a:7E1C}\T{a:7E24}\T{a:7E2C}\T{a:7E34}\T{a:7E3C}\T{a:7E44}\T{a:7E4C}\T{a:7E54}\T{a:7E5C}\T{a:7E64}\T{a:7E6C}\T{a:7E74}\T{a:7E7C}\T{a:7E84}\T{a:7E8C}\T{a:7E94}\T{a:7E9C}\T{a:7EA4}\T{a:7EAC}\T{a:7EB4}\T{a:7EBC}\T{a:7EC4}\T{a:7ECC}\T{a:7ED4}\T{a:7EDC}\T{a:7EE4}\T{a:7EEC}\T{a:7EF4}\T{a:7EFC}\T{a:7F04}\T{a:7F0C}\T{a:7F14}\T{a:7F1C}\T{a:7F24}\T{a:7F2C}\T{a:7F34}\T{a:7F3C}\T{a:7F44}\T{a:7F4C}\T{a:7F54}\T{a:7F5C}\T{a:7F64}\T{a:7F6C}\T{a:7F74}\T{a:7F7C}\T{a:7F84}\T{a:7F8C}\T{a:7F94}\T{a:7F9C}\T{a:7FA4}\T{a:7FAC}\T{a:7FB4}\T{a:7FBC}\T{a:7FC4}\T{a:7FCC}\T{a:7FD4}\T{a:7FDC}\T{a:7FE4}\T{a:7FEC}\T{a:7FF4}\T{a:7FFC}\textit{\$780C--\$7FFF: bara \$FF (2036 bytes), utelämnas här.}\end{Cmt}
+\begin{Cmt}\T{a:7378}\T{a:7380}\T{a:7388}\T{a:7390}\T{a:7398}\T{a:73A0}\T{a:73A8}\T{a:73B0}\T{a:73B8}\T{a:73C0}\T{a:73C8}\T{a:73D0}\T{a:73D8}\T{a:73E0}\T{a:73E8}\T{a:73F0}\T{a:73F8}\T{a:7400}\T{a:7408}\T{a:7410}\T{a:7418}\T{a:7420}\T{a:7428}\T{a:7430}\T{a:7438}\T{a:7440}\T{a:7448}\T{a:7450}\T{a:7458}\T{a:7460}\T{a:7468}\T{a:7470}\T{a:7478}\T{a:7480}\T{a:7488}\T{a:7490}\T{a:7498}\T{a:74A0}\T{a:74A8}\T{a:74B0}\T{a:74B8}\T{a:74C0}\T{a:74C8}\T{a:74D0}\T{a:74D8}\T{a:74E0}\T{a:74E8}\T{a:74F0}\T{a:74F8}\T{a:7500}\T{a:7508}\T{a:7510}\T{a:7518}\T{a:7520}\T{a:7528}\T{a:7530}\T{a:7538}\T{a:7540}\T{a:7548}\T{a:7550}\T{a:7558}\T{a:7560}\T{a:7568}\T{a:7570}\T{a:7578}\T{a:7580}\T{a:7588}\T{a:7590}\T{a:7598}\T{a:75A0}\T{a:75A8}\T{a:75B0}\T{a:75B8}\T{a:75C0}\T{a:75C8}\T{a:75D0}\T{a:75D8}\T{a:75E0}\T{a:75E8}\T{a:75F0}\T{a:75F8}\T{a:7600}\T{a:7608}\T{a:7610}\T{a:7618}\T{a:7620}\T{a:7628}\T{a:7630}\T{a:7638}\T{a:7640}\T{a:7648}\T{a:7650}\T{a:7658}\T{a:7660}\T{a:7668}\T{a:7670}\T{a:7678}\T{a:7680}\T{a:7688}\T{a:7690}\T{a:7698}\T{a:76A0}\T{a:76A8}\T{a:76B0}\T{a:76B8}\T{a:76C0}\T{a:76C8}\T{a:76D0}\T{a:76D8}\T{a:76E0}\T{a:76E8}\T{a:76F0}\T{a:76F8}\T{a:7700}\T{a:7708}\T{a:7710}\T{a:7718}\T{a:7720}\T{a:7728}\T{a:7730}\T{a:7738}\T{a:7740}\T{a:7748}\T{a:7750}\T{a:7758}\T{a:7760}\T{a:7768}\T{a:7770}\T{a:7778}\T{a:7780}\T{a:7788}\T{a:7790}\T{a:7798}\T{a:77A0}\T{a:77A8}\T{a:77B0}\T{a:77B8}\T{a:77C0}\T{a:77C8}\T{a:77D0}\T{a:77D8}\T{a:77E0}\T{a:77E8}\T{a:77F0}\T{a:77F8}\T{a:7800}\T{a:7808}\T{a:7810}\T{a:7818}\T{a:7820}\T{a:7828}\T{a:7830}\T{a:7838}\T{a:7840}\T{a:7848}\T{a:7850}\T{a:7858}\T{a:7860}\T{a:7868}\T{a:7870}\T{a:7878}\T{a:7880}\T{a:7888}\T{a:7890}\T{a:7898}\T{a:78A0}\T{a:78A8}\T{a:78B0}\T{a:78B8}\T{a:78C0}\T{a:78C8}\T{a:78D0}\T{a:78D8}\T{a:78E0}\T{a:78E8}\T{a:78F0}\T{a:78F8}\T{a:7900}\T{a:7908}\T{a:7910}\T{a:7918}\T{a:7920}\T{a:7928}\T{a:7930}\T{a:7938}\T{a:7940}\T{a:7948}\T{a:7950}\T{a:7958}\T{a:7960}\T{a:7968}\T{a:7970}\T{a:7978}\T{a:7980}\T{a:7988}\T{a:7990}\T{a:7998}\T{a:79A0}\T{a:79A8}\T{a:79B0}\T{a:79B8}\T{a:79C0}\T{a:79C8}\T{a:79D0}\T{a:79D8}\T{a:79E0}\T{a:79E8}\T{a:79F0}\T{a:79F8}\T{a:7A00}\T{a:7A08}\T{a:7A10}\T{a:7A18}\T{a:7A20}\T{a:7A28}\T{a:7A30}\T{a:7A38}\T{a:7A40}\T{a:7A48}\T{a:7A50}\T{a:7A58}\T{a:7A60}\T{a:7A68}\T{a:7A70}\T{a:7A78}\T{a:7A80}\T{a:7A88}\T{a:7A90}\T{a:7A98}\T{a:7AA0}\T{a:7AA8}\T{a:7AB0}\T{a:7AB8}\T{a:7AC0}\T{a:7AC8}\T{a:7AD0}\T{a:7AD8}\T{a:7AE0}\T{a:7AE8}\T{a:7AF0}\T{a:7AF8}\T{a:7B00}\T{a:7B08}\T{a:7B10}\T{a:7B18}\T{a:7B20}\T{a:7B28}\T{a:7B30}\T{a:7B38}\T{a:7B40}\T{a:7B48}\T{a:7B50}\T{a:7B58}\T{a:7B60}\T{a:7B68}\T{a:7B70}\T{a:7B78}\T{a:7B80}\T{a:7B88}\T{a:7B90}\T{a:7B98}\T{a:7BA0}\T{a:7BA8}\T{a:7BB0}\T{a:7BB8}\T{a:7BC0}\T{a:7BC8}\T{a:7BD0}\T{a:7BD8}\T{a:7BE0}\T{a:7BE8}\T{a:7BF0}\T{a:7BF8}\T{a:7C00}\T{a:7C08}\T{a:7C10}\T{a:7C18}\T{a:7C20}\T{a:7C28}\T{a:7C30}\T{a:7C38}\T{a:7C40}\T{a:7C48}\T{a:7C50}\T{a:7C58}\T{a:7C60}\T{a:7C68}\T{a:7C70}\T{a:7C78}\T{a:7C80}\T{a:7C88}\T{a:7C90}\T{a:7C98}\T{a:7CA0}\T{a:7CA8}\T{a:7CB0}\T{a:7CB8}\T{a:7CC0}\T{a:7CC8}\T{a:7CD0}\T{a:7CD8}\T{a:7CE0}\T{a:7CE8}\T{a:7CF0}\T{a:7CF8}\T{a:7D00}\T{a:7D08}\T{a:7D10}\T{a:7D18}\T{a:7D20}\T{a:7D28}\T{a:7D30}\T{a:7D38}\T{a:7D40}\T{a:7D48}\T{a:7D50}\T{a:7D58}\T{a:7D60}\T{a:7D68}\T{a:7D70}\T{a:7D78}\T{a:7D80}\T{a:7D88}\T{a:7D90}\T{a:7D98}\T{a:7DA0}\T{a:7DA8}\T{a:7DB0}\T{a:7DB8}\T{a:7DC0}\T{a:7DC8}\T{a:7DD0}\T{a:7DD8}\T{a:7DE0}\T{a:7DE8}\T{a:7DF0}\T{a:7DF8}\T{a:7E00}\T{a:7E08}\T{a:7E10}\T{a:7E18}\T{a:7E20}\T{a:7E28}\T{a:7E30}\T{a:7E38}\T{a:7E40}\T{a:7E48}\T{a:7E50}\T{a:7E58}\T{a:7E60}\T{a:7E68}\T{a:7E70}\T{a:7E78}\T{a:7E80}\T{a:7E88}\T{a:7E90}\T{a:7E98}\T{a:7EA0}\T{a:7EA8}\T{a:7EB0}\T{a:7EB8}\T{a:7EC0}\T{a:7EC8}\T{a:7ED0}\T{a:7ED8}\T{a:7EE0}\T{a:7EE8}\T{a:7EF0}\T{a:7EF8}\T{a:7F00}\T{a:7F08}\T{a:7F10}\T{a:7F18}\T{a:7F20}\T{a:7F28}\T{a:7F30}\T{a:7F38}\T{a:7F40}\T{a:7F48}\T{a:7F50}\T{a:7F58}\T{a:7F60}\T{a:7F68}\T{a:7F70}\T{a:7F78}\T{a:7F80}\T{a:7F88}\T{a:7F90}\T{a:7F98}\T{a:7FA0}\T{a:7FA8}\T{a:7FB0}\T{a:7FB8}\T{a:7FC0}\T{a:7FC8}\T{a:7FD0}\T{a:7FD8}\T{a:7FE0}\T{a:7FE8}\T{a:7FF0}\T{a:7FF8}\textit{\$7378--\$7FFF: bara \$FF (3208 bytes), utelämnas här.}\end{Cmt}
 \Gap
 \end{Listing}
 \appendix
-\chapter{Interpretatorns arkitektur}
-\begingroup\setlength{\parskip}{5pt}
-
-\section*{Ursprung}
-\par\noindent BASIC II för ABC80 är inte en vidareutveckling av ABC80:s egen BASIC utan ABC800 M:s BASIC II, flyttad till ABC80. Tolken \texttt{\$06AD}-\hyperlink{a:5FFF}{\texttt{\$5FFF}} är byte för byte densamma som i ABC800 M utom på tre ställen; det som skiljer är skärmen, tangentbordet, ljudet, klockan och kassetten (se bilagan om ABC800 M). Med ABC80-BASIC:en har koden bara 296 bytes gemensamt. Principerna är ändå desamma som Johan Finnved beskrev för ABC80 (Finnved 1979): raderna kompileras vid inmatningen till postfix, namn och radnummer byts mot adresser vid \hyperlink{l:RUN}{\texttt{RUN}}, och \hyperlink{l:LIST}{\texttt{LIST}} gör om koden till text igen.\par
-\begin{Verb}
-\VL{\SP{4}inmatad\SP{1}rad\SP{1}-{\char62}\SP{1}\hyperlink{l:DOLINE}{DOLINE}\SP{1}-{\char62}\SP{1}\hyperlink{l:CMPLIN}{CMPLIN}\SP{1}-{\char62}\SP{1}\hyperlink{l:INSLIN}{INSLIN}\SP{1}(med\SP{1}radnummer)}
-\VL{\SP{36}-{\char62}\SP{1}\hyperlink{l:RUNLP}{RUNLP}\SP{2}(utan\SP{1}radnummer,\SP{1}direkt)}
-\VL{\SP{4}\hyperlink{l:RUN}{RUN}\SP{9}-{\char62}\SP{1}\hyperlink{l:LINK}{LINK}\SP{1}-{\char62}\SP{1}\hyperlink{l:RUNLP}{RUNLP}\SP{1}-{\char62}\SP{1}\hyperlink{l:STMLP}{STMLP}\SP{1}-{\char62}\SP{1}\hyperlink{l:JPTABL}{JPTABL}}
-\VL{\SP{4}\hyperlink{l:LIST}{LIST}\SP{8}-{\char62}\SP{1}\hyperlink{l:DECOMP}{DECOMP}\SP{1}-{\char62}\SP{1}text}
-\end{Verb}
-\section*{Kommandoloopen}
-\par\noindent \hyperlink{l:READY}{\texttt{READY}} skriver prompten \texttt{ABC800} och \hyperlink{l:CMDLP}{\texttt{CMDLP}} läser en rad från fil 0 (\hyperlink{l:CON}{\texttt{CON}}:). \hyperlink{l:DOLINE}{\texttt{DOLINE}} söker först bland direktkommandona (\hyperlink{l:CMDKW}{\texttt{CMDKW}}: \hyperlink{l:RUN}{\texttt{RUN}}, \hyperlink{l:LIST}{\texttt{LIST}}, \hyperlink{l:LOAD}{\texttt{LOAD}}, \hyperlink{l:SAVE}{\texttt{SAVE}}, \texttt{RENUMBER}, \hyperlink{l:AUTO}{\texttt{AUTO}}, ED ...), som körs via \hyperlink{l:CMDTAB}{\texttt{CMDTAB}}. Annars läses ett radnummer, och raden kompileras av \hyperlink{l:CMPLIN}{\texttt{CMPLIN}} i ett utrymme på stacken. En rad med radnummer läggs in i programmet av \hyperlink{l:INSLIN}{\texttt{INSLIN}}; en rad utan körs direkt. Vid ett kompileringsfel skrivs felet och raden visas igen för rättning, med den gamla texten som mall.\par
-\section*{Programmet i minnet}
-\par\noindent Programmet ligger överst i RAM, närmast under \hyperlink{v:MEMTOP}{\texttt{MEMTOP}} (stacken och DOS:ens områden ligger ovanför): \hyperlink{l:NEW}{\texttt{NEW}} kopierar dit ett huvud om 20 bytes (bl.a. \hyperlink{l:DEF}{\texttt{DEF}}-listan och \texttt{DATA}-kedjan) och en \texttt{\$87}, och \hyperlink{v:PRGBEG}{\texttt{PRGBEG}} pekar på huvudet. Varje rad är en längdbyte, radnumret (2 bytes), den interna koden och \texttt{\$87}; programmet slutar med en rad med längden 1. Nedifrån, från \hyperlink{v:BOTRAM}{\texttt{BOTRAM}} (\texttt{\$8000}), växer \texttt{COMMON}-området och variablerna (\hyperlink{v:VARBEG}{\texttt{VARBEG}}, \hyperlink{v:FREPTR}{\texttt{FREPTR}}). Variablerna har egna listor (\hyperlink{v:VARLST}{\texttt{VARLST}}), och en variabel skapas första gången den behövs.\par
-\section*{Kompilering}
-\par\noindent \hyperlink{l:CMPLIN}{\texttt{CMPLIN}} kompilerar satserna, åtskilda av \texttt{:} (\texttt{\$88}), en i taget. Nyckelorden söks med \hyperlink{l:KWSRCH}{\texttt{KWSRCH}} i tabellerna som tabellhuvudena pekar ut (\hyperlink{v:STKWP}{\texttt{STKWP}}-kedjan). Varje tabellhuvud anger första kod, antal koder, rutintabell och nyckelordslista, och huvudena är länkade från en RAM-pekare, så att ett tilläggsprogram kan lägga till egna satser och funktioner (DOS:en lägger in \texttt{BYE}, \texttt{KILL} och \texttt{NAME}). Satserna finns i två grupper: grupp 1 med koderna \texttt{\$80}-\texttt{\$A4}, och grupp 2 som skrivs som \texttt{\$86} följt av koden (\texttt{DIM}, \hyperlink{l:OPEN}{\texttt{OPEN}}, \texttt{CLOSE} ... CLR DOT). Kompileringsrutinerna, körrutinerna och uttryckskoderna står alla i en och samma hopptabell, \hyperlink{l:JPTABL}{\texttt{JPTABL}} (204 ord), som används med olika baser.\par
-\section*{Uttryckskompilatorn}
-\par\noindent \hyperlink{l:CEXPR}{\texttt{CEXPR}} kompilerar ett uttryck med prioritetsklättring över grupperna i \hyperlink{l:OPGRP}{\texttt{OPGRP}} (\texttt{EQV}, \texttt{IMP}, \texttt{OR}/\texttt{XOR}, \texttt{AND}, relationer, + -, * /, \^{}). \hyperlink{l:CFACT}{\texttt{CFACT}} tar hand om faktorerna: tal, strängar, variabler, funktioner och parenteser. Typerna bestäms redan här: varje jämförelse och + har en kod per typ (grundkod flyttal, +1 heltal, +2 sträng), och där heltal och flyttal blandas skjuts \hyperlink{l:FTOI}{\texttt{FTOI}} eller \hyperlink{l:ITOF}{\texttt{ITOF}} (\texttt{\$81}/\texttt{\$82}) in. En parentes sparas som koden \texttt{\$A7}, som inte gör något vid körning men gör att \hyperlink{l:LIST}{\texttt{LIST}} kan skriva parentesen igen. Funktionernas argument kontrolleras mot beskrivningen i \hyperlink{l:FNARG}{\texttt{FNARG}} (\hyperlink{l:CFUNC}{\texttt{CFUNC}}, \hyperlink{l:CARGS}{\texttt{CARGS}}). Uttrycket avslutas med en av tio slutkoder \texttt{\$B1}-\texttt{\$BF}: tilldelning (via adress eller till enkel variabel), värde eller pekare, för var och en av de tre typerna, och ett tomt slut. Samma tio utgångar finns i ABC80-BASIC:en (Finnved 1979).\par
-\section*{Länkning vid \texttt{RUN}}
-\par\noindent \hyperlink{l:LINK}{\texttt{LINK}} gör programmet körbart. Pass 1 lägger \hyperlink{l:DEF}{\texttt{DEF}} \texttt{FN} i \hyperlink{l:DEF}{\texttt{DEF}}-listan och kedjar ihop \texttt{DATA}-satserna. Pass 2 går med \hyperlink{l:PSCAN}{\texttt{PSCAN}} igenom hela programmet och anropar en länkrutin (\hyperlink{l:LNKTAB}{\texttt{LNKTAB}}) för varje referens: variabelnamn byts mot 16-bitarsreferenser (\hyperlink{l:VARLNK}{\texttt{VARLNK}}), radnummer mot relativa adresser (\hyperlink{l:LLINE}{\texttt{LLINE}}), \texttt{FN}-anrop mot \hyperlink{l:DEF}{\texttt{DEF}}:en (\hyperlink{l:LFNCAL}{\texttt{LFNCAL}}), och \hyperlink{l:FOR}{\texttt{FOR}}/\hyperlink{l:NEXT}{\texttt{NEXT}} och \hyperlink{l:WHILE}{\texttt{WHILE}}/\texttt{WEND} paras ihop med block i minnet (\hyperlink{l:LFOR}{\texttt{LFOR}}, \hyperlink{l:LWHILE}{\texttt{LWHILE}}, \hyperlink{l:BLKPOP}{\texttt{BLKPOP}}). Här upptäcks fel som {\char34}raden finns inte{\char34} och {\char34}\hyperlink{l:NEXT}{\texttt{NEXT}} utan \hyperlink{l:FOR}{\texttt{FOR}}{\char34}. \hyperlink{l:UNLINK}{\texttt{UNLINK}} gör det ogjort när programmet ändras. Samma genomgång (\hyperlink{l:PSCAN}{\texttt{PSCAN}} med en annan tabell) används av \texttt{RENUMBER}.\par
-\section*{Körning}
-\par\noindent \hyperlink{l:RUNLP}{\texttt{RUNLP}} kör koden trådat: varje kod är ett index i \hyperlink{l:JPTABL}{\texttt{JPTABL}}, och varje rutin slutar med \texttt{RST} \texttt{\$28} (nästa kod) eller \texttt{RET}. \hyperlink{l:STMLP}{\texttt{STMLP}} tar en sats i taget och testar före varje sats BREAK, \hyperlink{l:TRACE}{\texttt{TRACE}} och paus. Uttryckskoden körs av \hyperlink{l:EXECA}{\texttt{EXECA}} (\texttt{RST} \texttt{\$20}):\par
-\begin{Verb}
-\VL{\SP{4}\$00-\$CF\SP{2}via\SP{1}\hyperlink{l:JPTABL}{JPTABL}}
-\VL{\SP{4}\$D0-\$D4\SP{2}funktionsanrop\SP{1}(index\SP{1}i\SP{1}\hyperlink{l:FNTAB}{FNTAB})}
-\VL{\SP{4}\$D5-\$DC\SP{2}talkonstant\SP{1}med\SP{1}1-8\SP{1}bytes}
-\VL{\SP{4}\$DD-\$FF\SP{2}litet\SP{1}heltal\SP{1}0-\$22}
-\end{Verb}
-\par\noindent Värdena ligger på Z80-stacken:\par
-\begin{Verb}
-\VL{\SP{4}heltal\SP{3}2\SP{1}bytes}
-\VL{\SP{4}flyttal\SP{2}4\SP{1}bytes\SP{1}(\hyperlink{l:SINGLE}{SINGLE})\SP{1}eller\SP{1}8\SP{1}bytes\SP{1}(\hyperlink{l:DOUBLE}{DOUBLE})}
-\VL{\SP{4}sträng\SP{3}tre\SP{1}ord:\SP{1}tillfälliga\SP{1}bytes\SP{1}på\SP{1}stacken,\SP{1}adress,\SP{1}längd,}
-\VL{\SP{13}och\SP{1}eventuellt\SP{1}texten\SP{1}under\SP{1}dem}
-\end{Verb}
-\section*{Tal}
-\par\noindent Flyttalen är binära, inte BCD som i ABC80-BASIC:en: en exponentbyte med förskjutningen \texttt{\$80} och mantissan med tecknet i den första bitens plats (den ledande ettan är underförstådd). \hyperlink{l:SINGLE}{\texttt{SINGLE}} ger 4 bytes, \hyperlink{l:DOUBLE}{\texttt{DOUBLE}} 8 bytes; valet gäller hela programmet (IY+\texttt{\$1E}). Heltalen är 16 bitar med tecken. Omvandlingen till och från text (\hyperlink{l:FTODEC}{\texttt{FTODEC}}, \hyperlink{l:DECTOF}{\texttt{DECTOF}}) går via tiopotenstabellen \hyperlink{l:POW10}{\texttt{POW10}}, och \hyperlink{l:SIN}{\texttt{SIN}}, \hyperlink{l:LOG}{\texttt{LOG}}, \hyperlink{l:EXP}{\texttt{EXP}}, \hyperlink{l:ATN}{\texttt{ATN}} m.fl. räknas med polynom (\hyperlink{l:SERIES}{\texttt{SERIES}}) med koefficienter för båda precisionerna. \texttt{ADD\$}, \texttt{SUB\$}, \texttt{MUL\$} och \texttt{DIV\$} räknar med tal skrivna som text.\par
-\section*{Strängar och fält}
-\par\noindent En strängvariabel har en egen buffert med en största längd; vid första tilldelningen får den 80 bytes (eller mer), och en längre text ger fel 137. Utrymmet ligger sedan kvar hos variabeln, så ingen skräpsamling tycks behövas (?). Nya strängar byggs på Z80-stacken. Fält har ett huvud med undre gräns, antal och steg per dimension; ett fält som används utan \texttt{DIM} får dimensionerna \texttt{OPTION} \texttt{BASE} till 10.\par
-\section*{Felhantering}
-\par\noindent Ett fel ges med \texttt{RST} \texttt{\$10} följt av felnumret (hela byten), med numret i A och \hyperlink{l:ERRJP}{\texttt{ERRJP}}, eller, i kompilatorn och länkningen, med CY = 1 och numret i A. \hyperlink{l:ERRHND}{\texttt{ERRHND}} hoppar till \texttt{ON} \hyperlink{l:ERROR}{\texttt{ERROR}} \hyperlink{l:GOTO}{\texttt{GOTO}}-raden om en sådan är aktiv; annars skrivs \texttt{Error n in line m.} och det blir \hyperlink{l:READY}{\texttt{READY}}. ROM:en har inga feltexter, men en krok (\hyperlink{v:ERRTXV}{\texttt{ERRTXV}}) låter DOS:en hämta texter från skivan (BASICINI.\hyperlink{l:SYS}{\texttt{SYS}}). \hyperlink{l:CON}{\texttt{CON}} fortsätter efter ett fel som går att fortsätta, och \hyperlink{l:RESUME}{\texttt{RESUME}} går tillbaka till felet eller till en viss rad.\par
-\section*{In- och utmatning}
-\par\noindent Filer går genom enhetslistan (\hyperlink{v:DEVLST}{\texttt{DEVLST}}): varje post har ett namn på tre tecken och en drivrutin som får funktionen i A (\hyperlink{l:OPEN}{\texttt{OPEN}}, \texttt{PREPARE}, \texttt{CLOSE}, \texttt{INPUT}, \hyperlink{l:PRINT}{\texttt{PRINT}}, \hyperlink{l:GET}{\texttt{GET}}, \hyperlink{l:PUT}{\texttt{PUT}}) och filblocket i IX. ROM:en har själv NUL: och \hyperlink{l:CON}{\texttt{CON}}: (skärmen, 24 rader om 40 tecken i bildminnet på \texttt{\$7C00}, och tangentbordet på PIO A). Tilläggsprogrammen på \hyperlink{a:6000}{\texttt{\$6000}} och \hyperlink{a:7000}{\texttt{\$7000}} startas vid \hyperlink{l:RESET}{\texttt{RESET}} och länkar in fler enheter: DOS:en för ABC800:s skivminnen (DR0..HD3) och PR: för en skrivare via V24 eller Centronics.\par
-\endgroup
-\chapter{Hårdvaran}
-\begingroup\setlength{\parskip}{5pt}
-
-\section*{Minneskarta}
-\par\noindent Så som ROM-koden använder adressrymden:\par
-\begin{Verb}
-\VL{\SP{4}\hyperlink{a:0000}{\$0000}-\hyperlink{a:5FFF}{\$5FFF}\SP{2}BASIC-tolken}
-\VL{\SP{4}\hyperlink{a:6000}{\$6000}-\$6FFF\SP{2}tilläggsprogram:\SP{1}DOS\SP{1}(skivminnen)}
-\VL{\SP{4}\hyperlink{a:7000}{\$7000}-\$77FF\SP{2}tilläggsprogram:\SP{1}PR:\SP{1}(skrivare)}
-\VL{\SP{4}\$7800-\$7BFF\SP{2}oanvänt\SP{1}(\$FF\SP{1}i\SP{1}ROM-filen)}
-\VL{\SP{4}\$7C00-\$7FFF\SP{2}bildminne,\SP{1}24\SP{1}rader\SP{1}x\SP{1}40\SP{1}tecken}
-\VL{\SP{4}\$8000-\SP{7}RAM;\SP{1}\hyperlink{v:BOTRAM}{BOTRAM}\SP{1}=\SP{1}första\SP{1}adressen\SP{1}efter\SP{1}ROM:en}
-\VL{\SP{4}\$F500-\$FCFF\SP{2}DOS:\SP{1}sektorbuffertar,\SP{1}256\SP{1}bytes\SP{1}per\SP{1}kanal}
-\VL{\SP{4}\$FD00\SP{8}stackens\SP{1}topp\SP{1}vid\SP{1}start\SP{1}(\hyperlink{v:STKTOP}{STKTOP})}
-\VL{\SP{4}\$FD00-\$FE18\SP{2}DOS:\SP{1}arbetsvariabler\SP{1}och\SP{1}kanaltabell}
-\VL{\SP{4}\$FF00-\$FFFF\SP{2}systemvariabler\SP{1}(IY\SP{1}=\SP{1}\$FF00),\SP{1}RAM-vektorer,}
-\VL{\SP{17}IM\SP{1}2-tabellen\SP{1}(\$FFB0)\SP{1}och\SP{1}klockan\SP{1}(\$FFEF)}
-\end{Verb}
-\par\noindent RAM:ets början letas upp vid \hyperlink{l:RESET}{\texttt{RESET}} (\hyperlink{l:INIT}{\texttt{INIT}}): \texttt{LDDR} nollar nedåt från \texttt{\$FFEE}, och \texttt{CPIR} söker sedan första nollbyten från \texttt{\$8000} och uppåt. Där RAM saknas blir det ingen nolla, så \hyperlink{v:BOTRAM}{\texttt{BOTRAM}} blir den lägsta adressen med RAM (\texttt{\$8000} med fullt minne). Något övre slut letas inte efter: stacken börjar alltid på \texttt{\$FD00}. Vid \hyperlink{l:RESET}{\texttt{RESET}} anropas varje sida om 256 bytes i \hyperlink{a:6000}{\texttt{\$6000}}-\texttt{\$77FF} som börjar med \texttt{JP} (\texttt{\$C3}) (\hyperlink{l:EXTSCN}{\texttt{EXTSCN}}). Så startar DOS:en och PR:.\par
-\section*{I/O-portar}
-\par\noindent Alla portar som ROM:en använder, med de ställen där de används:\par
-\begin{Verb}
-\VL{\SP{4}port\SP{2}riktning\SP{2}användning\SP{23}ställe}
-\VL{\SP{4}\$00\SP{3}in/ut\SP{5}ABC-bussen:\SP{1}data\SP{17}\hyperlink{l:SECIO}{SECIO},\SP{1}\hyperlink{l:CENOUT}{CENOUT}}
-\VL{\SP{4}\$01\SP{3}in\SP{8}ABC-bussen:\SP{1}status\SP{15}\hyperlink{l:SECIO}{SECIO},\SP{1}\hyperlink{l:CENOUT}{CENOUT}}
-\VL{\SP{4}\$01\SP{3}ut\SP{8}ABC-bussen:\SP{1}välj\SP{1}kort\SP{12}\hyperlink{l:SELCRD}{SELCRD},\SP{1}\hyperlink{l:INP}{INP},\SP{1}\hyperlink{l:OUTST}{OUTST}}
-\VL{\SP{4}\$02\SP{3}ut\SP{8}ABC-bussen:\SP{1}kommando\SP{13}\hyperlink{l:SECIO}{SECIO}}
-\VL{\SP{4}\$03\SP{3}ut\SP{8}ABC-bussen:\SP{1}kommando\SP{13}\hyperlink{l:CENOUT}{CENOUT},\SP{1}\hyperlink{l:PRCLOS}{PRCLOS}}
-\VL{\SP{4}\$04\SP{3}ut\SP{8}ABC-bussen:\SP{1}återställ\SP{1}kortet\SP{5}\hyperlink{l:SECIO}{SECIO}}
-\VL{\SP{4}\$06\SP{3}ut\SP{8}ljud\SP{29}\hyperlink{l:BEEP}{BEEP},\SP{1}\hyperlink{l:KBINIT}{KBINIT}}
-\VL{\SP{4}\$07\SP{3}in\SP{8}läses\SP{1}vid\SP{1}\hyperlink{l:RESET}{RESET},\SP{1}används\SP{1}inte\SP{5}\hyperlink{l:INIT}{INIT}}
-\VL{\SP{4}\$38\SP{3}in\SP{8}PIO\SP{1}A\SP{1}data:\SP{1}tangentbordet\SP{8}\hyperlink{l:KEYWT}{KEYWT},\SP{1}\hyperlink{l:KEYINT}{KEYINT}}
-\VL{\SP{4}\$39\SP{3}ut\SP{8}PIO\SP{1}A\SP{1}styrning\SP{19}\hyperlink{l:KBINIT}{KBINIT}}
-\VL{\SP{4}\$3A\SP{3}in/ut\SP{5}PIO\SP{1}B\SP{1}data:\SP{1}V24\SP{1}till\SP{1}skrivaren\SP{3}\hyperlink{l:PROUT}{PROUT}}
-\VL{\SP{4}\$3B\SP{3}ut\SP{8}PIO\SP{1}B\SP{1}styrning\SP{19}\hyperlink{l:INIT}{INIT}}
-\end{Verb}
-\par\noindent Satserna \hyperlink{l:INP}{\texttt{INP}} och \texttt{OUT} skriver först kortvalet (IY+\texttt{\$34}) till port \texttt{\$01} och använder sedan den angivna porten, så att de når ett kort på ABC-bussen.\par
-\section*{Avbrott}
-\par\noindent Z80:an går i läge 2 med I = \texttt{\$FF}, så vektortabellen ligger på \texttt{\$FFB0}. \hyperlink{l:INIT}{\texttt{INIT}} kopierar den från \hyperlink{l:IM2INI}{\texttt{IM2INI}} (\hyperlink{a:0166}{\texttt{\$0166}}):\par
-\begin{Verb}
-\VL{\SP{4}\$FFB0\SP{2}\hyperlink{a:03DD}{\$03DD}\SP{2}\hyperlink{l:DORETI}{DORETI}\SP{1}(bara\SP{1}RETI)}
-\VL{\SP{4}\$FFB2\SP{2}\hyperlink{a:03DD}{\$03DD}\SP{2}\hyperlink{l:DORETI}{DORETI}}
-\VL{\SP{4}\$FFB4\SP{2}\hyperlink{a:03C1}{\$03C1}\SP{2}\hyperlink{l:KEYINT}{KEYINT}:\SP{1}tangentbordet\SP{1}(PIO\SP{1}A,\SP{1}vektor\SP{1}\$B4)}
-\VL{\SP{4}\$FFB6\SP{2}\hyperlink{a:03DF}{\$03DF}\SP{2}\hyperlink{l:PIOINT}{PIOINT}:\SP{1}läser\SP{1}port\SP{1}\$38\SP{1}och\SP{1}gör\SP{1}inget\SP{1}mer\SP{1}(?)}
-\VL{\SP{4}\$FFB8-\SP{1}\hyperlink{a:03DD}{\$03DD}\SP{2}\hyperlink{l:DORETI}{DORETI},\SP{1}till\SP{1}och\SP{1}med\SP{1}\$FFD7}
-\VL{\SP{4}\$FFD6\SP{2}\hyperlink{a:3AB3}{\$3AB3}\SP{2}\hyperlink{l:NMICLK}{NMICLK}\SP{1}(sätts\SP{1}efteråt,\SP{1}\hyperlink{v:IM2NMI}{IM2NMI})}
-\end{Verb}
-\par\noindent Klockan drivs av \hyperlink{l:NMI}{\texttt{NMI}} (\hyperlink{a:0066}{\texttt{\$0066}}, \texttt{JP} \hyperlink{l:NMICLK}{\texttt{NMICLK}}), som räknas till 49 eller 50 per sekund; den tickar alltså med bildfrekvensen 50 Hz. Vektorn \texttt{\$D6} är en rest från ABC800, där klockan är kanal 3 i CTC:n (vektor \texttt{\$D0} + 6); på ABC80 finns ingen CTC som använder den. Efter initieringen gör \hyperlink{l:INIT}{\texttt{INIT}} \texttt{RETI} 256 gånger (\hyperlink{l:RETIS}{\texttt{RETIS}}), så att en avbrottskedja som väntar på \texttt{RETI} släpps.\par
-\section*{Tangentbordet (PIO A, port \texttt{\$38}/\texttt{\$39})}
-\par\noindent \hyperlink{l:KBINIT}{\texttt{KBINIT}} ställer in PIO A:\par
-\begin{Verb}
-\VL{\SP{4}\$B4\SP{2}avbrottsvektor\SP{1}\$B4}
-\VL{\SP{4}\$B7\SP{2}avbrott\SP{1}på,\SP{1}aktivt\SP{1}hög,\SP{1}mask\SP{1}följer}
-\VL{\SP{4}\$7F\SP{2}masken:\SP{1}bara\SP{1}bit\SP{1}7\SP{1}ger\SP{1}avbrott}
-\VL{\SP{4}\$FF\SP{2}läge\SP{1}3\SP{1}(bitvis)}
-\VL{\SP{4}\$FF\SP{2}alla\SP{1}bitar\SP{1}ingångar}
-\end{Verb}
-\par\noindent Bit 7 är 1 när en tangent är nedtryckt, bit 0\mbox{-}6 är teckenkoden. \hyperlink{l:KEYINT}{\texttt{KEYINT}} läser tecknet vid avbrottet, sparar det i \hyperlink{v:LASTKY}{\texttt{LASTKY}} och sätter BREAK-flaggan om det var CTRL-C (\texttt{\$03}). \hyperlink{l:KEYWT}{\texttt{KEYWT}} väntar på ett tecken, visar markören genom att sätta bit 7 i tecknet under den och läser porten direkt för autorepetitionen (först en lång fördröjning, sedan en kortare).\par
-\section*{Skärmen}
-\par\noindent Bildminnet på \texttt{\$7C00}-\texttt{\$7FFF} har 24 rader om 40 tecken, men raderna ligger inte i ordning: radtabellen \hyperlink{l:ROWTAB}{\texttt{ROWTAB}} (\hyperlink{a:03E6}{\texttt{\$03E6}}) ger radernas adresser.\par
-\begin{Verb}
-\VL{\SP{4}rad\SP{2}0-7\SP{4}\$7C00,\SP{1}\$7C80,\SP{1}\$7D00\SP{1}...\SP{1}\$7F80}
-\VL{\SP{4}rad\SP{2}8-15\SP{3}\$7C28,\SP{1}\$7CA8,\SP{1}\$7D28\SP{1}...\SP{1}\$7FA8}
-\VL{\SP{4}rad\SP{1}16-23\SP{3}\$7C50,\SP{1}\$7CD0,\SP{1}\$7D50\SP{1}...\SP{1}\$7FD0}
-\end{Verb}
-\par\noindent Markören är bit 7 i tecknet i bildminnet. \hyperlink{l:CLS}{\texttt{CLS}} fyller hela \texttt{\$7C00}-\texttt{\$7FFF} med blanktecken; \hyperlink{l:SCROLL}{\texttt{SCROLL}} flyttar raderna en i taget via \hyperlink{l:ROWTAB}{\texttt{ROWTAB}}. ROM:en ställer inte in någon bildkrets (jfr ABC800 M:s 6845); den skriver bara i bildminnet.\par
-\section*{Ljudet (port \texttt{\$06})}
-\par\noindent \hyperlink{l:BEEP}{\texttt{BEEP}} skriver \texttt{\$00} och sedan \texttt{\$83} till port \texttt{\$06}; \hyperlink{l:KBINIT}{\texttt{KBINIT}} skriver \texttt{\$00} (tyst). Porten styr en ljudgenerator av typen SN76477 (abc80sim).\par
-\section*{PIO B (port \texttt{\$3A}/\texttt{\$3B}) och V24}
-\par\noindent \hyperlink{l:INIT}{\texttt{INIT}} ställer PIO B i läge 3 (\texttt{\$CF}) med bit 0\mbox{-}2 och 7 som ingångar och bit 3\mbox{-}6 som utgångar (\texttt{\$87}). Ingen avbrottsvektor ges. Bara PR: på \hyperlink{a:7000}{\texttt{\$7000}} använder porten:\par
-\begin{Verb}
-\VL{\SP{4}bit\SP{1}1\SP{2}in\SP{3}1\SP{1}=\SP{1}skrivaren\SP{1}är\SP{1}inte\SP{1}klar}
-\VL{\SP{4}bit\SP{1}3\SP{2}ut\SP{3}utgående\SP{1}data\SP{1}(1\SP{1}=\SP{1}vila)}
-\VL{\SP{4}bit\SP{1}4\SP{2}ut\SP{3}0\SP{1}under\SP{1}sändningen,\SP{1}1\SP{1}efteråt}
-\end{Verb}
-\par\noindent V24 skickas alltså bitvis av programmet (\hyperlink{l:PROUT}{\texttt{PROUT}}, \hyperlink{l:BITDLY}{\texttt{BITDLY}}), utan seriekrets.\par
-\section*{ABC-bussen (port \texttt{\$00}-\texttt{\$04}, \texttt{\$07})}
-\par\noindent Kort på ABC-bussen väljs med en kortadress till port \texttt{\$01}; sedan är port \texttt{\$00} data och \texttt{\$01} status, och \texttt{\$02}-\texttt{\$04} ger kommandon. DOS:en (\hyperlink{l:SECIO}{\texttt{SECIO}}) skickar ett kommando om fyra bytes på port \texttt{\$00} och flyttar sektorn med \texttt{INIR}/\texttt{OTIR}. Ger \texttt{IN} (\texttt{\$01}) \texttt{\$FF} eller \texttt{\$00} finns inget kort. PR: använder ett Centronics-kort: \texttt{OUT} \texttt{\$BC} till \texttt{\$01} och \texttt{\$03}, vänta tills \texttt{IN} (\texttt{\$01}) har bit 4\mbox{-}6 = 0, och tecknet till \texttt{\$00}.\par
-\section*{Varför ABC80 och inte ABC800}
-\par\noindent Tolken själv är nästan byte för byte ABC800 M:s och skriver till och med prompten \texttt{ABC800}. Allt som rör maskinen är däremot ABC80:s. Jämfört med ABC80:s egen BASIC-ROM (11273) och med ABC800 M:\par
-\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l@{}}
-\textbf{BASIC II för ABC80} & \textbf{ABC80-ROM:en} & \textbf{ABC800 M}\\\hline\endhead
-\texttt{IN} (\texttt{\$38}) tangenter & samma & port \texttt{\$22} (seriekrets)\\
-PIO A \texttt{\$B4} \texttt{\$B7} \texttt{\$7F} & \texttt{\$34} \texttt{\$B7} \texttt{\$7F} & –\\
-PIO B \texttt{\$CF} \texttt{\$87} & samma & –\\
-\texttt{OUT} (\texttt{\$06}) \texttt{\$00}, \texttt{\$83} & samma pip & –\\
-\texttt{IN} (\texttt{\$07}) vid \hyperlink{l:RESET}{\texttt{RESET}} & samma & –\\
-\hyperlink{l:ROWTAB}{\texttt{ROWTAB}} \texttt{\$7C00}... & samma 48 bytes & 6845, linjärt \texttt{\$7800}\\
-klocka 50 \hyperlink{l:NMI}{\texttt{NMI}}/s & \hyperlink{l:NMI}{\texttt{NMI}} & CTC, 93\mbox{-}94 per s\\
-\hyperlink{l:POKE}{\texttt{POKE}} utan \texttt{OUT} & – & \texttt{OUT} (\texttt{\$AA}) före \hyperlink{l:POKE}{\texttt{POKE}}\\
-V24 bitvis på PIO B & – & seriekrets\\
-\end{longtable}\end{small}
-\par\noindent PIO A skiljer bara i avbrottsvektorn: ABC80-ROM:en har I = 0 och tabellen på \texttt{\$0034}, här ligger den i RAM på \texttt{\$FFB0}. Minneskartan (ROM till \texttt{\$77FF}, bildminne på \texttt{\$7C00}, RAM från \texttt{\$8000}) är ABC80:s. ABC-bussen finns på båda maskinerna och avgör inte saken. Resterna från ABC800 (prompten, \hyperlink{a:0170}{\texttt{\$0170}}-\texttt{\$017A}, vektorn \texttt{\$D6}, \texttt{80/40} i starttexten) gör ingenting på ABC80.\par
-\endgroup
 \chapter{Felkoder}
 \noindent Felnumret är hela byten, 1--255 (0 = BREAK/\texttt{Stop}).
 Det ges med \texttt{RST \$10} följt av numret, med ett hopp till en
@@ -19373,97 +19138,6 @@ listningen.\par\medskip
 \texttt{\$CD} &  & \hyperlink{l:XDIM}{\texttt{XDIM}} & \hyperlink{l:DDIM}{\texttt{DDIM}}\\
 \texttt{\$CE} &  & \hyperlink{l:XCOMMN}{\texttt{XCOMMN}} & \hyperlink{l:DCOMMN}{\texttt{DCOMMN}}\\
 \end{longtable}\end{small}
-\chapter{Jämförelse med ABC800 M}
-\begingroup\setlength{\parskip}{5pt}
-
-\section*{Allmänt}
-\par\noindent BASIC II för ABC80 är ABC800 M:s ROM med de delar som rör skärmen, tangentbordet, kassetten och klockan utbytta. 25057 av 32768 bytes är lika på samma adress. Tolken själv, \texttt{\$06AD}-\hyperlink{a:5FFF}{\texttt{\$5FFF}}, är identisk byte för byte utom på tre ställen: NUL:-enhetens länk (\hyperlink{a:11B2}{\texttt{\$11B2}}), \hyperlink{l:POKE}{\texttt{POKE}} (\hyperlink{a:3A34}{\texttt{\$3A34}}) och klockan (\hyperlink{a:3ABA}{\texttt{\$3ABA}}-\hyperlink{a:3AD4}{\texttt{\$3AD4}}). Alla anpassningar är gjorda på plats, så att ingen adress i tolken har flyttats: det som tagits bort är ersatt med \texttt{NOP} eller nollor, och det nya ligger i luckorna. Därför finns det i ROM:en rester från ABC800 som aldrig används, t.ex. bytes \hyperlink{a:0170}{\texttt{\$0170}}-\texttt{\$017A} och \texttt{IM} 2-vektorn på \texttt{\$FFD6}.\par
-\par\noindent Kort sammanfattning:\par
-\begin{Verb}
-\VL{\SP{4}\hyperlink{a:0000}{\$0000}-\$06AC\SP{2}skärm,\SP{1}tangentbord,\SP{1}ljud,\SP{1}init:\SP{1}ABC80:s\SP{1}egna}
-\VL{\SP{4}\$06AD-\hyperlink{a:5FFF}{\$5FFF}\SP{2}tolken:\SP{1}samma\SP{1}(utom\SP{1}\hyperlink{a:11B2}{\$11B2},\SP{1}\hyperlink{a:3A34}{\$3A34},\SP{1}\hyperlink{a:3ABA}{\$3ABA}-\hyperlink{a:3AD4}{\$3AD4})}
-\VL{\SP{4}\hyperlink{a:6000}{\$6000}-\$6FFF\SP{2}DOS:\SP{1}en\SP{1}äldre\SP{1}version\SP{1}(1984-03-02\SP{1}mot\SP{1}1984-04-03)}
-\VL{\SP{4}\hyperlink{a:7000}{\$7000}-\$77FF\SP{2}PR:\SP{1}i\SP{1}stället\SP{1}för\SP{1}ABC800:s\SP{1}grafik\SP{1}och\SP{1}V24:}
-\end{Verb}
-\par\noindent Starttexten har bytts. ABC800 M har på \texttt{\$03F6} ESC \texttt{=} och \texttt{**JF T\{by 1982\mbox{-}05\mbox{-}11} (JF = Johan Finnved, T\{by = Täby) och sex BEL; basicii80 har på \hyperlink{a:0431}{\texttt{\$0431}} \texttt{*** BASICII 80/40 *} och tre BEL. Ingen kod i någon av ROM:arna refererar till texten.\par
-\section*{Maskinvaran}
-\par\noindent ABC800 har ett bildminne på \texttt{\$7800} med 80 bytes per rad (i 40-teckensläge används varannan byte), en bildkrets av typen 6845 (register på port \texttt{\$38}, data på port \texttt{\$39}; ABC 800 schema, s. 6) och tangentbordet på kanal B i en DART (data på port \texttt{\$22}, styrning på \texttt{\$23}). Klockan drivs av en CTC (\texttt{\$60}-\texttt{\$63}) och kassetten av en SIO/2 (\texttt{\$40}-\texttt{\$43}, kassetten på kanal B, \texttt{\$42}/\texttt{\$43}; ABC 800 Bruksanvisning, s. 51). ABC80 har bildminnet på \texttt{\$7C00}-\texttt{\$7FFF} med sammanflätade rader (\hyperlink{l:ROWTAB}{\texttt{ROWTAB}}), inget bildkretsregister, tangentbordet på PIO A (port \texttt{\$38} data, \texttt{\$39} styrning; samma portnummer som ABC800:s bildkrets), ljudkretsen på port \texttt{\$06} och en \hyperlink{l:NMI}{\texttt{NMI}} med 50 Hz för klockan.\par
-\section*{Start och avbrott}
-
-\subsection*{\texttt{NMI} (\texttt{\$0066})}
-\par\noindent ABC800: \texttt{JP} \texttt{\$FF8A}, RAM-vektorn som \hyperlink{l:RAMINI}{\texttt{RAMINI}} sätter till \texttt{JP} \hyperlink{a:0000}{\texttt{\$0000}}. basicii80: \texttt{JP} \hyperlink{l:NMICLK}{\texttt{NMICLK}} direkt, eftersom \hyperlink{l:NMI}{\texttt{NMI}} är klockans avbrott på ABC80.\par
-\subsection*{\texttt{INIT} (\texttt{\$00A5}-\texttt{\$00B4})}
-\par\noindent ABC800 initierar tangentbordets seriekrets (8 bytes från \hyperlink{a:0170}{\texttt{\$0170}} till port \texttt{\$23}) och CTC:n (\texttt{\$D0} till port \texttt{\$64}, sedan \texttt{\$A5} \texttt{\$7D} till port \texttt{\$63}: kanal 3 räknar med förskalning 256 och tidskonstant 125 och ger avbrott). basicii80 skriver \texttt{\$CF} och \texttt{\$87} till port \texttt{\$3B} (PIO B, läge 3 följt av I/O-ordet \texttt{\$87}: en etta är en ingång, så bit 0\mbox{-}2 och 7 är ingångar), anropar \hyperlink{l:KBINIT}{\texttt{KBINIT}} och har fem \texttt{NOP}. Tabellen \hyperlink{a:0170}{\texttt{\$0170}}-\texttt{\$017A} ligger kvar oanvänd. Att CTC-vektorn \texttt{\$FFD6} (\hyperlink{v:IM2NMI}{\texttt{IM2NMI}}) sätts till \hyperlink{a:3AB3}{\texttt{\$3AB3}} på \hyperlink{a:00B5}{\texttt{\$00B5}} är också en rest; ABC80 har ingen CTC.\par
-\subsection*{Kassetten (\texttt{\$00C7})}
-\par\noindent ABC800 anropar \texttt{\$0634}, som skriver 6 bytes från \texttt{\$06A7} till kassettens seriekrets (port \texttt{\$43}) och gör \texttt{EI}. basicii80 har tre \texttt{NOP}.\par
-\subsection*{Skärmen vid start (\texttt{\$00DE})}
-\par\noindent ABC800 anropar \texttt{\$0299}, som först ställer in bildkretsen (14 register från tabellen \texttt{\$03E4} via port \texttt{\$38}/\texttt{\$39}; bit 5 i port \texttt{\$23} väljer andra värden för register 4\mbox{-}7) och sedan fortsätter i \hyperlink{l:CLS}{\texttt{CLS}}. basicii80 anropar \hyperlink{l:CLS}{\texttt{CLS}} direkt.\par
-\subsection*{\texttt{IM} 2-tabellen (\texttt{IM2INI}, \texttt{\$016A})}
-\par\noindent Tangentbordsvektorn (\texttt{\$FFB4}) är \texttt{\$03C3} i ABC800 och \hyperlink{a:03C1}{\texttt{\$03C1}} (\hyperlink{l:KEYINT}{\texttt{KEYINT}}) i basicii80, eftersom \hyperlink{l:KEYINT}{\texttt{KEYINT}} börjar två bytes tidigare.\par
-\section*{\texttt{CON}:, skärmen och tangentbordet}
-
-\subsection*{\texttt{CONOPN} (\texttt{\$01AB})}
-\par\noindent ABC800 bestämmer radlängden genom att pröva om bildminnet på \texttt{\$7801} går att skriva (\texttt{\$55} skrivs, läses och återställs): om värdet går att läsa tillbaka blir C = 80, annars C = 40. basicii80 har alltid C = 40 och nollor till \texttt{\$01BA}.\par
-\subsection*{\texttt{SCRTXT} (\texttt{\$01F8})}
-\par\noindent ABC800 har här en andra skrivslinga för 40 tecken per rad som skriver varannan byte (\texttt{INC} DE två gånger); vid radlängd 80 hoppar den till \hyperlink{l:SCRPUT}{\texttt{SCRPUT}}. basicii80 har bara \hyperlink{l:SCRPUT}{\texttt{SCRPUT}}; \hyperlink{a:01F8}{\texttt{\$01F8}}-\hyperlink{a:0214}{\texttt{\$0214}} är \texttt{NOP}.\par
-\subsection*{\texttt{BEEP} (\texttt{\$022A})}
-\par\noindent ABC800 läser port \texttt{\$05} 200 gånger med en fördröjning emellan. Varje läsning ger en puls till högtalaren, och de 200 pulserna är pipet (ABC 800 Bruksanvisning, s. 12). basicii80 skriver 0 och sedan \texttt{\$83} till ljudkretsen (port \texttt{\$06}).\par
-\subsection*{\texttt{SCROLL}, \texttt{CLS}, \texttt{BLANK}, \texttt{CURADR} (\texttt{\$0287}-\texttt{\$02F9})}
-\par\noindent ABC800 räknar skärmadressen som \texttt{\$7800} + 80 * rad + kolumn (kolumnen dubblerad vid 40 tecken) och rullar med en enda \texttt{LDIR} (\texttt{\$730} bytes). basicii80 slår upp raden i \hyperlink{l:ROWTAB}{\texttt{ROWTAB}} och rullar rad för rad. \hyperlink{l:CLS}{\texttt{CLS}} tömmer \texttt{\$7C00}-\texttt{\$7FFF} i stället för \texttt{\$7800}-\texttt{\$7F7F}. Överblivna bytes är nollor.\par
-\subsection*{\texttt{KEYWT} (\texttt{\$0382})}
-\par\noindent ABC800 visar markören med bildkretsen: register 14/15 = markörens adress, och register 10 växlas med \texttt{XOR} \texttt{\$20} i en tidsslinga så att markören blinkar, tills en tangent har kommit (bit 7 i \hyperlink{v:KEYFLG}{\texttt{KEYFLG}}). Koden tas sedan från \hyperlink{v:LASTKY}{\texttt{LASTKY}}. basicii80 sätter bit 7 i tecknet på skärmen, läser tangenten direkt från port \texttt{\$38} och sköter autorepetitionen själv (fördröjning \texttt{\$46}, sedan 8).\par
-\subsection*{\texttt{KEYINT} och \texttt{PIOINT} (\texttt{\$03C1}, \texttt{\$03DF})}
-\par\noindent ABC800 läser tangenten från port \texttt{\$22}, basicii80 från port \texttt{\$38} med \texttt{AND} \texttt{\$7F} (två bytes längre). \hyperlink{l:KEYINT}{\texttt{KEYINT}} börjar därför på \hyperlink{a:03C1}{\texttt{\$03C1}} i stället för \texttt{\$03C3}. \hyperlink{l:PIOINT}{\texttt{PIOINT}} ligger kvar på \hyperlink{a:03DF}{\texttt{\$03DF}} men blir också två bytes längre och tar två bytes från ABC800:s tabell \texttt{\$03E4}. I ABC800 sitter tangentbordet på DART:ens kanal B, och starten skriver \texttt{\$1C} till WR1 och vektorn \texttt{\$B0} till WR2 (port \texttt{\$23}): avbrott för varje tecken, och vektorn beror på orsaken. \texttt{\$B4} är ett mottaget tecken (\hyperlink{l:KEYINT}{\texttt{KEYINT}}) och \texttt{\$B6} ett mottagningsfel, som \hyperlink{l:PIOINT}{\texttt{PIOINT}} klarar av genom att läsa tecknet och kasta det (Zilog 2001, s. 278, tabell 16). På ABC80 ger inget avbrott vektorn \texttt{\$B6}: PIO A har \texttt{\$B4}, och PIO B får ingen vektor.\par
-\subsection*{\texttt{ROWTAB} och \texttt{KBINIT} (\texttt{\$03E6}-\texttt{\$0449})}
-\par\noindent Här har ABC800 bildkretsens tabell (\texttt{\$03E4}, 18 bytes) och starttexten. basicii80 har \hyperlink{l:ROWTAB}{\texttt{ROWTAB}} (24 radadresser), \hyperlink{l:KBINIT}{\texttt{KBINIT}} (PIO A och ljudet) och den nya starttexten.\par
-\section*{Kassetten CAS: (\texttt{\$044A}-\texttt{\$06AC})}
-\par\noindent ABC800 har här enheten CAS: (drivrutin \texttt{\$044A}): blockvis läsning och skrivning av 256 bytes via seriekretsen (\texttt{\$42}/\texttt{\$43}) och CTC:n (\texttt{\$60}), med avbrottsrutin (\texttt{\$0576}), en kontrollsumma på 16 bitar (summan av de 256 databyten och slutbyten \texttt{\$03}, som skrivs efter blocket och jämförs vid läsning), meddelandet \texttt{Found} och enhetsposterna \texttt{\$0670} (tomt namn) och \texttt{\$0677} (\texttt{{\char34}CAS{\char34}}). I basicii80 är hela området nollor (611 bytes). ABC80 har ingen kassett i denna ROM.\par
-\subsection*{NUL: (\texttt{NULDEV}, \texttt{\$11B2})}
-\par\noindent Enhetskedjan börjar med NUL:. I ABC800 pekar dess länk på CAS: (\texttt{\$0677}), som länkar vidare till den namnlösa posten \texttt{\$0670} och sedan till \hyperlink{l:CON}{\texttt{CON}}: (\hyperlink{a:0180}{\texttt{\$0180}}). I basicii80 pekar länken direkt på \hyperlink{l:CON}{\texttt{CON}}:.\par
-\section*{Tolken}
-
-\subsection*{\texttt{POKE} (\texttt{\$3A34})}
-\par\noindent ABC800 skriver varje värde också till port \texttt{\$AA} (\texttt{OUT} (\texttt{\$AA}),A) innan det läggs i minnet, med avbrotten avstängda; så gör alla tre ROM:arna för ABC 800 M, ABC 800 C och ABC 802. Vad porten gör framgår inte av koden, och MAME kopplar den inte till något. basicii80 har två \texttt{NOP}.\par
-\subsection*{Klockan (\texttt{NMICLK}, \texttt{\$3ABA})}
-\par\noindent Båda räknar TICKS och stegar klockan (\hyperlink{l:CLKTIK}{\texttt{CLKTIK}}) när en sekund har gått, men med olika takt:\par
-\begin{Verb}
-\VL{\SP{4}ABC800\SP{5}CTC\SP{1}93,75\SP{1}Hz:\SP{1}94\SP{1}avbrott\SP{1}per\SP{1}sekund,\SP{1}93\SP{1}när}
-\VL{\SP{15}sekunderna\SP{1}\&\SP{1}3\SP{1}=\SP{1}0,\SP{1}alltså\SP{1}375\SP{1}på\SP{1}4\SP{1}sekunder}
-\VL{\SP{4}basicii80\SP{2}\hyperlink{l:NMI}{NMI}:\SP{1}50\SP{1}per\SP{1}sekund,\SP{1}49\SP{1}när\SP{1}sekunderna\SP{1}\&\SP{1}31\SP{1}=\SP{1}0\SP{1}(två}
-\VL{\SP{15}gånger\SP{1}per\SP{1}minut),\SP{1}alltså\SP{1}2998\SP{1}per\SP{1}minut,\SP{1}som\SP{1}för\SP{1}49,97\SP{1}Hz}
-\end{Verb}
-\par\noindent (93,75 Hz = 3 MHz / 256 / 125, jfr CTC-inställningen ovan.) Rutinen slutar med \texttt{EI} / \texttt{RETI} i ABC800 och med \texttt{RETN} i basicii80, som därför är en byte kortare; \hyperlink{a:3AD4}{\texttt{\$3AD4}} är en överbliven nolla.\par
-\section*{DOS (\texttt{\$6000})}
-\par\noindent DOS:en är samma program i en annan version. Signaturen på \hyperlink{a:6FAC}{\texttt{\$6FAC}} är \texttt{GN T\{by 1984\mbox{-}03\mbox{-}02} i basicii80 och \texttt{GN T\{by 1984\mbox{-}04\mbox{-}03} i ABC800 M (\texttt{\$6FA4}). Bortsett från adresserna skiljer sig bara tre ställen, och ABC800 M:s version ser ut att vara den senare, rättade.\par
-\subsection*{\texttt{SETREC} (\texttt{\$6462})}
-\par\noindent I basicii80 anropar \hyperlink{l:SETREC}{\texttt{SETREC}}, efter att postnumret har lagrats, också \hyperlink{l:RECLFT}{\texttt{RECLFT}} och (om NC) S62B2, som \hyperlink{l:RDREC}{\texttt{RDREC}} gör, och sparar AF runt statusbyten (8 bytes till). ABC800 M saknar dessa anrop. Därför ligger allt efter \hyperlink{a:6462}{\texttt{\$6462}} 8 bytes högre i basicii80, och alla adresser dit (\texttt{JP}-tabellen \hyperlink{a:6000}{\texttt{\$6000}}-\texttt{\$6062}, pekartabellen \hyperlink{a:6069}{\texttt{\$6069}}, \hyperlink{l:CRDTAB}{\texttt{CRDTAB}}-pekaren, hopp i \hyperlink{l:DOSDSP}{\texttt{DOSDSP}} m.fl.) är 8 större.\par
-\subsection*{Felkoderna vid \texttt{\$68CE}}
-\par\noindent Fyra felställen i katalogkoden sätter felindexet och hoppar till \hyperlink{a:6675}{\texttt{\$6675}}, som lagrar A i \hyperlink{v:DFNBC}{\texttt{DFNBC}}. ABC800 M har \texttt{LD} A,\texttt{\$0A} / \texttt{\$14} / \texttt{\$0E} / \texttt{\$1A}, men basicii80 har \texttt{LD} C,\texttt{\$0A} / \texttt{\$14} / \texttt{\$0E} / \texttt{\$1C}, så att \hyperlink{v:DFNBC}{\texttt{DFNBC}} får det värde A råkar ha (på \hyperlink{a:68D7}{\texttt{\$68D7}} är det 0 eller \texttt{\$80}). Det är ett fel, rättat i den senare versionen. Det sista indexet är också ändrat, \texttt{\$1C} (fel 49) -{\char62} \texttt{\$1A} (fel 48).\par
-\subsection*{Versionsbyten (\texttt{\$606F})}
-\par\noindent I pekartabellen efter \hyperlink{l:DRDSR0}{\texttt{DRDSR0}} står \texttt{\$13} i basicii80 och \texttt{\$14} i ABC800 M, versionsnumret 19 och 20 decimalt (DOS v.19, 1984-03-02, och v.20, 1984-04-03, i ROM-arkivet på abc80.net). Ingen kod i ROM:en läser numret.\par
-\section*{Tilläggsprogrammet \texttt{\$7000}}
-\par\noindent ABC800 M har på \hyperlink{a:7000}{\texttt{\$7000}} ett annat tillägg: det länkar in poster i tre listor (\texttt{\$FF7B} enheter, \texttt{\$FF7D} och \texttt{\$FF7F} nyckelordstabellerna) och ger enheten V24: och grafiksatserna FGPOINT, FGLINE, FGFILL och FGPAINT. Inställningen för V24: står som text på \texttt{\$7FE0} (\texttt{{\char34}VSA36B7255A{\char34}}, samma form som PR:s \texttt{VSA30D724}). basicii80 har i stället enheten PR: och länkar bara in en enhet. Det enda gemensamma är länkrutinen \hyperlink{l:DEVLNK}{\texttt{DEVLNK}} (\hyperlink{a:700F}{\texttt{\$700F}}, ABC800 \texttt{\$7021}, 49 bytes lika) och några korta bitar.\par
-\section*{Adresser}
-\par\noindent Tabellen visar var varje del av ROM:en för ABC80 ligger i ABC800 M:s ROM. Nästan allt ligger på samma adress (0 i kolumnen Flyttad). Där det står ”ändrad” har koden bytts ut på samma plats, och där det står ”olika” har de två ROM:arna helt olika innehåll. Bara två områden har flyttats: en bit av \hyperlink{l:KEYINT}{\texttt{KEYINT}} ligger 2 bytes högre i ABC800 M, och det mesta av DOS:en ligger 8 bytes lägre, eftersom \hyperlink{l:SETREC}{\texttt{SETREC}} har 8 bytes mer kod i ABC80.\par
-\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l >{\raggedright\arraybackslash}p{0.5\textwidth}@{}}
-\textbf{ABC80} & \textbf{ABC800 M} & \textbf{Flyttad} & \textbf{Innehåll}\\\hline\endhead
-\hyperlink{a:0000}{\texttt{\$0000}}-\texttt{\$01AA} & \hyperlink{a:0000}{\texttt{\$0000}}-\texttt{\$01AA} & 0 & start, \texttt{RST}-vektorer, kommandoslingan; enstaka bytes ändrade: \hyperlink{a:0066}{\texttt{\$0066}}, \hyperlink{a:00A5}{\texttt{\$00A5}}-\hyperlink{a:00B4}{\texttt{\$00B4}}, \hyperlink{a:00C7}{\texttt{\$00C7}}, \hyperlink{a:00DE}{\texttt{\$00DE}}, \texttt{\$016A}\\
-\hyperlink{a:01AB}{\texttt{\$01AB}}-\texttt{\$01BA} & \hyperlink{a:01AB}{\texttt{\$01AB}}-\texttt{\$01BA} & ändrad & \hyperlink{l:CONOPN}{\texttt{CONOPN}}\\
-\hyperlink{a:01BB}{\texttt{\$01BB}}-\hyperlink{a:0289}{\texttt{\$0289}} & \hyperlink{a:01BB}{\texttt{\$01BB}}-\hyperlink{a:0289}{\texttt{\$0289}} & 0 & skärmutskriften; ändrat \hyperlink{a:01F8}{\texttt{\$01F8}}-\hyperlink{a:0214}{\texttt{\$0214}} och \hyperlink{l:BEEP}{\texttt{BEEP}} \hyperlink{a:022A}{\texttt{\$022A}}-\texttt{\$0234}\\
-\texttt{\$028A}-\texttt{\$02F9} & \texttt{\$028A}-\texttt{\$02F9} & ändrad & \hyperlink{l:SCROLL}{\texttt{SCROLL}}, \hyperlink{l:CLS}{\texttt{CLS}}, \hyperlink{l:BLANK}{\texttt{BLANK}}, \hyperlink{l:CURADR}{\texttt{CURADR}}\\
-\hyperlink{a:02FA}{\texttt{\$02FA}}-\texttt{\$0381} & \hyperlink{a:02FA}{\texttt{\$02FA}}-\texttt{\$0381} & 0 & \hyperlink{l:CONINP}{\texttt{CONINP}}, \hyperlink{l:RUBOUT}{\texttt{RUBOUT}}, \hyperlink{l:CONGET}{\texttt{CONGET}}\\
-\hyperlink{a:0382}{\texttt{\$0382}}-\texttt{\$03C0} & \hyperlink{a:0382}{\texttt{\$0382}}-\texttt{\$03C0} & ändrad & \hyperlink{l:KEYWT}{\texttt{KEYWT}}\\
-\hyperlink{a:03C1}{\texttt{\$03C1}}-\texttt{\$03C6} & \texttt{\$03C3}-\texttt{\$03C8} & +2 & början av \hyperlink{l:KEYINT}{\texttt{KEYINT}}\\
-\hyperlink{a:03C7}{\texttt{\$03C7}}-\texttt{\$03DE} & \hyperlink{a:03C7}{\texttt{\$03C7}}-\texttt{\$03DE} & 0 & resten av \hyperlink{l:KEYINT}{\texttt{KEYINT}}, \hyperlink{l:DORETI}{\texttt{DORETI}}\\
-\hyperlink{a:03DF}{\texttt{\$03DF}}-\texttt{\$03E5} & \hyperlink{a:03DF}{\texttt{\$03DF}}-\texttt{\$03E5} & ändrad & \hyperlink{l:PIOINT}{\texttt{PIOINT}}\\
-\hyperlink{a:03E6}{\texttt{\$03E6}}-\texttt{\$06AC} & \hyperlink{a:03E6}{\texttt{\$03E6}}-\texttt{\$06AC} & olika & ABC80: \hyperlink{l:ROWTAB}{\texttt{ROWTAB}}, \hyperlink{l:KBINIT}{\texttt{KBINIT}}, starttext, nollor; ABC800 M: bildkretsen, starttext, CAS:\\
-\texttt{\$06AD}-\hyperlink{a:6461}{\texttt{\$6461}} & \texttt{\$06AD}-\hyperlink{a:6461}{\texttt{\$6461}} & 0 & tolken och början av DOS:en; ändrat \hyperlink{a:11B2}{\texttt{\$11B2}}, \hyperlink{a:3A34}{\texttt{\$3A34}}, \hyperlink{a:3ABA}{\texttt{\$3ABA}}-\hyperlink{a:3AD4}{\texttt{\$3AD4}}, \hyperlink{a:606F}{\texttt{\$606F}} och adresserna i DOS:en\\
-\hyperlink{a:6462}{\texttt{\$6462}}-\hyperlink{a:6471}{\texttt{\$6471}} & \hyperlink{a:6462}{\texttt{\$6462}}-\hyperlink{a:6469}{\texttt{\$6469}} & ändrad & \hyperlink{l:SETREC}{\texttt{SETREC}}, 8 bytes längre i ABC80\\
-\hyperlink{a:6472}{\texttt{\$6472}}-\texttt{\$6FFF} & \texttt{\$646A}-\texttt{\$6FF7} & −8 & resten av DOS:en\\
-\hyperlink{a:7000}{\texttt{\$7000}}-\texttt{\$77FF} & \hyperlink{a:7000}{\texttt{\$7000}}-\texttt{\$77FF} & olika & ABC80: PR:; ABC800 M: V24: och grafiken\\
-\end{longtable}\end{small}
-
-\endgroup
 \chapter{Oklara ställen}
 \noindent Ställen i listningen där tolkningen är osäker, markerade
 med (?) i kommentarerna, och det som enligt kommentarerna inte används.
@@ -19495,7 +19169,7 @@ raden efter den) och är en länk dit.\par
 \hyperlink{a:7000}{\texttt{\$7000}} & \hyperlink{l:EXT7000}{\texttt{EXT7000}} & \hyperlink{l:PRINIT}{\texttt{PRINIT}} länkar in enhetsposten \hyperlink{l:PRDEV}{\texttt{PRDEV}} (\texttt{{\char34}PR\ {\char34}}, drivrutin \hyperlink{l:PRDRV}{\texttt{PRDRV}}) i \hyperlink{v:DEVLST}{\texttt{DEVLST}}, reserverar ett arbetsområde under stacken (\hyperlink{l:PRAREA}{\texttt{PRAREA}}) och kopierar standardinställningen \hyperlink{l:PRDEF}{\texttt{PRDEF}} till PRDEFR (\texttt{\$FFC0}, i den oanvända delen av \texttt{IM} 2-tabellen).\\
 \hyperlink{a:703F}{\texttt{\$703F}} & \hyperlink{l:PRAREA}{\texttt{PRAREA}} & Det andra blocket används inte.\\
 \hyperlink{a:7145}{\texttt{\$7145}} & \hyperlink{l:PRSPEC}{\texttt{PRSPEC}} & Siffran 0 godtas men ger index \texttt{\$FE} och läser ordet på \texttt{\$743E}, utanför tabellen: \hyperlink{a:312C}{\texttt{\$312C}}, tecknen \texttt{,1} ur BASIC-texten i den oanvända delen.\\
-\hyperlink{a:7370}{\texttt{\$7370}} & \hyperlink{l:BAUDTB}{\texttt{BAUDTB}} & Resten av sidorna \hyperlink{a:7370}{\texttt{\$7370}}-\texttt{\$77FF} används inte: rester av äldre kod (delar av \hyperlink{l:PROUT}{\texttt{PROUT}} och \hyperlink{l:CENOUT}{\texttt{CENOUT}}), en BASIC-programtext (\texttt{{\char34}UFLOADER{\char34}}, laddar UFORTH.DAT), en kopia av \texttt{\$7309}-\hyperlink{a:73A0}{\texttt{\$73A0}} på \texttt{\$7600} och sedan \texttt{\$E5} (samma värde som på en nyformaterad diskett) till \texttt{\$77FF}.\\
+\hyperlink{a:7370}{\texttt{\$7370}} & \hyperlink{l:BAUDTB}{\texttt{BAUDTB}} & Resten av sidorna \hyperlink{a:7370}{\texttt{\$7370}}-\texttt{\$77FF} används inte och är \texttt{\$FF}.\\
 \end{longtable}\end{small}
 \chapter{Källor}
 \par\noindent Arne Stockman: \emph{Programvaran i ABC80. Disassemblering med kommentarer}. ABC-klubben, Rapport nr 1, april 1981, 172 s.\par

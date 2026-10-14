@@ -2,7 +2,8 @@
 
 Två ROM-program för ABC80, genomgångna instruktion för instruktion, med
 namn och kommentarer på svenska. Dokumenten byggs ur samma anteckningar
-som listningarna i boken *ABC80 inifrån*.
+som boken *ABC80 inifrån*, men bokens text är inte med: här finns bara
+listningarna och tabellerna till dem.
 
 Här finns inte själva koden, bara mallarna: listningarna med adresser,
 namn och kommentarer, men utan byten och instruktionerna. Koden är
@@ -23,16 +24,16 @@ Utan ROM på kommandoraden hämtas den:
 | Dokument | ROM | Hämtas från | sha256 |
 |---|---|---|---|
 | `abc80rom.pdf` | ABC80:s BASIC-ROM, version 11273, 16 KB, $0000–$3FFF | kretsarna ZA3506–ZA3509 ur [abc80.net:s arkiv](https://www.abc80.net/archive/luxor/Prom/fw/ABC80/) | `b1e5e574…4b534396` |
-| `basicii80.pdf` | BASIC II för ABC80, 32 KB, koden på $0000–$77FF | [abc80sim](https://github.com/hpax/abc80sim/tree/main/roms/abc80) | `101c9331…0742bf6` |
+| `basicii80.pdf` | BASIC II för ABC80, 32 KB, koden på $0000–$736F | `basicii_abc80_1.bin` och `_2.bin` ur [abc80.net:s arkiv](https://www.abc80.net/archive/luxor/Prom/fw/ABC80/) | `778e7c8e…09a31fe26` |
 
 Har du ROM:en själv går det att ange den: `./bygg.sh abc80 min.rom`.
 Den måste vara exakt samma version som mallen gäller; `fyll.py` jämför
-kontrollsumman och stannar annars. ABC80:s senare ROM, version 9913,
-redovisas i en bilaga som skillnader mot 11273.
+kontrollsumman och stannar annars.
 
 BASIC II för ABC80 är ABC800:s BASIC II anpassad till ABC80:s skärm,
 tangentbord och minneskarta. Skärmminnet på $7C00–$7FFF är kvar, så
-koden upptar 30 KB.
+koden upptar 30 KB. ROM-filen i abc80sim har samma kod, men i den
+oanvända svansen $7379–$77FF rester av äldre kod där arkivets har $FF.
 
 ## Filerna
 
@@ -42,7 +43,7 @@ koden upptar 30 KB.
 | `fyll.py` | fyller i mallen: avkodar instruktionen eller datan på varje rads adress |
 | `z80dec.py` | Z80-avkodaren som `fyll.py` använder |
 | `abc80-mall.tex`, `basicii80-mall.tex` | mallarna |
-| `abc80rom.tex`, `kapitel/`, `bilder/`, `*.sty` | resten av ABC80-dokumentet, ur band 1 |
+| `abc80rom.tex`, `kapitel/`, `*.sty` | ramen till ABC80-dokumentet: inledningen och tabellerna till listningen (systemvariabler, felkoder, tokens, symboler) |
 | `kwfix.py` | sätter kod i citat i skrivmaskinsstil, som i boken |
 
 I mallen har varje kodrad kvar adress, namn och kommentar, medan byten

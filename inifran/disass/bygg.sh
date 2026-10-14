@@ -5,7 +5,7 @@
 # Mallen (<namn>-mall.tex) har namnen och kommentarerna men inte koden; den
 # fylls i ur ROM:en (fyll.py), som måste ha mallens kontrollsumma. Utan ROM
 # hämtas den: ABC80:s fyra kretsar ZA3506-ZA3509 från abc80.net:s arkiv,
-# BASIC II från abc80sim. Kräver python3, curl och tectonic.
+# BASIC II:s två halvor därifrån också. Kräver python3, curl och tectonic.
 # I abc80-förrådet hämtas band 1:s kapitel ur ../../band1 och stilen ur
 # ../../gemensamt; i det publika förrådet ligger allt här (inifran.sh).
 set -e
@@ -39,8 +39,9 @@ abc80)
   pdf=abc80rom ;;
 basicii80)
   if [ -z "$rom" ]; then
-    rom=ut/basicii80.rom
-    hamta $rom https://raw.githubusercontent.com/hpax/abc80sim/b8e525654343d5ec7f83f9406b219ca1fbb14e5a/roms/abc80/basicii80.rom
+    rom=ut/basicii80a.rom
+    u=https://www.abc80.net/archive/luxor/Prom/fw/ABC80
+    hamta $rom $u/basicii_abc80_1.bin $u/basicii_abc80_2.bin
   fi
   python3 fyll.py basicii80-mall.tex "$rom" > ut/basicii80.tex
   hv=ut/basicii80.tex sp=
