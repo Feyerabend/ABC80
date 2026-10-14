@@ -11,7 +11,8 @@ Emulatorn går att köra direkt i webbläsaren, utan att något installeras:
 - [`exempel/`](exempel/): program i en krets, exempel 1–6 (band 2)
 - [`tidslinje.md`](tidslinje.md): tidslinjen från bokens bilaga
 - [`disass/`](disass/): kommenterade disassembleringar av ABC80:s BASIC
-  och BASIC II för ABC80, med ROM:arna
+  och BASIC II för ABC80, som mallar utan koden; `bygg.sh` hämtar ROM:en
+  och bygger PDF:en
 - [`verktyg/`](verktyg/): assemblern och emulatorn som bokens exempel
   byggs och provas med
 - [`emulator/`](emulator/): emulatorn med kassett, diskett och ljud, i

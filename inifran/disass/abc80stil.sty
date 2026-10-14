@@ -1,0 +1,214 @@
+% abc80stil.sty -- inledningen för band 1 och 2: format, typsnitt,
+% listningarnas och bildernas makron (fryst ur tex80_pre.tex och
+% band.py 2026-10-06, omstruktureringen steg 5). Märkningen i
+% löptexten (\adr, \namn ...) står i abc80bok.sty.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{abc80stil}[2026/10/06 ABC80 inifrån, stil]
+\RequirePackage[paperwidth=200mm,paperheight=280mm,layoutwidth=190mm,layoutheight=270mm,layouthoffset=5mm,layoutvoffset=5mm,inner=25mm,outer=17mm,top=20mm,bottom=22mm,headheight=14pt]{geometry}
+\RequirePackage{fontspec}
+\RequirePackage[swedish]{babel}
+\setmainfont{texgyrepagella}[Extension=.otf,UprightFont=*-regular,
+  BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmonofont{Inconsolatazi4-Regular.otf}[BoldFont=Inconsolatazi4-Bold.otf,
+  Scale=MatchLowercase]
+\RequirePackage{xcolor}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{multicol}
+\RequirePackage{titlesec}
+\RequirePackage{fancyhdr}
+\RequirePackage[hyphens]{url}
+% xurl: långa adresser (Inskannad: i källorna) får brytas efter varje
+% tecken, inte bara vid / och -, så att de inte går ut i marginalen
+\RequirePackage{xurl}
+% Sakregistret: \index{...} i kapitlen, bandN-ny.idx sorteras av
+% tools/mkind.py (tectonic kör inte makeindex), se bygg.sh.
+\RequirePackage{makeidx}\makeindex
+% Registret omfattar båda banden (mkind.py --andra); \registerinledning
+% sätts i bandN-ny.tex och står under rubriken, över båda spalterna.
+% Samma theindex som report.cls, med inledningen i \twocolumn[...].
+\makeatletter
+\let\registerinledning\@empty
+\renewenvironment{theindex}
+  {\if@twocolumn\@restonecolfalse\else\@restonecoltrue\fi
+   \twocolumn[\@makeschapterhead{\indexname}%
+     \ifx\registerinledning\@empty\else
+       {\small\registerinledning\par}\bigskip\fi]%
+   \@mkboth{\MakeUppercase\indexname}{\MakeUppercase\indexname}%
+   \thispagestyle{plain}\parindent\z@
+   \parskip\z@ \@plus .3\p@\relax
+   \columnseprule \z@
+   \columnsep 35\p@
+   \let\item\@idxitem}
+  {\if@restonecol\onecolumn\else\clearpage\fi}
+\makeatother
+\RequirePackage[colorlinks,linkcolor=link,urlcolor=link,
+  bookmarksnumbered]{hyperref}
+
+\definecolor{link}{HTML}{1F3F7A}
+\definecolor{dim}{HTML}{8A8A8A}
+\definecolor{labc}{HTML}{7A1F1F}
+\definecolor{rulec}{HTML}{C8C8C8}
+
+\shorthandoff{"}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\frenchspacing
+
+\titleformat{\chapter}[display]{\normalfont\bfseries\Huge\raggedright}{}{0pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.8em}{}
+\titlespacing*{\section}{0pt}{18pt plus 4pt minus 2pt}{6pt}
+\titlespacing*{\subsection}{0pt}{12pt plus 3pt minus 2pt}{4pt}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\pagesec}}
+\fancyhead[R]{\small\pagerange}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+% utfyllnadssidor före högersida: helt tomma, utan huvud och sidnummer
+\makeatletter
+\renewcommand{\cleardoublepage}{\clearpage\if@twoside\ifodd\c@page\else
+  \hbox{}\thispagestyle{empty}\newpage\fi\fi}
+% jämnt antal tryckta sidor: tom sida sist om bandet slutar på en udda
+\AtEndDocument{\clearpage\ifodd\ReadonlyShipoutCounter
+  \hbox{}\thispagestyle{empty}\newpage\fi}
+\makeatother
+
+% ---- listningen ----
+\newlength{\cw}
+\newcommand{\setcw}{\settowidth{\cw}{\ttfamily 0}}
+\newcommand{\SP}[1]{\kern#1\cw\relax}
+% varje adress skrivs till .aux med sidnummer och avsnitt, så att
+% sidhuvudet kan visa sidans adressintervall och avsnittet överst på sidan
+\makeatletter
+\newcommand{\Ad}[1]{\textcolor{dim}{#1}\edef\abc@w{\noexpand\write\noexpand\@auxout
+  {\noexpand\string\noexpand\abcpa{\noexpand\thepage}{#1}{\thesection}}}\abc@w}
+\def\abcpa#1#2#3{\@ifundefined{abcf@#1}{\global\@namedef{abcf@#1}{#2}%
+  \global\@namedef{abcs@#1}{#3}}{}\global\@namedef{abcl@#1}{#2}}
+\newcommand{\pagerange}{\@ifundefined{abcf@\thepage}{}{%
+  \ttfamily\$\csname abcf@\thepage\endcsname\textendash\$\csname abcl@\thepage\endcsname}}
+\newcommand{\pagesec}{\@ifundefined{abcs@\thepage}{\rightmark}{%
+  \edef\abc@s{\csname abcs@\thepage\endcsname}%
+  \@ifundefined{abct@\abc@s}{\rightmark}{\abc@s\quad\csname abct@\abc@s\endcsname}}}
+\newcommand{\settitle}[1]{\global\@namedef{abct@\thesection}{#1}}
+% innehållsförteckningen: bredare fält för avsnittsnummer som 11.24 och 7.103
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3.0em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{4.5em}{3.6em}}
+\makeatother
+\newcommand{\By}[1]{\textcolor{dim}{#1}}
+\newcommand{\Lb}[1]{\textcolor{labc}{\bfseries #1}}
+% en kodrad: #1 = monospacerat prefix, #2 = kommentar (bryts med hängande indrag)
+\newcommand{\CL}[2]{\par\noindent\hangindent=49\cw\hangafter=1
+  {\ttfamily #1}{\rmfamily #2}\par}
+\newcommand{\Gap}{\par\vspace{0.55\baselineskip}}
+\newenvironment{Listing}{\par\fontsize{8.6}{10.6}\selectfont\setcw\lineskiplimit=-\maxdimen
+  \raggedright\setlength{\parskip}{0pt}}{\par}
+\newcommand{\Sec}[3]{\par\Needspace\section[{#1}]{#2\hfill{\normalsize\ttfamily\mdseries\$#3}}\settitle{#1}}
+\newcommand{\Sub}[3]{\par\Needspace\subsection[{#1}]{#2\hfill{\normalsize\ttfamily\mdseries\$#3}}}
+% före en tabell: ny sida om mindre än #1 återstår (som needspace.sty;
+% \break i stället för \newpage, så att inget körs inne i villkoret)
+\makeatletter
+\newcommand{\TabNeed}[1]{\par\if@nobreak\else\penalty-100\abc@need{#1}\fi}
+% direkt efter en rubrik gör \TabNeed ingenting: rubriken har redan sett
+% till att den får plats med något under sig, och en brytning här skulle
+% lämna rubriken ensam längst ned på sidan
+\newcommand{\abc@need}[1]{\begingroup\setlength{\dimen@}{#1}%
+  \dimen@ii\pagegoal\advance\dimen@ii-\pagetotal
+  \ifdim\dimen@>\dimen@ii\ifdim\dimen@ii>\z@\vfil\fi\break\fi\endgroup}
+% en rubrik börjar på ny sida om det inte finns plats för den och några
+% rader (eller tabellhuvudet och några rader) under den
+\let\abc@section\section
+\let\abc@subsection\subsection
+\renewcommand{\section}{\par\abc@need{45mm}\abc@section}
+\renewcommand{\subsection}{\par\abc@need{35mm}\abc@subsection}
+% inte heller direkt efter en rubrik
+\newcommand{\Needspace}{\par\if@nobreak\else\ifdim\pagetotal>0.75\textheight\clearpage\fi\fi}
+\makeatother
+% blockkommentarer
+\newenvironment{Note}{\par\begingroup\fontsize{10}{12.6}\selectfont\setcw
+  \setlength{\parskip}{4pt}}{\par\endgroup\vspace{6pt}}
+\newenvironment{Cmt}{\par\vspace{7pt}\begingroup\fontsize{9.4}{11.6}\selectfont\setcw
+  \setlength{\parskip}{3pt}\leftskip=1.2em\itshape}{\par\endgroup\vspace{4pt}}
+% uppräkning i en blockkommentar: löptext, tätt satt, tankstreck
+\newenvironment{Punkter}{\begin{list}{–}{\setlength{\leftmargin}{1.6em}%
+  \setlength{\labelwidth}{1em}\setlength{\labelsep}{.6em}\setlength{\itemsep}{1pt}%
+  \setlength{\parsep}{0pt}\setlength{\topsep}{2pt}\setlength{\partopsep}{0pt}}}%
+  {\end{list}}
+\newenvironment{Verb}{\par\vspace{1pt}\begingroup\upshape\fontsize{8.6}{10.4}\selectfont\setcw\lineskiplimit=-\maxdimen\parskip=0pt\relax}{\par\endgroup\vspace{1pt}}
+% ABC80:s skärm, 24 rader à 40 tecken, centrerad i en tv-ruta (en
+% superellips |x/a|^4 + |y/b|^4 = 1, liggande 4:3 tätt runt texten, eller
+% bredare om texten kräver det); raderna med \VL
+\newsavebox{\Skarmlada}
+\newenvironment{Skarm}{\par\vspace{3pt}\begingroup\upshape\fontsize{8.6}{10.4}\selectfont\setcw
+  \renewcommand{\VL}[1]{\par\noindent{\ttfamily ##1}\par}%
+  \begin{lrbox}{\Skarmlada}\begin{minipage}{40\cw}\lineskiplimit=-\maxdimen\parskip=0pt\relax}%
+  {\end{minipage}\end{lrbox}\par\noindent\hfil\begin{tikzpicture}
+    \pgfmathsetmacro{\Sb}{(\ht\Skarmlada+\dp\Skarmlada)/2+10}%
+    \pgfmathsetmacro{\Sa}{max(\Sb*4/3,\wd\Skarmlada/2+14)}%
+    \draw[line width=.6pt] plot[domain=1:359,samples=180,smooth]
+      ({\Sa*sign(cos(\x))*abs(cos(\x))^0.5*1pt},{\Sb*sign(sin(\x))*abs(sin(\x))^0.5*1pt}) -- cycle;
+    \node[inner sep=0pt] {\usebox{\Skarmlada}};
+  \end{tikzpicture}\hfil\par\endgroup\vspace{3pt}}
+\newcommand{\Hd}[1]{\par\vspace{8pt}\noindent{\bfseries #1}\par\vspace{2pt}}
+\newcommand{\SY}[1]{\par\noindent{\ttfamily\bfseries #1}\par}
+\newcommand{\VL}[1]{\par\noindent\hspace*{1em}{\ttfamily #1}\par}
+
+
+% svartvitt tryck: alla färger (länkar, namn, TikZ) blir gråskala
+\definecolor{link}{gray}{0.25}
+\definecolor{labc}{gray}{0}
+\selectcolormodel{gray}
+\RequirePackage{graphicx}
+\RequirePackage[section,below]{placeins}% bilder flyter inte förbi nästa avsnitt
+\RequirePackage{tikz}\usetikzlibrary{patterns}
+\AddToHook{shipout/background}{\special{pdf:put @thispage
+  << /TrimBox [14.17 14.17 552.76 779.53] /BleedBox [0 0 566.93 793.7] >>}}
+\newlength{\Utfall}\setlength{\Utfall}{5mm}
+\newcommand{\BildRuta}[3]{\fbox{\parbox[c][#3][c]{\dimexpr#2-2\fboxsep-2\fboxrule}{%
+  \centering\small\sffamily Bild: \texttt{#1}}}}
+\newcommand{\BildText}[1]{\ifx&#1&\else\par\vspace{2pt}{\small\itshape #1\par}\fi}
+% i satsytan: \BildI[bredd]{fil}{namn}{bildtext}{höjd för rutan}
+% Bilden flyter: ryms den inte där den står hamnar den överst på en
+% senare sida och texten fortsätter (i st. f. en halvtom sida).
+\newsavebox{\Bildlada}
+\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}\renewcommand{\floatpagefraction}{0.7}
+\setcounter{topnumber}{2}\setcounter{totalnumber}{3}
+\newcommand{\BildFlyt}[1]{\begin{figure}[htbp]\centering\usebox{\Bildlada}%
+  \BildText{#1}\end{figure}}
+\newcommand{\BildI}[5][\linewidth]{\par\sbox{\Bildlada}{%
+    \ifx&#2&\BildRuta{#3}{#1}{#5}\else\includegraphics[width=#1]{#2}\fi}%
+  \BildFlyt{#4}}
+% TikZ-skiss (bilder/*.tex, ritad i skala 1, högst satsbredden):
+% \BildTikz[största bredd]{fil}{namn}{bildtext}
+\newcommand{\BildTikz}[4][\linewidth]{\par\sbox{\Bildlada}{\input{#2}}%
+  \ifdim\wd\Bildlada>#1\sbox{\Bildlada}{\resizebox{#1}{!}{\usebox{\Bildlada}}}\fi
+  \BildFlyt{#4}}
+% överst på en ny sida, hela bredden med utfall uppåt och åt sidorna:
+% \BildBred{fil}{namn}{bildtext}{synlig höjd från skärkanten}
+\newcommand{\BildBred}[4]{\clearpage\thispagestyle{plain}%
+  \AddToHookNext{shipout/background}{\put(0,0){\raisebox{-\height}{%
+    \ifx&#1&\BildRuta{#2}{\paperwidth}{\dimexpr#4+\Utfall}%
+    \else\includegraphics[width=\paperwidth,height=\dimexpr#4+\Utfall]{#1}\fi}}}%
+  \vspace*{\dimexpr#4-20mm+4mm}\BildText{#3}\vspace{6pt}}
+% hel sida med utfall runt om (bilden ska vara 200 x 280 mm):
+% \BildHelsida{fil}{namn}{bildtext}
+\newcommand{\BildHelsida}[3]{\clearpage\thispagestyle{empty}%
+  \AddToHookNext{shipout/background}{\put(0,-\paperheight){%
+    \ifx&#1&\BildRuta{#2}{\paperwidth}{\paperheight}%
+    \else\includegraphics[width=\paperwidth,height=\paperheight]{#1}\fi}}%
+  \null\clearpage}
+% före \part: helsidan hamnar på deltitelns baksida (annars tom vid openright)
+\makeatletter\let\Orig@endpart\@endpart
+\newcommand{\BildEfterDel}[3]{\def\@endpart{\vfil\newpage
+  \BildHelsida{#1}{#2}{#3}\global\let\@endpart\Orig@endpart}}
+\makeatother
+\RequirePackage{abc80bok}
+\endinput

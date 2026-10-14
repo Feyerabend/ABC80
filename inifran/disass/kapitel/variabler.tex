@@ -1,0 +1,52 @@
+% kapitel/variabler.tex -- fryst ur tex80.py 2026-10-06 (omstruktureringen steg 5);
+% rättas här för hand.
+
+\chapter{Systemvariabler och externa adresser}\index{systemvariabler|textbf}
+\begin{longtable}{@{}l l p{0.62\textwidth}@{}}
+\textbf{Namn} & \textbf{Adress} & \textbf{Beskrivning}\\\hline\endhead
+\T{v:V405C}\texttt{V405C} & \texttt{\$405C} & tilläggs-ROM: målet för \kw{RST \$08}\\
+\T{v:V604B}\texttt{V604B} & \texttt{\$604B} & tilläggs-ROM: start vid kallstart, om det står \kw{JP} här\\
+\T{v:V6051}\texttt{V6051} & \texttt{\$6051} & tilläggs-ROM: felmeddelande, om bit 0 i \namn{EXTFLG} är satt\\
+\T{v:ASBBEG}\texttt{ASBBEG} & \texttt{\$FDD0} & ASCII-aritmetik: b:s början; flyttalsfunktioner: x (\namn{FLDX})\\
+\T{v:ASBEND}\texttt{ASBEND} & \texttt{\$FDD2} & ASCII-aritmetik: b:s slut (\adrx{83})\\
+\T{v:ASABEG}\texttt{ASABEG} & \texttt{\$FDD4} & ASCII-aritmetik: a:s början\\
+\T{v:ASAEND}\texttt{ASAEND} & \texttt{\$FDD6} & ASCII-aritmetik: a:s slut (\adrx{83})\\
+\T{v:SINQ}\texttt{SINQ} & \texttt{\$FDE4} & \kw{SIN}/\kw{COS}: kvadranten\\
+\T{v:ASARG1}\texttt{ASARG1} & \texttt{\$FDE7} & ASCII-aritmetik: a\$ i bufferten\\
+\T{v:ASEND}\texttt{ASEND} & \texttt{\$FDE9} & ASCII-aritmetik: där argumenten började; flyttal: resultatets adress\\
+\T{v:ASDEC}\texttt{ASDEC} & \texttt{\$FDEB} & ASCII-aritmetik: n, antal decimaler\\
+\T{v:ASCODE}\texttt{ASCODE} & \texttt{\$FDED} & ASCII-aritmetik: rutinens kod (DE)\\
+\T{v:NMICNT}\texttt{NMICNT} & \texttt{\$FDEF} & NMI: skrivs tillbaka oförändrad\\
+\T{v:CLOCKH}\texttt{CLOCKH} & \texttt{\$FDF1} & \namnx{CLOCK}:s två höga byte (\adr{FDF1}–\adr{FDF2}), räknas ned var 256:e NMI\\
+\T{v:CURROW}\texttt{CURROW} & \texttt{\$FDF3} & markörens rad (0–23)\\
+\T{v:CURCOL}\texttt{CURCOL} & \texttt{\$FDF4} & markörens kolumn (0–39)\\
+\T{v:KEYFLG}\texttt{KEYFLG} & \texttt{\$FDF5} & bit 7 = tangent väntar (sätts av \namn{KEYINT})\\
+\T{v:RPTDLY}\texttt{RPTDLY} & \texttt{\$FDF7} & autorepetition: fördröjning\\
+\T{v:CASST}\texttt{CASST} & \texttt{\$FDF8} & kassettläsning: \adrx{FF} = pågår, annars resultat\\
+\T{v:CASBUF}\texttt{CASBUF} & \texttt{\$FDF9} & kassett: aktuell läsbuffert (0 = ingen)\\
+\T{v:EDPTR}\texttt{EDPTR} & \texttt{\$FDFB} & \namn{INLINE}: mallrad för TAB-tangenten\\
+\T{v:CASBLK}\texttt{CASBLK} & \texttt{\$FDFD} & kassett: blocknummer\\
+\T{v:RCVPTR}\texttt{RCVPTR} & \texttt{\$FDFF} & kassettläsning: sparat DE\\
+\T{v:RCVBC}\texttt{RCVBC} & \texttt{\$FE01} & kassettläsning: C = skiftregister, B = bitar kvar\\
+\T{v:RCVCONT}\texttt{RCVCONT} & \texttt{\$FE03} & kassettläsning: korutinens fortsättningsadress\\
+\T{v:RCVSUM}\texttt{RCVSUM} & \texttt{\$FE05} & kassettläsning: checksumma\\
+\T{v:BRKFLG}\texttt{BRKFLG} & \texttt{\$FE07} & skilt från 0 om BREAK (CTRL-C) har tryckts\\
+\T{v:DEVHEAD}\texttt{DEVHEAD} & \texttt{\$FE0A} & första posten i enhetslistan\\
+\T{v:EXTFLG}\texttt{EXTFLG} & \texttt{\$FE0F} & bit 0: tilläggs-ROM skriver felmeddelanden\\
+\T{v:BOFA}\texttt{BOFA} & \texttt{\$FE1C} & programmets början\\
+\T{v:EOFA}\texttt{EOFA} & \texttt{\$FE1E} & programmets slut (slutmarkeringen \adrx{01})\\
+\T{v:HEAP}\texttt{HEAP} & \texttt{\$FE20} & slutet av variablerna = första lediga byte\\
+\T{v:FLAGS}\texttt{FLAGS} & \texttt{\$FE25} & flaggor: bit 4 = \namn{TRACE}, bit 5 = skyddat program (IY+\adrx{0F})\\
+\T{v:STKTOP}\texttt{STKTOP} & \texttt{\$FE27} & stackens startvärde\\
+\T{v:VARLST}\texttt{VARLST} & \texttt{\$FE29} & variabellistan\\
+\texttt{VFE2B} & \texttt{\$FE2B} & kortvalet: senaste värdet till port 1, skrivs till port 1 igen före varje \kw{OUT} och \kw{INP} (IY+\adrx{15})\\
+\T{v:CURLIN}\texttt{CURLIN} & \texttt{\$FE2C} & adress till raden som körs (eller hade fel)\\
+\T{v:DATPTR}\texttt{DATPTR} & \texttt{\$FE2E} & \namn{DATA}: pekare till nästa värde\\
+\T{v:DATLIN}\texttt{DATLIN} & \texttt{\$FE30} & \namn{DATA}: aktuell rad\\
+\T{v:FILLST}\texttt{FILLST} & \texttt{\$FE32} & fillistan: första FCB i kedjan (IY+\adrx{1C})\\
+\T{v:VFE33}\texttt{VFE33} & \texttt{\$FE33} & \namn{FILLST}:s höga byte, 0 = inga filer (IY+\adrx{1D})\\
+\T{v:ONERR}\texttt{ONERR} & \texttt{\$FE34} & \kw{ON ERROR GOTO}: radadress, 0 = inget (IY+\adrx{1E}/\adrx{1F})\\
+\T{v:STMSP}\texttt{STMSP} & \texttt{\$FE36} & SP när satsen startade, för \kw{ON ERROR}\\
+\T{v:FNFRAM}\texttt{FNFRAM} & \texttt{\$FE3E} & ramen för aktuellt \kw{FN}-anrop (argumenten)\\
+\T{v:BUF1}\texttt{BUF1} & \texttt{\$FE40} & \namn{BUF1}: radbuffert, vid \namn{PRELNK} pekare till \namn{FOR}-kedjan\\
+\end{longtable}

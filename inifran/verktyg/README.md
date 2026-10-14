@@ -31,7 +31,7 @@ Utan `make`:
 ## Kom igång
 
     ./abc80                                   # ABC80, Ctrl-] avslutar
-    ./abc80 -r ../disass/basicii/basicii80.rom -m 32    # BASIC II för ABC80
+    ./abc80 -r ../emulator/roms/basicii80.rom -m 32    # BASIC II för ABC80
 
     ./z80asm -l e1.lst ../exempel/e1.asm      # -> ../exempel/e1.bin
     ./abc80 -l ../exempel/e1.bin@4000         # med kretsen på $4000
@@ -39,8 +39,8 @@ Utan `make`:
 
     ./abc80 -t 500 -k 'PRINT 6*7\r'           # utan terminal: skriver skärmen
 
-ROM:arna finns i [`../disass/`](../disass/); utan `-r` startar `abc80`
-med `../disass/abc80/abc80new.rom`, räknat från där programmet ligger.
+ROM:arna finns i [`../emulator/roms/`](../emulator/roms/); utan `-r` startar `abc80`
+med `../emulator/roms/abc80new.rom`, räknat från där programmet ligger.
 
 ## Filerna
 
@@ -88,4 +88,4 @@ comments and manuals are in Swedish.
 
 Build with `make`; `make prov` assembles the examples and the Forth
 system and checks the result against the `.bin` files. The ROM images are
-in `../disass/`.
+in `../emulator/roms/`.

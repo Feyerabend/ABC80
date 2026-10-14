@@ -3,9 +3,11 @@
 De som webbsidan byggs med (`make webb`) och som exemplen i README
 använder:
 
-- `abc80new.rom`, `abc80old.rom`: ABC80:s BASIC, den nya (11273) och
-  den gamla (9913), 16 KB; samma som i `../disass/abc80/`, där de är
-  kommenterade.
+- `abc80old.rom`, `abc80new.rom`: ABC80:s BASIC, den gamla (11273) och
+  den nya (9913), 16 KB. Den kommenterade listningen i `../../disass/`
+  byggs ur den gamla.
+- `basicii80.rom`: BASIC II för ABC80, 32 KB (`-r roms/basicii80.rom -m 32`),
+  ur abc80sim; den kommenterade listningen i `../../disass/` byggs ur den.
 - `abcdos80.rom`: ABC-DOS för ABC80, 4 KB på $6000, till disketten i
   FD2 (`-l roms/abcdos80.rom@6000`).
 - `p40.rom`: drivrutinen till nålskrivaren P40, 1 KB på $7800

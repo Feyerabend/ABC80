@@ -7,7 +7,7 @@
  *
  * Flaggor:
  *     -r fil         ROM:en, 16 KB ($0000-$3FFF) eller 32 KB (BASIC II,
- *                    $0000-$7BFF); utan -r ../disass/abc80/abc80new.rom
+ *                    $0000-$7BFF); utan -r ../emulator/roms/abc80new.rom
  *                    bredvid programmet
  *     -l fil@adr     en krets (skrivskyddad) på adressen, i hex; flera går bra
  *     -b f0,f1,..@adr  en krets med banker (högst 8 à 4 KB); skrivning till
@@ -629,7 +629,7 @@ int main(int argc, char **argv)
     if (!rom) {                              /* bredvid programmet */
         const char *s = strrchr(argv[0], '/');
         int n = s ? (int)(s - argv[0] + 1) : 0;
-        snprintf(standard, sizeof standard, "%.*s../disass/abc80/abc80new.rom", n, argv[0]);
+        snprintf(standard, sizeof standard, "%.*s../emulator/roms/abc80new.rom", n, argv[0]);
         rom = standard;
     }
 

@@ -12,7 +12,7 @@ Den skrevs för boken *ABC80 inifrån*, och bokens exempel provas med den.
 
 | Flagga | |
 |---|---|
-| `-r fil` | ROM:en från $0000: 16 KB (ABC80:s BASIC) eller 32 KB (BASIC II för ABC80). Utan `-r`: `../disass/abc80/abc80new.rom` räknat från där programmet ligger |
+| `-r fil` | ROM:en från $0000: 16 KB (ABC80:s BASIC) eller 32 KB (BASIC II för ABC80). Utan `-r`: `../emulator/roms/abc80new.rom` räknat från där programmet ligger |
 | `-l fil@adr` | en krets: filen läses in på adressen (hex) och är skrivskyddad. Flera `-l` går bra |
 | `-b f0,f1,…@adr` | en krets med banker, högst 8 à 4 KB. En skrivning till adr+$40+n väljer bank n; bank 0 är vald från början |
 | `-m kb` | RAM överst i minnet: 16 (standard, $C000–$FFFF), 32 ($8000–) eller 48 (också $8000–; under $8000 sitter inget RAM) |
@@ -88,7 +88,7 @@ jämföra med `diff`.
 ABC80:s BASIC och BASIC II för ABC80 (som vill ha 32 KB RAM):
 
     ./abc80
-    ./abc80 -r ../disass/basicii/basicii80.rom -m 32
+    ./abc80 -r ../emulator/roms/basicii80.rom -m 32
 
 Exempel 1 i boken, kretsen på $4000. När den är inkopplad räknar den
 tangenttryckningarna i skärmens övre högra hörn:

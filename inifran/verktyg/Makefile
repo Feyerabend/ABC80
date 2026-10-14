@@ -26,10 +26,10 @@ prov: z80asm abc80
 	  if cmp -s prov/$$n.bin $$p.bin; then echo "lika   $$n"; \
 	  else echo "OLIKA  $$n"; fel=1; fi; \
 	done; \
-	./abc80 -r ../disass/abc80/abc80new.rom -t 200 -k 'PRINT 6*7\r' > prov/abc80.ut; \
+	./abc80 -r ../emulator/roms/abc80new.rom -t 200 -k 'PRINT 6*7\r' > prov/abc80.ut; \
 	if grep -q '^ 42$$' prov/abc80.ut; then echo "lika   abc80 (PRINT 6*7)"; \
 	else echo "OLIKA  abc80"; cat prov/abc80.ut; fel=1; fi; \
-	./abc80 -r ../disass/abc80/abc80new.rom -W 7 -t 300 \
+	./abc80 -r ../emulator/roms/abc80new.rom -W 7 -t 300 \
 	  -k 'PRINT INP(58)\rOUT 58,24\rPRINT INP(58)\r' > prov/labb.ut; \
 	if [ "$$(grep '^ [0-9]' prov/labb.ut | tr -d ' \n')" = 135159 ]; then \
 	  echo "lika   abc80 -W (INP(58) 135, 159)"; \

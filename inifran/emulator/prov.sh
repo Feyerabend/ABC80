@@ -14,9 +14,9 @@ if [ -z "$INIFRAN" ]; then
   else INIFRAN=$HOME/Documents/GitHub/ABC80/inifran; fi
 fi
 GAMLA=$INIFRAN/verktyg/abc80
-ROM=$INIFRAN/disass/abc80/abc80new.rom
-GAMMAL_ROM=$INIFRAN/disass/abc80/abc80old.rom
-BII=$INIFRAN/disass/basicii/basicii80.rom
+ROM=$INIFRAN/emulator/roms/abc80new.rom
+GAMMAL_ROM=$INIFRAN/emulator/roms/abc80old.rom
+BII=$INIFRAN/emulator/roms/basicii80.rom
 EX=$INIFRAN/exempel
 [ -x "$GAMLA" ] || make -C "$INIFRAN/verktyg" abc80 >/dev/null || exit 1
 mkdir -p prov

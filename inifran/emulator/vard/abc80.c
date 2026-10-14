@@ -9,7 +9,7 @@
  *
  * Maskinen:
  *     -r fil         ROM:en, 16 KB ($0000-$3FFF) eller 32 KB (BASIC II,
- *                    $0000-$7BFF). Utan -r ../disass/abc80/abc80new.rom
+ *                    $0000-$7BFF). Utan -r roms/abc80new.rom
  *                    bredvid programmet. Namnen 9913 och 11273 (ROM:arna i
  *                    fyra kretsar, ../dis/roms/orig/ABC80-ZA35xx-namn.bin)
  *                    och basicii80 (../basicii80/roms/basicii80.rom) går
@@ -561,7 +561,7 @@ int main(int argc, char **argv)
         else hjalp();
     }
     if (!romfil) {                           /* bredvid programmet */
-        snprintf(standard_rom, sizeof standard_rom, "%s../disass/abc80/abc80new.rom",
+        snprintf(standard_rom, sizeof standard_rom, "%sroms/abc80new.rom",
                  programmets_katalog);
         romfil = standard_rom;
     }

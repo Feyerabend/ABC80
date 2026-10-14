@@ -160,7 +160,7 @@ kolumnen.
     make clean
 
 `make prov` behöver den gamla emulatorn i `../verktyg/` och ROM:arna i
-`../disass/`, som i det publika förrådet; fall 4 får skilja (labplattan,
+`../emulator/roms/`, som i det publika förrådet; fall 4 får skilja (labplattan,
 en ms räknas lite olika). I bokens arkiv går också provningarna till
 abc80host att köra mot den här (569 fall):
 

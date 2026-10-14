@@ -1,0 +1,56 @@
+% abc80bok.sty -- gemensamt för band 1 och 2 (omstrukturering steg 4).
+% Makrona för märkningen i löptexten. De ersätter det som tex80.py
+% gjorde av "$hex", kända namn, "#! nolink" och "#! namn":
+%
+%   \rom{b2}         namnrymden för det som följer: målen heter b2-a:XXXX,
+%                    b2-l:NAMN ...; \rom{} = utan prefix (band 1)
+%   \adr{1A2B}       $1A2B i skrivmaskinsstil, länk till raden om den
+%                    listas (målet a:1A2B finns), annars utan länk
+%   \adr[ufd]{604B}  dito i en annan namnrymd
+%   \adrx{1A2B}      $1A2B utan länk (adress i en annan ROM, "#! nolink")
+%   \namn{KWSRCH}    namnet i skrivmaskinsstil, länk till rutinen (l:),
+%                    annars till ordlistan "Namn utanför listningen" (u:),
+%                    annars till variabeltabellen (v:), annars utan länk
+%   \namn[b2]{POKE}  dito i en annan namnrymd
+%   \namnx{FNDLIN}   namn i en annan ROM, utan länk ("#! namn")
+%   \kw{PRINT}       BASIC-nyckelord eller Z80-instruktion
+%   \T{a:1A2B}       mål (i listningarna, ordlistan, variabeltabellen);
+%                    prefixet skrivs ut: \T{b2-a:1A2B}
+%
+% Länkarna avgörs av målen i .aux från föregående körning (tectonic kör
+% om tills .aux är stabil). Namn får innehålla _ (\namn{IX_ST}), också i
+% rubriker.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{abc80bok}[2026/10/06 ABC80 inifrån, gemensamma makron]
+\RequirePackage{hyperref}
+
+\newcommand{\abc@ns}{}
+\DeclareRobustCommand{\rom}[1]{\def\abc@arg{#1}%
+  \ifx\abc@arg\@empty\def\abc@ns{}\else\def\abc@ns{#1-}\fi}
+% namnrymden ur ett valfritt argument: [] = den aktuella
+\def\abc@setns#1{\def\abc@arg{#1}%
+  \ifx\abc@arg\@empty\edef\abc@n{\abc@ns}\else\def\abc@n{#1-}\fi}
+
+% mål: hypertarget (smash: hyperref höjer ankaret en radhöjd) och en rad
+% i .aux, så att länkarna i nästa körning vet att målet finns
+\def\abc@mal#1{\global\expandafter\let\csname abc@m@#1\endcsname\@empty}
+\newcommand{\T}[1]{\smash{\hypertarget{#1}{}}%
+  \protected@write\@auxout{}{\string\abc@mal{#1}}}
+\newcommand{\abc@finns}[1]{\@ifundefined{abc@m@#1}\@secondoftwo\@firstoftwo}
+
+\DeclareRobustCommand{\adr}[2][]{\abc@setns{#1}%
+  \abc@finns{\abc@n a:#2}%
+    {\hyperlink{\abc@n a:#2}{\texttt{\$#2}}}%
+    {\texttt{\$#2}}}
+\DeclareRobustCommand{\adrx}[1]{\texttt{\$#1}}
+
+\DeclareRobustCommand{\namn}[2][]{\abc@setns{#1}%
+  \abc@finns{\abc@n l:#2}{\hyperlink{\abc@n l:#2}{\abc@tt{#2}}}{%
+  \abc@finns{\abc@n u:#2}{\hyperlink{\abc@n u:#2}{\abc@tt{#2}}}{%
+  \abc@finns{\abc@n v:#2}{\hyperlink{\abc@n v:#2}{\abc@tt{#2}}}{%
+  \abc@tt{#2}}}}}
+\DeclareRobustCommand{\namnx}[1]{\abc@tt{#1}}
+\newcommand{\abc@tt}[1]{\texttt{\detokenize{#1}}}
+\DeclareRobustCommand{\kw}[1]{\texttt{#1}}
+
+\endinput

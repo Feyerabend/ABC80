@@ -1,0 +1,255 @@
+% kapitel/tokens.tex -- fryst ur tex80.py 2026-10-06 (omstruktureringen steg 5);
+% rättas här för hand.
+
+\chapter{Tokens och tabeller}
+\section{Direktkommandon}
+\noindent Ur \hyperlink{l:CMDKW}{\texttt{CMDKW}} och
+\hyperlink{l:CMDTAB}{\texttt{CMDTAB}}. Koden är index i CMDTAB\index{direktkommando}.\par\medskip
+\TabNeed{30mm}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l@{}}
+\textbf{Kommando} & \textbf{Kod} & \textbf{Rutin}\\\hline\endhead
+\texttt{BYE} & \texttt{\$80} & \hyperlink{l:L017A}{\texttt{L017A}} {\footnotesize(tillägg \texttt{\$604E})}\\
+\texttt{RUN} & \texttt{\$81} & \hyperlink{l:CMDRUN}{\texttt{CMDRUN}}\\
+\texttt{LIST} & \texttt{\$82} & \hyperlink{l:CMDLIST}{\texttt{CMDLIST}}\\
+\texttt{NEW} & \texttt{\$83} & \hyperlink{l:NEW}{\texttt{NEW}}\\
+\texttt{SCR} & \texttt{\$83} & \hyperlink{l:NEW}{\texttt{NEW}}\\
+\texttt{CLEAR} & \texttt{\$84} & \hyperlink{l:CLEAR}{\texttt{CLEAR}}\\
+\texttt{LOAD} & \texttt{\$85} & \hyperlink{l:CMDLOAD}{\texttt{CMDLOAD}}\\
+\texttt{MERGE} & \texttt{\$86} & \hyperlink{l:CMDMERG}{\texttt{CMDMERG}}\\
+\texttt{REN} & \texttt{\$87} & \hyperlink{l:CMDREN}{\texttt{CMDREN}}\\
+\texttt{ED} & \texttt{\$88} & \hyperlink{l:CMDED}{\texttt{CMDED}}\\
+\texttt{SAVE} & \texttt{\$89} & \hyperlink{l:CMDSAVE}{\texttt{CMDSAVE}}\\
+\texttt{UNSAVE} & \texttt{\$8A} & \hyperlink{l:L014C}{\texttt{L014C}} {\footnotesize(tillägg \texttt{\$605A})}\\
+\end{longtable}\end{small}
+\section{Satser}
+\noindent Token\index{token} $\$80$--$\$96$ ur \hyperlink{l:STKW1}{\texttt{STKW1}}.
+Kompileringsrutinen står i \hyperlink{l:STTAB1}{\texttt{STTAB1}} och
+körrutinen i \hyperlink{l:STEXE1}{\texttt{STEXE1}}, båda med index
+token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
+\hyperlink{l:STKW2}{\texttt{STKW2}} och har rutinerna i
+\hyperlink{l:STTAB2}{\texttt{STTAB2}} och
+\hyperlink{l:STEXE2}{\texttt{STEXE2}}.\par\medskip
+\TabNeed{30mm}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l@{}}
+\textbf{Token} & \textbf{Ord} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
+\texttt{\$80} & \texttt{GOTO} & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:GOTO}{\texttt{GOTO}}\\
+\texttt{\$81} & (\kw{GOTO} efter \kw{THEN}/\kw{ELSE}) & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:GOTO}{\texttt{GOTO}}\\
+\texttt{\$82} & \texttt{LET} & \hyperlink{l:CMPLET}{\texttt{CMPLET}} & \hyperlink{l:LET}{\texttt{LET}}\\
+\texttt{\$83} & (\kw{LET} utan ordet) & \hyperlink{l:CMPLET}{\texttt{CMPLET}} & \hyperlink{l:LET}{\texttt{LET}}\\
+\texttt{\$84} & \texttt{PRINT} & \hyperlink{l:CMPPRT}{\texttt{CMPPRT}} & \hyperlink{l:PRINTS}{\texttt{PRINTS}}\\
+\texttt{\$85} & \texttt{;} & \hyperlink{l:CMPPRT}{\texttt{CMPPRT}} & \hyperlink{l:PRINTS}{\texttt{PRINTS}}\\
+\texttt{\$86} & (tabell 2, kod följer) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:EXEST2}{\texttt{EXEST2}}\\
+\texttt{\$87} & (hopp framåt, \kw{IF}) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:EXESKP}{\texttt{EXESKP}}\\
+\texttt{\$88} & \texttt{IF} & \hyperlink{l:CMPIF}{\texttt{CMPIF}} & \hyperlink{l:IF}{\texttt{IF}}\\
+\texttt{\$89} & \texttt{INPUT} & \hyperlink{l:CMPINP}{\texttt{CMPINP}} & \hyperlink{l:INPT}{\texttt{INPT}}\\
+\texttt{\$8A} & \texttt{INPUTLINE} & \hyperlink{l:CMPINL}{\texttt{CMPINL}} & \hyperlink{l:INPLIN}{\texttt{INPLIN}}\\
+\texttt{\$8B} & \texttt{FOR} & \hyperlink{l:CMPFOR}{\texttt{CMPFOR}} & \hyperlink{l:FOR}{\texttt{FOR}}\\
+\texttt{\$8C} & \texttt{NEXT} & \hyperlink{l:CMPNXT}{\texttt{CMPNXT}} & \hyperlink{l:NEXT}{\texttt{NEXT}}\\
+\texttt{\$8D} & (inget ord) & \hyperlink{l:L0709}{fel 8} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$8E} & \texttt{READ} & \hyperlink{l:CMPRD}{\texttt{CMPRD}} & \hyperlink{l:READ}{\texttt{READ}}\\
+\texttt{\$8F} & \texttt{RESTORE} & \hyperlink{l:CMPRES}{\texttt{CMPRES}} & \hyperlink{l:RESTOR}{\texttt{RESTOR}}\\
+\texttt{\$90} & \texttt{GOSUB} & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:GOSUB}{\texttt{GOSUB}}\\
+\texttt{\$91} & \texttt{RETURN} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:RETURN}{\texttt{RETURN}}\\
+\texttt{\$92} & \texttt{ON} & \hyperlink{l:CMPON}{\texttt{CMPON}} & \hyperlink{l:ON}{\texttt{ON}}\\
+\texttt{\$93} & \texttt{DATA} & \hyperlink{l:CMPREM}{\texttt{CMPREM}} & \hyperlink{l:DATA}{\texttt{DATA}}\\
+\texttt{\$94} & \texttt{ONERRORGOTO} & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:ONERRG}{\texttt{ONERRG}}\\
+\texttt{\$95} & (felaktig rad) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:L06F7}{fel 53}\\
+\texttt{\$96} & \texttt{DEFFN} & \hyperlink{l:CMPDEF}{\texttt{CMPDEF}} & \hyperlink{l:DEF}{\texttt{DEF}}\\
+\end{longtable}\end{small}
+\section{Satser, tabell 2}
+\TabNeed{30mm}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l@{}}
+\textbf{Kod} & \textbf{Ord} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
+\texttt{\$86 \$80} & \texttt{DIM} & \hyperlink{l:CMPDIM}{\texttt{CMPDIM}} & \hyperlink{l:DIM}{\texttt{DIM}}\\
+\texttt{\$86 \$81} & \texttt{POKE} & \hyperlink{l:CMPPOK}{\texttt{CMPPOK}} & \hyperlink{l:POKE}{\texttt{POKE}}\\
+\texttt{\$86 \$82} & \texttt{OUT} & \hyperlink{l:CMPOUT}{\texttt{CMPOUT}} & \hyperlink{l:OUTST}{\texttt{OUTST}}\\
+\texttt{\$86 \$83} & (inget ord) & \hyperlink{l:CMPINX}{\texttt{CMPINX}} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$86 \$84} & \texttt{REM} & \hyperlink{l:CMPREM}{\texttt{CMPREM}} & \hyperlink{l:REM}{\texttt{REM}}\\
+\texttt{\$86 \$85} & \texttt{OPEN} & \hyperlink{l:CMPOPN}{\texttt{CMPOPN}} & \hyperlink{l:OPENST}{\texttt{OPENST}}\\
+\texttt{\$86 \$86} & \texttt{PREPARE} & \hyperlink{l:CMPOPN}{\texttt{CMPOPN}} & \hyperlink{l:PREPST}{\texttt{PREPST}}\\
+\texttt{\$86 \$87} & \texttt{CLOSE} & \hyperlink{l:CMPCLS}{\texttt{CMPCLS}} & \hyperlink{l:CLOSST}{\texttt{CLOSST}}\\
+\texttt{\$86 \$88} & \texttt{RANDOMIZE} & \hyperlink{l:CMPNOP}{\texttt{CMPNOP}} & \hyperlink{l:RANDOM}{\texttt{RANDOM}}\\
+\texttt{\$86 \$89} & \texttt{STOP} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:STOP}{\texttt{STOP}}\\
+\texttt{\$86 \$8A} & \texttt{END} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:ENDPRG}{\texttt{ENDPRG}}\\
+\texttt{\$86 \$8B} & \texttt{CMD} & \hyperlink{l:L0147}{\texttt{L0147}} {\footnotesize(tillägg \texttt{\$7000})} & \hyperlink{l:L0166}{\texttt{L0166}} {\footnotesize(tillägg \texttt{\$7003})}\\
+\texttt{\$86 \$8C} & (inget ord) & \hyperlink{l:L0709}{fel 8} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$86 \$8D} & (inget ord) & \hyperlink{l:L0709}{fel 8} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$86 \$8E} & \texttt{SETDOT} & \hyperlink{l:CMPDOT}{\texttt{CMPDOT}} & \hyperlink{l:SETDOT}{\texttt{SETDOT}}\\
+\texttt{\$86 \$8F} & \texttt{CLRDOT} & \hyperlink{l:CMPDOT}{\texttt{CMPDOT}} & \hyperlink{l:CLRDOT}{\texttt{CLRDOT}}\\
+\texttt{\$86 \$90} & \texttt{GET} & \hyperlink{l:CMPGET}{\texttt{CMPGET}} & \hyperlink{l:GET}{\texttt{GET}}\\
+\texttt{\$86 \$91} & \texttt{CHAIN} & \hyperlink{l:CMPSTX}{\texttt{CMPSTX}} & \hyperlink{l:CHAIN}{\texttt{CHAIN}}\\
+\texttt{\$86 \$92} & \texttt{KILL} & \hyperlink{l:CMPSTX}{\texttt{CMPSTX}} & \hyperlink{l:L0170}{\texttt{L0170}} {\footnotesize(tillägg \texttt{\$605D})}\\
+\texttt{\$86 \$93} & \texttt{NAME} & \hyperlink{l:L0151}{\texttt{L0151}} {\footnotesize(tillägg \texttt{\$6054})} & \hyperlink{l:L0175}{\texttt{L0175}} {\footnotesize(tillägg \texttt{\$6057})}\\
+\texttt{\$86 \$94} & \texttt{TRACE} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:TRACE}{\texttt{TRACE}}\\
+\texttt{\$86 \$95} & \texttt{NOTRACE} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:NOTRAC}{\texttt{NOTRAC}}\\
+\end{longtable}\end{small}
+\section{Övriga nyckelord}
+\noindent Tabeller med ett ord\index{nyckelord} var, som kompileringsrutinerna söker i.
+Token skrivs i satsens kod och listas genom STKW1.\par\medskip
+\TabNeed{30mm}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l@{}}
+\textbf{Tabell} & \textbf{Token} & \textbf{Ord}\\\hline\endhead
+\hyperlink{l:KWTHEN}{\texttt{KWTHEN}} & \texttt{\$BD} & \texttt{THEN}\\
+\hyperlink{l:KWELSE}{\texttt{KWELSE}} & \texttt{\$BC} & \texttt{ELSE}\\
+\hyperlink{l:KWSTEP}{\texttt{KWSTEP}} & \texttt{\$BB} & \texttt{STEP}\\
+\hyperlink{l:KWTO}{\texttt{KWTO}} & \texttt{\$BA} & \texttt{TO}\\
+\hyperlink{l:KWASF}{\texttt{KWASF}} & \texttt{\$B8} & \texttt{ASFILE}\\
+\hyperlink{l:KWAS}{\texttt{KWAS}} & \texttt{\$B7} & \texttt{AS}\\
+\end{longtable}\end{small}
+\section{Operatorer}
+\noindent Nivåerna i uttryckskompilatorn, från lägst till högst
+prioritet\index{prioritet (operatorer)} (\hyperlink{l:PREC1}{\texttt{PREC1}}). Aritmetik och jämförelser
+har en token per typ: bas${}+0$ flyttal, ${}+1$ heltal, ${}+2$ sträng;
+körrutinerna står i \hyperlink{l:EXPTAB1}{\texttt{EXPTAB1}}.\par\medskip
+\TabNeed{30mm}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l l >{\raggedright\arraybackslash}p{0.3\textwidth}@{}}
+\textbf{Nivå} & \textbf{Operator} & \textbf{Token} & \textbf{Klass} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
+\hyperlink{l:PREC1}{\texttt{PREC1}} & \texttt{EQV} & \texttt{\$DC} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPEQV}{\texttt{OPEQV}}\\
+\hyperlink{l:PREC2}{\texttt{PREC2}} & \texttt{IMP} & \texttt{\$DD} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPIMP}{\texttt{OPIMP}}\\
+\hyperlink{l:PREC3}{\texttt{PREC3}} & \texttt{OR} & \texttt{\$DE} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPOR}{\texttt{OPOR}}\\
+\hyperlink{l:PREC3}{\texttt{PREC3}} & \texttt{XOR} & \texttt{\$DF} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPXOR}{\texttt{OPXOR}}\\
+\hyperlink{l:PREC4}{\texttt{PREC4}} & \texttt{AND} & \texttt{\$E0} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPAND}{\texttt{OPAND}}\\
+\hyperlink{l:PREC5}{\texttt{PREC5}} & \texttt{NOT} & \texttt{\$E1} & unär & \hyperlink{l:CMPNOT}{\texttt{CMPNOT}} & \hyperlink{l:OPNOT}{\texttt{OPNOT}}\\
+\hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char60}=} & \texttt{\$F1} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:LEF}{\texttt{LEF}} \hyperlink{l:LEI}{\texttt{LEI}} \hyperlink{l:LES}{\texttt{LES}}\\
+\hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char60}{\char62}} & \texttt{\$E5} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:NEF}{\texttt{NEF}} \hyperlink{l:NEI}{\texttt{NEI}} \hyperlink{l:NES}{\texttt{NES}}\\
+\hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char60}} & \texttt{\$E8} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:LTF}{\texttt{LTF}} \hyperlink{l:LTI}{\texttt{LTI}} \hyperlink{l:LTS}{\texttt{LTS}}\\
+\hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char62}=} & \texttt{\$EB} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:GEF}{\texttt{GEF}} \hyperlink{l:GEI}{\texttt{GEI}} \hyperlink{l:GES}{\texttt{GES}}\\
+\hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char62}} & \texttt{\$EE} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:GTF}{\texttt{GTF}} \hyperlink{l:GTI}{\texttt{GTI}} \hyperlink{l:GTS}{\texttt{GTS}}\\
+\hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{=} & \texttt{\$E2} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:EQF}{\texttt{EQF}} \hyperlink{l:EQI}{\texttt{EQI}} \hyperlink{l:EQS}{\texttt{EQS}}\\
+\hyperlink{l:PREC7}{\texttt{PREC7}} & \texttt{+} & \texttt{\$F4} & aritmetik & \hyperlink{l:CMPADD}{\texttt{CMPADD}} & \hyperlink{l:ADDF}{\texttt{ADDF}} \hyperlink{l:ADDI}{\texttt{ADDI}} \hyperlink{l:CONCAT}{\texttt{CONCAT}}\\
+\hyperlink{l:PREC7}{\texttt{PREC7}} & \texttt{-} & \texttt{\$F7} & aritmetik & \hyperlink{l:CMPADD}{\texttt{CMPADD}} & \hyperlink{l:SUBF}{\texttt{SUBF}} \hyperlink{l:SUBI}{\texttt{SUBI}}\\
+\hyperlink{l:PREC8}{\texttt{PREC8}} & \texttt{*} & \texttt{\$F9} & aritmetik & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:MULF}{\texttt{MULF}} \hyperlink{l:MULI}{\texttt{MULI}}\\
+\hyperlink{l:PREC8}{\texttt{PREC8}} & \texttt{/} & \texttt{\$FB} & aritmetik & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:DIVF}{\texttt{DIVF}} \hyperlink{l:DIVI}{\texttt{DIVI}}\\
+\hyperlink{l:PREC9}{\texttt{PREC9}} & \texttt{\^{}}, \texttt{**} & \texttt{\$FD} & potens & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:POWF}{\texttt{POWF}} \hyperlink{l:POWI}{\texttt{POWI}} \hyperlink{l:POWFI}{\texttt{POWFI}}\\
+\hyperlink{l:PREC10}{\texttt{PREC10}} &  &  & primärt uttryck & \hyperlink{l:PRIMARY}{\texttt{PRIMARY}} & \\
+\end{longtable}\end{small}
+\section{Funktioner}
+\noindent Token $\$80+k$ ur \hyperlink{l:FNKW}{\texttt{FNKW}};
+koden $k$ är index i \hyperlink{l:EXPTAB2}{\texttt{EXPTAB2}}. Formen och
+typerna är ur \hyperlink{l:FNTYPE}{\texttt{FNTYPE}}: \texttt{x} flyttal,
+\texttt{i} heltal, \texttt{s\$} sträng, \texttt{[ ]} får utelämnas.\par\medskip
+\TabNeed{30mm}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l@{}}
+\textbf{Kod} & \textbf{Form} & \textbf{Resultat} & \textbf{Rutin}\\\hline\endhead
+\texttt{\$00} & \texttt{FN} & -- & \hyperlink{l:FN}{\texttt{FN}}\\
+\texttt{\$01} & \texttt{ABS(x)} & flyttal & \hyperlink{l:EXABS}{\texttt{EXABS}}\\
+\texttt{\$02} & \texttt{ATN(x)} & flyttal & \hyperlink{l:EXATN}{\texttt{EXATN}}\\
+\texttt{\$03} & \texttt{COS(x)} & flyttal & \hyperlink{l:EXCOS}{\texttt{EXCOS}}\\
+\texttt{\$04} & \texttt{EXP(x)} & flyttal & \hyperlink{l:EXEXP1}{\texttt{EXEXP1}}\\
+\texttt{\$05} & \texttt{FIX(x)} & flyttal & \hyperlink{l:EXFIX}{\texttt{EXFIX}}\\
+\texttt{\$06} & \texttt{INT(x)} & flyttal & \hyperlink{l:EXINT}{\texttt{EXINT}}\\
+\texttt{\$07} & \texttt{LOG(x)} & flyttal & \hyperlink{l:EXLOG}{\texttt{EXLOG}}\\
+\texttt{\$08} & \texttt{LOG10(x)} & flyttal & \hyperlink{l:EXLG10}{\texttt{EXLG10}}\\
+\texttt{\$09} & \texttt{PI} & flyttal & \hyperlink{l:EXPI}{\texttt{EXPI}}\\
+\texttt{\$0A} & \texttt{RND[(x)]} & flyttal & \hyperlink{l:EXRND}{\texttt{EXRND}}\\
+\texttt{\$0B} & \texttt{SGN(x)} & heltal & \hyperlink{l:EXSGN}{\texttt{EXSGN}}\\
+\texttt{\$0C} & \texttt{SIN(x)} & flyttal & \hyperlink{l:EXSIN}{\texttt{EXSIN}}\\
+\texttt{\$0D} & \texttt{SQR(x)} & flyttal & \hyperlink{l:EXSQR}{\texttt{EXSQR}}\\
+\texttt{\$0E} & \texttt{TAN(x)} & flyttal & \hyperlink{l:EXTAN}{\texttt{EXTAN}}\\
+\texttt{\$0F} & \texttt{ASC(s\$)} & heltal & \hyperlink{l:EXASC}{\texttt{EXASC}}\\
+\texttt{\$10} & \texttt{CHR\$(i[,i[,i[,i]]])} & sträng & \hyperlink{l:EXCHR}{\texttt{EXCHR}}\\
+\texttt{\$11} & \texttt{LEFT\$(s\$,i)} & sträng & \hyperlink{l:EXLEFT}{\texttt{EXLEFT}}\\
+\texttt{\$12} & \texttt{RIGHT\$(s\$,i)} & sträng & \hyperlink{l:EXRGHT}{\texttt{EXRGHT}}\\
+\texttt{\$13} & \texttt{MID\$(s\$,i,i)} & sträng & \hyperlink{l:EXMID}{\texttt{EXMID}}\\
+\texttt{\$14} & \texttt{LEN(s\$)} & heltal & \hyperlink{l:EXLEN}{\texttt{EXLEN}}\\
+\texttt{\$15} & \texttt{INSTR(i,s\$,s\$)} & heltal & \hyperlink{l:EXINST}{\texttt{EXINST}}\\
+\texttt{\$16} & \texttt{SPACE\$(i)} & sträng & \hyperlink{l:EXSPC}{\texttt{EXSPC}}\\
+\texttt{\$17} & \texttt{STRING\$(i,i)} & sträng & \hyperlink{l:EXSTRG}{\texttt{EXSTRG}}\\
+\texttt{\$18} & \texttt{NUM\$(x)} & sträng & \hyperlink{l:EXNUM}{\texttt{EXNUM}}\\
+\texttt{\$19} & \texttt{VAL(s\$)} & flyttal & \hyperlink{l:EXVAL}{\texttt{EXVAL}}\\
+\texttt{\$1A} & \texttt{SWAP\%(i)} & heltal & \hyperlink{l:EXSWAP}{\texttt{EXSWAP}}\\
+\texttt{\$1B} & \texttt{PEEK(i)} & heltal & \hyperlink{l:EXPEEK}{\texttt{EXPEEK}}\\
+\texttt{\$1C} & \texttt{INP(i)} & heltal & \hyperlink{l:EXINP}{\texttt{EXINP}}\\
+\texttt{\$1D} & \texttt{CALL(i[,i])} & heltal & \hyperlink{l:EXCALL}{\texttt{EXCALL}}\\
+\texttt{\$1E} & \texttt{ERRCODE} & heltal & \hyperlink{l:EXERR}{\texttt{EXERR}}\\
+\texttt{\$1F} & \texttt{IEC\$(i)} & sträng & \hyperlink{l:EXIEC}{\texttt{EXIEC}} {\footnotesize(tillägg \texttt{\$7006})}\\
+\texttt{\$20} & \texttt{TAB(i)} & sträng & \hyperlink{l:EXTAB}{\texttt{EXTAB}}\\
+\texttt{\$21} & \texttt{CUR(i,i)} & sträng & \hyperlink{l:EXCUR}{\texttt{EXCUR}}\\
+\texttt{\$23} & \texttt{DOT(i,i)} & heltal & \hyperlink{l:EXDOT}{\texttt{EXDOT}}\\
+\texttt{\$30} & \texttt{ADD\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXADD}{\texttt{EXADD}}\\
+\texttt{\$31} & \texttt{SUB\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXSUB}{\texttt{EXSUB}}\\
+\texttt{\$32} & \texttt{MUL\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXMUL}{\texttt{EXMUL}}\\
+\texttt{\$33} & \texttt{DIV\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXDIV}{\texttt{EXDIV}}\\
+\texttt{\$34} & \texttt{COMP\%(s\$,s\$)} & heltal & \hyperlink{l:EXCOMP}{\texttt{EXCOMP}}\\
+\end{longtable}\end{small}
+\noindent Koder utan namn i FNKW: \texttt{\$22}, \texttt{\$24}, \texttt{\$25}, \texttt{\$26}, \texttt{\$27}, \texttt{\$28}, \texttt{\$29}, \texttt{\$2A}, \texttt{\$2B}, \texttt{\$2C}, \texttt{\$2D}, \texttt{\$2E}, \texttt{\$2F} (\hyperlink{l:L0709}{fel 8}).\par
+\section{Uttryckskod}
+\noindent Token $\$B6$--$\$FF$ i den kompilerade uttryckskoden och
+rutinen i \hyperlink{l:EXPTAB1}{\texttt{EXPTAB1}} som utför den. Vad varje
+token betyder beskrivs vid tabellen i listningen.\par\medskip
+\begin{multicols}{3}\small\raggedright
+\noindent\texttt{\$B6}\quad \hyperlink{l:ASGNF}{\texttt{ASGNF}}\par
+\noindent\texttt{\$B7}\quad \hyperlink{l:ASGNI}{\texttt{ASGNI}}\par
+\noindent\texttt{\$B8}\quad \hyperlink{l:ASGNS}{\texttt{ASGNS}}\par
+\noindent\texttt{\$B9}\quad \hyperlink{l:ENDF}{\texttt{ENDF}}\par
+\noindent\texttt{\$BA}\quad \hyperlink{l:EXEND}{\texttt{EXEND}}\par
+\noindent\texttt{\$BB}\quad \hyperlink{l:ENDS}{\texttt{ENDS}}\par
+\noindent\texttt{\$BC}\quad \hyperlink{l:ENDVF}{\texttt{ENDVF}}\par
+\noindent\texttt{\$BD}\quad \hyperlink{l:EXEND}{\texttt{EXEND}}\par
+\noindent\texttt{\$BE}\quad \hyperlink{l:ENDVS}{\texttt{ENDVS}}\par
+\noindent\texttt{\$BF}\quad \hyperlink{l:ENDDIM}{\texttt{ENDDIM}}\par
+\noindent\texttt{\$C0}\quad \hyperlink{l:VAR0}{\texttt{VAR0}}\par
+\noindent\texttt{\$C1}\quad \hyperlink{l:VAR0}{\texttt{VAR0}}\par
+\noindent\texttt{\$C2}\quad \hyperlink{l:VAR0}{\texttt{VAR0}}\par
+\noindent\texttt{\$C3}\quad \hyperlink{l:CONSTF}{\texttt{CONSTF}}\par
+\noindent\texttt{\$C4}\quad \hyperlink{l:VAR1F}{\texttt{VAR1F}}\par
+\noindent\texttt{\$C5}\quad \hyperlink{l:VAR1I}{\texttt{VAR1I}}\par
+\noindent\texttt{\$C6}\quad \hyperlink{l:VAR1S}{\texttt{VAR1S}}\par
+\noindent\texttt{\$C7}\quad \hyperlink{l:CONSTI}{\texttt{CONSTI}}\par
+\noindent\texttt{\$C8}\quad \hyperlink{l:VAR2F}{\texttt{VAR2F}}\par
+\noindent\texttt{\$C9}\quad \hyperlink{l:VAR2I}{\texttt{VAR2I}}\par
+\noindent\texttt{\$CA}\quad \hyperlink{l:VAR2S}{\texttt{VAR2S}}\par
+\noindent\texttt{\$CB}\quad \hyperlink{l:CONSTS}{\texttt{CONSTS}}\par
+\noindent\texttt{\$CC}\quad \hyperlink{l:DIMELM}{\texttt{DIMELM}}\par
+\noindent\texttt{\$CD}\quad \hyperlink{l:EXFUNC}{\texttt{EXFUNC}}\par
+\noindent\texttt{\$CE}\quad \hyperlink{l:EXFUNC}{\texttt{EXFUNC}}\par
+\noindent\texttt{\$CF}\quad \hyperlink{l:EXFUNC}{\texttt{EXFUNC}}\par
+\noindent\texttt{\$D0}\quad \hyperlink{l:EXFUNC}{\texttt{EXFUNC}}\par
+\noindent\texttt{\$D1}\quad \hyperlink{l:EXFUNC}{\texttt{EXFUNC}}\par
+\noindent\texttt{\$D2}\quad \hyperlink{l:PUSH0}{\texttt{PUSH0}}\par
+\noindent\texttt{\$D3}\quad \hyperlink{l:EXEXP}{\texttt{EXEXP}}\par
+\noindent\texttt{\$D4}\quad \hyperlink{l:GETF}{\texttt{GETF}}\par
+\noindent\texttt{\$D5}\quad \hyperlink{l:GETI}{\texttt{GETI}}\par
+\noindent\texttt{\$D6}\quad \hyperlink{l:GETS}{\texttt{GETS}}\par
+\noindent\texttt{\$D7}\quad \hyperlink{l:NEGF}{\texttt{NEGF}}\par
+\noindent\texttt{\$D8}\quad \hyperlink{l:NEGI}{\texttt{NEGI}}\par
+\noindent\texttt{\$D9}\quad \hyperlink{l:FTOI}{\texttt{FTOI}}\par
+\noindent\texttt{\$DA}\quad \hyperlink{l:ITOF}{\texttt{ITOF}}\par
+\noindent\texttt{\$DB}\quad \hyperlink{l:SKPARG}{\texttt{SKPARG}}\par
+\noindent\texttt{\$DC}\quad \hyperlink{l:OPEQV}{\texttt{OPEQV}}\hfill\texttt{EQV}\par
+\noindent\texttt{\$DD}\quad \hyperlink{l:OPIMP}{\texttt{OPIMP}}\hfill\texttt{IMP}\par
+\noindent\texttt{\$DE}\quad \hyperlink{l:OPOR}{\texttt{OPOR}}\hfill\texttt{OR}\par
+\noindent\texttt{\$DF}\quad \hyperlink{l:OPXOR}{\texttt{OPXOR}}\hfill\texttt{XOR}\par
+\noindent\texttt{\$E0}\quad \hyperlink{l:OPAND}{\texttt{OPAND}}\hfill\texttt{AND}\par
+\noindent\texttt{\$E1}\quad \hyperlink{l:OPNOT}{\texttt{OPNOT}}\hfill\texttt{NOT}\par
+\noindent\texttt{\$E2}\quad \hyperlink{l:EQF}{\texttt{EQF}}\hfill\texttt{=}\par
+\noindent\texttt{\$E3}\quad \hyperlink{l:EQI}{\texttt{EQI}}\hfill\texttt{=}\par
+\noindent\texttt{\$E4}\quad \hyperlink{l:EQS}{\texttt{EQS}}\hfill\texttt{=}\par
+\noindent\texttt{\$E5}\quad \hyperlink{l:NEF}{\texttt{NEF}}\hfill\texttt{{\char60}{\char62}}\par
+\noindent\texttt{\$E6}\quad \hyperlink{l:NEI}{\texttt{NEI}}\hfill\texttt{{\char60}{\char62}}\par
+\noindent\texttt{\$E7}\quad \hyperlink{l:NES}{\texttt{NES}}\hfill\texttt{{\char60}{\char62}}\par
+\noindent\texttt{\$E8}\quad \hyperlink{l:LTF}{\texttt{LTF}}\hfill\texttt{{\char60}}\par
+\noindent\texttt{\$E9}\quad \hyperlink{l:LTI}{\texttt{LTI}}\hfill\texttt{{\char60}}\par
+\noindent\texttt{\$EA}\quad \hyperlink{l:LTS}{\texttt{LTS}}\hfill\texttt{{\char60}}\par
+\noindent\texttt{\$EB}\quad \hyperlink{l:GEF}{\texttt{GEF}}\hfill\texttt{{\char62}=}\par
+\noindent\texttt{\$EC}\quad \hyperlink{l:GEI}{\texttt{GEI}}\hfill\texttt{{\char62}=}\par
+\noindent\texttt{\$ED}\quad \hyperlink{l:GES}{\texttt{GES}}\hfill\texttt{{\char62}=}\par
+\noindent\texttt{\$EE}\quad \hyperlink{l:GTF}{\texttt{GTF}}\hfill\texttt{{\char62}}\par
+\noindent\texttt{\$EF}\quad \hyperlink{l:GTI}{\texttt{GTI}}\hfill\texttt{{\char62}}\par
+\noindent\texttt{\$F0}\quad \hyperlink{l:GTS}{\texttt{GTS}}\hfill\texttt{{\char62}}\par
+\noindent\texttt{\$F1}\quad \hyperlink{l:LEF}{\texttt{LEF}}\hfill\texttt{{\char60}=}\par
+\noindent\texttt{\$F2}\quad \hyperlink{l:LEI}{\texttt{LEI}}\hfill\texttt{{\char60}=}\par
+\noindent\texttt{\$F3}\quad \hyperlink{l:LES}{\texttt{LES}}\hfill\texttt{{\char60}=}\par
+\noindent\texttt{\$F4}\quad \hyperlink{l:ADDF}{\texttt{ADDF}}\hfill\texttt{+}\par
+\noindent\texttt{\$F5}\quad \hyperlink{l:ADDI}{\texttt{ADDI}}\hfill\texttt{+}\par
+\noindent\texttt{\$F6}\quad \hyperlink{l:CONCAT}{\texttt{CONCAT}}\hfill\texttt{+}\par
+\noindent\texttt{\$F7}\quad \hyperlink{l:SUBF}{\texttt{SUBF}}\hfill\texttt{-}\par
+\noindent\texttt{\$F8}\quad \hyperlink{l:SUBI}{\texttt{SUBI}}\hfill\texttt{-}\par
+\noindent\texttt{\$F9}\quad \hyperlink{l:MULF}{\texttt{MULF}}\hfill\texttt{*}\par
+\noindent\texttt{\$FA}\quad \hyperlink{l:MULI}{\texttt{MULI}}\hfill\texttt{*}\par
+\noindent\texttt{\$FB}\quad \hyperlink{l:DIVF}{\texttt{DIVF}}\hfill\texttt{/}\par
+\noindent\texttt{\$FC}\quad \hyperlink{l:DIVI}{\texttt{DIVI}}\hfill\texttt{/}\par
+\noindent\texttt{\$FD}\quad \hyperlink{l:POWF}{\texttt{POWF}}\hfill\texttt{\^{}}\par
+\noindent\texttt{\$FE}\quad \hyperlink{l:POWI}{\texttt{POWI}}\hfill\texttt{\^{}}\par
+\noindent\texttt{\$FF}\quad \hyperlink{l:POWFI}{\texttt{POWFI}}\hfill\texttt{\^{}}\par
+\end{multicols}
