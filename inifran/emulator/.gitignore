@@ -19,3 +19,4 @@ cpm/skriv/med_bios.asm
 cpm/ztolk.com
 cpm/zork/med_bios.asm
 cpm/d.dsk
+roms/*.rom

@@ -5,6 +5,8 @@
 #                Z-maskintolken ZTOLK (cpm/system.dsk), skivan
 #                till B: med BBC BASIC (cpm/b.dsk) och skivan till D:
 #                på kort 44 med Zork I (cpm/d.dsk)
+#   make roms    hämta ROM:arna (roms/hamta.py); webb och prov
+#                hämtar dem själva om de saknas
 #   make prov    kör den nya och den gamla (verktyg/abc80) med samma flaggor
 #                och jämför skärmarna
 #   make webb    bygg webb/abc80.html, emulatorn i en enda sida som går
@@ -46,6 +48,15 @@ abc80: $(KARNA) $(VARD) karna/*.h vard/*.h
 	$(CC) $(CFLAGS) -o $@ $(KARNA) $(VARD) -lm
 
 webb: webb/abc80.html
+
+# ROM:arna ligger inte i det publika förrådet; roms/hamta.py hämtar dem.
+ROMAR = roms/abc80old.rom roms/abc80new.rom roms/basicii80.rom roms/abcdos80.rom \
+        roms/p40.rom roms/tkn80-iii.rom
+
+roms: $(ROMAR)
+
+$(ROMAR):
+	python3 -I roms/hamta.py
 
 webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 	$(CLANG) $(WEBB_FLAGGOR) -o $@ $(WEBB_C)
@@ -127,7 +138,7 @@ cpm/b.dsk: cpm/bbcbasic.com cpm/systemskiva.py
 cpm/d.dsk: cpm/zork/zork1.z3 cpm/systemskiva.py
 	python3 -I cpm/systemskiva.py -44 $@ cpm/zork/zork1.z3
 
-prov: abc80
+prov: abc80 $(ROMAR)
 	@./prov.sh
 
 cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin cpm/b.dsk cpm/skriv.com cpm/ztolk.com cpm/d.dsk | $(Z80ASM)
@@ -138,4 +149,4 @@ clean:
 	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/skriv.txt cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com \
 	       cpm/zork/med_bios.asm cpm/ztolk.com cpm/d.dsk
 
-.PHONY: alla prov cpmprov webb clean
+.PHONY: roms alla prov cpmprov webb clean

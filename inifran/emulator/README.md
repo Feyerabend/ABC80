@@ -153,6 +153,7 @@ kolumnen.
 
     ./abc80 -cpm cpm/system.dsk -k 'SKRIV SKRIV.TXT\r'
 
+    make roms       # hämta ROM:arna (roms/hamta.py); de ligger inte i förrådet
     make            # abc80
     make prov       # jämför med verktyg/abc80 i en rad fall
     make webb       # webb/abc80.html
@@ -160,7 +161,7 @@ kolumnen.
     make clean
 
 `make prov` behöver den gamla emulatorn i `../verktyg/` och ROM:arna i
-`../emulator/roms/`, som i det publika förrådet; fall 4 får skilja (labplattan,
+`../emulator/roms/`, som i det publika förrådet (de hämtas om de saknas); fall 4 får skilja (labplattan,
 en ms räknas lite olika). I bokens arkiv går också provningarna till
 abc80host att köra mot den här (569 fall):
 
@@ -173,6 +174,8 @@ abc80host att köra mot den här (569 fall):
 direkt från disken; den behöver ingen server och inget installerat. Den
 ligger också på webben, i den version som finns i kodförrådet:
 [https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)
+Den går att bygga om med `make webb`, som först hämtar ROM:arna
+(`roms/hamta.py`, se [`roms/LASMIG.md`](roms/LASMIG.md)).
 WebAssembly-koden, de två ROM:arna och ABC-DOS ligger i filen, och
 exempeldisketten (`exempel/program/diskett/program.dsk`), MÅLARE-bandet
 och Genesis-demot (band med musiken och diskett) om de finns; med båda blir filen drygt

@@ -39,7 +39,8 @@ Utan `make`:
 
     ./abc80 -t 500 -k 'PRINT 6*7\r'           # utan terminal: skriver skärmen
 
-ROM:arna finns i [`../emulator/roms/`](../emulator/roms/); utan `-r` startar `abc80`
+ROM:arna hämtas till [`../emulator/roms/`](../emulator/roms/) med `make roms` där
+(de ligger inte i förrådet); utan `-r` startar `abc80`
 med `../emulator/roms/abc80new.rom`, räknat från där programmet ligger.
 
 ## Filerna
@@ -88,4 +89,5 @@ comments and manuals are in Swedish.
 
 Build with `make`; `make prov` assembles the examples and the Forth
 system and checks the result against the `.bin` files. The ROM images are
-in `../emulator/roms/`.
+not in the repository; `make roms` in `../emulator/` downloads them to
+`../emulator/roms/`.

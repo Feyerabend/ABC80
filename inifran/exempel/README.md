@@ -66,7 +66,8 @@ Hur emulatorn tar emot V24 för e6 (`-s`) står i dess manual,
 
 Emulatorn finns också som en webbsida,
 [`../emulator/webb/abc80.html`](../emulator/webb/abc80.html), en enda fil
-som går att öppna direkt. Länkarna nedan öppnar den på GitHub Pages med
+som går att öppna direkt (och bygga om med `make webb` i `../emulator/`,
+som hämtar ROM:arna). Länkarna nedan öppnar den på GitHub Pages med
 kretsen på sin plats och skriver kommandona åt en:
 
 | Länk | Vad som händer |

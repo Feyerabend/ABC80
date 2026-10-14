@@ -6,6 +6,10 @@ Publicering av boken väntas under 2026.
 
 Emulatorn går att köra direkt i webbläsaren, utan att något installeras:
 [https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)
+Sidan går också att bygga själv: ROM:arna ligger inte i förrådet, och
+`make webb` i [`emulator/`](emulator/) hämtar dem och bygger
+`emulator/webb/abc80.html` (se
+[`emulator/roms/LASMIG.md`](emulator/roms/LASMIG.md)).
 
 - [`forth/`](forth/): en liten Forth för ABC80 (band 2, exempel 7)
 - [`exempel/`](exempel/): program i en krets, exempel 1–6 (band 2)
