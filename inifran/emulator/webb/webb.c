@@ -12,8 +12,8 @@
  * (ljudprov(), 16 bitar, med den provtakt som starta() fick).
  *
  * Det mesta motsvarar flaggorna i vard/abc80.c: krets() är -l, bank()
- * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP, tkn80() -tkn80,
- * cpm() -cpm och v24() -s.
+ * -b, skiva() -D, band() -T, spela_in() -U, p40() -CP, centronics() -C 00,
+ * tkn80() -tkn80, cpm() -cpm och v24() -s.
  */
 
 #include <stdlib.h>
@@ -25,6 +25,7 @@
 #include "../karna/maskin.h"
 #include "../karna/p40.h"
 #include "../karna/skivkort.h"
+#include "../karna/skrivarkort.h"
 #include "../vard/wav.h"
 
 #define EXPORT(namn) __attribute__((export_name(#namn)))
@@ -40,6 +41,8 @@ static Skivkort skivkort;
 static int skivkortet_kopplat;
 static P40 skrivaren;
 static int skrivaren_kopplad;
+static Skrivarkort snittkortet;              /* Centronics på kort 60 */
+static int snittkortet_kopplat;
 static Uni80 uni80;
 static int cpm_lage;                         /* UNI-80 med start-PROM:en */
 
@@ -79,6 +82,7 @@ EXPORT(starta) int starta(int ram_kb, const uint8_t *rom, long storlek, long pro
     skivkort_starta(&skivkort);
     skivkortet_kopplat = 0;
     skrivaren_kopplad = 0;
+    snittkortet_kopplat = 0;
     cpm_lage = 0;                            /* maskin.uni80 är NULL igen */
     return 1;
 }
@@ -149,6 +153,10 @@ EXPORT(aterstall) void aterstall(void)
  * markor. Ger antalet ljudprov för bilden. */
 EXPORT(bild) int bild(int rita, int markor)
 {
+    /* Centronicsskrivaren är redo (status 0) tills sidan har en bit kvar
+     * att hämta; då är den upptagen (BUSY, bit 4, och bit 1 för 9704:s
+     * typ U), och drivrutinen väntar. */
+    snittkortet.status = snittkortet.antal > SKRIVARE_BUFFERT - 1024 ? 0x12 : 0x00;
     maskin_kor(&maskin, MASKIN_BILD);
     long long antal = ljud_prov_till(&ljud, maskin.tid) - ljud.prov;
     while (antal > 2048) {                   /* det som inte får plats */
@@ -332,3 +340,26 @@ EXPORT(p40_fullt) int p40_fullt(void) { return skrivaren.antal >= P40_ANSLAG; }
 
 /* Riv av papperet: anslagen glöms, men vagnen står kvar. */
 EXPORT(p40_riv) void p40_riv(void) { skrivaren.antal = 0; }
+
+/* ---------------------------------------------------------------- */
+/* Centronicsskrivaren                                               */
+
+/* Centronicskortet på kort 60 (-C 00) in eller ur medan maskinen går,
+ * med 9704 på $7800 (krets() först), som p40(). Skrivaren tar emot
+ * tecknen som de är; sidan läser dem med centronics_tecken() och
+ * centronics_antal() och tömmer med centronics_hamtat(). */
+EXPORT(centronics) void centronics(int in)
+{
+    if (in && !snittkortet_kopplat) {
+        skrivarkort_starta(&snittkortet, 0x00, 0x00, 0);
+        bussen_koppla(&maskin.bussen, &snittkortet.kort);
+    } else if (!in && snittkortet_kopplat) {
+        bussen_koppla_ur(&maskin.bussen, &snittkortet.kort);
+        memset(maskin.minne + 0x7800, 0xFF, 0x400);
+    }
+    snittkortet_kopplat = in;
+}
+
+EXPORT(centronics_antal) int centronics_antal(void) { return snittkortet.antal; }
+EXPORT(centronics_tecken) const uint8_t *centronics_tecken(void) { return snittkortet.utskrift; }
+EXPORT(centronics_hamtat) void centronics_hamtat(void) { snittkortet.antal = 0; }

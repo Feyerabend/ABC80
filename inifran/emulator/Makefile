@@ -26,12 +26,12 @@ VARD  = vard/abc80.c vard/terminal.c vard/batch.c vard/anrop.c vard/tstenhet.c \
         vard/kassettfil.c vard/wav.c vard/png.c
 
 # WebAssembly utan C-bibliotek: clang och lld (wasm-ld) räcker, t.ex.
-# Apple clang och Homebrews lld. Bara kärnan, utan skrivarkortet och
-# IEC-kortet, med webb/libc.c i stället för C-biblioteket.
+# Apple clang och Homebrews lld. Bara kärnan, utan IEC-kortet, med
+# webb/libc.c i stället för C-biblioteket.
 CLANG   ?= clang
 WASM_LD ?= $(firstword $(wildcard /opt/homebrew/opt/lld/bin/wasm-ld /usr/local/opt/lld/bin/wasm-ld) wasm-ld)
-WEBB_C   = karna/z80.c karna/maskin.c karna/bussen.c karna/skivkort.c karna/ljud.c \
-           karna/p40.c karna/kassett.c karna/bild.c karna/uni80.c vard/wav.c webb/webb.c webb/libc.c
+WEBB_C   = karna/z80.c karna/maskin.c karna/bussen.c karna/skivkort.c karna/skrivarkort.c \
+           karna/ljud.c karna/p40.c karna/kassett.c karna/bild.c karna/uni80.c vard/wav.c webb/webb.c webb/libc.c
 WEBB_FLAGGOR = --target=wasm32 -std=c11 -O2 -Wall -Wextra -ffreestanding -nostdlib \
            -isystem webb/libc -fuse-ld=$(WASM_LD) -Wl,--no-entry -Wl,--strip-all \
            -Wl,-z,stack-size=1048576
@@ -53,7 +53,7 @@ webb: webb/abc80.html
 
 # ROM:arna ligger inte i det publika förrådet; roms/hamta.py hämtar dem.
 ROMAR = roms/abc80old.rom roms/abc80new.rom roms/basicii80.rom roms/abcdos80.rom \
-        roms/p40.rom roms/tkn80-iii.rom
+        roms/p40.rom roms/pr9704.rom roms/tkn80-iii.rom
 
 roms: $(ROMAR)
 
@@ -77,7 +77,7 @@ webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 # kommer med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
-                 roms/tkn80-iii.rom $(SKIVOR) \
+                 roms/pr9704.rom roms/tkn80-iii.rom $(SKIVOR) \
                  cpm/start.bin cpm/system.dsk cpm/b.dsk cpm/d.dsk \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \

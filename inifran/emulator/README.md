@@ -82,7 +82,13 @@ provprogram och vad det visar:
     ./abc80 -r roms/abc80new.rom -l roms/p40.rom@7800 -CP papper.png \
             -f exempel/p40/PROV.BAS -k 'RUN\r' -t 9000
 
-I webbläsaren finns skrivaren i gruppen *Skrivaren P40*.
+I webbläsaren finns skrivaren i gruppen *Skrivaren*.
+
+`-C 00` med `-l roms/pr9704.rom@7800` är en Centronicsskrivare på
+kort 60 med Luxors skrivarkrets 9704: tecknen skrivs som "PR60: hh ..."
+efter körningen. I webbläsaren är den rutan *Centronics* i gruppen
+*Skrivaren*, med papperet som text (80 tecken, svenska tecken som en
+Epson, sparas som papper.txt, `?centronics=pa`).
 
 `-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
 Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när
@@ -203,7 +209,7 @@ vidare när motorn slås av, så att Genesis-demots musik kommer från
 bandet), disketten i FD2 med ABC-DOS, Forth-kretsarna (en lista, eller
 `?krets=forth` och `?krets=cmos`), bokens exempel 1–6 i den tänkta
 kretsen (i samma lista, eller `?krets=e1` till `?krets=e6`), CMOS-minnet, skrivaren P40 (papperet
-växer på sidan och sparas som PNG, `?p40=pa`), exempeldisketten, Luxors systemskiva och demoskiva (`?skiva=system`, `?skiva=demo`), MÅLARE och Genesis-demot på
+växer på sidan och sparas som PNG, `?p40=pa`) eller en Centronicsskrivare med 9704 (papperet som text, `?centronics=pa`), exempeldisketten, Luxors systemskiva och demoskiva (`?skiva=system`, `?skiva=demo`), MÅLARE och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:
@@ -214,7 +220,7 @@ och `?s=` en text till V24, med samma syntax som `-s`, när tangenterna
 är skrivna.
 
 Knapparna ligger i paneler (Maskinen, Disketten, Kassetten, Program och
-kretsar, Skrivaren P40, CMOS-minnet, Demot) som fälls ut och ihop; listen
+kretsar, Skrivaren, CMOS-minnet, Demot) som fälls ut och ihop; listen
 visar läget också ihopfälld, och *i* visar panelens hjälptext. Sidan
 finns på svenska och engelska: knappen *EN*/*SV* överst byter, valet
 sparas i webbläsaren, och `?sprak=en` eller `?sprak=sv` går före. Utan

@@ -200,18 +200,19 @@ function visa_lagen(alltid = false) {
         disk = cpm_valt() ? [skivans_namn, skiva_b_namn, skiva_d_namn].join(' · ') : skivans_namn;
     const krets = $('krets');
     const program = krets && krets.value ? krets.options[krets.selectedIndex].textContent : '';
-    const p40 = $('p40').checked ? t('inkopplad', 'connected') + (papper_rader
+    const skrivare = $('p40').checked ? 'P40' : $('centronics').checked ? 'Centronics' : '';
+    const skrivaren_text = skrivare ? skrivare + (papper_rader
         ? ' · ' + papper_rader + t(papper_rader === 1 ? ' rad' : ' rader',
                                     papper_rader === 1 ? ' line' : ' lines') : '') : '';
     const cmos_text = $('cmos').checked ? t('på', 'on') : '';
-    const nytt = [maskin, disk, program, p40, cmos_text].join('|');
+    const nytt = [maskin, disk, program, skrivaren_text, cmos_text].join('|');
     if (!alltid && nytt === lagen_nu)
         return;
     lagen_nu = nytt;
     $('lage_maskin').textContent = maskin;
     $('lage_disk').textContent = disk;
     $('lage_program').textContent = program;
-    $('lage_p40').textContent = p40;
+    $('lage_skrivaren').textContent = skrivaren_text;
     $('lage_cmos').textContent = cmos_text;
     /* Fast markör gäller bara TKN80. */
     $('fast').disabled = !$('tkn80').checked;
@@ -405,7 +406,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
         e.slapp(p);
     }
     papper_tomt();
-    p40_koppla();
+    skrivaren_koppla();
     e.aterstall();
     nasta = null;
 }
@@ -689,26 +690,33 @@ function papper_visa(visa) {
     else
         papperet.classList.toggle('oppen', visa);
     if (visa)
-        $('p40_visa').classList.remove('nytt');
+        $('papper_knapp').classList.remove('nytt');
 }
 
-/* Skrivaren och drivrutinen in eller ur, som rutan säger. */
-function p40_koppla() {
-    if ($('p40').checked) {
-        const p = lagg_i_minnet(ROM.p40);
-        e.krets(0x7800, p, ROM.p40.length);
-        e.slapp(p);
-    }
-    e.p40($('p40').checked ? 1 : 0);
+/* Skrivaren och drivrutinen in eller ur, som rutorna säger: P40 med
+ * sin drivrutin eller Centronicskortet med 9704, båda på kort 60. Den
+ * som kopplas ur först, så att den andras drivrutin får ligga kvar. */
+function skrivaren_koppla() {
+    for (const namn of ['p40', 'centronics'])
+        if (!$(namn).checked)
+            e[namn](0);
+    for (const [namn, rom] of [['p40', ROM.p40], ['centronics', ROM.pr9704]])
+        if ($(namn).checked) {
+            const p = lagg_i_minnet(rom);
+            e.krets(0x7800, p, rom.length);
+            e.slapp(p);
+            e[namn](1);
+        }
 }
 
 function papper_tomt() {
+    text_tom();
     papper_ritat = 0;
     papper_rader = 0;
     papper_senast = 0;
     papper_visa(false);
-    $('p40_visa').disabled = true;
-    $('p40_visa').classList.remove('nytt');
+    $('papper_knapp').disabled = true;
+    $('papper_knapp').classList.remove('nytt');
     papper_rubrik();
 }
 
@@ -723,11 +731,17 @@ function papper_anslag(fran, till) {
                         (till - fran) * P40_ANSLAG);
 }
 
+/* Rita det som har kommit till skrivaren sedan sist. */
+function papper_rita() {
+    if ($('p40').checked)
+        p40_rita();
+    else if ($('centronics').checked)
+        text_rita();
+}
+
 /* Rita de anslag som har kommit sedan sist. Behövs fler rader görs
  * bilden om och allt ritas igen. */
-function papper_rita() {
-    if (!$('p40').checked)
-        return;
+function p40_rita() {
     const antal = e.p40_antal();
     if (antal === papper_ritat)
         return;
@@ -761,19 +775,142 @@ function papper_rita() {
                                         P40_KANT + rad * P40_RADHOJD + n * P40_NALRAD, 3, 3);
     }
     papper_ritat = antal;
-    $('p40_visa').disabled = false;
+    papper_nytt(ny_utskrift);
+    if (e.p40_fullt())
+        meddela('Papperet är fullt: riv av det.', 'The paper is full: tear it off.');
+}
+
+/* Det har kommit något på papperet. En ny utskrift tar fram lappen;
+ * stängs den under utskriften lyser bara knappen. */
+function papper_nytt(ny_utskrift) {
+    $('papper_knapp').disabled = false;
     papper_rubrik();
-    /* En ny utskrift tar fram lappen; stängs den under utskriften
-     * lyser bara knappen. */
     if (ny_utskrift)
         papper_visa(true);
     else if (!papper_oppet())
-        $('p40_visa').classList.add('nytt');
+        $('papper_knapp').classList.add('nytt');
     const ruta = $('papper_rulle');
     if (ny_utskrift || ruta.scrollTop + ruta.clientHeight >= ruta.scrollHeight - 80)
         ruta.scrollTop = ruta.scrollHeight;
-    if (e.p40_fullt())
-        meddela('Papperet är fullt: riv av det.', 'The paper is full: tear it off.');
+}
+
+/* ---------------------------------------------------------------- */
+/* Centronicsskrivaren                                               */
+
+/* En skrivare som Epsons med den svenska teckenuppsättningen (som
+ * ABC80:s skärm, karna/tecken.c). Den skriver rader om 80 tecken: CR
+ * för vagnen till början, LF skriver raden och matar fram papperet (och
+ * nästa rad börjar till vänster, som på Epson), FF ger en ny sida, BS
+ * och HT flyttar vagnen, och en full rad bryts. Bit 7 tas bort, andra
+ * styrtecken skrivs inte, och ESC tar med sig nästa tecken (Epsons
+ * styrkoder är ofta längre; de syns inte på papperet ändå). Papperet
+ * är text: sidorna, var och en en lista med rader. */
+const TEXT_BREDD = 80, TEXT_RADER = 5000;
+const TEXT_TECKEN = { 0x24: '¤', 0x40: 'É', 0x5B: 'Ä', 0x5C: 'Ö', 0x5D: 'Å', 0x5E: 'Ü',
+                      0x60: 'é', 0x7B: 'ä', 0x7C: 'ö', 0x7D: 'å', 0x7E: 'ü' };
+let text_sidor = [[]];
+let text_rad = [];                           /* raden under vagnen */
+let text_kolumn = 0;
+let text_esc = false;
+let text_fullt = false;                      /* sagt att papperet är fullt */
+
+function text_tom() {
+    text_sidor = [[]];
+    text_rad = [];
+    text_kolumn = 0;
+    text_esc = false;
+    text_fullt = false;
+    $('papper_text').textContent = '';
+}
+
+function text_antal_rader() {
+    let antal = text_rad.length ? 1 : 0;
+    for (const sida of text_sidor)
+        antal += sida.length;
+    return antal;
+}
+
+function text_radslut() {
+    text_sidor[text_sidor.length - 1].push(text_rad.join('').trimEnd());
+    text_rad = [];
+    text_kolumn = 0;
+}
+
+function text_tecken(k) {
+    k &= 0x7F;
+    if (text_esc) {
+        text_esc = false;
+        return;
+    }
+    switch (k) {
+    case 0x1B: text_esc = true; return;
+    case 0x0D: text_kolumn = 0; return;
+    case 0x0A: text_radslut(); return;
+    case 0x0C:
+        if (text_rad.length)
+            text_radslut();
+        if (text_sidor[text_sidor.length - 1].length)
+            text_sidor.push([]);
+        text_kolumn = 0;
+        return;
+    case 0x08: text_kolumn = Math.max(0, text_kolumn - 1); return;
+    case 0x09: text_kolumn = Math.min(TEXT_BREDD, (text_kolumn + 8) & ~7); return;
+    }
+    if (k < 0x20 || k === 0x7F)
+        return;
+    if (text_kolumn >= TEXT_BREDD)
+        text_radslut();
+    while (text_rad.length < text_kolumn)
+        text_rad.push(' ');
+    text_rad[text_kolumn++] = TEXT_TECKEN[k] || String.fromCharCode(k);
+}
+
+/* Papperet som text, sidorna med ett streck emellan. */
+function text_som_text(sidbyte) {
+    const sidor = text_sidor.map(sida => sida.join('\n'));
+    if (text_rad.length)
+        sidor[sidor.length - 1] += (text_sidor[text_sidor.length - 1].length ? '\n' : '')
+            + text_rad.join('').trimEnd();
+    return sidor.join(sidbyte);
+}
+
+/* Hämta tecknen som har kommit sedan sist och skriv om texten. Är
+ * papperet fullt hämtas inget, så att kortet blir upptaget och 9704
+ * väntar (BREAK avbryter). */
+function text_rita() {
+    const antal = e.centronics_antal();
+    if (antal === 0)
+        return;
+    if (text_antal_rader() >= TEXT_RADER) {
+        if (!text_fullt) {
+            text_fullt = true;
+            meddela('Papperet är fullt: riv av det.', 'The paper is full: tear it off.');
+        }
+        return;
+    }
+    const ny_utskrift = performance.now() - papper_senast > PAPPER_PAUS;
+    papper_senast = performance.now();
+    const tecknen = new Uint8Array(e.memory.buffer, e.centronics_tecken(), antal);
+    for (const k of tecknen)
+        text_tecken(k);
+    e.centronics_hamtat();
+    papper_ritat += antal;
+    papper_rader = text_antal_rader();
+    const pre = $('papper_text');
+    pre.textContent = '';
+    text_som_text('\f').split('\f').forEach((sida, n) => {
+        if (n > 0)
+            pre.appendChild(document.createElement('hr'));
+        pre.appendChild(document.createTextNode(sida + '\n'));
+    });
+    papper_nytt(ny_utskrift);
+}
+
+/* Lappen visar P40:s papper (bild) eller Centronicsskrivarens (text). */
+function papper_slag() {
+    const text = $('centronics').checked;
+    pappret.hidden = text;
+    $('papper_text').hidden = !text;
 }
 
 let anvande_ljud = false;
@@ -1552,17 +1689,27 @@ $('cmos_spara').addEventListener('click', () => {
 });
 /* Skrivaren kopplas in och ur medan maskinen går: programmet ligger
  * kvar, och BASIC hittar drivrutinen när PR: öppnas. */
-$('p40').addEventListener('change', () => {
-    p40_koppla();
-    if ($('p40').checked)
-        meddela('P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.',
-                'P40 on card 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HELLO", 30 CLOSE 1, or LIST PR:.');
-    else
-        meddela('Skrivaren är urkopplad; papperet ligger kvar.',
-                'The printer is disconnected; the paper stays.');
-    skarm.focus();
-});
-$('p40_riv').addEventListener('click', () => {
+for (const [namn, andra] of [['p40', 'centronics'], ['centronics', 'p40']])
+    $(namn).addEventListener('change', () => {
+        const byte = $(namn).checked && $(andra).checked;
+        if (byte || $(namn).checked)
+            papper_tomt();                   /* ett nytt papper för den nya */
+        if (byte)
+            $(andra).checked = false;        /* båda på kort 60 */
+        papper_slag();
+        skrivaren_koppla();
+        if ($('p40').checked)
+            meddela('P40 på kort 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HEJ", 30 CLOSE 1, eller LIST PR:.',
+                    'P40 on card 60: 10 OPEN "PR:" AS FILE 1, 20 PRINT #1,"HELLO", 30 CLOSE 1, or LIST PR:.');
+        else if ($('centronics').checked)
+            meddela('Centronics på kort 60 med 9704: LIST PR:, eller OPEN "PR:CSA36C70" AS FILE 1.',
+                    'Centronics on card 60 with 9704: LIST PR:, or OPEN "PR:CSA36C70" AS FILE 1.');
+        else
+            meddela('Skrivaren är urkopplad; papperet ligger kvar.',
+                    'The printer is disconnected; the paper stays.');
+        skarm.focus();
+    });
+$('papper_riv').addEventListener('click', () => {
     if ($('p40').checked)
         e.p40_riv();
     papper_tomt();
@@ -1570,8 +1717,8 @@ $('p40_riv').addEventListener('click', () => {
     skarm.focus();
 });
 if (!med_popover)                            /* annars popovertarget */
-    $('p40_visa').addEventListener('click', () => papper_visa(!papper_oppet()));
-$('p40_stang').addEventListener('click', () => {
+    $('papper_knapp').addEventListener('click', () => papper_visa(!papper_oppet()));
+$('papper_stang').addEventListener('click', () => {
     papper_visa(false);
     skarm.focus();
 });
@@ -1652,7 +1799,7 @@ addEventListener('resize', () => {
 papperet.addEventListener('toggle', () => {
     if (papper_oppet()) {
         papper_lage();
-        $('p40_visa').classList.remove('nytt');
+        $('papper_knapp').classList.remove('nytt');
         const ruta = $('papper_rulle');
         ruta.scrollTop = ruta.scrollHeight;
     }
@@ -1661,9 +1808,21 @@ document.addEventListener('keydown', h => {   /* Esc utan popover */
     if (h.key === 'Escape' && !med_popover)
         papper_visa(false);
 });
-$('p40_spara').addEventListener('click', () => {
+$('papper_spara').addEventListener('click', () => {
     if (!papper_ritat) {
         meddela('Papperet är tomt.', 'The paper is empty.');
+        return;
+    }
+    if ($('centronics').checked) {
+        const lank = document.createElement('a');
+        lank.href = URL.createObjectURL(new Blob([text_som_text('\f\n') + '\n'],
+                                                 { type: 'text/plain;charset=utf-8' }));
+        lank.download = 'papper.txt';
+        lank.click();
+        setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
+        meddela('papper.txt laddas ner (FF mellan sidorna).',
+                'papper.txt is downloaded (FF between the pages).');
+        skarm.focus();
         return;
     }
     pappret.toBlob(blob => {
@@ -1755,6 +1914,7 @@ $('genesis_skiva')?.addEventListener('click', () => {
     ROM.gammal = base64(FILER.rom_gammal);
     ROM.dos = base64(FILER.dos);
     ROM.p40 = base64(FILER.p40);
+    ROM.pr9704 = base64(FILER.pr9704);
     ROM.tkn80 = base64(FILER.tkn80);
     if (FILER.cpm_start) {
         ROM.cpm_start = base64(FILER.cpm_start);
@@ -1800,8 +1960,12 @@ $('genesis_skiva')?.addEventListener('click', () => {
     }
     if (fraga.get('p40') === 'pa') {
         $('p40').checked = true;
-        oppna_panel('panel_p40');
+        oppna_panel('panel_skrivaren');
+    } else if (fraga.get('centronics') === 'pa') {
+        $('centronics').checked = true;
+        oppna_panel('panel_skrivaren');
     }
+    papper_slag();
     if (fraga.get('tkn80') === 'pa')
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')

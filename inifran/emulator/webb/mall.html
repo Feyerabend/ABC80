@@ -182,7 +182,12 @@
   #papper header button { cursor: pointer; }
   #papper_rulle { overflow: auto; background: #fbfaf5; border-radius: 0 0 10px 10px; }
   #papper canvas { display: block; width: 532px; }   /* halva storleken */
-  #p40_visa.nytt { box-shadow: 0 0 0 2px var(--accent); }
+  #papper_text {                             /* Centronics: 80 tecken */
+    margin: 0; padding: 12px 14px; color: #202020;
+    font: 11px/1.35 ui-monospace, Menlo, Consolas, monospace;
+  }
+  #papper_text hr { border: 0; border-top: 1px dashed #b8b4a8; margin: 6px -14px; }
+  #papper_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
   /* Kom igång: en ruta mitt på sidan (popover). */
   #rubrik { display: flex; align-items: flex-start; gap: 8px; }
   #rubrik h1 { flex: 1; }
@@ -712,11 +717,12 @@
       </div>
     </details>
 
-    <details class="panel" id="panel_p40">
-      <summary><span lang="sv">Skrivaren P40</span><span lang="en">The P40 printer</span><span class="lage" id="lage_p40"></span><button class="info" title="Mer om skrivaren" data-title-en="More about the printer">i</button></summary>
+    <details class="panel" id="panel_skrivaren">
+      <summary><span lang="sv">Skrivaren</span><span lang="en">The printer</span><span class="lage" id="lage_skrivaren"></span><button class="info" title="Mer om skrivaren" data-title-en="More about the printer">i</button></summary>
       <div class="knappar">
-        <label title="Nålskrivaren på kort 60 och drivrutinen på $7800" data-title-en="The dot matrix printer on card 60 and the driver at $7800"><input type="checkbox" id="p40"> <span lang="sv">på kort 60</span><span lang="en">on card 60</span></label>
-        <button id="p40_visa" popovertarget="papper" title="Visa papperet; det kommer fram av sig självt när skrivaren börjar" data-title-en="Show the paper; it appears by itself when the printer starts" data-en="The paper" disabled>Papperet</button>
+        <label title="Nålskrivaren på kort 60 och drivrutinen på $7800" data-title-en="The dot matrix printer on card 60 and the driver at $7800"><input type="checkbox" id="p40"> P40</label>
+        <label title="En Centronicsskrivare, som Epsons, på kort 60 och skrivarkretsen 9704 på $7800" data-title-en="A Centronics printer, like Epson's, on card 60 and the printer ROM 9704 at $7800"><input type="checkbox" id="centronics"> Centronics</label>
+        <button id="papper_knapp" popovertarget="papper" title="Visa papperet; det kommer fram av sig självt när skrivaren börjar" data-title-en="Show the paper; it appears by itself when the printer starts" data-en="The paper" disabled>Papperet</button>
       </div>
       <div class="hjalptext" hidden>
         <p lang="sv"><i>Skrivaren P40</i> är nålskrivaren från band 2,
@@ -744,20 +750,47 @@
         back, and <i>Save</i> gives it as an image (in the terminal:
         <code>-CP papper.png</code>). The sheet can be moved by dragging its
         bar, and the page remembers where.</p>
-        <p lang="sv">Skrivarens mekanik är inte bevarad, så den är antagen:
+        <p lang="sv">P40:s mekanik är inte bevarad, så den är antagen:
         vagnen går med fast fart, och var punkterna hamnar avgörs bara av
         tiden, som på skrivaren. Raderna som skrivs framåt hamnar drygt två
         kolumner till vänster om dem som skrivs bakåt;
         <code>exempel/p40/LASMIG.md</code> berättar varför (?).</p>
-        <p lang="en">The printer's mechanics are not preserved, so they are
+        <p lang="en">The P40's mechanics are not preserved, so they are
         assumed: the carriage moves at a fixed speed, and where the dots land
         is decided by timing alone, as on the printer. Lines printed forwards
         end up a little more than two columns left of those printed
         backwards; <code>exempel/p40/LASMIG.md</code> tells why (?).</p>
-        <p lang="sv">I en länk kopplar <code>?p40=pa</code> in
-        skrivaren.</p>
-        <p lang="en">In a link, <code>?p40=pa</code> connects the
-        printer.</p>
+        <p lang="sv"><i>Centronics</i> är en skrivare med Centronicssnitt,
+        som Epsons, på Luxors Centronicskort (kort 60), med Luxors
+        skrivarkrets 9704 på <code>$7800</code> (band 2, kapitlen
+        Skrivarna och Skrivarkretsen 9704). Skrivaren tar emot tecknen som
+        de är och skriver dem med den svenska teckenuppsättningen, så att
+        <code>[ \ ] { | }</code> blir Ä Ö Å ä ö å; papperet är text, 80
+        tecken breda rader, och <i>Spara</i> ger det som en textfil. Med
+        tom inställning, som i <code>LIST PR:</code>, väljer 9704 typen U
+        efter kortets status, och den skriver till samma port som C; typen C
+        väljs med <code>OPEN "PR:CSA36C70" AS FILE 1</code>. Skrivaren är
+        alltid redo, utom när sidan ännu inte har hämtat tecknen (i
+        terminalen: <code>-l roms/pr9704.rom@7800 -C 00</code>).</p>
+        <p lang="en"><i>Centronics</i> is a printer with a Centronics
+        interface, like Epson's, on Luxor's Centronics card (card 60), with
+        Luxor's printer ROM 9704 at <code>$7800</code> (volume 2, the
+        chapters on printers and on the printer ROM 9704). The printer takes
+        the characters as they come and prints them with the Swedish
+        character set, so that <code>[ \ ] { | }</code> become Ä Ö Å ä ö å;
+        the paper is text, 80 characters wide, and <i>Save</i> gives it as
+        a text file. With an empty setting, as in <code>LIST PR:</code>, 9704
+        chooses type U from the card's status, and it writes to the same port
+        as C; type C is chosen with <code>OPEN "PR:CSA36C70" AS FILE
+        1</code>. The printer is always ready, except when the page has
+        not yet fetched the characters (in the terminal: <code>-l
+        roms/pr9704.rom@7800 -C 00</code>).</p>
+        <p lang="sv">I en länk kopplar <code>?p40=pa</code> in P40 och
+        <code>?centronics=pa</code> Centronicsskrivaren. Båda sitter på kort
+        60, så bara en av dem åt gången.</p>
+        <p lang="en">In a link, <code>?p40=pa</code> connects the P40 and
+        <code>?centronics=pa</code> the Centronics printer. Both sit on card
+        60, so only one at a time.</p>
       </div>
     </details>
 
@@ -843,8 +876,8 @@ RUN</pre>
         på band: svara 10 och RETURN, och rita med E, R, T, D, G, C, V och
         B.</li>
 <!-- /MALARE -->
-        <li>Skrivaren: kryssa i <i>på kort 60</i> under <i>Skrivaren
-        P40</i> och skriv <code>LIST PR:</code>.</li>
+        <li>Skrivaren: kryssa i <i>P40</i> eller <i>Centronics</i> under
+        <i>Skrivaren</i> och skriv <code>LIST PR:</code>.</li>
 <!-- CPM -->
         <li>CP/M: kryssa i <i>CP/M</i> under <i>Maskinen</i> och skriv
         <code>DIR</code>.</li>
@@ -897,8 +930,8 @@ RUN</pre>
         1982 on tape: answer 10 and RETURN, and draw with E, R, T, D, G, C, V
         and B.</li>
 <!-- /MALARE -->
-        <li>The printer: tick <i>on card 60</i> under <i>The P40
-        printer</i> and type <code>LIST PR:</code>.</li>
+        <li>The printer: tick <i>P40</i> or <i>Centronics</i> under
+        <i>The printer</i> and type <code>LIST PR:</code>.</li>
 <!-- CPM -->
         <li>CP/M: tick <i>CP/M</i> under <i>The machine</i> and type
         <code>DIR</code>.</li>
@@ -923,11 +956,11 @@ RUN</pre>
     <div id="papper" popover>
       <header>
         <span id="papper_rubrik">Papperet</span>
-        <button id="p40_riv" title="Riv av papperet" data-title-en="Tear off the paper" data-en="Tear off">Riv av</button>
-        <button id="p40_spara" title="Ladda ner papperet som PNG" data-title-en="Download the paper as PNG" data-en="Save">Spara</button>
-        <button id="p40_stang" title="Stäng (Esc, eller klicka utanför)" data-title-en="Close (Esc, or click outside)">✕</button>
+        <button id="papper_riv" title="Riv av papperet" data-title-en="Tear off the paper" data-en="Tear off">Riv av</button>
+        <button id="papper_spara" title="Ladda ner papperet (P40 som PNG, Centronics som text)" data-title-en="Download the paper (P40 as PNG, Centronics as text)" data-en="Save">Spara</button>
+        <button id="papper_stang" title="Stäng (Esc, eller klicka utanför)" data-title-en="Close (Esc, or click outside)">✕</button>
       </header>
-      <div id="papper_rulle"><canvas id="pappret" width="1064" height="16"></canvas></div>
+      <div id="papper_rulle"><canvas id="pappret" width="1064" height="16"></canvas><pre id="papper_text" hidden></pre></div>
     </div>
   </div>
 </main>

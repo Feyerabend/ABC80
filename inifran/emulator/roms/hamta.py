@@ -23,6 +23,8 @@ ROMAR = {
                      "78786d99d80639a9f074c6d28f946d1968526b10f3d7f8b5c7088310d753ea59"),
     "p40.rom": ([ARKIV + "P40.bin"],
                 "9f1d79c750668a77880e32891d1c90047663858b54a55e576935dd99273977e9"),
+    "pr9704.rom": ([ARKIV + "ABC80-printer-option-9704.bin"],
+                   "62e5d53212395190cb5c5126d4d45455da0bee0cd1d35cc7284d8ae3024e6c51"),
     "tkn80-iii.rom": ([ARKIV + "TKN80-III.bin"],
                       "a5cb443873ee5e08251a809c26539b7a2fc0d3c00e3cfeb76aa3ff8bcac655b8"),
 }
