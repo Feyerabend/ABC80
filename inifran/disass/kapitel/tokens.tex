@@ -1,14 +1,14 @@
 % kapitel/tokens.tex -- fryst ur tex80.py 2026-10-06 (omstruktureringen steg 5);
 % rättas här för hand.
 
-\chapter{Tokens och tabeller}
+\chapter{Tokens och tabeller}\label{bil:tokens}
 \section{Direktkommandon}
 \noindent Ur \hyperlink{l:CMDKW}{\texttt{CMDKW}} och
 \hyperlink{l:CMDTAB}{\texttt{CMDTAB}}. Koden är index i CMDTAB\index{direktkommando}.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l@{}}
 \textbf{Kommando} & \textbf{Kod} & \textbf{Rutin}\\\hline\endhead
-\texttt{BYE} & \texttt{\$80} & \hyperlink{l:L017A}{\texttt{L017A}} {\footnotesize(tillägg \texttt{\$604E})}\\
+\texttt{BYE} & \texttt{\$80} & \texttt{L017A} {\footnotesize(tillägg \texttt{\$604E})}\\
 \texttt{RUN} & \texttt{\$81} & \hyperlink{l:CMDRUN}{\texttt{CMDRUN}}\\
 \texttt{LIST} & \texttt{\$82} & \hyperlink{l:CMDLIST}{\texttt{CMDLIST}}\\
 \texttt{NEW} & \texttt{\$83} & \hyperlink{l:NEW}{\texttt{NEW}}\\
@@ -19,7 +19,7 @@
 \texttt{REN} & \texttt{\$87} & \hyperlink{l:CMDREN}{\texttt{CMDREN}}\\
 \texttt{ED} & \texttt{\$88} & \hyperlink{l:CMDED}{\texttt{CMDED}}\\
 \texttt{SAVE} & \texttt{\$89} & \hyperlink{l:CMDSAVE}{\texttt{CMDSAVE}}\\
-\texttt{UNSAVE} & \texttt{\$8A} & \hyperlink{l:L014C}{\texttt{L014C}} {\footnotesize(tillägg \texttt{\$605A})}\\
+\texttt{UNSAVE} & \texttt{\$8A} & \texttt{L014C} {\footnotesize(tillägg \texttt{\$605A})}\\
 \end{longtable}\end{small}
 \section{Satser}
 \noindent Token\index{token} $\$80$--$\$96$ ur \hyperlink{l:STKW1}{\texttt{STKW1}}.
@@ -45,7 +45,7 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$8A} & \texttt{INPUTLINE} & \hyperlink{l:CMPINL}{\texttt{CMPINL}} & \hyperlink{l:INPLIN}{\texttt{INPLIN}}\\
 \texttt{\$8B} & \texttt{FOR} & \hyperlink{l:CMPFOR}{\texttt{CMPFOR}} & \hyperlink{l:FOR}{\texttt{FOR}}\\
 \texttt{\$8C} & \texttt{NEXT} & \hyperlink{l:CMPNXT}{\texttt{CMPNXT}} & \hyperlink{l:NEXT}{\texttt{NEXT}}\\
-\texttt{\$8D} & (inget ord) & \hyperlink{l:L0709}{fel 8} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$8D} & (inget ord) & fel 8 & fel 8\\
 \texttt{\$8E} & \texttt{READ} & \hyperlink{l:CMPRD}{\texttt{CMPRD}} & \hyperlink{l:READ}{\texttt{READ}}\\
 \texttt{\$8F} & \texttt{RESTORE} & \hyperlink{l:CMPRES}{\texttt{CMPRES}} & \hyperlink{l:RESTOR}{\texttt{RESTOR}}\\
 \texttt{\$90} & \texttt{GOSUB} & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:GOSUB}{\texttt{GOSUB}}\\
@@ -53,7 +53,7 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$92} & \texttt{ON} & \hyperlink{l:CMPON}{\texttt{CMPON}} & \hyperlink{l:ON}{\texttt{ON}}\\
 \texttt{\$93} & \texttt{DATA} & \hyperlink{l:CMPREM}{\texttt{CMPREM}} & \hyperlink{l:DATA}{\texttt{DATA}}\\
 \texttt{\$94} & \texttt{ONERRORGOTO} & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:ONERRG}{\texttt{ONERRG}}\\
-\texttt{\$95} & (felaktig rad) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:L06F7}{fel 53}\\
+\texttt{\$95} & (felaktig rad) & \hyperlink{l:RESET}{\texttt{RESET}} & fel 53\\
 \texttt{\$96} & \texttt{DEFFN} & \hyperlink{l:CMPDEF}{\texttt{CMPDEF}} & \hyperlink{l:DEF}{\texttt{DEF}}\\
 \end{longtable}\end{small}
 \section{Satser, tabell 2}
@@ -63,7 +63,7 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$86 \$80} & \texttt{DIM} & \hyperlink{l:CMPDIM}{\texttt{CMPDIM}} & \hyperlink{l:DIM}{\texttt{DIM}}\\
 \texttt{\$86 \$81} & \texttt{POKE} & \hyperlink{l:CMPPOK}{\texttt{CMPPOK}} & \hyperlink{l:POKE}{\texttt{POKE}}\\
 \texttt{\$86 \$82} & \texttt{OUT} & \hyperlink{l:CMPOUT}{\texttt{CMPOUT}} & \hyperlink{l:OUTST}{\texttt{OUTST}}\\
-\texttt{\$86 \$83} & (inget ord) & \hyperlink{l:CMPINX}{\texttt{CMPINX}} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$86 \$83} & (inget ord) & \hyperlink{l:CMPINX}{\texttt{CMPINX}} & fel 8\\
 \texttt{\$86 \$84} & \texttt{REM} & \hyperlink{l:CMPREM}{\texttt{CMPREM}} & \hyperlink{l:REM}{\texttt{REM}}\\
 \texttt{\$86 \$85} & \texttt{OPEN} & \hyperlink{l:CMPOPN}{\texttt{CMPOPN}} & \hyperlink{l:OPENST}{\texttt{OPENST}}\\
 \texttt{\$86 \$86} & \texttt{PREPARE} & \hyperlink{l:CMPOPN}{\texttt{CMPOPN}} & \hyperlink{l:PREPST}{\texttt{PREPST}}\\
@@ -71,15 +71,15 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$86 \$88} & \texttt{RANDOMIZE} & \hyperlink{l:CMPNOP}{\texttt{CMPNOP}} & \hyperlink{l:RANDOM}{\texttt{RANDOM}}\\
 \texttt{\$86 \$89} & \texttt{STOP} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:STOP}{\texttt{STOP}}\\
 \texttt{\$86 \$8A} & \texttt{END} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:ENDPRG}{\texttt{ENDPRG}}\\
-\texttt{\$86 \$8B} & \texttt{CMD} & \hyperlink{l:L0147}{\texttt{L0147}} {\footnotesize(tillägg \texttt{\$7000})} & \hyperlink{l:L0166}{\texttt{L0166}} {\footnotesize(tillägg \texttt{\$7003})}\\
-\texttt{\$86 \$8C} & (inget ord) & \hyperlink{l:L0709}{fel 8} & \hyperlink{l:L0709}{fel 8}\\
-\texttt{\$86 \$8D} & (inget ord) & \hyperlink{l:L0709}{fel 8} & \hyperlink{l:L0709}{fel 8}\\
+\texttt{\$86 \$8B} & \texttt{CMD} & \texttt{L0147} {\footnotesize(tillägg \texttt{\$7000})} & \texttt{L0166} {\footnotesize(tillägg \texttt{\$7003})}\\
+\texttt{\$86 \$8C} & (inget ord) & fel 8 & fel 8\\
+\texttt{\$86 \$8D} & (inget ord) & fel 8 & fel 8\\
 \texttt{\$86 \$8E} & \texttt{SETDOT} & \hyperlink{l:CMPDOT}{\texttt{CMPDOT}} & \hyperlink{l:SETDOT}{\texttt{SETDOT}}\\
 \texttt{\$86 \$8F} & \texttt{CLRDOT} & \hyperlink{l:CMPDOT}{\texttt{CMPDOT}} & \hyperlink{l:CLRDOT}{\texttt{CLRDOT}}\\
 \texttt{\$86 \$90} & \texttt{GET} & \hyperlink{l:CMPGET}{\texttt{CMPGET}} & \hyperlink{l:GET}{\texttt{GET}}\\
 \texttt{\$86 \$91} & \texttt{CHAIN} & \hyperlink{l:CMPSTX}{\texttt{CMPSTX}} & \hyperlink{l:CHAIN}{\texttt{CHAIN}}\\
-\texttt{\$86 \$92} & \texttt{KILL} & \hyperlink{l:CMPSTX}{\texttt{CMPSTX}} & \hyperlink{l:L0170}{\texttt{L0170}} {\footnotesize(tillägg \texttt{\$605D})}\\
-\texttt{\$86 \$93} & \texttt{NAME} & \hyperlink{l:L0151}{\texttt{L0151}} {\footnotesize(tillägg \texttt{\$6054})} & \hyperlink{l:L0175}{\texttt{L0175}} {\footnotesize(tillägg \texttt{\$6057})}\\
+\texttt{\$86 \$92} & \texttt{KILL} & \hyperlink{l:CMPSTX}{\texttt{CMPSTX}} & \texttt{L0170} {\footnotesize(tillägg \texttt{\$605D})}\\
+\texttt{\$86 \$93} & \texttt{NAME} & \texttt{L0151} {\footnotesize(tillägg \texttt{\$6054})} & \texttt{L0175} {\footnotesize(tillägg \texttt{\$6057})}\\
 \texttt{\$86 \$94} & \texttt{TRACE} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:TRACE}{\texttt{TRACE}}\\
 \texttt{\$86 \$95} & \texttt{NOTRACE} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:NOTRAC}{\texttt{NOTRAC}}\\
 \end{longtable}\end{small}
@@ -172,11 +172,11 @@ typerna är ur \hyperlink{l:FNTYPE}{\texttt{FNTYPE}}: \texttt{x} flyttal,
 \texttt{\$33} & \texttt{DIV\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXDIV}{\texttt{EXDIV}}\\
 \texttt{\$34} & \texttt{COMP\%(s\$,s\$)} & heltal & \hyperlink{l:EXCOMP}{\texttt{EXCOMP}}\\
 \end{longtable}\end{small}
-\noindent Koder utan namn i FNKW: \texttt{\$22}, \texttt{\$24}, \texttt{\$25}, \texttt{\$26}, \texttt{\$27}, \texttt{\$28}, \texttt{\$29}, \texttt{\$2A}, \texttt{\$2B}, \texttt{\$2C}, \texttt{\$2D}, \texttt{\$2E}, \texttt{\$2F} (\hyperlink{l:L0709}{fel 8}).\par
+\noindent Koder utan namn i FNKW: \texttt{\$22}, \texttt{\$24}, \texttt{\$25}, \texttt{\$26}, \texttt{\$27}, \texttt{\$28}, \texttt{\$29}, \texttt{\$2A}, \texttt{\$2B}, \texttt{\$2C}, \texttt{\$2D}, \texttt{\$2E}, \texttt{\$2F} (fel 8).\par
 \section{Uttryckskod}
 \noindent Token $\$B6$--$\$FF$ i den kompilerade uttryckskoden och
 rutinen i \hyperlink{l:EXPTAB1}{\texttt{EXPTAB1}} som utför den. Vad varje
-token betyder beskrivs vid tabellen i listningen.\par\medskip
+token betyder står i avsnittet Körningen av uttryckskoden (i boken).\par\medskip
 \begin{multicols}{3}\small\raggedright
 \noindent\texttt{\$B6}\quad \hyperlink{l:ASGNF}{\texttt{ASGNF}}\par
 \noindent\texttt{\$B7}\quad \hyperlink{l:ASGNI}{\texttt{ASGNI}}\par

@@ -177,6 +177,7 @@
 \VL{\SP{2}\hyperlink{a:0015}{\$0015}\SP{1}\hyperlink{l:TXTINP}{TXTINP}\SP{2}läs\SP{1}rad\SP{1}från\SP{1}blockad\SP{1}textfil\SP{1}(enhetsrutin\SP{1}3)}
 \VL{\SP{2}\hyperlink{a:001B}{\$001B}\SP{1}\hyperlink{l:TXTPRT}{TXTPRT}\SP{2}skriv\SP{1}till\SP{1}blockad\SP{1}textfil\SP{1}(enhetsrutin\SP{1}4)}
 \VL{\SP{2}\hyperlink{a:0023}{\$0023}\SP{1}\hyperlink{l:TXTEND}{TXTEND}\SP{2}avsluta\SP{1}blockad\SP{1}textfil}
+\VL{\SP{2}\hyperlink{a:002D}{\$002D}\SP{1}\hyperlink{l:OPEN}{OPEN}\SP{4}öppna\SP{1}en\SP{1}fil}
 \VL{\SP{2}\hyperlink{a:003B}{\$003B},\SP{1}\hyperlink{a:003E}{\$003E}\SP{1}\hyperlink{l:OPNSTR}{OPNSTR},\SP{1}\hyperlink{a:0041}{\$0041},\SP{1}\hyperlink{a:0044}{\$0044}\SP{1}\hyperlink{l:KWSRCH}{KWSRCH}:\SP{1}interpretatorns\SP{1}rutiner}
 \end{Verb}
 \par\noindent \texttt{RST}-rutinerna:\par
@@ -841,7 +842,7 @@
 \CL{\T{a:03E3}\Ad{03E3}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{CASWBL}\SP{11}}{skriv namnblocket}
 \CL{\T{a:03E6}\Ad{03E6}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:03E9}\Ad{03E9}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{CASBUF}\SP{6}}{\hyperlink{v:CASBUF}{\texttt{CASBUF}} = 0: ingen mottagning}
-\CL{\T{a:03EC}\Ad{03EC}\SP{2}\By{?}\SP{2}\SP{8}\Fy{c}{}\SP{5}}{+E = 1: filen öppen, ingen text än}
+\CL{\T{a:03EC}\Ad{03EC}\SP{2}\By{?}\SP{2}\SP{8}\Fy{c}{}\SP{5}}{+E = 1 (död: \hyperlink{l:OPEN}{\texttt{OPEN}} nollar +E efteråt)}
 \CL{\T{a:03F0}\Ad{03F0}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{blocknummer = \mbox{-}1}
 \CL{\T{a:03F1}\Ad{03F1}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{CASBLK}}{}
 \Gap
@@ -2890,7 +2891,7 @@
 \VL{\SP{4}+0\SP{1}namnbyte\SP{2}+1\SP{1}bokstav\SP{2}+2/3\SP{1}länk\SP{1}till\SP{1}nästa\SP{1}post\SP{1}(0\SP{1}=\SP{1}sist)}
 \VL{\SP{4}+4\SP{1}värdet\SP{1}(flyttal\SP{1}5\SP{1}byte,\SP{1}heltal\SP{1}2,\SP{1}sträng-\SP{1}eller\SP{1}vektorpost)}
 \end{Verb}
-\par\noindent Namnbyten (bit 4\mbox{-}7 siffran, bit 2\mbox{-}3 antal index, bit 0\mbox{-}1 typen) skiljer A, A\%, A\$, A(..) och A(..,..) åt. Samma namn med ett annat antal index ger fel 1 (bara bit 2\mbox{-}3 skiljer: \texttt{XOR} = \texttt{\$0C}).\par
+\par\noindent Namnbyten (bit 4\mbox{-}7 siffran, bit 2\mbox{-}3 antal index, bit 0\mbox{-}1 typen) skiljer A, A\%, A\$, A(..) och A(..,..) åt. Samma namn med ett index och med två ger fel 1 (bara bit 2\mbox{-}3 skiljer: \texttt{XOR} = \texttt{\$0C}); A och A(1), eller A\$ och A\$(1), går bra.\par
 \par\noindent Adressen som skrivs in i koden är +4, för flyttal utan index +8 (exponenten).\par\end{Cmt}
 \CL{\T{a:106B}\Ad{106B}\SP{2}\By{?}\SP{8}\T{l:LNKLST}\label{l:LNKLST}\Lb{LNKLST:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:106D}\Ad{106D}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
@@ -4543,8 +4544,8 @@
 \VL{\SP{4}tar\SP{1}det\SP{1}första\SP{1}som\SP{1}stämmer.\SP{1}Därför\SP{1}står\SP{1}INPUTLINE\SP{1}före\SP{1}\hyperlink{l:INPUT}{INPUT}}
 \VL{\SP{4}och\SP{1}ONERRORGOTO\SP{1}före\SP{1}\hyperlink{l:ON}{ON}.\SP{1}\hyperlink{l:KWSRCH}{KWSRCH}\SP{1}hoppar\SP{1}över}
 \VL{\SP{4}blanktecken,\SP{1}så\SP{1}{\char34}\hyperlink{l:ON}{ON}\SP{1}\hyperlink{l:ERROR}{ERROR}\SP{1}\hyperlink{l:GOTO}{GOTO}{\char34}\SP{1}och\SP{1}{\char34}\hyperlink{l:INPUT}{INPUT}\SP{1}LINE{\char34}\SP{1}stämmer.}
-\VL{\SP{4}Ordet\SP{1}behöver\SP{1}bara\SP{1}vara\SP{1}början\SP{1}av\SP{1}texten:\SP{1}{\char34}LETTER=1{\char34}\SP{1}blir}
-\VL{\SP{4}\hyperlink{l:LET}{LET}\SP{1}TER=1.}
+\VL{\SP{4}Ordet\SP{1}behöver\SP{1}bara\SP{1}vara\SP{1}början\SP{1}av\SP{1}texten:\SP{1}i\SP{1}{\char34}LETTER=1{\char34}}
+\VL{\SP{4}hittas\SP{1}\hyperlink{l:LET}{LET},\SP{1}variabeln\SP{1}blir\SP{1}T\SP{1}och\SP{1}E\SP{1}står\SP{1}där\SP{1}{\char34}={\char34}\SP{1}ska\SP{1}stå:\SP{1}fel\SP{1}15.}
 \VL{\SP{2}*\SP{1}\hyperlink{l:DETOK}{DETOK}\SP{1}(listning)\SP{1}letar\SP{1}upp\SP{1}token\SP{1}med\SP{1}CPIR\SP{1}från\SP{1}\hyperlink{l:STKW1}{STKW1}\SP{1}och\SP{1}framåt,}
 \VL{\SP{4}och\SP{1}texten\SP{1}slutar\SP{1}vid\SP{1}nästa\SP{1}byte\SP{1}med\SP{1}bit\SP{1}7.\SP{1}Därför\SP{1}kan\SP{1}tokens}
 \VL{\SP{4}efter\SP{1}\$FF\SP{1}(\hyperlink{l:KWLIST}{KWLIST},\SP{1}THEN,\SP{1}ELSE\SP{1}...)\SP{1}också\SP{1}listas.}
@@ -4949,7 +4950,7 @@
 \begin{Verb}
 \VL{\SP{4}[index]\SP{1}[längd\SP{1}eller\SP{1}\$D2]\SP{1}\$CC\SP{1}[variabel,\SP{1}5\SP{1}byte]}
 \end{Verb}
-\par\noindent Hela listan slutar med \texttt{\$BF}. Tal ska ha 1 eller 2 index. En sträng kan ha 0–2 index och \texttt{=längd} efter (\texttt{DIM A\$(5)=20}, \texttt{DIM B\$=40}); utan längd skrivs \texttt{\$D2}, som ger längden 0 vid körning. Indexen och längden är heltal. Ett tal utan index eller med tre index ger fel 4, en längd efter ett tal eller något annat än ”,” mellan posterna fel 14.\par\end{Note}
+\par\noindent Hela listan slutar med \texttt{\$BF}. Tal ska ha 1 eller 2 index. En sträng kan ha 0–2 index och \texttt{=längd} efter (\texttt{DIM A\$(5)=20}, \texttt{DIM B\$=40}); utan längd skrivs \texttt{\$D2}, som ger längden 0 vid körning. Indexen och längden är heltal. Ett tal utan index eller med tre index är tänkt att ge fel 13, men \hyperlink{l:CMPDMI}{\texttt{CMPDMI}} lämnar BC och AF på stacken och \hyperlink{l:CMPERR}{\texttt{CMPERR}} tar bort bara det ena, så \texttt{RET} hoppar till variabelns namn som adress (\texttt{\$41F0} för A) och det som händer beror på minnet där (ofta fel 4, eftersom tomt minne är \texttt{\$FF} = \texttt{RST \$38}; 9913 ger 13). En längd efter ett tal eller något annat än ”,” mellan posterna ger fel 14.\par\end{Note}
 \CL{\T{a:1BAA}\Ad{1BAA}\SP{2}\By{?}\SP{5}\T{l:CMPDIM}\label{l:CMPDIM}\Lb{CMPDIM:}\SP{1}\Fy{c}{CMPDMI}}{}
 \CL{\T{a:1BAD}\Ad{1BAD}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:1BAE}\Ad{1BAE}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{11}}{{\char34},{\char34}?}
@@ -10013,8 +10014,8 @@
 \CL{\T{a:3773}\Ad{3773}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
 \Sec{IMUL / IDIV: 16-bitars heltal utan tecken}{\texttt{IMUL} / \texttt{IDIV}: 16-bitars heltal utan tecken}{3774}
-\begin{Note}\par\noindent\hangindent=1.5em \hyperlink{l:IMUL}{\texttt{IMUL}}: HL = HL × DE. Skift och addition, högsta biten först. CY = 1 om produkten inte ryms i 16 bitar.\par
-\par\noindent\hangindent=1.5em \hyperlink{l:IDIV}{\texttt{IDIV}}: HL = HL / DE, DE = resten. Återställande division, 16 varv (A = 17 räknar också det sista skiftet av kvoten). CY = 1 om DE = 0. Anropas via \hyperlink{l:SMULDV}{\texttt{SMULDV}} (\hyperlink{a:2B87}{\texttt{\$2B87}}), som sköter tecknen, och direkt från \hyperlink{a:2D5A}{\texttt{\$2D5A}}, \hyperlink{a:331E}{\texttt{\$331E}} och \hyperlink{a:3F44}{\texttt{\$3F44}}.\par\end{Note}
+\begin{Note}\par\noindent\hangindent=1.5em \hyperlink{l:IMUL}{\texttt{IMUL}}: HL = HL × DE. Skift och addition, högsta biten först. CY = 1 om produkten inte ryms i 16 bitar. Anropas via \hyperlink{l:SMULDV}{\texttt{SMULDV}} och direkt från \hyperlink{a:2D5A}{\texttt{\$2D5A}} och \hyperlink{a:331E}{\texttt{\$331E}}.\par
+\par\noindent\hangindent=1.5em \hyperlink{l:IDIV}{\texttt{IDIV}}: HL = HL / DE, DE = resten. Återställande division, 16 varv (A = 17 räknar också det sista skiftet av kvoten). CY = 1 om DE = 0. Anropas via \hyperlink{l:SMULDV}{\texttt{SMULDV}} (\hyperlink{a:2B87}{\texttt{\$2B87}}), som sköter tecknen, och direkt bara från \hyperlink{l:INTDIG}{\texttt{INTDIG}} (\hyperlink{a:3F44}{\texttt{\$3F44}}).\par\end{Note}
 \CL{\T{a:3774}\Ad{3774}\SP{2}\By{?}\SP{11}\T{l:IMUL}\label{l:IMUL}\Lb{IMUL:}\SP{3}\Fy{c}{}\SP{14}}{BC = b}
 \CL{\T{a:3775}\Ad{3775}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:3776}\Ad{3776}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{9}}{DE = produkten}
@@ -10757,7 +10758,7 @@
 \CL{\T{a:3BFE}\Ad{3BFE}\SP{2}\By{?}\SP{2}\SP{8}\Fy{bxxxx}{}\SP{8}}{0.00681241}
 \CL{\T{a:3C02}\Ad{3C02}\SP{2}\By{?}\SP{11}\T{l:ATNSER}\label{l:ATNSER}\Lb{ATNSER:}\SP{1}\Fy{bx}{}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:FEXP}{\texttt{FEXP}}: \texttt{EXP}(x) = 10\^{}y med y = x * \texttt{LOG10}(e) (\hyperlink{l:FLGE}{\texttt{FLGE}} = .434294). y delas i n = \texttt{INT}(y) och f = y - n i [0, 1). 10\^{}f räknas med serien \hyperlink{l:EXPSER}{\texttt{EXPSER}} (Taylorserien för 10\^{}f: LN(10)\^{}k/k!) och blir 1..10. Sedan läggs n till exponenten. Över \texttt{\$FF}: fel 4. Under 1: resultatet 0. {\char124}y{\char124} {\char62}= 65536 ger fel 7 i \hyperlink{l:FTOINT}{\texttt{FTOINT}}, så \texttt{EXP}(1E6) och \texttt{EXP}(\mbox{-}1E6) ger FÖR STORT HELTAL i stället för fel 4 resp. 0. Provat: \texttt{EXP}(292) = 6.51628E126, \texttt{EXP}(300) fel 4, \texttt{EXP}(\mbox{-}300) = 0.\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:FEXP}{\texttt{FEXP}}: \texttt{EXP}(x) = 10\^{}y med y = x * \texttt{LOG10}(e) (\hyperlink{l:FLGE}{\texttt{FLGE}} = .434294). y delas i n = \texttt{INT}(y) och f = y - n i [0, 1). 10\^{}f räknas med serien \hyperlink{l:EXPSER}{\texttt{EXPSER}} (Taylorserien för 10\^{}f: LN(10)\^{}k/k!) och blir 1..10. Sedan läggs n till exponenten. Över \texttt{\$FF}: fel 4. Under 1: resultatet 0. {\char124}y{\char124} {\char62}= 65536 ger fel 7 i \hyperlink{l:FTOINT}{\texttt{FTOINT}}, så \texttt{EXP}(1E6) och \texttt{EXP}(\mbox{-}1E6) ger FÖR STORT HELTAL i stället för fel 4 resp. 0. Under den gränsen prövas exponenten plus n som ett 16-bitarstal med tecken, fast n är utan tecken upp till 65535, så stora |x| slår runt: \texttt{EXP}(75100) fel 4 men \texttt{EXP}(75200) = 0, \texttt{EXP}(\mbox{-}75700) = 0 men \texttt{EXP}(\mbox{-}75800) fel 4 och \texttt{EXP}(\mbox{-}150800) = 3.16228E44 (samma i 9913). Provat: \texttt{EXP}(292) = 6.51628E126, \texttt{EXP}(300) fel 4, \texttt{EXP}(\mbox{-}300) = 0.\par\end{Cmt}
 \CL{\T{a:3C03}\Ad{3C03}\SP{2}\By{?}\SP{11}\T{l:FEXP}\label{l:FEXP}\Lb{FEXP:}\SP{3}\Fy{c}{}\SP{14}}{DE = x}
 \CL{\T{a:3C04}\Ad{3C04}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:3C05}\Ad{3C05}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{FLGE}\SP{10}}{\texttt{LOG10}(e)}

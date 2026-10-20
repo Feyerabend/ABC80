@@ -15832,7 +15832,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:608D}\Ad{608D}\SP{2}\By{?}\SP{8}\T{l:L608D}\label{l:L608D}\Lb{L608D:}\SP{2}\Fy{c}{}\SP{12}}{C = \texttt{\$0C}: skriv}
 \Gap
 \Sec{SECIO: läs eller skriv en sektor via ABC-bussen}{\texttt{SECIO}: läs eller skriv en sektor via ABC-bussen}{608F}
-\begin{Note}\par\noindent In: C = 3 (läs) eller \texttt{\$0C} (skriv), B = kanal * 16, DE = sektornummer. B bit 0 = 1 (\hyperlink{l:DRDSR0}{\texttt{DRDSR0}}/\hyperlink{l:DWRSR0}{\texttt{DWRSR0}}) och bit 6 i \texttt{\$FD19} (sätts inte i ROM:en) stänger av omräkningen av sektornumret. Först anropas kroken \hyperlink{v:VFE02}{\texttt{VFE02}}, som är \texttt{RET} (sista byten i kopian av \hyperlink{l:CRDTAB}{\texttt{CRDTAB}}, \hyperlink{a:6EFB}{\texttt{\$6EFB}}).\par
+\begin{Note}\par\noindent In: C = 3 (läs) eller \texttt{\$0C} (skriv), B = kanal * 16, DE = sektornummer. B bit 0 = 1 (\hyperlink{l:DRDSR0}{\texttt{DRDSR0}}/\hyperlink{l:DWRSR0}{\texttt{DWRSR0}}) och bit 6 i kortpostens flaggbyte (satt i ingen post i CRDTAB) stänger av omräkningen av sektornumret. Först anropas kroken \hyperlink{v:VFE02}{\texttt{VFE02}}, som är \texttt{RET} (sista byten i kopian av \hyperlink{l:CRDTAB}{\texttt{CRDTAB}}, \hyperlink{a:6EFB}{\texttt{\$6EFB}}).\par
 \begin{Verb}
 \VL{\SP{2}-\SP{1}DRETRY\SP{1}(\$FD18)\SP{1}=\SP{1}antal\SP{1}försök\SP{1}(3).}
 \VL{\SP{2}-\SP{1}\hyperlink{l:SELCRD}{SELCRD}\SP{1}väljer\SP{1}kortet\SP{1}(OUT\SP{1}\$01)\SP{1}enligt\SP{1}\hyperlink{l:CRDTYP}{CRDTYP}.\SP{1}Vid\SP{1}omförsök\SP{1}ges}
@@ -15865,7 +15865,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:60AD}\Ad{60AD}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:60AF}\Ad{60AF}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L60B6}}{}
 \CL{\T{a:60B1}\Ad{60B1}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
-\CL{\T{a:60B2}\Ad{60B2}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}\SP{11}}{\texttt{\$FD19} bit 6: ingen omräkning}
+\CL{\T{a:60B2}\Ad{60B2}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}\SP{11}}{flaggorna bit 6: ingen omräkning}
 \CL{\T{a:60B4}\Ad{60B4}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L60E1}}{}
 \CL{\T{a:60B6}\Ad{60B6}\SP{2}\By{?}\SP{8}\T{l:L60B6}\label{l:L60B6}\Lb{L60B6:}\SP{2}\Fy{c}{}}{}
 \CL{\T{a:60B8}\Ad{60B8}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L60E1}\SP{10}}{kortbyte bit 6\mbox{-}7 = 0 (HD): som det står}
@@ -17970,7 +17970,7 @@ sist ger adress och sida för varje etikett.
 \CL{\T{a:6E00}\Ad{6E00}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:6E01}\Ad{6E01}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:6E02}\Ad{6E02}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
-\CL{\T{a:6E03}\Ad{6E03}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{ERRTXV}\SP{6}}{\hyperlink{v:ERRTXV}{\texttt{ERRTXV}} := 0 (B = 0) under läsningen}
+\CL{\T{a:6E03}\Ad{6E03}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{ERRTXV}\SP{6}}{\hyperlink{v:ERRTXV}{\texttt{ERRTXV}} := \$00rr under läsningen: av (\hyperlink{l:ERRMSG}{\texttt{ERRMSG}} prövar H)}
 \CL{\T{a:6E06}\Ad{6E06}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{DOPEN}}{}
 \CL{\T{a:6E09}\Ad{6E09}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:6E0A}\Ad{6E0A}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L6E1C}\SP{10}}{finns inte}

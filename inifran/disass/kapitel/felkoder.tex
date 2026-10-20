@@ -1,69 +1,88 @@
 % kapitel/felkoder.tex -- fryst ur tex80.py 2026-10-06 (omstruktureringen steg 5);
 % rättas här för hand.
 
-\chapter{Felkoder}
+\chapter{Felkoder}\label{bil:felkoder}
 \noindent Felkoden\index{felkoder|textbf}\index{felhantering} är $\$80+n$. Den ges med \kw{RST \$10} följt av
 koden, eller med ett hopp till en felingång (en \kw{RST \$10} med
 koden efter). ROM:en skriver bara ut \texttt{ERR n}; texterna är
 ABC80:s fellista. \emph{Fångas} betyder att felet står i
 \hyperlink{l:ERRTRP}{\texttt{ERRTRP}} och kan tas om hand av
-\kw{ON ERROR GOTO}\index{ON ERROR GOTO@\kw{ON ERROR GOTO}}. Kolumnen \emph{ges i} är de namngivna rutiner där
-koden ger felet (enligt kommentarerna och hoppen till felingångarna);
-listan är inte nödvändigtvis fullständig.\par\medskip
+\kw{ON ERROR GOTO}\index{ON ERROR GOTO@\kw{ON ERROR GOTO}}. \emph{Ingång} är felingången på
+\adrx{06F7}–\adrx{072B}, där felet kan ges med ett hopp (avsnittet
+Felen, i boken). Kolumnen \emph{ges i} är de namngivna rutiner där
+koden ger felet (ur hoppen till felingångarna och felkoderna efter
+\kw{RST \$10}); listan är inte nödvändigtvis fullständig. Namnen länkar
+till raden i Rutinerna.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}r l p{0.3\textwidth} l l >{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
 \textbf{Nr} & \textbf{Kod} & \textbf{Text} & \textbf{Fångas} & \textbf{Ingång} & \textbf{Ges i}\\\hline\endhead
-0 & \texttt{\$80} & EJ TILLÅTET ÖKA {\char34}DIM{\char34} &  & \hyperlink{l:L06F9}{\texttt{L06F9}} & \hyperlink{a:32F2}{\texttt{DIM1}}, \hyperlink{a:3344}{\texttt{DIMSTR}}\\
-1 & \texttt{\$81} & FEL ANTAL INDEX &  & \hyperlink{l:L06FB}{\texttt{L06FB}} & \hyperlink{a:108B}{\texttt{LNKSRC}}\\
-2 & \texttt{\$82} & OTILLÅTET SOM KOMMANDO &  & \hyperlink{l:L06FD}{\texttt{L06FD}} & \hyperlink{a:0DC4}{\texttt{NODIR}}, \hyperlink{a:0F7C}{\texttt{LNKFOR}}, \hyperlink{a:22B0}{\texttt{RETURN}}\\
-3 & \texttt{\$83} & MINNET FULLT &  & \hyperlink{l:L06FF}{\texttt{L06FF}} & \hyperlink{a:0776}{\texttt{INSLIN}}, \hyperlink{a:0C59}{\texttt{CMDMERG}}, \hyperlink{a:1B2A}{\texttt{FN}}, \hyperlink{a:2F66}{\texttt{CONCAT}}, \hyperlink{a:3104}{\texttt{STRFIL}}, \hyperlink{a:3185}{\texttt{EXVAL}}, \hyperlink{a:32FB}{\texttt{DIM1}}, \hyperlink{a:3317}{\texttt{DIM2}}, \hyperlink{a:334B}{\texttt{DIMSTR}}, \hyperlink{a:3398}{\texttt{MEMFUL}}\\
-4 & \texttt{\$84} & FÖR STORT FLYTTAL & ja & \hyperlink{l:L0701}{\texttt{L0701}} & \hyperlink{a:2E45}{\texttt{POWI}}, \hyperlink{a:3431}{\texttt{FADDC}}, \hyperlink{a:34F5}{\texttt{FMUL}}, \hyperlink{a:35E0}{\texttt{FMRND}}, \hyperlink{a:35F6}{\texttt{FDIV}}, \hyperlink{a:36B0}{\texttt{FDRND}}, \hyperlink{a:3758}{\texttt{FOVFL}}, \hyperlink{a:3C31}{\texttt{FEXP}}, \hyperlink{a:3CC7}{\texttt{FLOG}}\\
-5 & \texttt{\$85} & FÖR STORT INDEX &  & \hyperlink{l:L0703}{\texttt{L0703}} & \hyperlink{a:2CF8}{\texttt{VAR1}}, \hyperlink{a:2D4F}{\texttt{ERRIDX}}\\
-6 & \texttt{\$86} & HITTAR EJ DETTA RADNUMMER &  & \hyperlink{l:L0705}{\texttt{L0705}} & \hyperlink{a:0AB3}{\texttt{CMDED}}, \hyperlink{a:0D38}{\texttt{REFADR}}, \hyperlink{a:0EE4}{\texttt{LNKELM}}\\
-7 & \texttt{\$87} & FÖR STORT HELTAL & ja & \hyperlink{l:L0707}{\texttt{L0707}} & \hyperlink{a:2B95}{\texttt{SMULDV}}, \hyperlink{a:3EF1}{\texttt{FTIERR}}\\
-8 & \texttt{\$88} & FINNS EJ I DETTA SYSTEM &  & \hyperlink{l:L0709}{\texttt{L0709}} & \hyperlink{a:0162}{\texttt{EXTJP1}}, \hyperlink{a:0187}{\texttt{EXTJP2}}, \hyperlink{a:0E2E}{\texttt{STEXE1}}, \hyperlink{a:0E48}{\texttt{STEXE2}}, \hyperlink{a:0EBF}{\texttt{LNKELM}}, \hyperlink{a:1A22}{\texttt{STTAB1}}, \hyperlink{a:1A4E}{\texttt{STTAB2}}, \hyperlink{a:1B5C}{\texttt{FN}}, \hyperlink{a:2963}{\texttt{EXPTAB2}}\\
-9 & \texttt{\$89} & INDEX UTANFÖR STRÄNGEN &  & \hyperlink{l:L070B}{\texttt{L070B}} & \hyperlink{a:2F12}{\texttt{EXLEFT}}, \hyperlink{a:2F30}{\texttt{STRSKP}}\\
-10 & \texttt{\$8A} & TEXTEN FÅR EJ PLATS I STRÄNGEN &  & \hyperlink{l:L070D}{\texttt{L070D}} & \hyperlink{a:29DA}{\texttt{ASGNS}}\\
-11 & \texttt{\$8B} & FÖRSTÅR EJ &  &  & \hyperlink{a:18F5}{\texttt{TOKKW}}, \hyperlink{a:2185}{\texttt{CMPPRT}}, \hyperlink{a:26D1}{\texttt{VARNAM}}\\
-12 & \texttt{\$8C} & FELAKTIGT TAL & ja & \hyperlink{l:L0713}{\texttt{L0713}} & \hyperlink{a:1F1B}{\texttt{RDVAL}}, \hyperlink{a:26B6}{\texttt{CMPNUM}}, \hyperlink{a:318A}{\texttt{EXVAL}}\\
-13 & \texttt{\$8D} & FEL ANTAL ELLER TYP AV ARGUMENT &  &  & \hyperlink{a:118C}{\texttt{LNKFN}}, \hyperlink{a:1A85}{\texttt{CMPDEF}}, \hyperlink{a:1AE0}{\texttt{CMPFN}}, \hyperlink{a:1E67}{\texttt{CMPINP}}, \hyperlink{a:2110}{\texttt{CMPPOK}}, \hyperlink{a:255D}{\texttt{TYPCNV}}, \hyperlink{a:2668}{\texttt{CMPARG}}\\
-14 & \texttt{\$8E} & OTILLÅTET TECKEN EFTER SATSEN &  &  & \hyperlink{a:18B6}{\texttt{TOKLIN}}\\
-15 & \texttt{\$8F} & {\char34}={\char34} SAKNAS ELLER PÅ FEL PLATS &  &  & \hyperlink{a:18F5}{\texttt{TOKKW}}, \hyperlink{a:1A9A}{\texttt{CMPDEF}}, \hyperlink{a:1B90}{\texttt{CMPLET}}\\
-16 & \texttt{\$90} & RADNUMMER SAKNAS &  &  & \hyperlink{a:0C02}{\texttt{CMDMERG}}, \hyperlink{a:1DCE}{\texttt{CMPREF}}, \hyperlink{a:2001}{\texttt{CMPON}}\\
-17 & \texttt{\$91} & OTILLÅTEN BLANDNING AV TAL OCH STRÄNGAR &  &  & \hyperlink{a:2388}{\texttt{CMPSV}}, \hyperlink{a:23AF}{\texttt{CMPGET}}, \hyperlink{a:2575}{\texttt{TOFLT}}, \hyperlink{a:281B}{\texttt{CMPADD}}\\
-18 & \texttt{\$92} & {\char34}){\char34} SAKNAS ELLER PÅ FEL PLATS &  &  & \hyperlink{a:1A93}{\texttt{CMPDEF}}, \hyperlink{a:1AFC}{\texttt{CMPFN}}, \hyperlink{a:25B6}{\texttt{PRIMARY}}\\
+0 & \texttt{\$80} & EJ TILLÅTET ÖKA {\char34}DIM{\char34} &  & \texttt{L06F9} & \hyperlink{l:DIM1}{\texttt{DIM1}}, \hyperlink{l:DIMSTR}{\texttt{DIMSTR}}\\
+1 & \texttt{\$81} & FEL ANTAL INDEX &  & \texttt{L06FB} & \hyperlink{l:LNKSRC}{\texttt{LNKSRC}}\\
+2 & \texttt{\$82} & OTILLÅTET SOM KOMMANDO &  & \texttt{L06FD} & \hyperlink{l:NODIR}{\texttt{NODIR}}, \hyperlink{l:LNKFOR}{\texttt{LNKFOR}}, \hyperlink{l:RETURN}{\texttt{RETURN}}\\
+3 & \texttt{\$83} & MINNET FULLT &  & \texttt{L06FF} & \hyperlink{l:INSLIN}{\texttt{INSLIN}}, \hyperlink{l:CMDMERG}{\texttt{CMDMERG}}, \hyperlink{l:FN}{\texttt{FN}}, \hyperlink{l:CONCAT}{\texttt{CONCAT}}, \hyperlink{l:STRFIL}{\texttt{STRFIL}}, \hyperlink{l:EXVAL}{\texttt{EXVAL}}, \hyperlink{l:DIM1}{\texttt{DIM1}}, \hyperlink{l:DIM2}{\texttt{DIM2}}, \hyperlink{l:DIMSTR}{\texttt{DIMSTR}}, \hyperlink{l:MEMFUL}{\texttt{MEMFUL}}\\
+4 & \texttt{\$84} & FÖR STORT FLYTTAL & ja & \texttt{L0701} & \hyperlink{l:POWI}{\texttt{POWI}}, \hyperlink{l:FADDC}{\texttt{FADDC}}, \hyperlink{l:FMUL}{\texttt{FMUL}}, \hyperlink{l:FMRND}{\texttt{FMRND}}, \hyperlink{l:FDIV}{\texttt{FDIV}}, \hyperlink{l:FDRND}{\texttt{FDRND}}, \hyperlink{l:FOVFL}{\texttt{FOVFL}}, \hyperlink{l:FEXP}{\texttt{FEXP}}, \hyperlink{l:FLOG}{\texttt{FLOG}}\\
+5 & \texttt{\$85} & FÖR STORT INDEX &  & \texttt{L0703} & \hyperlink{l:VAR1}{\texttt{VAR1}}, \hyperlink{l:ERRIDX}{\texttt{ERRIDX}}\\
+6 & \texttt{\$86} & HITTAR EJ DETTA RADNUMMER &  & \texttt{L0705} & \hyperlink{l:CMDED}{\texttt{CMDED}}, \hyperlink{l:REFADR}{\texttt{REFADR}}, \hyperlink{l:LNKELM}{\texttt{LNKELM}}\\
+7 & \texttt{\$87} & FÖR STORT HELTAL & ja & \texttt{L0707} & \hyperlink{l:SMULDV}{\texttt{SMULDV}}, \hyperlink{l:FTIERR}{\texttt{FTIERR}}\\
+8 & \texttt{\$88} & FINNS EJ I DETTA SYSTEM &  & \texttt{L0709} & \hyperlink{l:EXTJP1}{\texttt{EXTJP1}}, \hyperlink{l:EXTJP2}{\texttt{EXTJP2}}, \hyperlink{l:STEXE1}{\texttt{STEXE1}}, \hyperlink{l:STEXE2}{\texttt{STEXE2}}, \hyperlink{l:LNKELM}{\texttt{LNKELM}}, \hyperlink{l:STTAB1}{\texttt{STTAB1}}, \hyperlink{l:STTAB2}{\texttt{STTAB2}}, \hyperlink{l:FN}{\texttt{FN}}, \hyperlink{l:EXPTAB2}{\texttt{EXPTAB2}}\\
+9 & \texttt{\$89} & INDEX UTANFÖR STRÄNGEN &  & \texttt{L070B} & \hyperlink{l:EXLEFT}{\texttt{EXLEFT}}, \hyperlink{l:STRSKP}{\texttt{STRSKP}}\\
+10 & \texttt{\$8A} & TEXTEN FÅR EJ PLATS I STRÄNGEN &  & \texttt{L070D} & \hyperlink{l:ASGNS}{\texttt{ASGNS}}\\
+11 & \texttt{\$8B} & FÖRSTÅR EJ &  &  & \hyperlink{l:TOKKW}{\texttt{TOKKW}}, \hyperlink{l:CMPPRT}{\texttt{CMPPRT}}, \hyperlink{l:VARNAM}{\texttt{VARNAM}}\\
+12 & \texttt{\$8C} & FELAKTIGT TAL & ja & \texttt{L0713} & \hyperlink{l:RDVAL}{\texttt{RDVAL}}, \hyperlink{l:CMPNUM}{\texttt{CMPNUM}}, \hyperlink{l:EXVAL}{\texttt{EXVAL}}\\
+13 & \texttt{\$8D} & FEL ANTAL ELLER TYP AV ARGUMENT &  &  & \hyperlink{l:LNKFN}{\texttt{LNKFN}}, \hyperlink{l:CMPDEF}{\texttt{CMPDEF}}, \hyperlink{l:CMPFN}{\texttt{CMPFN}}, \hyperlink{l:CMPINP}{\texttt{CMPINP}}, \hyperlink{l:CMPPOK}{\texttt{CMPPOK}}, \hyperlink{l:TYPCNV}{\texttt{TYPCNV}}, \hyperlink{l:CMPARG}{\texttt{CMPARG}}\\
+14 & \texttt{\$8E} & OTILLÅTET TECKEN EFTER SATSEN &  &  & \hyperlink{l:TOKLIN}{\texttt{TOKLIN}}\\
+15 & \texttt{\$8F} & {\char34}={\char34} SAKNAS ELLER PÅ FEL PLATS &  &  & \hyperlink{l:TOKKW}{\texttt{TOKKW}}, \hyperlink{l:CMPDEF}{\texttt{CMPDEF}}, \hyperlink{l:CMPLET}{\texttt{CMPLET}}\\
+16 & \texttt{\$90} & RADNUMMER SAKNAS &  &  & \hyperlink{l:CMDMERG}{\texttt{CMDMERG}}, \hyperlink{l:CMPREF}{\texttt{CMPREF}}, \hyperlink{l:CMPON}{\texttt{CMPON}}\\
+17 & \texttt{\$91} & OTILLÅTEN BLANDNING AV TAL OCH STRÄNGAR &  &  & \hyperlink{l:CMPSV}{\texttt{CMPSV}}, \hyperlink{l:CMPGET}{\texttt{CMPGET}}, \hyperlink{l:TOFLT}{\texttt{TOFLT}}, \hyperlink{l:CMPADD}{\texttt{CMPADD}}\\
+18 & \texttt{\$92} & {\char34}){\char34} SAKNAS ELLER PÅ FEL PLATS &  &  & \hyperlink{l:CMPDEF}{\texttt{CMPDEF}}, \hyperlink{l:CMPFN}{\texttt{CMPFN}}, \hyperlink{l:PRIMARY}{\texttt{PRIMARY}}\\
 19 & \texttt{\$93} & KAN EJ ÖPPNA FLER FILER & ja &  & \\
-20 & \texttt{\$94} & FÖR LÅNG RAD &  &  & \hyperlink{a:09BF}{\texttt{TXTINP}}\\
-21 & \texttt{\$95} & HITTAR EJ FILEN & ja & \hyperlink{l:L070F}{\texttt{L070F}} & \hyperlink{a:07F2}{\texttt{OPEN}}\\
-22 & \texttt{\$96} & OTILLÅTEN SATS &  & \hyperlink{l:L0711}{\texttt{L0711}} & \\
-23 & \texttt{\$97} & {\char34}TO{\char34} SAKNAS &  &  & \hyperlink{a:1C92}{\texttt{CMPFOR}}\\
-24 & \texttt{\$98} & {\char34}NEXT{\char34} SAKNAS &  & \hyperlink{l:L0715}{\texttt{L0715}} & \hyperlink{a:0EA3}{\texttt{PRELNK}}\\
-25 & \texttt{\$99} & FELAKTIG SATS EFTER {\char34}ON{\char34} &  &  & \hyperlink{a:1FD9}{\texttt{CMPON}}\\
-26 & \texttt{\$9A} & FEL I ON-UTTRYCK &  & \hyperlink{l:L071D}{\texttt{L071D}} & \hyperlink{a:2024}{\texttt{ON}}\\
-27 & \texttt{\$9B} & {\char34}NEXT{\char34} UTAN {\char34}FOR{\char34} &  & \hyperlink{l:L0719}{\texttt{L0719}} & \hyperlink{a:0FF6}{\texttt{LNKNXT}}\\
-28 & \texttt{\$9C} & FEL VARIABEL EFTER {\char34}NEXT{\char34} &  & \hyperlink{l:L0717}{\texttt{L0717}} & \hyperlink{a:1012}{\texttt{LNKNXT}}\\
-29 & \texttt{\$9D} & {\char34}RETURN{\char34} UTAN {\char34}GOSUB{\char34} &  & \hyperlink{l:L071B}{\texttt{L071B}} & \\
-30 & \texttt{\$9E} & DATA SLUT & ja & \hyperlink{l:L071F}{\texttt{L071F}} & \hyperlink{a:1ED4}{\texttt{READ}}\\
-31 & \texttt{\$9F} & FEL DATA TILL KOMMANDO &  & \hyperlink{l:L0721}{\texttt{L0721}} & \hyperlink{a:0AA7}{\texttt{CMDED}}, \hyperlink{a:0B2B}{\texttt{CMDLIST}}, \hyperlink{a:0C97}{\texttt{CMDREN}}\\
-32 & \texttt{\$A0} & FILEN EJ ÖPPNAD &  & \hyperlink{l:L0723}{\texttt{L0723}} & \hyperlink{a:0905}{\texttt{CURFIL}}\\
-33 & \texttt{\$A1} & {\char34}AS FILE{\char34} SAKNAS &  &  & \hyperlink{a:206A}{\texttt{CMPOPN}}\\
-34 & \texttt{\$A2} & SLUT PÅ FILEN & ja &  & \hyperlink{a:08EA}{\texttt{INPUT}}\\
-35 & \texttt{\$A3} & CHECKSUMMAFEL VID LÄSNING & ja &  & \hyperlink{a:060A}{\texttt{RCVBLK}}\\
-37 & \texttt{\$A5} & FELAKTIGT RECORDFORMAT & ja &  & \hyperlink{a:04BD}{\texttt{CASOPN}}, \hyperlink{a:0519}{\texttt{CASGET}}, \hyperlink{a:05F6}{\texttt{RCVBLK}}\\
+20 & \texttt{\$94} & FÖR LÅNG RAD &  &  & \hyperlink{l:TXTINP}{\texttt{TXTINP}}\\
+21 & \texttt{\$95} & HITTAR EJ FILEN & ja & \texttt{L070F} & \hyperlink{l:OPEN}{\texttt{OPEN}}\\
+22 & \texttt{\$96} & OTILLÅTEN SATS &  & \texttt{L0711} & \\
+23 & \texttt{\$97} & {\char34}TO{\char34} SAKNAS &  &  & \hyperlink{l:CMPFOR}{\texttt{CMPFOR}}\\
+24 & \texttt{\$98} & {\char34}NEXT{\char34} SAKNAS &  & \texttt{L0715} & \hyperlink{l:PRELNK}{\texttt{PRELNK}}\\
+25 & \texttt{\$99} & FELAKTIG SATS EFTER {\char34}ON{\char34} &  &  & \hyperlink{l:CMPON}{\texttt{CMPON}}\\
+26 & \texttt{\$9A} & FEL I ON-UTTRYCK &  & \texttt{L071D} & \hyperlink{l:ON}{\texttt{ON}}\\
+27 & \texttt{\$9B} & {\char34}NEXT{\char34} UTAN {\char34}FOR{\char34} &  & \texttt{L0719} & \hyperlink{l:LNKNXT}{\texttt{LNKNXT}}\\
+28 & \texttt{\$9C} & FEL VARIABEL EFTER {\char34}NEXT{\char34} &  & \texttt{L0717} & \hyperlink{l:LNKNXT}{\texttt{LNKNXT}}\\
+29 & \texttt{\$9D} & {\char34}RETURN{\char34} UTAN {\char34}GOSUB{\char34} &  & \texttt{L071B} & \hyperlink{l:CMDRUN}{\texttt{CMDRUN}} (\adrx{0D6D})\\
+30 & \texttt{\$9E} & DATA SLUT & ja & \texttt{L071F} & \hyperlink{l:READ}{\texttt{READ}}\\
+31 & \texttt{\$9F} & FEL DATA TILL KOMMANDO &  & \texttt{L0721} & \hyperlink{l:CMDED}{\texttt{CMDED}}, \hyperlink{l:CMDLIST}{\texttt{CMDLIST}}, \hyperlink{l:CMDREN}{\texttt{CMDREN}}\\
+32 & \texttt{\$A0} & FILEN EJ ÖPPNAD &  & \texttt{L0723} & \hyperlink{l:CURFIL}{\texttt{CURFIL}}\\
+33 & \texttt{\$A1} & {\char34}AS FILE{\char34} SAKNAS &  &  & \hyperlink{l:CMPOPN}{\texttt{CMPOPN}}\\
+34 & \texttt{\$A2} & SLUT PÅ FILEN & ja &  & \hyperlink{l:INPUT}{\texttt{INPUT}}\\
+35 & \texttt{\$A3} & CHECKSUMMAFEL VID LÄSNING & ja &  & \hyperlink{l:RCVBLK}{\texttt{RCVBLK}}\\
+37 & \texttt{\$A5} & FELAKTIGT RECORDFORMAT & ja &  & \hyperlink{l:CASOPN}{\texttt{CASOPN}}, \hyperlink{l:CASGET}{\texttt{CASGET}}, \hyperlink{l:RCVBLK}{\texttt{RCVBLK}}\\
 38 & \texttt{\$A6} & RECORDNUMMER UTANFÖR FILEN & ja &  & \\
-42 & \texttt{\$AA} & SKIVAN EJ KLAR & ja &  & \hyperlink{a:0541}{\texttt{CASRBL}}\\
-50 & \texttt{\$B2} & KVADRATROT UR NEGATIVT TAL &  & \hyperlink{l:L0725}{\texttt{L0725}} & \hyperlink{a:3E19}{\texttt{FSQR}}\\
+42 & \texttt{\$AA} & SKIVAN EJ KLAR & ja &  & \hyperlink{l:CASRBL}{\texttt{CASRBL}}\\
+50 & \texttt{\$B2} & KVADRATROT UR NEGATIVT TAL &  & \texttt{L0725} & \hyperlink{l:FSQR}{\texttt{FSQR}}\\
 51 & \texttt{\$B3} & ENHETEN UPPTAGEN &  &  & \\
-52 & \texttt{\$B4} & EJ TILL DENNA ENHET &  & \hyperlink{l:L0727}{\texttt{L0727}} & \hyperlink{a:03B9}{\texttt{CASTAB}}, \hyperlink{a:0C2F}{\texttt{CMDMERG}}, \hyperlink{a:0DDB}{\texttt{CMDSAVE}}\\
-53 & \texttt{\$B5} & FELAKTIG RAD &  & \hyperlink{l:L06F7}{\texttt{L06F7}} & \hyperlink{a:0E3E}{\texttt{STEXE1}}\\
-57 & \texttt{\$B9} & FUNKTIONEN EJ DEFINIERAD &  & \hyperlink{l:L0729}{\texttt{L0729}} & \hyperlink{a:112F}{\texttt{LNKFN}}\\
-58 & \texttt{\$BA} & OGILTIGT TECKEN INLÄST &  &  & \hyperlink{a:09B7}{\texttt{TXTINP}}\\
-59 & \texttt{\$BB} & FEL PROGRAMFORMAT &  &  & \hyperlink{a:0C3A}{\texttt{CMDMERG}}\\
-60 & \texttt{\$BC} & BIT ADRESS 16 BITAR &  & \hyperlink{l:L072B}{\texttt{L072B}} & \\
+52 & \texttt{\$B4} & EJ TILL DENNA ENHET &  & \texttt{L0727} & \hyperlink{l:CASTAB}{\texttt{CASTAB}}, \hyperlink{l:CMDMERG}{\texttt{CMDMERG}}, \hyperlink{l:CMDSAVE}{\texttt{CMDSAVE}}\\
+53 & \texttt{\$B5} & FELAKTIG RAD &  & \texttt{L06F7} & \hyperlink{l:STEXE1}{\texttt{STEXE1}}\\
+57 & \texttt{\$B9} & FUNKTIONEN EJ DEFINIERAD &  & \texttt{L0729} & \hyperlink{l:LNKFN}{\texttt{LNKFN}}\\
+58 & \texttt{\$BA} & OGILTIGT TECKEN INLÄST &  &  & \hyperlink{l:TXTINP}{\texttt{TXTINP}}\\
+59 & \texttt{\$BB} & FEL PROGRAMFORMAT &  &  & \hyperlink{l:CMDMERG}{\texttt{CMDMERG}}\\
+60 & \texttt{\$BC} & BIT ADRESS 16 BITAR &  & \texttt{L072B} & \\
 61 & \texttt{\$BD} & KOMMA SAKNAS &  &  & \\
-62 & \texttt{\$BE} & DOT-ADRESS UTANFÖR SKÄRMEN &  &  & \hyperlink{a:22EC}{\texttt{DOTARG}}\\
+62 & \texttt{\$BE} & DOT-ADRESS UTANFÖR SKÄRMEN &  &  & \hyperlink{l:DOTARG}{\texttt{DOTARG}}\\
 63 & \texttt{\$BF} & {\char34}AS{\char34} SAKNAS &  &  & \\
 64 & \texttt{\$C0} & FELAKTIG {\char34}RENAME{\char34} &  &  & \\
-65 & \texttt{\$C1} & SPILL I ASCII-ARITMETIK &  & \hyperlink{l:ERR65}{\texttt{ERR65}} & \hyperlink{a:2C7E}{\texttt{ASCARG}}\\
-66 & \texttt{\$C2} & STRÄNG EJ NUMERISK &  & \hyperlink{l:ERR66}{\texttt{ERR66}} & \hyperlink{a:2BF5}{\texttt{ASCAR}}, \hyperlink{a:2C4D}{\texttt{ASCERR}}, \hyperlink{a:2C81}{\texttt{ASCARG}}\\
+65 & \texttt{\$C1} & SPILL I ASCII-ARITMETIK &  & \hyperlink{l:ERR65}{\texttt{ERR65}} & \hyperlink{l:ASCARG}{\texttt{ASCARG}}\\
+66 & \texttt{\$C2} & STRÄNG EJ NUMERISK &  & \hyperlink{l:ERR66}{\texttt{ERR66}} & \hyperlink{l:ASCAR}{\texttt{ASCAR}}, \hyperlink{l:ASCERR}{\texttt{ASCERR}}, \hyperlink{l:ASCARG}{\texttt{ASCARG}}\\
 \end{longtable}\end{small}
+\noindent Fyra av felen kommer inte där man väntar sig dem:\par
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Fel 1 kommer bara när samma namn står med ett index och med två
+  (\kw{A(1)} och \kw{A(1,1)}). \kw{A} och \kw{A(1)}, eller \kw{A\$} och
+  \kw{A\$(1)}, är olika variabler och går bra (avsnittet Variablerna,
+  i boken).
+\item Fel 13 är det tänkta felet för \kw{DIM A} och \kw{DIM A(1,2,3)}, men
+  stacken är fel efter felet i \namn{CMPDMI}, och ABC80 ger i stället
+  ett fel som beror på slumpen, oftast 4 (avsnittet \kw{DIM},
+  i boken).
+  9913 ger fel 13.
+\item Fel 61 kommer aldrig: kontrollen av kommat i \namn{CMPDOT} slår
+  inte till (avsnittet Grafikpunkterna, i boken).
+\item Fel 62 kommer bara från \kw{SETDOT} och \kw{CLRDOT}. \kw{DOT}
+  utanför skärmen ger inget fel (samma avsnitt).
+\end{itemize}

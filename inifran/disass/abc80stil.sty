@@ -108,8 +108,15 @@
 \newcommand{\CL}[2]{\par\noindent\hangindent=49\cw\hangafter=1
   {\ttfamily #1}{\rmfamily #2}\par}
 \newcommand{\Gap}{\par\vspace{0.55\baselineskip}}
-\newenvironment{Listing}{\par\fontsize{8.6}{10.6}\selectfont\setcw\lineskiplimit=-\maxdimen
-  \raggedright\setlength{\parskip}{0pt}}{\par}
+% Citaten ur listningen: luft ovanför och under, så att de inte ligger
+% tätt mot styckena runt omkring (\vspace, inte \addvspace, så att luften
+% står kvar också inuti en minipage; \kern0pt hindrar minipagens \unskip).
+% Först i en minipage (\prevdepth = -1000pt) står lådan centrerad på raden och får
+% bara \lineskip mot raden ovanför och under; där behövs mer luft inuti.
+\newif\ifListingmp
+\newenvironment{Listing}{\par\ifdim\prevdepth=-1000pt\relax\Listingmptrue\vspace{12pt}\else\vspace{8pt}\fi
+  \fontsize{8.6}{10.6}\selectfont\setcw\lineskiplimit=-\maxdimen
+  \raggedright\setlength{\parskip}{0pt}}{\par\ifListingmp\vspace{12pt}\else\vspace{8pt}\fi\kern0pt}
 \newcommand{\Sec}[3]{\par\Needspace\section[{#1}]{#2\hfill{\normalsize\ttfamily\mdseries\$#3}}\settitle{#1}}
 \newcommand{\Sub}[3]{\par\Needspace\subsection[{#1}]{#2\hfill{\normalsize\ttfamily\mdseries\$#3}}}
 % före en tabell: ny sida om mindre än #1 återstår (som needspace.sty;
@@ -126,8 +133,8 @@
 % rader (eller tabellhuvudet och några rader) under den
 \let\abc@section\section
 \let\abc@subsection\subsection
-\renewcommand{\section}{\par\abc@need{45mm}\abc@section}
-\renewcommand{\subsection}{\par\abc@need{35mm}\abc@subsection}
+\renewcommand{\section}{\par\if@nobreak\else\penalty-100\fi\abc@need{45mm}\abc@section}
+\renewcommand{\subsection}{\par\if@nobreak\else\penalty-100\fi\abc@need{35mm}\abc@subsection}
 % inte heller direkt efter en rubrik
 \newcommand{\Needspace}{\par\if@nobreak\else\ifdim\pagetotal>0.75\textheight\clearpage\fi\fi}
 \makeatother
