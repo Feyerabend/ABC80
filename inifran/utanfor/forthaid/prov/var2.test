@@ -1,0 +1,4 @@
+# VAR utan namn behöver 256 byte mellan HEAP och STKTOP till tabellen;
+# med 217 fritt (STKTOP satt till $C100) svarar den ?, med 473 ($C200)
+# skriver den variablerna. Kretsen ändrar inte STKTOP.
+-k '10 A=1:B$="X"\rPOKE 65063,0:POKE 65064,193:Z=CALL(16384,2)\r\w300\.VAR\r\w300\.EX\r\w300\.POKE 65064,194:Z=CALL(16384,2)\r\w300\.VAR\r\w300\.EX\r\w300\.PRINT PEEK(65063)+256*PEEK(65064)\r\w300\.'

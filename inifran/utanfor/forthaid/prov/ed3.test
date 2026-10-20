@@ -1,0 +1,6 @@
+# ED n: raden listas med markören på dess början. Högerpilen tar tecken
+# från skärmen, CTRL-P sätter in två blanka som XY skriver över, och
+# RETURN ger ROM:en raden. Radnumret går att ändra (rad 11 blir en
+# kopia). ED på en rad som inte finns ger ?. Från OK går raden till
+# BASIC (Z=CALL(16384)).
+-k '10 PRINT "AB"\r20 END\rZ=CALL(16384,2)\r\w300\.ED 10\r\w300\.\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x10\x10XY\x09\x09\x09\r\w300\.ED 10\r\w300\.\x091\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\r\w300\.\x0cED 30\r\w300\.EX\r\w300\.Z=CALL(16384)\r\w300\.ED 20\r\w300\.\x09\x09\x09STOP\r\w300\.LIST\r\w300\.RUN\r\w300\.'

@@ -1,0 +1,3 @@
+# Inkopplad: AUTO, REN och CHANGE direkt i BASIC. INPUT i ett program
+# som kör tas inte över. FORTH går till Forth, BYE tillbaka.
+-k 'Z=CALL(16384,2)\r\w300\.AUTO\r\w300\.INPUT A\r\w300\.GOSUB 50\r\w300\.END\r\w300\.\r\w300\.AUTO 50\r\w300\.PRINT A*2\r\w300\.RETURN\r\w300\.\r\w300\.REN 100,5\r\w300\.CHANGE A,B\r\w300\.LIST\r\w300\.RUN\r\w300\.21\r\w300\.FORTH\r\w300\.3 4 + .\r\w300\.BYE\r\w300\.PRINT 9\r\w300\.'

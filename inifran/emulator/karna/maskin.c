@@ -265,18 +265,34 @@ void tangentko_paus(Maskin *m, long ms)
     tangentko_in(m, 256 + (int)ms);
 }
 
+void tangentko_hall(Maskin *m, long ms)
+{
+    tangentko_in(m, -1 - (int)ms);
+}
+
 int tangentko_tom(const Maskin *m)
 {
     return m->ko_forst == m->ko_sist && !m->tangent_nere && m->tid >= m->ko_nasta;
 }
 
+/* Väntar PIO A på att bit 7 går låg? Ett avbrottsord med mask (bit 4)
+ * och aktivt låg (bit 5 = 0), där masken släpper fram bit 7, som $97
+ * och $7F: avbrott när tangenten släpps. ROM:en ställer $B7, nedtryckt. */
+static int pio_a_slapp(const Pio *p)
+{
+    return (p->avbrottsord & 0x30) == 0x10 && !(p->mask & 0x80);
+}
+
 /* Nästa steg i kön: släpp tangenten som är nere, tryck ned nästa
- * eller vänta. En nedtryckt tangent ger INT om PIO A är i läge 3. */
+ * eller vänta. I läge 3 ger PIO A INT när tangenten trycks ned, eller
+ * när den släpps om avbrottsordet säger så (pio_a_slapp). */
 static void tangentko_steg(Maskin *m)
 {
     if (m->tangent_nere) {
         m->tangent &= 0x7F;
         m->tangent_nere = 0;
+        if (m->pio_a.lage == 3 && m->pio_a.avbrott && pio_a_slapp(&m->pio_a))
+            m->pio_a.vantar = 1;
         m->ko_nasta += MASKIN_MS(m->slapp_ms);
         return;
     }
@@ -288,11 +304,19 @@ static void tangentko_steg(Maskin *m)
         m->ko_nasta += MASKIN_MS(post - 256);
         return;
     }
+    long nere = m->tryck_ms;
+    if (post < 0) {                          /* hålltiden, och tangenten */
+        nere = -1 - post;
+        if (m->ko_forst == m->ko_sist)
+            return;
+        post = m->tangentko[m->ko_forst];
+        m->ko_forst = (m->ko_forst + 1) % TANGENTKO_STORLEK;
+    }
     m->tangent = (uint8_t)(post | 0x80);
     m->tangent_nere = 1;
-    if (m->pio_a.lage == 3 && m->pio_a.avbrott)
+    if (m->pio_a.lage == 3 && m->pio_a.avbrott && !pio_a_slapp(&m->pio_a))
         m->pio_a.vantar = 1;
-    m->ko_nasta += MASKIN_MS(m->tryck_ms);
+    m->ko_nasta += MASKIN_MS(nere);
 }
 
 /* ---------------------------------------------------------------- */

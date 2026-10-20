@@ -1,0 +1,2 @@
+# LIST med intervall: en rad, n-, -m och allt.
+-k '10 PRINT "A":PRINT "B"\r20 FOR I=1 TO 3:NEXT I\r30 GOTO 10\rZ=CALL(16384)\r\w300\.LIST 20\r\w300\.LIST 15-\r\w300\.LIST -10\r\w300\.LIST\r\w300\.BYE\r\w300\.'

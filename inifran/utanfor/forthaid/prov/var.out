@@ -1,0 +1,24 @@
+VAR
+A A( A1 B% C¤ Z
+OK
+VAR A
+10 A=1 : A1=2 : B%=3 : C¤="X"
+20 DIM A(5) : A(1)=A+A1
+30 PRINT B%;C¤ : IF A>0 THEN Z=SIN(A)
+OK
+VAR A(
+20 DIM A(5) : A(1)=A+A1
+OK
+VAR A1
+10 A=1 : A1=2 : B%=3 : C¤="X"
+20 DIM A(5) : A(1)=A+A1
+OK
+VAR C¤
+10 A=1 : A1=2 : B%=3 : C¤="X"
+30 PRINT B%;C¤ : IF A>0 THEN Z=SIN(A)
+OK
+VAR Q
+OK
+BYE
+ABC80
+_

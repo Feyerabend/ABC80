@@ -1,0 +1,5 @@
+# Stegning: CTRL-C under RUN gör paus (! vid markören); CTRL-T slår på
+# TRACE och kör så länge tangenten hålls (\h60), CTRL-S kör utan TRACE
+# (\h100); CTRL-C i pausen ger STOP LINE 10, och nästa rad fungerar.
+# I 11273 släpps CTRL-S mitt i ROM:ens TSTBRK (PSBRK i fai.asm).
+-k '10 I=I+1\r20 GOTO 10\rZ=CALL(16384,2)\r\w300\.RUN\r\w300\.\x03\w300\.\h60\.\x14\w300\.\h100\.\x13\w300\.\x03\w300\.PRINT I\r\w300\.'

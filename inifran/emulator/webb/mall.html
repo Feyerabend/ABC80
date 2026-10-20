@@ -4,7 +4,7 @@
 
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
-  exempeldisketten, Luxors systemskiva och demoskiva, Forth-kretsen, bokens exempel 1-6, MÅLARE-bandet och
+  exempeldisketten, Luxors systemskiva och demoskiva, Forth-kretsen, Forthaid, bokens exempel 1-6, MÅLARE-bandet och
   Genesis-demot (band och diskett), om de finns, in som base64, och
   abc80.js efter. Då är abc80.html en enda fil som går att öppna direkt i
   webbläsaren, utan server och utan att något installeras.
@@ -15,7 +15,9 @@
   mellan SYSTEM och /SYSTEM system- och demoskivans, som tas bort när
   skivor/systemskiva.dsk och demoskiva.dsk inte finns (skivor/hamta.py),
   mellan KRETS och /KRETS Forth-kretsens, som tas bort när
-  exempel/krets/forth.bin inte finns, mellan EXEMPEL och /EXEMPEL
+  exempel/krets/forth.bin inte finns, mellan FORTHAID och /FORTHAID
+  Forthaids, som tas bort när ../utanfor/forthaid/forthaid.bin inte
+  finns, mellan EXEMPEL och /EXEMPEL
   exemplens, som tas bort när exempel/krets/e1.bin med flera inte finns,
   mellan MALARE och /MALARE bandet MÅLAREs, som tas bort när
   exempel/malare/MALARE.wav inte finns, mellan CPM och /CPM CP/M:s, och
@@ -616,6 +618,9 @@
           <option value="forth" data-en="Forth ROM">Forth-kretsen</option>
           <option value="cmos" data-en="Forth with CMOS">Forth med CMOS</option>
 <!-- /KRETS -->
+<!-- FORTHAID -->
+          <option value="forthaid" data-en="Forthaid (outside the book)">Forthaid (utanför boken)</option>
+<!-- /FORTHAID -->
 <!-- EXEMPEL -->
           <option value="e1" data-en="Example 1: the key interrupt">Exempel 1: tangentavbrottet</option>
           <option value="e2" data-en="Example 2: capitals">Exempel 2: versaler</option>
@@ -670,6 +675,37 @@
         words remain when the page is reloaded. <code>EMPTY</code> empties the
         dictionary.</p>
 <!-- /KRETS -->
+<!-- FORTHAID -->
+        <p lang="sv"><i>Forthaid</i> är inte med i boken: en verktygskrets i
+        stil med Smartaid 3, skriven i Forth på tolken från exempel 7.
+        <code>Z=CALL(16384,2)</code> kopplar in den, och sedan skrivs
+        kommandona direkt i BASIC: <code>LIST</code>, <code>FIND</code>,
+        <code>VAR</code>, <code>REN</code>, <code>CHANGE A,B</code>,
+        <code>DEL</code>, <code>AUTO</code>, <code>ED</code>,
+        <code>START</code>, <code>OLD</code>, <code>PEEK</code>,
+        <code>SYS</code> och <code>HELP</code>. CTRL-W, A, S och Z flyttar
+        markören, och högerpilen läser tecknet under den. CTRL-C under
+        körning ger en paus; CTRL-T och CTRL-S kör sedan vidare medan
+        tangenten hålls ned, med och utan TRACE. <code>FORTH</code> går till
+        Forth-tolken, där egna kommandon kan skrivas, och <code>EX</code>
+        kopplar ur kretsen. Manualen står i
+        <code>utanfor/forthaid/MANUAL.md</code> i bokens kodförråd.</p>
+        <p lang="en"><i>Forthaid</i> is not part of the book: a tool ROM in
+        the style of Smartaid 3, written in Forth on the interpreter from
+        example 7. <code>Z=CALL(16384,2)</code> hooks it in, and then the
+        commands are typed directly in BASIC: <code>LIST</code>,
+        <code>FIND</code>, <code>VAR</code>, <code>REN</code>, <code>CHANGE
+        A,B</code>, <code>DEL</code>, <code>AUTO</code>, <code>ED</code>,
+        <code>START</code>, <code>OLD</code>, <code>PEEK</code>,
+        <code>SYS</code> and <code>HELP</code>. CTRL-W, A, S and Z move the
+        cursor, and the right arrow reads the character under it. CTRL-C
+        while a program runs gives a pause; CTRL-T and CTRL-S then run on
+        while the key is held down, with and without TRACE. <code>FORTH</code>
+        goes to the Forth interpreter, where you can write commands of your
+        own, and <code>EX</code> unhooks the ROM. The manual (in Swedish) is
+        <code>utanfor/forthaid/MANUAL.md</code> in the book's code
+        repository.</p>
+<!-- /FORTHAID -->
 <!-- EXEMPEL -->
         <p lang="sv"><i>Exempel 1</i>–<i>6</i> är programmen i band 2,
         kapitlet Egna exempel, i den tänkta kretsen: på <code>$4000</code>,

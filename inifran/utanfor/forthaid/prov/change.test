@@ -1,0 +1,3 @@
+# CHANGE: en variabel med siffra, FOR/NEXT, en sträng och en med index;
+# olika typ ger ?. Programmet körs efteråt.
+-k '10 FOR I=1 TO 2:A1=A1+I:NEXT I\r20 B$="X":DIM C(3):C(1)=A1\r30 PRINT A1;B$;C(1)\rZ=CALL(16384)\r\w300\.CHANGE A1,K\r\w300\.CHANGE I,J\r\w300\.CHANGE B$,D$\r\w300\.CHANGE C(,E(\r\w300\.CHANGE A,B$\r\w300\.LIST\r\w300\.BYE\r\w300\.RUN\r\w300\.'

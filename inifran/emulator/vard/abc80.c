@@ -98,7 +98,8 @@
  *                    (abc80host har 6000); utan -i räknas T-cykler
  *
  * I texten till -k och -s är \r RETURN, \xHH koden HH, \\ ett \, \.
- * ingenting och \wN en paus på N ms (bara -k). Å, Ä, Ö, É, Ü och små
+ * ingenting, \wN en paus på N ms och \hN att nästa tangent hålls nere
+ * N ms (\w och \h bara -k). Å, Ä, Ö, É, Ü och små
  * å, ä, ö, é, ü i UTF-8 blir ABC80:s koder för dem.
  *
  * Här läses alla filer; kärnan (karna/) får bara bytebuffertar.
@@ -155,6 +156,13 @@ static void text(Maskin *m, const char *s, int till_v24)
                 s = slut;
                 if (!till_v24)
                     tangentko_paus(m, ms);
+                continue;
+            } else if (*s == 'h') {
+                char *slut;
+                long ms = strtol(s + 1, &slut, 10);
+                s = slut;
+                if (!till_v24)
+                    tangentko_hall(m, ms);
                 continue;
             } else if (*s == '.') {          /* \. skiljer \w5\.0 */
                 s++;

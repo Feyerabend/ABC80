@@ -11,6 +11,8 @@
 # (skivor/hamta.py) kommer Luxors systemskiva och demoskiva med (SYSTEM
 # och /SYSTEM). Finns exempel/krets/forth.bin och
 # forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns
+# ../utanfor/forthaid/forthaid.bin (utanför boken) kommer Forthaid med
+# (FORTHAID och /FORTHAID). Finns
 # exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
 # bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
 # exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
@@ -32,6 +34,7 @@ SYSTEM=skivor/systemskiva.dsk
 DEMO=skivor/demoskiva.dsk
 KRETS=exempel/krets/forth.bin
 KRETS_CMOS=exempel/krets/forth_cmos.bin
+FORTHAID=../utanfor/forthaid/forthaid.bin
 EXEMPEL="e1 e2 e3 e4a e4b e5 e6"
 MALARE=exempel/malare/MALARE.wav
 SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
@@ -76,6 +79,7 @@ sida() {
         avsnitt PROGRAM "$(finns "$PROGRAM")" |
         avsnitt SYSTEM "$(finns "$SYSTEM" "$DEMO")" |
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
+        avsnitt FORTHAID "$(finns "$FORTHAID")" |
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
         avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B" "$CPM_D")" |
@@ -101,6 +105,9 @@ fi
 if [ -f "$KRETS" ] && [ -f "$KRETS_CMOS" ]; then
     printf '  krets: "%s",\n' "$(base64_av "$KRETS")"
     printf '  krets_cmos: "%s",\n' "$(base64_av "$KRETS_CMOS")"
+fi
+if [ -f "$FORTHAID" ]; then
+    printf '  forthaid: "%s",\n' "$(base64_av "$FORTHAID")"
 fi
 if [ "$(finns $(exemplen))" = ja ]; then
     printf '  exempel: {\n'

@@ -1,0 +1,2 @@
+# SYS: ett program på två rader, en variabel efter RUN.
+-k '10 A=1\r20 PRINT A\rRUN\rZ=CALL(16384)\r\w100\.SYS\r\w100\.1 2 3 * + . 100 7 U/MOD . . $ABCD H.\r\w100\.BYE\r\w100\.'

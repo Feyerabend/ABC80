@@ -1,0 +1,4 @@
+# Direkt i BASIC: Z=CALL(16384,2) kopplar in kretsen. PRINT och en ny
+# rad går till ROM:en, LIST och DEL till kretsen (DEL med CLEAR: ABC80),
+# RUN till ROM:en; efter EX är LIST ROM:ens.
+-k '10 A=1\r20 A=2\r30 PRINT A\rZ=CALL(16384,2)\r\w300\.PRINT Z+5\r\w300\.40 PRINT A+1\r\w300\.LIST 30-\r\w300\.DEL 20\r\w300\.RUN\r\w300\.EX\r\w300\.LIST\r\w300\.'

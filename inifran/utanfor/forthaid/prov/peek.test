@@ -1,0 +1,3 @@
+# PEEK: ROM:ens början, en rad till med mellanslag, avbruten med X; PEEK
+# utan adress fortsätter, och $-tal i tolken.
+-k 'Z=CALL(16384)\r\w300\.PEEK $0000\r\w1000\. \w300\.X\w300\.PEEK\r\w1000\.X\w300\.$10 10 + .\r\w300\.BYE\r\w300\.'

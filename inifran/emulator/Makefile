@@ -73,8 +73,8 @@ webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 	$(CLANG) $(WEBB_FLAGGOR) -o $@ $(WEBB_C)
 
 # CP/M (start-PROM:en och systemskivan) kommer med. Exempeldisketten,
-# Forth-kretsarna, bokens exempel 1-6, MÅLARE-bandet och Genesis-demot
-# kommer med om de finns.
+# Forth-kretsarna, Forthaid (utanfor/), bokens exempel 1-6, MÅLARE-bandet
+# och Genesis-demot kommer med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
                  roms/pr9704.rom roms/tkn80-iii.rom $(SKIVOR) \
@@ -82,6 +82,7 @@ webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \
                             exempel/krets/forth_cmos.bin \
+                            ../utanfor/forthaid/forthaid.bin \
                             $(wildcard exempel/krets/e*.bin) \
                             exempel/malare/MALARE.wav \
                             exempel/genesis/GenesisProject_ABCDemo.dsk \

@@ -21,7 +21,9 @@
  *                    (1 utan kassett)
  *     port $3B       PIO B:s styrord; avbrott när bit 7 går låg (kassetten)
  *     avbrott        PIO A i läge 3 med avbrott på: INT när en tangent
- *                    trycks ned; i läge 1: INT från linjesignalen på ASTB,
+ *                    trycks ned, eller när den släpps om avbrottsordet
+ *                    är aktivt lågt med bit 7 i masken ($97, $7F); i
+ *                    läge 1: INT från linjesignalen på ASTB,
  *                    7 812,5 gånger i sekunden. Vektorn är PIO A:s.
  *                    PIO B ger INT med sin vektor när kassettens latch
  *                    sätts, och inte igen förrän efter RETI; PIO A går före
@@ -138,7 +140,8 @@ struct Maskin {
     uint8_t tangent;                         /* koden; bit 7 = nere */
     Pio pio_a, pio_b;
 
-    /* Tangentkön: en kod 0-255, eller 256 + ms för en paus. */
+    /* Tangentkön: en kod 0-255, 256 + ms för en paus, eller -1 - ms för
+     * hur länge nästa tangent hålls nere. */
     int tangentko[TANGENTKO_STORLEK];
     int ko_forst, ko_sist;
     int tangent_nere;                        /* tangenten ur kön är nere */
@@ -205,9 +208,12 @@ void maskin_aterstall(Maskin *m);
 /* Kör minst tcykler T-cykler, eller tills en krok stannar maskinen. */
 void maskin_kor(Maskin *m, long long tcykler);
 
-/* Tangentkön. tangentko_tom är sann när kön, tangenten och pausen är slut. */
+/* Tangentkön. tangentko_hall ger nästa tangent en egen hålltid i stället
+ * för tryck_ms. tangentko_tom är sann när kön, tangenten och pausen är
+ * slut. */
 void tangentko_lagg(Maskin *m, uint8_t kod);
 void tangentko_paus(Maskin *m, long ms);
+void tangentko_hall(Maskin *m, long ms);
 int  tangentko_tom(const Maskin *m);
 
 /* V24 in: lägg till tecken; mottagningen börjar vid tiden start. */
