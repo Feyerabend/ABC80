@@ -7,6 +7,8 @@
 #                på kort 44 med Zork I (cpm/d.dsk)
 #   make roms    hämta ROM:arna (roms/hamta.py); webb och prov
 #                hämtar dem själva om de saknas
+#   make skivor  hämta Luxors systemskiva och demoskiva till FD2
+#                (skivor/hamta.py); webb hämtar dem själv om de saknas
 #   make prov    kör den nya och den gamla (verktyg/abc80) med samma flaggor
 #                och jämför skärmarna
 #   make webb    bygg webb/abc80.html, emulatorn i en enda sida som går
@@ -58,6 +60,15 @@ roms: $(ROMAR)
 $(ROMAR):
 	python3 -I roms/hamta.py
 
+# Luxors systemskiva och demoskiva ligger inte heller i förrådet;
+# skivor/hamta.py hämtar dem.
+SKIVOR = skivor/systemskiva.dsk skivor/demoskiva.dsk
+
+skivor: $(SKIVOR)
+
+$(SKIVOR):
+	python3 -I skivor/hamta.py
+
 webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 	$(CLANG) $(WEBB_FLAGGOR) -o $@ $(WEBB_C)
 
@@ -66,7 +77,8 @@ webb/abc80.wasm: $(WEBB_C) karna/*.h vard/wav.h webb/libc/*.h
 # kommer med om de finns.
 webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                  roms/abc80new.rom roms/abc80old.rom roms/abcdos80.rom roms/p40.rom \
-                 roms/tkn80-iii.rom cpm/start.bin cpm/system.dsk cpm/b.dsk cpm/d.dsk \
+                 roms/tkn80-iii.rom $(SKIVOR) \
+                 cpm/start.bin cpm/system.dsk cpm/b.dsk cpm/d.dsk \
                  $(wildcard exempel/program/diskett/program.dsk \
                             exempel/krets/forth.bin \
                             exempel/krets/forth_cmos.bin \
@@ -149,4 +161,4 @@ clean:
 	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/skriv.txt cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com \
 	       cpm/zork/med_bios.asm cpm/ztolk.com cpm/d.dsk
 
-.PHONY: roms alla prov cpmprov webb clean
+.PHONY: roms skivor alla prov cpmprov webb clean

@@ -6,7 +6,9 @@
 # två ROM:arna, ABC-DOS, drivrutinen till P40 och TKN80-III som base64, och abc80.js efter, där raden med
 # FILER står. Finns exempel/program/diskett/program.dsk kommer
 # exempeldisketten med; annars tas dess knapp och text bort (mellan PROGRAM
-# och /PROGRAM i mallen). Finns exempel/krets/forth.bin och
+# och /PROGRAM i mallen). Finns skivor/systemskiva.dsk och demoskiva.dsk
+# (skivor/hamta.py) kommer Luxors systemskiva och demoskiva med (SYSTEM
+# och /SYSTEM). Finns exempel/krets/forth.bin och
 # forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns
 # exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
 # bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
@@ -25,6 +27,8 @@ set -e
 cd "$(dirname "$0")/.."
 
 PROGRAM=exempel/program/diskett/program.dsk
+SYSTEM=skivor/systemskiva.dsk
+DEMO=skivor/demoskiva.dsk
 KRETS=exempel/krets/forth.bin
 KRETS_CMOS=exempel/krets/forth_cmos.bin
 EXEMPEL="e1 e2 e3 e4a e4b e5 e6"
@@ -69,6 +73,7 @@ finns() {
 sida() {
     avsnitt MALL nej < webb/mall.html |
         avsnitt PROGRAM "$(finns "$PROGRAM")" |
+        avsnitt SYSTEM "$(finns "$SYSTEM" "$DEMO")" |
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
@@ -86,6 +91,10 @@ printf '  p40: "%s",\n' "$(base64_av roms/p40.rom)"
 printf '  tkn80: "%s",\n' "$(base64_av roms/tkn80-iii.rom)"
 if [ -f "$PROGRAM" ]; then
     printf '  program: "%s",\n' "$(base64_av "$PROGRAM")"
+fi
+if [ "$(finns "$SYSTEM" "$DEMO")" = ja ]; then
+    printf '  systemskiva: "%s",\n' "$(base64_av "$SYSTEM")"
+    printf '  demoskiva: "%s",\n' "$(base64_av "$DEMO")"
 fi
 if [ -f "$KRETS" ] && [ -f "$KRETS_CMOS" ]; then
     printf '  krets: "%s",\n' "$(base64_av "$KRETS")"

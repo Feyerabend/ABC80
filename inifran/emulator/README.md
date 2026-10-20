@@ -44,6 +44,22 @@ ger ERR 35, så lägg en lång paus (`\w`) före nästa kommando:
     ./abc80 -r rom -f prog.bas -k 'SAVE CAS:PROG\r' -U prog.wav -t 100
     ./abc80 -r rom -k 'LOAD CAS:PROG\r\w20000\.LIST\r' -T prog.wav -t 300
 
+Skivminnena finns i två slag. `-D fil@45` sätter en skiva i FD2 på
+kort 45 (160 KB), som ABC-DOS (`-l roms/abcdos80.rom@6000`) läser;
+`-D fil` utan kort sätter den på kort 44, ABC 832 med 640 KB, som
+UFD-DOS och CP/M:s D: använder. `skivor/hamta.py` (`make skivor`)
+hämtar Luxors systemskiva ver. 1.0 för ABC80 och Luxors demoskiva till
+flexskiveenheten från ABC-klubbens samling (devili.iki.fi) och gör om
+dem till FD2-skivor, `skivor/systemskiva.dsk` och
+`skivor/demoskiva.dsk`. De ligger inte i förrådet. På systemskivan
+visar `RUN DR0:LIB` katalogen, och `BYE` kör CMDINT.SYS med programmen
+på skivan; på demoskivan ger `RUN DR0:MENY` menyn:
+
+    ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 \
+            -D skivor/systemskiva.dsk@45 -k '\w1500\.RUN DR0:LIB\r'
+    ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 \
+            -D skivor/demoskiva.dsk@45 -k '\w1500\.RUN DR0:MENY\r'
+
 `exempel/program/` har fyra exempelprogram (GISSA, KURVA, MUSIK och
 AIRFIGHT) i tre mappar: `kassett/` (ett band per program), `diskett/`
 (alla fyra för ABC-DOS) och `text/`. `exempel/malare/` har MÅLARE, ett
@@ -176,8 +192,8 @@ ligger också på webben, i den version som finns i kodförrådet:
 [https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)
 Den går att bygga om med `make webb`, som först hämtar ROM:arna
 (`roms/hamta.py`, se [`roms/LASMIG.md`](roms/LASMIG.md)).
-WebAssembly-koden, de två ROM:arna och ABC-DOS ligger i filen, och
-exempeldisketten (`exempel/program/diskett/program.dsk`), MÅLARE-bandet
+WebAssembly-koden, de två ROM:arna, ABC-DOS, systemskivan och
+demoskivan (`skivor/hamta.py`) ligger i filen, och exempeldisketten (`exempel/program/diskett/program.dsk`), MÅLARE-bandet
 och Genesis-demot (band med musiken och diskett) om de finns; med båda blir filen drygt
 4 MB, med bara exempeldisketten 330 KB. Sidan har ljudet
 (Web Audio), kassetten (lägg i en WAV, spela in och spara som WAV,
@@ -187,7 +203,7 @@ vidare när motorn slås av, så att Genesis-demots musik kommer från
 bandet), disketten i FD2 med ABC-DOS, Forth-kretsarna (en lista, eller
 `?krets=forth` och `?krets=cmos`), bokens exempel 1–6 i den tänkta
 kretsen (i samma lista, eller `?krets=e1` till `?krets=e6`), CMOS-minnet, skrivaren P40 (papperet
-växer på sidan och sparas som PNG, `?p40=pa`), exempeldisketten, MÅLARE och Genesis-demot på
+växer på sidan och sparas som PNG, `?p40=pa`), exempeldisketten, Luxors systemskiva och demoskiva (`?skiva=system`, `?skiva=demo`), MÅLARE och Genesis-demot på
 knappar (från bandet, med musiken, eller från disketten). Filer går
 att dra till sidan, text att klistra in, och en länk kan ge tangenter
 med samma syntax som `-k`:

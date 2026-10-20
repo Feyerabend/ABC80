@@ -4,7 +4,7 @@
 
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
-  exempeldisketten, Forth-kretsen, bokens exempel 1-6, MÅLARE-bandet och
+  exempeldisketten, Luxors systemskiva och demoskiva, Forth-kretsen, bokens exempel 1-6, MÅLARE-bandet och
   Genesis-demot (band och diskett), om de finns, in som base64, och
   abc80.js efter. Då är abc80.html en enda fil som går att öppna direkt i
   webbläsaren, utan server och utan att något installeras.
@@ -12,6 +12,8 @@
   Mellan MALL och /MALL står det som bara syns i mallen; bygg.sh tar
   bort det. Mellan PROGRAM och /PROGRAM står exempeldiskettens knapp och
   text, som tas bort när exempel/program/diskett/program.dsk inte finns,
+  mellan SYSTEM och /SYSTEM system- och demoskivans, som tas bort när
+  skivor/systemskiva.dsk och demoskiva.dsk inte finns (skivor/hamta.py),
   mellan KRETS och /KRETS Forth-kretsens, som tas bort när
   exempel/krets/forth.bin inte finns, mellan EXEMPEL och /EXEMPEL
   exemplens, som tas bort när exempel/krets/e1.bin med flera inte finns,
@@ -389,6 +391,10 @@
         ROM:en, <code>?tkn80=pa</code> sätter i TKN80 och
         <code>?fast=pa</code> ger den fast markör. <code>?skarp=pa</code>
         ger skarpa punkter.
+<!-- SYSTEM -->
+        <code>?skiva=system</code> lägger i systemskivan och
+        <code>?skiva=demo</code> demoskivan.
+<!-- /SYSTEM -->
 <!-- CPM -->
         <code>?cpm=pa</code> startar CP/M och <code>?zork=pa</code> Zork I.
 <!-- /CPM -->
@@ -396,6 +402,10 @@
         <p lang="en">In a link: <code>?rom=gammal</code> selects the old
         ROM, <code>?tkn80=pa</code> fits TKN80 and <code>?fast=pa</code> gives
         it a steady cursor. <code>?skarp=pa</code> gives sharp dots.
+<!-- SYSTEM -->
+        <code>?skiva=system</code> inserts the system disk and
+        <code>?skiva=demo</code> the demo disk.
+<!-- /SYSTEM -->
 <!-- CPM -->
         <code>?cpm=pa</code> starts CP/M and <code>?zork=pa</code> Zork I.
 <!-- /CPM -->
@@ -410,6 +420,10 @@
 <!-- PROGRAM -->
         <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS" data-title-en="GISSA, KURVA, MUSIK and AIRFIGHT on a disk with ABC-DOS" data-en="Example disk">Exempeldisketten</button>
 <!-- /PROGRAM -->
+<!-- SYSTEM -->
+        <button id="systemskiva" title="Luxors systemskiva ver. 1.0 med ABC-DOS: LIB, COPY, DOSGEN …" data-title-en="Luxor's system disk ver. 1.0 with ABC-DOS: LIB, COPY, DOSGEN …" data-en="System disk">Systemskivan</button>
+        <button id="demoskiva" title="Luxors demoskiva för flexskiveenheten: RUN DR0:MENY" data-title-en="Luxor's demo disk for the floppy disk unit: RUN DR0:MENY" data-en="Demo disk">Demoskivan</button>
+<!-- /SYSTEM -->
 <!-- CPM -->
         <button id="zork" title="Zork I i CP/M, från D: på kort 44" data-title-en="Zork I in CP/M, from D: on card 44">Zork I</button>
 <!-- /CPM -->
@@ -476,6 +490,35 @@
         <code>exempel/program/text/</code> (<i>Type in…</i> and
         <code>RUN</code>).</p>
 <!-- /PROGRAM -->
+<!-- SYSTEM -->
+        <p lang="sv"><i>Systemskivan</i> lägger i Luxors systemskiva ver.
+        1.0 för ABC80, bevarad i ABC-klubbens samling. <code>RUN
+        DR0:LIB</code> visar katalogen som på riktigt, och <code>BYE</code>
+        kör CMDINT.SYS, som tar emot kommandona: <code>LIB</code>,
+        <code>MAP</code>, <code>SPACE</code>, <code>COPY</code>,
+        <code>DOSGEN</code> och de andra programmen på skivan. Programmen
+        beskrivs i band 2, kapitlet DOS:en.</p>
+        <p lang="en"><i>System disk</i> inserts Luxor's system disk ver. 1.0
+        for the ABC80, preserved in the ABC club's collection (in Swedish).
+        <code>RUN DR0:LIB</code> shows the directory the real way, and
+        <code>BYE</code> runs CMDINT.SYS, which takes the commands:
+        <code>LIB</code>, <code>MAP</code>, <code>SPACE</code>,
+        <code>COPY</code>, <code>DOSGEN</code> and the other programs on the
+        disk. The programs are described in volume 2, the chapter on the
+        DOS.</p>
+        <p lang="sv"><i>Demoskivan</i> lägger i Luxors demoskiva till
+        flexskiveenheten (art.nr 68 00021-31), som butikerna visade den med.
+        <code>RUN DR0:MENY</code> ger menyn: bokföring, ordbehandling,
+        adressetiketter, sortering, grafik, styrdatorn och de andra.
+        <code>RUN DR0:START</code> börjar från början och frågar först om
+        klockan (svara N).</p>
+        <p lang="en"><i>Demo disk</i> inserts Luxor's demo disk for the
+        floppy disk unit (art.no 68 00021-31), which the shops showed it
+        with (in Swedish). <code>RUN DR0:MENY</code> gives the menu:
+        bookkeeping, word processing, address labels, sorting, graphics,
+        control and the others. <code>RUN DR0:START</code> starts from the
+        beginning and first asks about the clock (answer N).</p>
+<!-- /SYSTEM -->
       </div>
     </details>
 

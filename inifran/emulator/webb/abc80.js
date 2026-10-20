@@ -522,22 +522,28 @@ function nytt_ljud() {
 ljud = nytt_ljud();
 provtakt = ljud ? ljud.sampleRate : PROVTAKT;   /* 48 kHz, om webbläsaren inte vägrar */
 
+/* Ett nytt ljud i stället för det gamla, om det får samma provtakt. */
+function byt_ljud() {
+    const gammalt = ljud;
+    const nytt = nytt_ljud();
+    if (nytt && nytt.sampleRate === provtakt) {
+        ljud = nytt;
+        ljud_upplast = false;
+        ljud_sedd = null;
+        nasta = null;
+        tysta_kallorna();
+        if (gammalt.state !== 'closed')
+            gammalt.close().catch(() => {});
+    } else if (nytt)
+        nytt.close().catch(() => {});
+}
+
 /* Anropas i klick och tangenttryck (användarhandlingar). */
 function vack_ljudet() {
     if (!ljud_valt || !ljud)
         return;
-    if (ljud.state === 'closed' || ljudet_star()) {
-        const gammalt = ljud;
-        const nytt = nytt_ljud();
-        if (nytt && nytt.sampleRate === provtakt) {
-            ljud = nytt;
-            ljud_upplast = false;
-            ljud_sedd = null;
-            nasta = null;
-            gammalt.close().catch(() => {});
-        } else if (nytt)
-            nytt.close().catch(() => {});
-    }
+    if (ljud.state === 'closed' || ljudet_star())
+        byt_ljud();
     if (ljud.state !== 'running')
         ljud.resume().catch(() => {});
     if (!ljud_upplast) {
@@ -548,6 +554,18 @@ function vack_ljudet() {
         ljud_upplast = true;
     }
     visa_ljudet();
+}
+
+/* Proven som ligger och väntar i ljudet; de stoppas när ljudet stängs av
+ * eller byts. */
+const kallorna = new Set();
+
+function tysta_kallorna() {
+    for (const kalla of kallorna) {
+        try { kalla.stop(); } catch (fel) {}
+        kalla.disconnect();
+    }
+    kallorna.clear();
 }
 
 /* Igång men tyst: klockan har stått still i en halv sekund. */
@@ -586,10 +604,21 @@ document.addEventListener('visibilitychange', () => {
     nasta = null;
 });
 
+/* Knappen. På: ett helt nytt ljud, upplåst i klicket. Av: proven som
+ * väntar stoppas och ljudet stängs, så att inget hörs förrän det slås på
+ * igen. */
 $('ljud').addEventListener('click', () => {
     ljud_valt = !ljud_valt;
-    if (ljud)
-        ljud_valt ? vack_ljudet() : ljud.suspend();
+    if (ljud) {
+        if (ljud_valt) {
+            byt_ljud();
+            vack_ljudet();
+        } else {
+            tysta_kallorna();
+            if (ljud.state !== 'closed')
+                ljud.close().catch(() => {});
+        }
+    }
     nasta = null;
     visa_ljudet();
     skarm.focus();
@@ -616,6 +645,8 @@ function spela(antal, tid, fran) {
     const kalla = ljud.createBufferSource();
     kalla.buffer = buffert;
     kalla.connect(ljud.destination);
+    kalla.onended = () => kallorna.delete(kalla);
+    kallorna.add(kalla);
     kalla.start(tid);
 }
 
@@ -1419,6 +1450,36 @@ $('exempel')?.addEventListener('click', () => {
     skarm.focus();
 });
 
+/* Luxors systemskiva ver. 1.0 och demoskiva (skivor/hamta.py), när de
+ * ligger i sidan. */
+function systemskivan() {
+    abc80_lage();
+    skivans_namn = 'systemskiva.dsk';
+    starta(FILER.systemskiva.slice());
+    meddela('Systemskivan: RUN DR0:LIB visar katalogen, BYE ger kommandona (LIB, MAP, SPACE, COPY …).',
+            'The system disk: RUN DR0:LIB shows the directory, BYE gives the commands (LIB, MAP, SPACE, COPY …).');
+    oppna_panel('panel_disk');
+}
+
+function demoskivan() {
+    abc80_lage();
+    skivans_namn = 'demoskiva.dsk';
+    starta(FILER.demoskiva.slice());
+    meddela('Demoskivan: RUN DR0:START (svara N på frågan om klockan), eller RUN DR0:MENY.',
+            'The demo disk: RUN DR0:START (answer N to the clock question), or RUN DR0:MENY.');
+    oppna_panel('panel_disk');
+}
+
+$('systemskiva')?.addEventListener('click', () => {
+    systemskivan();
+    skarm.focus();
+});
+
+$('demoskiva')?.addEventListener('click', () => {
+    demoskivan();
+    skarm.focus();
+});
+
 /* Forth-kretsarna (exempel/krets/), när de ligger i sidan: maskinen
  * startas om med den valda kretsen eller utan. */
 const KRETSAR = {
@@ -1704,6 +1765,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
     }
     if (FILER.program)
         FILER.program = base64(FILER.program);
+    if (FILER.systemskiva) {
+        FILER.systemskiva = base64(FILER.systemskiva);
+        FILER.demoskiva = base64(FILER.demoskiva);
+    }
     if (FILER.genesis)
         FILER.genesis = base64(FILER.genesis);
     if (FILER.krets) {
@@ -1753,6 +1818,9 @@ $('genesis_skiva')?.addEventListener('click', () => {
     visa_lagen(true);
     if (cpm_valt())
         meddela(...CPM_TEXT);
+    const med_system = ['system', 'demo'].includes(fraga.get('skiva')) && FILER.systemskiva && !cpm_valt();
+    if (med_system)
+        (fraga.get('skiva') === 'demo' ? demoskivan : systemskivan)();
     if (med_zork) {
         e.paus(1500);
         skriv('ZTOLK D:ZORK1\n');
@@ -1760,7 +1828,7 @@ $('genesis_skiva')?.addEventListener('click', () => {
     } else if (fraga.get('k')) {
         e.paus(1000);
         skriv(fraga.get('k'), true);
-    } else if (!fraga.get('s'))
+    } else if (!fraga.get('s') && !med_system)
         kom_igang();
     v24_text = fraga.get('s');
     skarm.focus();
