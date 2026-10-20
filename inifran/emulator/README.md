@@ -88,7 +88,10 @@ I webbläsaren finns skrivaren i gruppen *Skrivaren*.
 kort 60 med Luxors skrivarkrets 9704: tecknen skrivs som "PR60: hh ..."
 efter körningen. I webbläsaren är den rutan *Centronics* i gruppen
 *Skrivaren*, med papperet som text (80 tecken, svenska tecken som en
-Epson, sparas som papper.txt, `?centronics=pa`).
+Epson, sparas som papper.txt, `?centronics=pa`). Den förstår Epsons
+styrkoder (MX-80 och FX-80): fet, dubbelslag, kursiv, understruken,
+breda, smala och elite tecken, landet, tabbar och `ESC @`; grafiken
+flyttar bara vagnen.
 
 `-M cmos.bin` sätter i 2 KB CMOS-minne med batteri på $5000–$57FF, som på
 Super Smartaid: det läses ur filen, om den finns, och skrivs tillbaka när

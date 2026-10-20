@@ -186,6 +186,9 @@
     margin: 0; padding: 12px 14px; color: #202020;
     font: 11px/1.35 ui-monospace, Menlo, Consolas, monospace;
   }
+  #papper_text .fet { font-weight: bold; }
+  #papper_text .under { text-decoration: underline; }
+  #papper_text .kursiv { font-style: italic; }
   #papper_text hr { border: 0; border-top: 1px dashed #b8b4a8; margin: 6px -14px; }
   #papper_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
   /* Kom igång: en ruta mitt på sidan (popover). */
@@ -766,7 +769,16 @@
         Skrivarna och Skrivarkretsen 9704). Skrivaren tar emot tecknen som
         de är och skriver dem med den svenska teckenuppsättningen, så att
         <code>[ \ ] { | }</code> blir Ä Ö Å ä ö å; papperet är text, 80
-        tecken breda rader, och <i>Spara</i> ger det som en textfil. Med
+        tecken breda rader, och <i>Spara</i> ger det som en textfil.
+        Skrivaren förstår Epsons styrkoder (MX-80 och FX-80): fet stil
+        (<code>ESC E</code>, <code>ESC F</code>), dubbelslag
+        (<code>ESC G</code>, <code>ESC H</code>), kursiv (<code>ESC 4</code>,
+        <code>ESC 5</code>), understruken (<code>ESC - 1</code>,
+        <code>ESC - 0</code>), breda tecken (SO för raden, <code>ESC W
+        1</code>), smala (SI, DC2 tar bort det), elite (<code>ESC M</code>),
+        landet (<code>ESC R n</code>, 5 är Sverige) och <code>ESC @</code>
+        som återställer; grafiken flyttar bara vagnen. Till exempel
+        <code>PRINT #1,CHR$(27);"E";"FET";CHR$(27);"F"</code>. Med
         tom inställning, som i <code>LIST PR:</code>, väljer 9704 typen U
         efter kortets status, och den skriver till samma port som C; typen C
         väljs med <code>OPEN "PR:CSA36C70" AS FILE 1</code>. Skrivaren är
@@ -779,7 +791,17 @@
         the characters as they come and prints them with the Swedish
         character set, so that <code>[ \ ] { | }</code> become Ä Ö Å ä ö å;
         the paper is text, 80 characters wide, and <i>Save</i> gives it as
-        a text file. With an empty setting, as in <code>LIST PR:</code>, 9704
+        a text file. The printer understands Epson's control codes (MX-80
+        and FX-80): bold (<code>ESC E</code>, <code>ESC F</code>), double
+        strike (<code>ESC G</code>, <code>ESC H</code>), italic
+        (<code>ESC 4</code>, <code>ESC 5</code>), underline (<code>ESC -
+        1</code>, <code>ESC - 0</code>), wide characters (SO for the line,
+        <code>ESC W 1</code>), condensed (SI, DC2 cancels it), elite
+        (<code>ESC M</code>), the country (<code>ESC R n</code>, 5 is Sweden)
+        and <code>ESC @</code>, which resets; graphics only move the
+        carriage. For example
+        <code>PRINT #1,CHR$(27);"E";"BOLD";CHR$(27);"F"</code>. With an
+        empty setting, as in <code>LIST PR:</code>, 9704
         chooses type U from the card's status, and it writes to the same port
         as C; type C is chosen with <code>OPEN "PR:CSA36C70" AS FILE
         1</code>. The printer is always ready, except when the page has

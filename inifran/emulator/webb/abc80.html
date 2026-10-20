@@ -186,6 +186,9 @@
     margin: 0; padding: 12px 14px; color: #202020;
     font: 11px/1.35 ui-monospace, Menlo, Consolas, monospace;
   }
+  #papper_text .fet { font-weight: bold; }
+  #papper_text .under { text-decoration: underline; }
+  #papper_text .kursiv { font-style: italic; }
   #papper_text hr { border: 0; border-top: 1px dashed #b8b4a8; margin: 6px -14px; }
   #papper_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
   /* Kom igång: en ruta mitt på sidan (popover). */
@@ -717,7 +720,16 @@
         Skrivarna och Skrivarkretsen 9704). Skrivaren tar emot tecknen som
         de är och skriver dem med den svenska teckenuppsättningen, så att
         <code>[ \ ] { | }</code> blir Ä Ö Å ä ö å; papperet är text, 80
-        tecken breda rader, och <i>Spara</i> ger det som en textfil. Med
+        tecken breda rader, och <i>Spara</i> ger det som en textfil.
+        Skrivaren förstår Epsons styrkoder (MX-80 och FX-80): fet stil
+        (<code>ESC E</code>, <code>ESC F</code>), dubbelslag
+        (<code>ESC G</code>, <code>ESC H</code>), kursiv (<code>ESC 4</code>,
+        <code>ESC 5</code>), understruken (<code>ESC - 1</code>,
+        <code>ESC - 0</code>), breda tecken (SO för raden, <code>ESC W
+        1</code>), smala (SI, DC2 tar bort det), elite (<code>ESC M</code>),
+        landet (<code>ESC R n</code>, 5 är Sverige) och <code>ESC @</code>
+        som återställer; grafiken flyttar bara vagnen. Till exempel
+        <code>PRINT #1,CHR$(27);"E";"FET";CHR$(27);"F"</code>. Med
         tom inställning, som i <code>LIST PR:</code>, väljer 9704 typen U
         efter kortets status, och den skriver till samma port som C; typen C
         väljs med <code>OPEN "PR:CSA36C70" AS FILE 1</code>. Skrivaren är
@@ -730,7 +742,17 @@
         the characters as they come and prints them with the Swedish
         character set, so that <code>[ \ ] { | }</code> become Ä Ö Å ä ö å;
         the paper is text, 80 characters wide, and <i>Save</i> gives it as
-        a text file. With an empty setting, as in <code>LIST PR:</code>, 9704
+        a text file. The printer understands Epson's control codes (MX-80
+        and FX-80): bold (<code>ESC E</code>, <code>ESC F</code>), double
+        strike (<code>ESC G</code>, <code>ESC H</code>), italic
+        (<code>ESC 4</code>, <code>ESC 5</code>), underline (<code>ESC -
+        1</code>, <code>ESC - 0</code>), wide characters (SO for the line,
+        <code>ESC W 1</code>), condensed (SI, DC2 cancels it), elite
+        (<code>ESC M</code>), the country (<code>ESC R n</code>, 5 is Sweden)
+        and <code>ESC @</code>, which resets; graphics only move the
+        carriage. For example
+        <code>PRINT #1,CHR$(27);"E";"BOLD";CHR$(27);"F"</code>. With an
+        empty setting, as in <code>LIST PR:</code>, 9704
         chooses type U from the card's status, and it writes to the same port
         as C; type C is chosen with <code>OPEN "PR:CSA36C70" AS FILE
         1</code>. The printer is always ready, except when the page has
@@ -1643,6 +1665,8 @@ function skrivaren_koppla() {
             e.slapp(p);
             e[namn](1);
         }
+    if ($('centronics').checked)
+        text_starta();
 }
 
 function papper_tomt() {
@@ -1733,30 +1757,59 @@ function papper_nytt(ny_utskrift) {
 /* ---------------------------------------------------------------- */
 /* Centronicsskrivaren                                               */
 
-/* En skrivare som Epsons med den svenska teckenuppsättningen (som
- * ABC80:s skärm, karna/tecken.c). Den skriver rader om 80 tecken: CR
- * för vagnen till början, LF skriver raden och matar fram papperet (och
- * nästa rad börjar till vänster, som på Epson), FF ger en ny sida, BS
- * och HT flyttar vagnen, och en full rad bryts. Bit 7 tas bort, andra
- * styrtecken skrivs inte, och ESC tar med sig nästa tecken (Epsons
- * styrkoder är ofta längre; de syns inte på papperet ändå). Papperet
- * är text: sidorna, var och en en lista med rader. */
-const TEXT_BREDD = 80, TEXT_RADER = 5000;
-const TEXT_TECKEN = { 0x24: '¤', 0x40: 'É', 0x5B: 'Ä', 0x5C: 'Ö', 0x5D: 'Å', 0x5E: 'Ü',
-                      0x60: 'é', 0x7B: 'ä', 0x7C: 'ö', 0x7D: 'å', 0x7E: 'ü' };
+/* En skrivare som Epsons MX-80 (och FX-80) med den svenska
+ * teckenuppsättningen (som ABC80:s skärm, karna/tecken.c). Vagnen går i
+ * 1/120 tum, och raden är 8 tum: 80 tecken i pica (10 per tum), 96 i
+ * elite (12), 137 smala (17) och hälften så många breda. CR för vagnen
+ * till början, LF skriver raden och matar fram papperet (och nästa rad
+ * börjar till vänster, som på Epson), VT som LF, FF ger en ny sida, BS
+ * och HT flyttar vagnen, CAN tömmer raden, och en full rad bryts.
+ * SO gör resten av raden bred (DC4 tar bort det), SI smal (DC2 tar bort
+ * det). ESC-följderna tas emot med sina argument, så att inget av dem
+ * hamnar på papperet: ESC E/F fet, ESC G/H dubbelslag, ESC 4/5 kursiv,
+ * ESC - n understruken, ESC W n bred, ESC M/P elite och pica, ESC ! n
+ * allt på en gång, ESC R n landet, ESC D tabbarna, ESC $ läget och ESC @
+ * som återställer. Grafiken (ESC K, L, Y, Z, * och ^) flyttar vagnen
+ * men ritas inte. Ett tecken som slås över ett annat blir understruket
+ * om det ena är _, och fett om de är lika. Papperet är sidorna, var och
+ * en en lista med rader, och raderna tecknen med läge och stil. */
+const TEXT_BREDD = 960, TEXT_RADER = 5000;
+const TEXT_FET = 1, TEXT_DUBBEL = 2, TEXT_UNDER = 4, TEXT_KURSIV = 8;
+/* Länderna (ESC R n) för # $ @ [ \ ] ^ ` { | } ~. */
+const TEXT_PLATSER = [0x23, 0x24, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E];
+const TEXT_LAND = ['#$@[\\]^`{|}~', '#$à°ç§^`éùè¨', '#$§ÄÖÜ^`äöüß', '£$@[\\]^`{|}~',
+                   '#$@ÆØÅ^`æøå~', '#¤ÉÄÖÅÜéäöåü', '#$@°\\é^ùàòèì', '₧$@¡Ñ¿^`¨ñ}~',
+                   '#$@[¥]^`{|}~'];
+const TEXT_SVERIGE = 5;
 let text_sidor = [[]];
 let text_rad = [];                           /* raden under vagnen */
-let text_kolumn = 0;
-let text_esc = false;
+let text_x = 0;                              /* vagnen, i 1/120 tum */
 let text_fullt = false;                      /* sagt att papperet är fullt */
+let text_stil, text_elite, text_smal, text_bred, text_bred_raden, text_land, text_tabbar;
+let text_foljd = null;                       /* ESC-följden som tas emot */
+
+/* Skrivaren som när den slås på (och ESC @). */
+function text_starta() {
+    text_stil = 0;
+    text_elite = text_smal = text_bred = text_bred_raden = false;
+    text_land = TEXT_SVERIGE;
+    text_tabbar = null;                      /* var åttonde tecken */
+    text_foljd = null;
+}
+text_starta();
 
 function text_tom() {
     text_sidor = [[]];
     text_rad = [];
-    text_kolumn = 0;
-    text_esc = false;
+    text_x = 0;
     text_fullt = false;
     $('papper_text').textContent = '';
+}
+
+/* Ett teckens bredd i 1/120 tum. */
+function text_steg() {
+    const steg = text_smal ? 7 : text_elite ? 10 : 12;
+    return text_bred || text_bred_raden ? 2 * steg : steg;
 }
 
 function text_antal_rader() {
@@ -1767,47 +1820,210 @@ function text_antal_rader() {
 }
 
 function text_radslut() {
-    text_sidor[text_sidor.length - 1].push(text_rad.join('').trimEnd());
+    text_sidor[text_sidor.length - 1].push({ tecken: text_rad, html: text_html(text_rad) });
     text_rad = [];
-    text_kolumn = 0;
+    text_x = 0;
+    text_bred_raden = false;
 }
 
-function text_tecken(k) {
-    k &= 0x7F;
-    if (text_esc) {
-        text_esc = false;
+/* Lägg tecknet c där vagnen står. Står ett tecken redan där slås det
+ * nya över det. */
+function text_skriv(c) {
+    const w = text_steg();
+    if (text_x + w > TEXT_BREDD)
+        text_radslut();
+    const ny = { c: c, x: text_x, w: w, stil: text_stil };
+    text_x += w;
+    let i = text_rad.length;
+    while (i > 0 && text_rad[i - 1].x > ny.x)
+        i--;
+    const gammal = i > 0 && text_rad[i - 1].x === ny.x ? text_rad[i - 1] : null;
+    if (!gammal) {
+        if (c !== ' ' || ny.stil & TEXT_UNDER)
+            text_rad.splice(i, 0, ny);
         return;
     }
+    gammal.stil |= ny.stil;
+    if (c === '_')
+        gammal.stil |= TEXT_UNDER;
+    else if (gammal.c === '_' || gammal.c === ' ') {
+        if (gammal.c === '_')
+            gammal.stil |= TEXT_UNDER;
+        gammal.c = c;
+    } else if (gammal.c === c)
+        gammal.stil |= TEXT_FET;
+    else if (c !== ' ')
+        gammal.c = c;
+}
+
+/* Är ESC-följden k med argumenten a klar? */
+function text_foljd_klar(k, a) {
+    const n = a.length;
+    const antal = (i, j) => a[i] + 256 * a[j];
     switch (k) {
-    case 0x1B: text_esc = true; return;
-    case 0x0D: text_kolumn = 0; return;
-    case 0x0A: text_radslut(); return;
+    case '-': case 'W': case 'R': case 'Q': case 'l': case 'N': case 'A': case 'J':
+    case '3': case 'S': case 'U': case 'j': case 'p': case 's': case '!': case 'i':
+    case 'a': case 'k': case 'x': case '/': case 'w': case 'r': case 't':
+        return n >= 1;
+    case 'C': return n >= 2 || (n === 1 && a[0] !== 0);
+    case '$': case '\\': case '%': case 'e': case 'f': case '?': return n >= 2;
+    case ':': return n >= 3;
+    case 'K': case 'L': case 'Y': case 'Z': return n >= 2 && n >= 2 + antal(0, 1);
+    case '*': return n >= 3 && n >= 3 + antal(1, 2);
+    case '^': return n >= 3 && n >= 3 + 2 * antal(1, 2);
+    case '&': return n >= 3 && n >= 3 + 12 * Math.max(0, a[2] - a[1] + 1);
+    case 'D': case 'B': return (n >= 1 && a[n - 1] === 0) || n > 32;
+    case 'b': return (n >= 2 && a[n - 1] === 0) || n > 17;
+    default: return true;                    /* utan argument */
+    }
+}
+
+/* Gör det ESC-följden k med argumenten a säger. På och av tar både 0
+ * och 1 och '0' och '1'. */
+function text_foljd_gor(k, a) {
+    const pa = (a[0] & 1) === 1;
+    const stil = (bit, satt) => text_stil = satt ? text_stil | bit : text_stil & ~bit;
+    switch (k) {
+    case '@': text_starta(); break;
+    case 'E': case 'F': stil(TEXT_FET, k === 'E'); break;
+    case 'G': case 'H': stil(TEXT_DUBBEL, k === 'G'); break;
+    case '4': case '5': stil(TEXT_KURSIV, k === '4'); break;
+    case '-': stil(TEXT_UNDER, pa); break;
+    case 'W': text_bred = pa; break;
+    case '\x0E': text_bred_raden = true; break;
+    case '\x0F': text_smal = true; break;
+    case 'M': case 'P': text_elite = k === 'M'; break;
+    case '!':
+        text_elite = (a[0] & 1) !== 0;
+        text_smal = (a[0] & 4) !== 0;
+        text_bred = (a[0] & 32) !== 0;
+        stil(TEXT_FET, a[0] & 8);
+        stil(TEXT_DUBBEL, a[0] & 16);
+        stil(TEXT_KURSIV, a[0] & 64);
+        stil(TEXT_UNDER, a[0] & 128);
+        break;
+    case 'R': if (a[0] < TEXT_LAND.length) text_land = a[0]; break;
+    case 'D':
+        text_tabbar = a.slice(0, -1).filter(n => n > 0).map(n => n * text_steg());
+        break;
+    case '$': text_x = Math.min(TEXT_BREDD, 2 * (a[0] + 256 * a[1])); break;
+    case '\\': text_x = Math.max(0, Math.min(TEXT_BREDD, text_x + ((a[0] + 256 * a[1]) << 16 >> 16))); break;
+    case 'K': case 'L': case 'Y': case 'Z': case '*': case '^': {
+        const tathet = k === '*' || k === '^' ? a[0] : 'KLYZ'.indexOf(k);
+        const prickar = k === '*' || k === '^' ? a[1] + 256 * a[2] : a[0] + 256 * a[1];
+        const steg = [2, 1, 1, 0.5, 1.5, 120 / 72, 120 / 90, 120 / 144][tathet & 7];
+        text_x = Math.min(TEXT_BREDD, text_x + prickar * steg);
+        break;
+    }
+    }
+}
+
+function text_tecken(b) {
+    if (text_foljd) {
+        if (text_foljd.k === null)
+            text_foljd.k = String.fromCharCode(b & 0x7F);
+        else
+            text_foljd.a.push(b);
+        if (text_foljd_klar(text_foljd.k, text_foljd.a)) {
+            text_foljd_gor(text_foljd.k, text_foljd.a);
+            text_foljd = null;
+        }
+        return;
+    }
+    const k = b & 0x7F;
+    switch (k) {
+    case 0x1B: text_foljd = { k: null, a: [] }; return;
+    case 0x0D: text_x = 0; return;
+    case 0x0A: case 0x0B: text_radslut(); return;
     case 0x0C:
         if (text_rad.length)
             text_radslut();
         if (text_sidor[text_sidor.length - 1].length)
             text_sidor.push([]);
-        text_kolumn = 0;
+        text_x = 0;
         return;
-    case 0x08: text_kolumn = Math.max(0, text_kolumn - 1); return;
-    case 0x09: text_kolumn = Math.min(TEXT_BREDD, (text_kolumn + 8) & ~7); return;
+    case 0x08: text_x = Math.max(0, text_x - text_steg()); return;
+    case 0x09: {
+        const steg = text_steg();
+        const tabb = text_tabbar ? text_tabbar.find(t => t > text_x)
+                   : (Math.floor(text_x / (8 * steg)) + 1) * 8 * steg;
+        if (tabb !== undefined)
+            text_x = Math.min(TEXT_BREDD, tabb);
+        return;
+    }
+    case 0x0E: text_bred_raden = true; return;
+    case 0x14: text_bred_raden = false; return;
+    case 0x0F: text_smal = true; return;
+    case 0x12: text_smal = false; return;
+    case 0x18: text_rad = []; text_x = 0; return;
     }
     if (k < 0x20 || k === 0x7F)
         return;
-    if (text_kolumn >= TEXT_BREDD)
-        text_radslut();
-    while (text_rad.length < text_kolumn)
-        text_rad.push(' ');
-    text_rad[text_kolumn++] = TEXT_TECKEN[k] || String.fromCharCode(k);
+    const plats = TEXT_PLATSER.indexOf(k);
+    text_skriv(plats >= 0 ? [...TEXT_LAND[text_land]][plats] : String.fromCharCode(k));
 }
 
-/* Papperet som text, sidorna med ett streck emellan. */
+/* En rad som text: varje tecken i den kolumn (om 10 per tum) där det
+ * börjar, eller efter det förra, med minst ett mellanrum där det är
+ * luft emellan. */
+function text_rad_text(rad) {
+    let s = '', slut = 0;
+    for (const t of rad) {
+        const kolumn = Math.max(Math.floor(t.x / 12), t.x - slut >= 6 ? s.length + 1 : 0);
+        if (s.length < kolumn)
+            s += ' '.repeat(kolumn - s.length);
+        s += t.c;
+        slut = t.x + t.w;
+    }
+    return s.trimEnd();
+}
+
+/* En rad som HTML: tecknen i följder med samma stil och bredd, som
+ * dras ut eller trycks ihop till sin bredd (1ch är ett pica-tecken). */
+function text_html(rad) {
+    const ch = n => +(n / 12).toFixed(4) + 'ch';
+    const skydda = c => c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c;
+    let html = '', x = 0;
+    for (let i = 0; i < rad.length;) {
+        const forsta = rad[i];
+        let j = i + 1;
+        while (j < rad.length && rad[j].stil === forsta.stil && rad[j].w === forsta.w
+               && rad[j].x === rad[j - 1].x + forsta.w)
+            j++;
+        if (forsta.x !== x)
+            html += '<span style="margin-left:' + ch(forsta.x - x) + '"></span>';
+        const text = rad.slice(i, j).map(t => skydda(t.c)).join('');
+        const klasser = [];
+        if (forsta.stil & (TEXT_FET | TEXT_DUBBEL)) klasser.push('fet');
+        if (forsta.stil & TEXT_UNDER) klasser.push('under');
+        if (forsta.stil & TEXT_KURSIV) klasser.push('kursiv');
+        const attr = klasser.length ? ' class="' + klasser.join(' ') + '"' : '';
+        if (forsta.w === 12)
+            html += attr ? '<span' + attr + '>' + text + '</span>' : text;
+        else
+            html += '<span' + attr + ' style="display:inline-block;transform:scaleX('
+                + +(forsta.w / 12).toFixed(4) + ');transform-origin:0 0;margin-right:'
+                + ch((j - i) * (forsta.w - 12)) + '">' + text + '</span>';
+        x = rad[j - 1].x + forsta.w;
+        i = j;
+    }
+    return html;
+}
+
+/* Papperet som text, sidorna med sidbyte emellan. */
 function text_som_text(sidbyte) {
-    const sidor = text_sidor.map(sida => sida.join('\n'));
+    const sidor = text_sidor.map(sida => sida.map(rad => text_rad_text(rad.tecken)));
     if (text_rad.length)
-        sidor[sidor.length - 1] += (text_sidor[text_sidor.length - 1].length ? '\n' : '')
-            + text_rad.join('').trimEnd();
-    return sidor.join(sidbyte);
+        sidor[sidor.length - 1].push(text_rad_text(text_rad));
+    return sidor.map(sida => sida.join('\n')).join(sidbyte);
+}
+
+/* Papperet som HTML, sidorna med ett streck emellan. */
+function text_som_html() {
+    const sidor = text_sidor.map(sida => sida.map(rad => rad.html));
+    if (text_rad.length)
+        sidor[sidor.length - 1].push(text_html(text_rad));
+    return sidor.map(sida => sida.join('\n') + '\n').join('<hr>');
 }
 
 /* Hämta tecknen som har kommit sedan sist och skriv om texten. Är
@@ -1832,13 +2048,7 @@ function text_rita() {
     e.centronics_hamtat();
     papper_ritat += antal;
     papper_rader = text_antal_rader();
-    const pre = $('papper_text');
-    pre.textContent = '';
-    text_som_text('\f').split('\f').forEach((sida, n) => {
-        if (n > 0)
-            pre.appendChild(document.createElement('hr'));
-        pre.appendChild(document.createTextNode(sida + '\n'));
-    });
+    $('papper_text').innerHTML = text_som_html();
     papper_nytt(ny_utskrift);
 }
 
