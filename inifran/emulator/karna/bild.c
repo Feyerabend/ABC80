@@ -4,7 +4,8 @@
  * Varje ruta är 8 x 10 punkter. Ett tecken är sju rader om fem punkter
  * (bit 6-2 i teckensnittet), med två rader under för g, j, p, q och y.
  * En mosaikruta delas i två kolumner om fyra punkter och tre rader om
- * 3, 3 och 4 punkter; bit 0 är blocket överst till vänster och bit 5
+ * 3, 4 och 3 linjer, som på skärmen (mittraden är högre på fotot i
+ * Markesjö 1978, s. 215); bit 0 är blocket överst till vänster och bit 5
  * nederst till höger, som i tecken.c. Grafiken slås på av koderna
  * $11-$17 och av av $01-$07, från tecknet efter; varje rad börjar med
  * text. I grafikläget är $20-$3F och $60-$7F mosaik, och $40-$5F
@@ -19,7 +20,7 @@
 #include "teckensnitt.h"
 
 /* Mosaikens rader: var de börjar och slutar i rutan. */
-static const int mosaik_rad[4] = { 0, 3, 6, 10 };
+static const int mosaik_rad[4] = { 0, 3, 7, 10 };
 
 void bild_rita(const uint8_t *bildminne, int kolumner, uint32_t *punkter,
                uint32_t forgrund, uint32_t bakgrund, int markor)
