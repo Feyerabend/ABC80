@@ -14,6 +14,12 @@ dem: 40 spår à 16 sektorer à 256 byte. På skivan har sektorerna numren
 1-16, och styrprogrammet lägger logisk sektor L på sektor (7L mod 16) + 1
 (band 2, kapitlet Skivminnet).
 
+Därtill hämtas två filer från Luxors systemskiva till ABC 800 i samma
+samling, DOS:ens kommandotolk CMDINT.SYS (Ver 6.02) och LIB.ABS (6.03),
+till skivor/abc800/. De är datan i filerna, 253 byte per post, och
+exempel/program/gor.sh lägger dem på BASIC II-skivan
+(diskett/program_b2.dsk), så att BYE där når ABC 800:s DOS.
+
     ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 -D skivor/systemskiva.dsk@45
     ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 -D skivor/demoskiva.dsk@45 \\
             -k '\\w1500\\.RUN DR0:START\\r'
@@ -30,6 +36,15 @@ SKIVOR = {
     "demoskiva.dsk": ("demo.td0",
                       "0c818c59056701ecdde0f569eec04a8ab537a6df49d399cf62942893a5527bb2",
                       "980f3d6c0df21cc7940bd46ba3d840ddad62c1669bf53ba4fcc66ffcc63830ef"),
+}
+
+
+ARKIV800 = "https://www.devili.iki.fi/pub/Luxor/software/ABC-klubben/abc800/systempr/"
+
+# fil: dess SHA-256
+FILER800 = {
+    "cmdint.sys": "b3232ab5102b42f04c80d846310f6548079cd426e28e24a31f16cc762f895291",
+    "lib.abs": "7d6eb808c872feba3d4b7788a884939c74b5d5ca2815ef9b123e7c4490bb6b14",
 }
 
 
@@ -110,11 +125,38 @@ def hamta(mal, td0_namn, td0_summa, dsk_summa):
     return True
 
 
+def hamta_fil(mal, summa):
+    """Hämta en fil rakt av; sant om den finns och stämmer efteråt."""
+    namn = os.path.basename(mal)
+    if os.path.exists(mal):
+        with open(mal, "rb") as f:
+            if sha(f.read()) == summa:
+                return True
+    try:
+        print("hämtar " + ARKIV800 + namn, flush=True)
+        with urllib.request.urlopen(ARKIV800 + namn, timeout=60) as r:
+            data = r.read()
+    except OSError as e:
+        print("%s: kunde inte hämtas (%s)" % (namn, e), file=sys.stderr)
+        return False
+    if sha(data) != summa:
+        print("%s: fel kontrollsumma, sparas inte" % namn, file=sys.stderr)
+        return False
+    os.makedirs(os.path.dirname(mal), exist_ok=True)
+    with open(mal, "wb") as f:
+        f.write(data)
+    print("%s: %d byte" % (namn, len(data)))
+    return True
+
+
 def main():
     har = os.path.dirname(os.path.abspath(__file__))
     fel = 0
     for namn, (td0_namn, td0_summa, dsk_summa) in SKIVOR.items():
         if not hamta(os.path.join(har, namn), td0_namn, td0_summa, dsk_summa):
+            fel += 1
+    for namn, summa in FILER800.items():
+        if not hamta_fil(os.path.join(har, "abc800", namn), summa):
             fel += 1
     sys.exit(1 if fel else 0)
 

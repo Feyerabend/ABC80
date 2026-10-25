@@ -1697,7 +1697,16 @@ document.addEventListener('drop', (h) => {
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
 $('nystart').addEventListener('click', () => { starta(null, null, null); meddela(); skarm.focus(); });
 $('rom').addEventListener('change', () => {
-    starta();
+    /* Sitter en exempeldiskett i byts den mot den som hör till tolken; den
+     * som tas ur ligger undan med det som har sparats på den. */
+    const b2 = b2_valt() && !!FILER.program_b2;
+    const ur = b2 ? 'exempel.dsk' : 'exempel_b2.dsk';
+    if (skivans_namn === ur && FILER.program_b2) {
+        exempel_undan[ur] = skivan_nu();
+        skivans_namn = b2 ? 'exempel_b2.dsk' : 'exempel.dsk';
+        starta(exempel_undan[skivans_namn] || exempel_skivan(b2));
+    } else
+        starta();
     visa_lagen();
     if (b2_valt())
         meddela('BASIC II: FD2 är MO0:, till exempel SAVE "MO0:PROV". PR: skriver till Centronics.',
@@ -1793,13 +1802,29 @@ $('zork')?.addEventListener('click', () => {
     skarm.focus();
 });
 
-/* Exempeldisketten (exempel/program/), när den ligger i sidan. */
+/* Exempeldisketten (exempel/program/), när den ligger i sidan. Med
+ * BASIC II är det dess egen (program_b2.dsk), med programmen skrivna om
+ * för ABC 800-tolken och ABC 800:s CMDINT.SYS, så att BYE går. */
+const exempel_undan = {};
+
+function exempel_skivan(b2) {
+    return (b2 ? FILER.program_b2 : FILER.program).slice();
+}
+
 $('exempel')?.addEventListener('click', () => {
     abc80_lage();
-    skivans_namn = 'exempel.dsk';
-    starta(FILER.program.slice());
-    meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.',
-            'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK or RUN DR0:AIRFIGHT.');
+    const b2 = b2_valt() && !!FILER.program_b2;
+    skivans_namn = b2 ? 'exempel_b2.dsk' : 'exempel.dsk';
+    exempel_undan[skivans_namn] = null;
+    starta(exempel_skivan(b2));
+    if (b2)
+        meddela('Exempeldisketten för BASIC II: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out) eller SNAKE3. ' +
+                'BYE ger DOS:en (LIB), $BAS går tillbaka. Ctrl-C två gånger stoppar.',
+                'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out) or SNAKE3. ' +
+                'BYE gives the DOS (LIB), $BAS returns. Ctrl-C twice stops.');
+    else
+        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.',
+                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK or RUN DR0:AIRFIGHT.');
     oppna_panel('panel_disk');
     skarm.focus();
 });
@@ -2147,6 +2172,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
     }
     if (FILER.program)
         FILER.program = base64(FILER.program);
+    if (FILER.program_b2)
+        FILER.program_b2 = base64(FILER.program_b2);
     if (FILER.systemskiva) {
         FILER.systemskiva = base64(FILER.systemskiva);
         FILER.demoskiva = base64(FILER.demoskiva);

@@ -13,6 +13,14 @@
 #      diskett/program.dsk: 640 sektorer om 256 bytes, fyllda med $40, bitkartan
 #      i sektor 6 (och 7) och katalogen i sektor 16-23 med kopian i 8-15,
 #      som på Genesis-disketten (band 2, kapitlet om FD2).
+#   5. Finns roms/basicii80.rom (roms/hamta.py) görs också BASIC II-skivan
+#      diskett/program_b2.dsk, för ?rom=b2 på webbsidan: samma tomma skiva
+#      och programmen i text_b2/, som är skrivna om för ABC 800-tolken
+#      (inget SET DOT, IF sist på raden, korta namn utan EXTEND), sparade
+#      med SAVE MO0:. Har skivor/hamta.py hämtat ABC 800:s CMDINT.SYS och
+#      LIB.ABS till skivor/abc800/ läggs de också på skivan (skrivare.py),
+#      så att BYE når DOS:en och $BAS går tillbaka. Skivan har Luxors filer
+#      och ligger inte i förrådet.
 #
 # Körs från emulatorns mapp eller härifrån; ../../abc80 måste vara byggd.
 cd "$(dirname "$0")" || exit 1
@@ -26,6 +34,9 @@ ABC80=../../abc80
 ROM=../../roms/abc80new.rom
 DOS=../../roms/abcdos80.rom
 PROGRAM="GISSA KURVA MUSIK AIRFIGHT"
+B2ROM=../../roms/basicii80.rom
+PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3"
+ABC800=../../skivor/abc800
 
 "$Z80ASM" -o airfight.bin airfight.asm || exit 1
 
@@ -75,7 +86,8 @@ ut.close()
 EOF
 done
 
-python3 - diskett/program.dsk <<'EOF' || exit 1
+tom_skiva() {
+python3 - "$1" <<'EOF'
 import sys
 d = bytearray(b'\x40' * 640 * 256)
 karta = bytearray(256)
@@ -89,8 +101,25 @@ for s in range(8, 24):
     d[s * 256:(s + 1) * 256] = katalog
 open(sys.argv[1], 'wb').write(d)
 EOF
+}
+tom_skiva diskett/program.dsk || exit 1
 flaggor=
 for p in $PROGRAM; do
   flaggor="$flaggor -f text/$p.BAS -k 'SAVE DR0:$p\r\w3000\.NEW\r\w500\.'"
 done
 eval "$ABC80 -r $ROM -l $DOS@6000 -D diskett/program.dsk@45 -DS $flaggor -t 1000" > /dev/null || exit 1
+
+[ -f $B2ROM ] || exit 0
+tom_skiva diskett/program_b2.dsk || exit 1
+flaggor=
+for p in $PROGRAM_B2; do
+  flaggor="$flaggor -f text_b2/$p.BAS -k 'SAVE MO0:$p\r\w3000\.NEW\r\w500\.'"
+done
+eval "$ABC80 -r $B2ROM -m 32 -D diskett/program_b2.dsk@45 -DS $flaggor -t 1000" > /dev/null || exit 1
+if [ -f $ABC800/cmdint.sys ] && [ -f $ABC800/lib.abs ]; then
+  skrivare=$(mktemp)
+  python3 skrivare.py CMDINT.SYS=$ABC800/cmdint.sys LIB.ABS=$ABC800/lib.abs > $skrivare || exit 1
+  "$ABC80" -r $B2ROM -m 32 -K 20,20 -D diskett/program_b2.dsk@45 -DS -f $skrivare \
+    -k 'RUN\r\w180000' -t 500 > /dev/null || exit 1
+  rm -f $skrivare
+fi

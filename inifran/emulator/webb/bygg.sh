@@ -22,7 +22,9 @@
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
 # knappar och text bort (mellan GENESIS och /GENESIS). Finns
 # roms/basicii80.rom (roms/hamta.py) kommer BASIC II för ABC80 med (B2 och
-# /B2). Det som bara syns i
+# /B2), och finns dessutom exempel/program/diskett/program_b2.dsk
+# (exempel/program/gor.sh) kommer BASIC II:s exempeldiskett med, som
+# Exempeldisketten ger när BASIC II är valt. Det som bara syns i
 # mallen (mellan MALL och /MALL) tas alltid bort. Filen skrivs på
 # standard ut:
 #     webb/bygg.sh > webb/abc80.html
@@ -32,6 +34,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 PROGRAM=exempel/program/diskett/program.dsk
+PROGRAM_B2=exempel/program/diskett/program_b2.dsk
 SYSTEM=skivor/systemskiva.dsk
 DEMO=skivor/demoskiva.dsk
 KRETS=exempel/krets/forth.bin
@@ -97,6 +100,9 @@ printf '  rom_ny: "%s",\n' "$(base64_av roms/abc80new.rom)"
 printf '  rom_gammal: "%s",\n' "$(base64_av roms/abc80old.rom)"
 if [ -f "$B2" ]; then
     printf '  rom_b2: "%s",\n' "$(base64_av "$B2")"
+    if [ -f "$PROGRAM_B2" ]; then
+        printf '  program_b2: "%s",\n' "$(base64_av "$PROGRAM_B2")"
+    fi
 fi
 printf '  dos: "%s",\n' "$(base64_av roms/abcdos80.rom)"
 printf '  p40: "%s",\n' "$(base64_av roms/p40.rom)"

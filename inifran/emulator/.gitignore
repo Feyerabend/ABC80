@@ -22,3 +22,5 @@ cpm/d.dsk
 roms/*.rom
 skivor/systemskiva.dsk
 skivor/demoskiva.dsk
+skivor/abc800/
+exempel/program/diskett/program_b2.dsk
