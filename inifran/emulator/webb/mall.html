@@ -246,6 +246,9 @@
         <select id="rom" title="BASIC-ROM:en" data-title-en="The BASIC ROM">
           <option value="ny" data-en="New ROM">Nya ROM:en</option>
           <option value="gammal" data-en="Old ROM">Gamla ROM:en</option>
+<!-- B2 -->
+          <option value="b2" data-en="BASIC II (Ekman's 64K)">BASIC II (Ekmans 64K)</option>
+<!-- /B2 -->
         </select>
         <label title="MyAB:s kort för 80 tecken per rad" data-title-en="MyAB's card for 80 characters per line"><input type="checkbox" id="tkn80"> TKN80</label>
         <label title="TKN80 med byglingen för fast markör" data-title-en="TKN80 with the jumper for a steady cursor"><input type="checkbox" id="fast"> <span lang="sv">fast markör</span><span lang="en">steady cursor</span></label>
@@ -262,6 +265,36 @@
         program stays in memory. <i>Restart</i> clears memory. The new ROM is
         the one most machines have; the old one is there for the comparison in
         volume 1.</p>
+<!-- B2 -->
+        <p lang="sv"><i>BASIC II</i> är ABC 800:s tolk för ABC80, 32 KB med
+        DOS:en på <code>$6000</code> och PR: på <code>$7000</code> (band 2,
+        kapitlet BASIC II-ROM:en). Hur den satt i en riktig ABC80 vet vi
+        inte; det kan ha varit Libers BASIC II-kort eller något annat.
+        Emulatorn gör som Christer Ekmans utbyggnad till 64 kilobyte, karta 1:
+        tolken på <code>$0000</code>–<code>$7BFF</code>, bildminnet på
+        <code>$7C00</code> och 32 KB RAM ovanför, men skrivskyddar tolken.
+        FD2 heter här <code>MO0:</code> (DR0: är kort 44), till exempel
+        <code>SAVE "MO0:PROV"</code>. ABC80-BASIC:ens <code>.BAC</code>-filer
+        går inte att ladda (fel 203), men program som text går med
+        <i>Skriv in</i>. PR: skriver till Centronics på kort 60. Kretsarna på
+        <code>$4000</code>, CMOS-minnet, TKN80, CP/M och P40 går inte med
+        BASIC II. I terminalen: <code>-r roms/basicii80.rom -m 32</code>.</p>
+        <p lang="en"><i>BASIC II</i> is the ABC 800's interpreter for the
+        ABC80, 32 KB with the DOS at <code>$6000</code> and PR: at
+        <code>$7000</code> (volume 2, the chapter on the BASIC II ROM).
+        How it sat in a real ABC80 we do not know; it may have been Liber's
+        BASIC II card or something else. The emulator does as Christer
+        Ekman's expansion to 64 kilobytes, map 1: the interpreter at
+        <code>$0000</code>–<code>$7BFF</code>, screen memory at
+        <code>$7C00</code> and 32 KB of RAM above, but keeps the interpreter
+        write-protected. The FD2 is called <code>MO0:</code> here (DR0: is
+        card 44), for example <code>SAVE "MO0:PROV"</code>. ABC80 BASIC's
+        <code>.BAC</code> files cannot be loaded (error 203), but programs as
+        text can be typed in with <i>Type in</i>. PR: prints to the Centronics
+        printer on card 60. The ROMs at <code>$4000</code>, the CMOS memory,
+        TKN80, CP/M and the P40 do not go with BASIC II. In the terminal:
+        <code>-r roms/basicii80.rom -m 32</code>.</p>
+<!-- /B2 -->
         <p lang="sv"><i>TKN80</i> är MyAB:s kort för 80 tecken per rad, med
         EPROM:en TKN80-III (band 2, kapitlet Skärmen). Maskinen startas om med
         kortet i, och det startar i 80-teckensläget. <code>PRINT
@@ -401,6 +434,9 @@
         ROM:en, <code>?tkn80=pa</code> sätter i TKN80 och
         <code>?fast=pa</code> ger den fast markör. <code>?skarp=pa</code>
         ger skarpa punkter.
+<!-- B2 -->
+        <code>?rom=b2</code> väljer BASIC II.
+<!-- /B2 -->
 <!-- SYSTEM -->
         <code>?skiva=system</code> lägger i systemskivan och
         <code>?skiva=demo</code> demoskivan.
@@ -412,6 +448,9 @@
         <p lang="en">In a link: <code>?rom=gammal</code> selects the old
         ROM, <code>?tkn80=pa</code> fits TKN80 and <code>?fast=pa</code> gives
         it a steady cursor. <code>?skarp=pa</code> gives sharp dots.
+<!-- B2 -->
+        <code>?rom=b2</code> selects BASIC II.
+<!-- /B2 -->
 <!-- SYSTEM -->
         <code>?skiva=system</code> inserts the system disk and
         <code>?skiva=demo</code> the demo disk.

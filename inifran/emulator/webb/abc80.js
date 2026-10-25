@@ -186,9 +186,11 @@ for (const p of paneler) {
 let lagen_nu = '';
 
 function visa_lagen(alltid = false) {
-    const delar = [t($('rom').value === 'gammal' ? 'gamla ROM:en' : 'nya ROM:en',
-                     $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
-    if ($('tkn80').checked)
+    const b2 = b2_valt();
+    const delar = [b2 ? 'BASIC II'
+                   : t($('rom').value === 'gammal' ? 'gamla ROM:en' : 'nya ROM:en',
+                       $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
+    if ($('tkn80').checked && !b2)
         delar.push('TKN80' + ($('fast').checked ? t(', fast', ', steady') : ''));
     if ($('skarp').checked)
         delar.push(t('skarp', 'sharp'));
@@ -199,12 +201,12 @@ function visa_lagen(alltid = false) {
     if (skivan)
         disk = cpm_valt() ? [skivans_namn, skiva_b_namn, skiva_d_namn].join(' · ') : skivans_namn;
     const krets = $('krets');
-    const program = krets && krets.value ? krets.options[krets.selectedIndex].textContent : '';
-    const skrivare = $('p40').checked ? 'P40' : $('centronics').checked ? 'Centronics' : '';
+    const program = krets && krets.value && !b2 ? krets.options[krets.selectedIndex].textContent : '';
+    const skrivare = $('p40').checked && !b2 ? 'P40' : $('centronics').checked ? 'Centronics' : '';
     const skrivaren_text = skrivare ? skrivare + (papper_rader
         ? ' · ' + papper_rader + t(papper_rader === 1 ? ' rad' : ' rader',
                                     papper_rader === 1 ? ' line' : ' lines') : '') : '';
-    const cmos_text = $('cmos').checked ? t('på', 'on') : '';
+    const cmos_text = $('cmos').checked && !b2 ? t('på', 'on') : '';
     const nytt = [maskin, disk, program, skrivaren_text, cmos_text].join('|');
     if (!alltid && nytt === lagen_nu)
         return;
@@ -214,8 +216,12 @@ function visa_lagen(alltid = false) {
     $('lage_program').textContent = program;
     $('lage_skrivaren').textContent = skrivaren_text;
     $('lage_cmos').textContent = cmos_text;
-    /* Fast markör gäller bara TKN80. */
-    $('fast').disabled = !$('tkn80').checked;
+    /* Fast markör gäller bara TKN80. Med BASIC II går varken kretsarna,
+     * CMOS-minnet, TKN80, CP/M eller P40. */
+    for (const namn of ['tkn80', 'cpm', 'krets', 'cmos', 'p40'])
+        if ($(namn))
+            $(namn).disabled = b2;
+    $('fast').disabled = b2 || !$('tkn80').checked;
 }
 
 /* Bytes in i WebAssemblys minne (extra nollor efter); pekaren. */
@@ -303,8 +309,13 @@ function skiva_d_nu() {
 const CPM_SKIVA = 40 * 8 * 256;              /* FD2: 80 KB per enhet */
 const KORT44_SKIVA = 2560 * 256;             /* kort 44: 640 KB */
 
+/* BASIC II för ABC80 (32 KB, med egen DOS och PR:) i stället för ABC80-ROM:en. */
+function b2_valt() {
+    return $('rom').value === 'b2';
+}
+
 function cpm_valt() {
-    return !!$('cpm')?.checked;
+    return !!$('cpm')?.checked && !b2_valt();
 }
 
 /* En CP/M-systemskiva börjar med startblocket, "CP/M" (cpm/start.asm). */
@@ -319,13 +330,16 @@ function ar_cpm(d) {
  * Smartaid (-l forth.bin@4000); Forth med CMOS slår på CMOS-minnet.
  * Med CP/M är disketten A: (utan den systemskivan), b B: (utan den
  * skivan med BBC BASIC) och d D: (utan den skivan med Zork I), och
- * ABC-DOS sitter inte i. */
+ * ABC-DOS sitter inte i. Med BASIC II (b2_valt) är RAM:et 32 KB, som i
+ * Ekmans 64K med karta 1, tolkens egen DOS läser FD2 som MO0:, och
+ * kretsarna, CMOS-minnet och TKN80 sitter inte i. */
 function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
     cmos_spara();                            /* innan minnet töms */
     const cpm = cpm_valt();
+    const b2 = b2_valt();
     const rom = ROM[$('rom').value];
     const p = lagg_i_minnet(rom);
-    e.starta(16, p, rom.length, provtakt);
+    e.starta(b2 ? 32 : 16, p, rom.length, provtakt);
     e.slapp(p);
     knappar();
     if (skivans_minne)                       /* kortet är tomt nu */
@@ -352,7 +366,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
     skiva_d = cpm ? d : null;
     $('katalog').hidden = true;
     if (skivan) {
-        if (!cpm) {
+        if (!cpm && !b2) {
             const dos = lagg_i_minnet(ROM.dos);
             e.krets(0x6000, dos, ROM.dos.length);
             e.slapp(dos);
@@ -369,7 +383,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
         skiva_d_minne = lagg_i_minnet(skiva_d, 256);
         e.skiva(44, 0, skiva_d_minne, skiva_d.length, 0);
     }
-    const val = $('krets')?.value;
+    const val = b2 ? '' : $('krets')?.value;
     const ex = EXEMPEL[val];
     if (ex) {
         for (const namn of ex.filer) {
@@ -391,12 +405,12 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
             $('cmos').checked = true;
     }
     cmos_pekare = 0;
-    if ($('cmos').checked) {
+    if ($('cmos').checked && !b2) {
         const p = lagg_i_minnet(cmos);
         cmos_pekare = e.cmos(CMOS_ADRESS, p, CMOS_STORLEK);
         e.slapp(p);
     }
-    if ($('tkn80').checked) {
+    if ($('tkn80').checked && !b2) {
         const p = lagg_i_minnet(ROM.tkn80);
         e.tkn80(p, ROM.tkn80.length);
         e.slapp(p);
@@ -697,15 +711,20 @@ function papper_visa(visa) {
 /* Skrivaren och drivrutinen in eller ur, som rutorna säger: P40 med
  * sin drivrutin eller Centronicskortet med 9704, båda på kort 60. Den
  * som kopplas ur först, så att den andras drivrutin får ligga kvar. */
+/* Med BASIC II skriver PR: i ROM:en till kort 60, så 9704 behövs inte,
+ * och P40 kopplas inte in. */
 function skrivaren_koppla() {
+    const b2 = b2_valt();
     for (const namn of ['p40', 'centronics'])
-        if (!$(namn).checked)
+        if (!$(namn).checked || (b2 && namn === 'p40'))
             e[namn](0);
     for (const [namn, rom] of [['p40', ROM.p40], ['centronics', ROM.pr9704]])
-        if ($(namn).checked) {
-            const p = lagg_i_minnet(rom);
-            e.krets(0x7800, p, rom.length);
-            e.slapp(p);
+        if ($(namn).checked && !(b2 && namn === 'p40')) {
+            if (!b2) {
+                const p = lagg_i_minnet(rom);
+                e.krets(0x7800, p, rom.length);
+                e.slapp(p);
+            }
             e[namn](1);
         }
     if ($('centronics').checked)
@@ -1677,7 +1696,16 @@ document.addEventListener('drop', (h) => {
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
 $('nystart').addEventListener('click', () => { starta(null, null, null); meddela(); skarm.focus(); });
-$('rom').addEventListener('change', () => { starta(); skarm.focus(); });
+$('rom').addEventListener('change', () => {
+    starta();
+    visa_lagen();
+    if (b2_valt())
+        meddela('BASIC II: FD2 är MO0:, till exempel SAVE "MO0:PROV". PR: skriver till Centronics.',
+                'BASIC II: the FD2 is MO0:, for example SAVE "MO0:PROV". PR: prints to the Centronics.');
+    else
+        meddela();
+    skarm.focus();
+});
 $('tkn80').addEventListener('change', () => {
     starta();
     if ($('tkn80').checked)
@@ -2104,6 +2132,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
     e = instance.exports;
     ROM.ny = base64(FILER.rom_ny);
     ROM.gammal = base64(FILER.rom_gammal);
+    if (FILER.rom_b2)
+        ROM.b2 = base64(FILER.rom_b2);
     ROM.dos = base64(FILER.dos);
     ROM.p40 = base64(FILER.p40);
     ROM.pr9704 = base64(FILER.pr9704);
@@ -2131,8 +2161,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
         FILER.forthaid = base64(FILER.forthaid);
     cmos_las_in();
 
-    if (fraga.get('rom') === 'gammal')
-        $('rom').value = 'gammal';
+    if (fraga.get('rom') === 'gammal' || (fraga.get('rom') === 'b2' && ROM.b2))
+        $('rom').value = fraga.get('rom');
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;
     if (FILER.exempel)

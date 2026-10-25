@@ -20,7 +20,9 @@
 # (make) kommer CP/M med UNI-80 med (CPM och /CPM); d.dsk, D: på kort 44
 # med Zork I, utan de $E5 som avslutar den (abc80.js fyller i dem). Finns exempel/genesis/ kommer Genesis-demot med
 # (disketten och bandet, i 8 bitar och halva takten); annars tas demots
-# knappar och text bort (mellan GENESIS och /GENESIS). Det som bara syns i
+# knappar och text bort (mellan GENESIS och /GENESIS). Finns
+# roms/basicii80.rom (roms/hamta.py) kommer BASIC II för ABC80 med (B2 och
+# /B2). Det som bara syns i
 # mallen (mellan MALL och /MALL) tas alltid bort. Filen skrivs på
 # standard ut:
 #     webb/bygg.sh > webb/abc80.html
@@ -43,6 +45,7 @@ CPM_START=cpm/start.bin
 CPM_SKIVA=cpm/system.dsk
 CPM_B=cpm/b.dsk
 CPM_D=cpm/d.dsk
+B2=roms/basicii80.rom
 
 base64_av() {
     base64 < "$1" | tr -d '\n'
@@ -83,7 +86,8 @@ sida() {
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
         avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B" "$CPM_D")" |
-        avsnitt GENESIS "$(finns "$SKIVA" "$BAND")"
+        avsnitt GENESIS "$(finns "$SKIVA" "$BAND")" |
+        avsnitt B2 "$(finns "$B2")"
 }
 
 sida | sed '/<!-- FILER -->/,$d'
@@ -91,6 +95,9 @@ printf '<script>\nconst FILER = {\n'
 printf '  wasm: "%s",\n' "$(base64_av webb/abc80.wasm)"
 printf '  rom_ny: "%s",\n' "$(base64_av roms/abc80new.rom)"
 printf '  rom_gammal: "%s",\n' "$(base64_av roms/abc80old.rom)"
+if [ -f "$B2" ]; then
+    printf '  rom_b2: "%s",\n' "$(base64_av "$B2")"
+fi
 printf '  dos: "%s",\n' "$(base64_av roms/abcdos80.rom)"
 printf '  p40: "%s",\n' "$(base64_av roms/p40.rom)"
 printf '  pr9704: "%s",\n' "$(base64_av roms/pr9704.rom)"
