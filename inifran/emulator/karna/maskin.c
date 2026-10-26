@@ -408,7 +408,10 @@ void maskin_starta(Maskin *m, int ram_kb)
 
     m->pio_a.lage = 1;
     m->pio_a.vektor = 0x34;
-    m->pio_b_skrivet = 0xFF;                 /* bit 3-6 läses som 1 före första OUT */
+    /* Före första OUT läses bit 3, 4 och 6 som 1 och bit 5 som 0, så att
+     * ett program som läser porten och skriver tillbaka (BASIC II:s PROUT,
+     * HR80:s rutin) inte drar kassettmotorns relä. */
+    m->pio_b_skrivet = 0xDF;
     m->nasta_nmi = MASKIN_BILD;
     m->tryck_ms = 40;
     m->slapp_ms = 60;

@@ -11,9 +11,13 @@
 ; (1 = vila), bit 4 är 0 medan tecknet går och 1 efteråt, och bit 1 = 1
 ; säger att mottagaren inte är klar. Startbit 0, 8 databitar med den
 ; lägsta först, en stoppbit, 9600 baud: 312 T-cykler per bit med
-; ABC80:s 2,9952 MHz. Avbrotten är av medan tecknet går, så att bitarna
-; blir lika långa. Är inget kort inkopplat väntar rutinen på klar; CTRL-C
-; (BRKFLG) går då tillbaka utan att skicka, och BASIC stannar efter CALL.
+; ABC80:s 2,9952 MHz. Bara bit 3 och 4 ändras: bit 5 och 6 (kassettens
+; motor och skrivsignal) skrivs tillbaka som de lästes, och bit 0-2 och 7
+; är ingångar som en OUT inte når. Tangentbordet sitter på PIO A (port
+; $38), som rutinen inte rör. Avbrotten är av medan tecknet går, så att
+; bitarna blir lika långa. Är inget kort inkopplat väntar rutinen på
+; klar; CTRL-C (BRKFLG) går då tillbaka utan att skicka, och BASIC stannar
+; efter CALL.
 
 BRKFLG  EQU $FE07               ; skilt från 0 efter CTRL-C (KEYINT)
 
