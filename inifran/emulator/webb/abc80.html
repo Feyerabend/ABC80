@@ -40,8 +40,9 @@
   Vad som går ihop står på ett ställe, i VAL i abc80.js: lägena BASIC II
   och CP/M dimmar det som inte går med dem, och val som tar samma minne
   ($5000 för CMOS-minnet och Forthaids banker, $5800 för TKN80 och
-  Forthaid) dimmar varandra. Skälet står i title (för kretsarna i
-  listans text). ?-parametrar som krockar reds ut i VAL:s ordning.
+  Forthaid) dimmar varandra. Skälet står i title, och det som en krock
+  just har dimmat sägs i meddelandet (listan med kretsarna visar inte
+  title). ?-parametrar som krockar reds ut i VAL:s ordning.
   Nya val som kan krocka läggs till där, inte i panelernas kod.
 
   Sidan finns på svenska och engelska. Text står två gånger, med
@@ -1331,8 +1332,8 @@ function visa_lagen(alltid = false) {
 /* Valen och vad de krockar med                                      */
 
 /* Alla regler för vad som går ihop står här, i VAL; regler_tillampa()
- * dimmar efter dem (disabled, med skälet i title, och för kretsarna i
- * texten, som en lista inte visar title för) och regler_los() reder ut
+ * dimmar efter dem (disabled, med skälet i title och, när en krock just
+ * har dimmat något, i meddelandet) och regler_los() reder ut
  * ?-parametrar som krockar. Tre sorters regler:
  *   inte    lägena som valet inte går med: BASIC II (b2: ROM:en tar
  *           minnet till $7FFF, har egen DOS och PR: och ingen CAS:) och
@@ -1378,8 +1379,8 @@ const VAL = [
     { id: 'malare', inte: ['b2'] },
     { id: 'systemskiva', inte: ['b2'] },
     { id: 'demoskiva', inte: ['b2'] },
-    { id: 'genesis', inte: ['b2'], tar: ['skarmen'] },
-    { id: 'genesis_skiva', inte: ['b2'], tar: ['skarmen'] },
+    { id: 'genesis', namn: ['Genesis-demot', 'the Genesis demo'], inte: ['b2'], tar: ['skarmen'] },
+    { id: 'genesis_skiva', namn: ['Genesis-demot', 'the Genesis demo'], inte: ['b2'], tar: ['skarmen'] },
 ];
 
 function valet(id) {
@@ -1439,18 +1440,38 @@ function hinder(val) {
     return null;
 }
 
+/* Det som en krock dimmade förra gången: namnet (sv) -> [sv, en]; null
+ * innan sidan har startat, så att det som är dimmat från början inte
+ * sägs. */
+let krockar_nu = null;
+
+/* Ett vals namn i texterna, [sv, en]: namn i VAL, annars kretsens rad. */
+function valets_namn(val, el) {
+    if (val.namn)
+        return val.namn;
+    if (el?.tagName === 'OPTION')
+        return [el.dataset.sv ?? el.textContent, el.dataset.en ?? el.dataset.sv ?? el.textContent];
+    return null;
+}
+
+/* Dimmar efter VAL. Skälet står i title; listan med kretsarna visar
+ * inte title (och lång text i den gör den bredare än panelen), så det
+ * som en krock just har dimmat sägs dessutom i meddelandet, efter det
+ * som står där. Det som ett läge dimmar sägs inte: det är för mycket,
+ * och lägets egen text säger vad som gäller. */
 function regler_tillampa() {
+    const krockar = {};
     for (const val of VAL) {
         const el = valets_element(val.id);
         if (!el)
             continue;
         const skal = hinder(val);
         el.disabled = !!skal;
+        const namn = valets_namn(val, el);
+        if (skal && namn && !lagets_hinder(val.id))
+            krockar[namn[0]] = [namn, skal];
         if (el.tagName === 'OPTION') {
-            if (el.dataset.sv === undefined)
-                el.dataset.sv = el.textContent;
-            el.textContent = t(el.dataset.sv, el.dataset.en ?? el.dataset.sv) +
-                             (skal ? ' (' + t(...skal) + ')' : '');
+            el.title = skal ? t(...skal) : '';
             continue;
         }
         const titeln = el.closest('label') ?? el;    /* rutornas title står på label */
@@ -1460,6 +1481,21 @@ function regler_tillampa() {
             ? t(titeln.dataset.titleSv ?? titeln.title, titeln.dataset.titleEn) : titeln.dataset.grund;
         titeln.title = skal ? grund + ' (' + t(...skal) + ')' : grund;
     }
+    const nya = krockar_nu ? Object.keys(krockar).filter(n => !krockar_nu[n]) : [];
+    krockar_nu = krockar;
+    if (!nya.length)
+        return;
+    /* Samma skäl en gång: "Forthaid och Forthaid II (inte med ...)". */
+    const text = sprak => {
+        const skal = {};
+        for (const n of nya)
+            (skal[krockar[n][1][sprak]] ??= []).push(krockar[n][0][sprak]);
+        const och = sprak ? ' and ' : ' och ';
+        return Object.entries(skal).map(([s, namn]) =>
+            namn.slice(0, -1).join(', ') + (namn.length > 1 ? och : '') + namn.at(-1) + ' (' + s + ')').join('; ');
+    };
+    meddela((senaste[0] + ' Går inte nu: ' + text(0) + '.').trim(),
+            (senaste[1] + ' Not available now: ' + text(1) + '.').trim());
 }
 
 /* ?-parametrar som krockar: det som står senare i VAL slås av (rutan ur,

@@ -66,7 +66,7 @@ function lage(p, id) {
         const el = valets_element(id);
         if (!el)
             return null;
-        const t = el.tagName === 'OPTION' ? el.textContent : (el.closest('label') ?? el).title;
+        const t = el.tagName === 'OPTION' ? el.title : (el.closest('label') ?? el).title;
         return { dimmat: el.disabled, titel: t };
     }, id);
 }
@@ -123,6 +123,11 @@ async function reglerna(w) {
 
     await klicka(p, 'cmos');
     await dimmat(p, 'CMOS', 'krets:forthaid', true, '$5000-$57FF');
+    const text = await p.evaluate(() => $('meddelande').textContent);
+    prov('CMOS: meddelandet säger vad som inte går', text.startsWith('CMOS-minnet på') &&
+         text.includes('Går inte nu: Forthaid och Forthaid II (inte med CMOS-minnet'), text);
+    prov('CMOS: listan har kvar sin text', await p.evaluate(() =>
+         [...$('krets').options].every(o => !o.textContent.includes('inte med'))));
     await dimmat(p, 'CMOS', 'krets:forthaid2', true, 'inte med CMOS-minnet');
     await dimmat(p, 'CMOS', 'krets:forth', false);
     await klicka(p, 'cmos');
