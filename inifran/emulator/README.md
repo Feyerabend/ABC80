@@ -229,6 +229,16 @@ finns på svenska och engelska: knappen *EN*/*SV* överst byter, valet
 sparas i webbläsaren, och `?sprak=en` eller `?sprak=sv` går före. Utan
 något val gäller webbläsarens språk.
 
+Med BASIC II (`?rom=b2`) får tolken ett avbrott när en tangent trycks
+ned (PIO:n med `$B7`) och läser sedan tecknet från porten så länge
+tangenten hålls, med egen repetition. Skrivet för hand blir det rätt,
+men släpps tangenten nästan i samma ögonblick som den trycks ned, som
+när ett provverktyg (Playwrights `keyboard.type`) eller ett
+fjärrskrivbord skickar tangenterna, kan ett tecken komma två gånger
+(`PRINT 12+344`). Det händer inte med ABC80:s egna ROM:ar, inte i
+terminalen och inte med *Skriv in*; prov med webbsidan trycker därför
+ned tangenterna en stund (`keyboard.down`, 30 ms, `keyboard.up`).
+
 `make webb` bygger om den med clang och wasm-ld (lld), utan Emscripten
 och utan C-bibliotek: kärnan, `vard/wav.c` och `webb/webb.c` med
 `webb/libc.c` blir `abc80.wasm`, som `webb/bygg.sh` lägger i mallen

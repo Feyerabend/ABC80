@@ -304,6 +304,15 @@
         <code>$4000</code>, CMOS-minnet, TKN80, CP/M, P40 och kassetten går
         inte med BASIC II: ROM:en har ingen CAS:, och <code>LOAD CAS:</code>
         ger fel 21. I terminalen: <code>-r roms/basicii80.rom -m 32</code>.</p>
+        <p lang="sv">Tangenterna under BASIC II: tolken får ett avbrott när
+        en tangent trycks ned (PIO:n med <code>$B7</code>, som i Ekmans
+        lappar) och läser sedan tecknet direkt från porten så länge tangenten
+        hålls, med egen repetition. Skrivet för hand blir det rätt. Om
+        tangenten släpps nästan i samma ögonblick som den trycks ned, som när
+        ett provverktyg eller ett fjärrskrivbord skickar tangenterna, kan ett
+        tecken komma två gånger (<code>PRINT 12+344</code>); det händer inte
+        med ABC80:s egna ROM:ar och inte i terminalen. Program som text går
+        säkrast med <i>Skriv in</i> eller en fil.</p>
         <p lang="en"><i>BASIC II</i> is the ABC 800's interpreter for the
         ABC80, 32 KB with the DOS at <code>$6000</code> and PR: at
         <code>$7000</code> (volume 2, the chapter on the BASIC II ROM).
@@ -324,6 +333,15 @@
         ROM has no CAS:, and <code>LOAD CAS:</code> gives error 21. In the
         terminal:
         <code>-r roms/basicii80.rom -m 32</code>.</p>
+        <p lang="en">The keys under BASIC II: the interpreter gets an
+        interrupt when a key is pressed (the PIO with <code>$B7</code>, as in
+        Ekman's patches) and then reads the character straight from the port
+        for as long as the key is held, with its own repeat. Typed by hand it
+        comes out right. If the key is released almost at the same moment as
+        it is pressed, as when a test tool or a remote desktop sends the keys,
+        a character can come twice (<code>PRINT 12+344</code>); this does not
+        happen with the ABC80's own ROMs or in the terminal. Programs as text
+        are safest with <i>Type in</i> or a file.</p>
 <!-- /B2 -->
         <p lang="sv"><i>TKN80</i> är MyAB:s kort för 80 tecken per rad, med
         EPROM:en TKN80-III (band 2, kapitlet Skärmen). Maskinen startas om med
