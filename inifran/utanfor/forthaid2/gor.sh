@@ -18,7 +18,8 @@
 #     kommandona i TABORT tas bort, med de ord som bara de använder.
 #
 #     ./gor.sh        (forthaid2.bin, den fasta delen, och forthaid2_bN.bin,
-#                      bankerna, med .lst)
+#                      bankerna, med .lst; ordfilerna på exemplens skiva
+#                      sparas om, se slutet)
 #     ./gor.sh -p     (kör också proven i prov/)
 #     ./gor.sh -1     (steg1.bin och steg1.lst, utan banker; -1 -p proven)
 #     TABORT="PEEK" ./gor.sh -1   (prövar ett annat urval)
@@ -269,5 +270,12 @@ n=$(wc -c < $UT.bin | tr -d ' ')
 d=$(grep "DEFS \$$GRANS-\\$" $UT.lst | cut -c1-4)
 echo "gor.sh: $UT.bin ($n bytes; lediga: $((0x$GRANS - 0x$d)) före KTAB, $((MAX - n)) sist)"
 [ "$n" -le $MAX ] || { echo "gor.sh: större än $MAX byte"; exit 1; }
+# Ordfilerna på exemplens skiva (VERKTYG.FTH) hör till den Forthaid II
+# de gjordes med (LOADW prövar LATEST), så de sparas om med den nya.
+# Webbsidan görs sedan om med make webb i emulator/.
+SPARA=../../emulator/exempel/program/forth/spara.sh
+if [ -z "$STEG1" ] && [ -x $SPARA ]; then
+  $SPARA || { echo "gor.sh: ordfilerna kunde inte sparas om"; exit 1; }
+fi
 [ "$1" = "-p" ] && exec ./prov/kor.sh ${STEG1:+-1}
 exit 0

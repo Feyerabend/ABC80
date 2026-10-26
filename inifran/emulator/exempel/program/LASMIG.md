@@ -62,6 +62,21 @@ FD2-kortet:
     ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 \
         -D exempel/program/diskett/program.dsk@45 -k '\w1500\.RUN DR0:GISSA\r'
 
+## Forthaid II:s ord
+
+Disketten har också `VERKTYG.FTH`, egna ord till Forthaid II
+(`utanfor/forthaid2`): `n CROSS` listar de rader som hoppar till rad n,
+`n RAM` visar rad n byte för byte, `FIX` ger en referens till en rad som
+inte finns numret på nästa rad, och `PAC` tar bort raderna med `REM` och
+gör sedan `FIX`. Källan är `forth/VERKTYG.FS`, och `forth/spara.sh`
+lägger varje `forth/NAMN.FS` på disketten som `NAMN.FTH`, om Forthaid II
+är byggd. Både `gor.sh` här och Forthaid II:s `gor.sh` kör det, eftersom
+LOADW bara laddar en ordfil som gjordes med samma Forthaid II; efter en
+ombyggd Forthaid II görs webbsidan om med `make webb`. I webbsidan:
+*Forthaid II* i listan, *Exempeldisketten*, `LOAD GISSA`,
+`Z=CALL(16384,2)`, `FORTH`, `LOADW VERKTYG.FTH` och `60 CROSS`. Mer i
+Forthaid II:s `MANUAL.md`.
+
 ## Som text
 
 `text/NAMN.BAS` är programmet som vanlig text, som skrivs in rad för

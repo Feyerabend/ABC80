@@ -14,7 +14,12 @@
 #      diskett/program.dsk: 640 sektorer om 256 bytes, fyllda med $40, bitkartan
 #      i sektor 6 (och 7) och katalogen i sektor 16-23 med kopian i 8-15,
 #      som på Genesis-disketten (band 2, kapitlet om FD2).
-#   5. Finns roms/basicii80.rom (roms/hamta.py) görs också BASIC II-skivan
+#   5. Är Forthaid II byggd (../../../utanfor/forthaid2/gor.sh) skrivs
+#      orden i forth/NAMN.FS in i dess tolk och sparas med SAVEW som
+#      NAMN.FTH på samma diskett, en omgång i taget (forth/spara.sh, som
+#      Forthaid II:s gor.sh också kör, eftersom en ordfil bara går att
+#      ladda i den Forthaid II den gjordes med).
+#   6. Finns roms/basicii80.rom (roms/hamta.py) görs också BASIC II-skivan
 #      diskett/program_b2.dsk, för ?rom=b2 på webbsidan: samma tomma skiva
 #      och programmen i text_b2/, som är skrivna om för ABC 800-tolken
 #      (inget SET DOT, IF sist på raden, korta namn utan EXTEND), sparade
@@ -151,6 +156,9 @@ for p in $PROGRAM; do
   flaggor="$flaggor -f text/$p.BAS -k 'SAVE DR0:$p\r\w3000\.NEW\r\w500\.'"
 done
 eval "$ABC80 -r $ROM -l $DOS@6000 -D diskett/program.dsk@45 -DS $flaggor -t 1000" > /dev/null || exit 1
+# Forthaid II:s ord i forth/*.FS sparas med SAVEW på skivan, om kretsen
+# är byggd (forth/spara.sh, som också utanfor/forthaid2/gor.sh kör).
+./forth/spara.sh || exit 1
 
 [ -f $B2ROM ] || exit 0
 tom_skiva diskett/program_b2.dsk || exit 1

@@ -833,7 +833,17 @@
         TKN80 i 80-teckensläget räknar skärmeditorn, <code>ED</code> och
         <code>LIST</code> med 80 kolumner. <code>SAVEW namn</code> sparar de
         egna Forth-orden på skivan och <code>LOADW namn</code> laddar dem;
-        det kräver ett skivminne, till exempel <i>Systemskivan</i>. Manualen
+        det kräver ett skivminne, till exempel <i>Systemskivan</i>. På
+        <i>Exempeldisketten</i> ligger <code>VERKTYG.FTH</code> med fyra ord
+        efter Smartaid-kretsarnas kommandon: <code>n CROSS</code> listar de
+        rader som hoppar till rad n (<code>GOTO</code>, <code>GOSUB</code>,
+        <code>THEN</code> och <code>ON</code>), <code>n RAM</code> visar
+        rad n som den ligger i minnet, byte för byte, <code>FIX</code> ger
+        ett hopp till en rad som inte finns numret på nästa rad, och
+        <code>PAC</code> tar bort raderna med <code>REM</code> och gör
+        sedan <code>FIX</code>. Till exempel
+        <code>LOAD GISSA</code>, <code>FORTH</code>, <code>LOADW
+        VERKTYG.FTH</code> och <code>60 CROSS</code>. Manualen
         står i <code>utanfor/forthaid2/MANUAL.md</code> i bokens
         kodförråd.</p>
         <p lang="en"><i>Forthaid II</i> is Forthaid on an imagined card with
@@ -845,7 +855,17 @@
         editor, <code>ED</code> and <code>LIST</code> use 80 columns.
         <code>SAVEW name</code> saves your own Forth words on disk and
         <code>LOADW name</code> loads them; this needs a disk drive, such as
-        the <i>System disk</i>. The manual (in Swedish) is
+        the <i>System disk</i>. <i>Example disk</i> has
+        <code>VERKTYG.FTH</code> with four words after the commands of the
+        Smartaid ROMs: <code>n CROSS</code> lists the lines that jump to line
+        n (<code>GOTO</code>, <code>GOSUB</code>, <code>THEN</code> and
+        <code>ON</code>), <code>n RAM</code> shows line n as it lies in
+        memory, byte by byte, <code>FIX</code> gives a jump to a line that
+        does not exist the number of the next line, and <code>PAC</code>
+        removes the lines with <code>REM</code> and then does
+        <code>FIX</code>. For example <code>LOAD GISSA</code>,
+        <code>FORTH</code>, <code>LOADW VERKTYG.FTH</code> and <code>60
+        CROSS</code>. The manual (in Swedish) is
         <code>utanfor/forthaid2/MANUAL.md</code> in the book's code
         repository.</p>
 <!-- /FORTHAID2 -->

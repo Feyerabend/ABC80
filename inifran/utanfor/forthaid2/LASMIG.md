@@ -19,7 +19,7 @@ femte.
 
 | Fil             | Vad                                                                  |
 |-----------------|----------------------------------------------------------------------|
-| `gor.sh`        | bygger `forthaid2.bin` och bankerna ur kopior av Forthaids och bokens källor; `-1` bygger steg 1, `-p` kör proven |
+| `gor.sh`        | bygger `forthaid2.bin` och bankerna ur kopior av Forthaids och bokens källor; `-1` bygger steg 1, `-p` kör proven; sparar sedan om ordfilerna på exempeldisketten (`emulator/exempel/program/forth/spara.sh`) |
 | `banker.txt`    | vilken bank Forthaids ord hamnar i                                   |
 | `prov/`         | Forthaids prov; `prov/steg1/` har det som är annorlunda i steg 1      |
 | `kort/prov.sh`  | provet för bankkortet: byter bank från BASIC och läser tillbaka |

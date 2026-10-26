@@ -509,6 +509,86 @@ tolken; bara de i tabellen ovan och kommandona går att skriva vid OK.
 den fasta delen, som byter bank och byter tillbaka när ordet är klart.
 
 
+### VERKTYG.FTH på exempeldisketten
+
+Exempeldisketten (`emulator/exempel/program/diskett/program.dsk`, på
+webbsidan *Exempeldisketten*) har en ordfil med fyra ord efter
+kommandon i Smartaid-kretsarna och deras like (band 2, kapitlet
+Smartaid):
+
+| Ord        | Vad                                                              |
+|------------|------------------------------------------------------------------|
+| `n CROSS`  | de rader som hoppar till rad n: `GOTO`, `GOSUB`, `THEN`, `ELSE` och listorna i `ON` (ABC80L:s CROSS, Schoolaids XREF) |
+| `n RAM`    | rad n som den ligger i minnet, byte för byte i hex (Superbasics RAM) |
+| `FIX`      | en referens till en rad som inte finns får numret på nästa rad som finns; de ändrade raderna listas (Superbasics FIX) |
+| `PAC`      | tar bort raderna som börjar med `REM` och gör sedan `FIX` (Superbasics PAC) |
+
+```
+    LOAD GISSA
+    Z=CALL(16384,2)
+    FORTH
+    LOADW VERKTYG.FTH OK
+    60 CROSS
+    100 GOTO 60
+    OK
+    80 RAM
+    80 IF G=T THEN 110
+    1C 50 00 88 C0 F0 47 44 69 D4
+    C0 F0 54 73 D4 D4 E2 BA BD 87
+    07 81 BF 6E 00 47 65 0D
+    OK
+```
+
+I RAM:s rader syns radens inre form från band 1: längden `1C`, numret
+`50 00`, `IF` (`88`), `87 07` som hoppar förbi `THEN`-delen och
+radreferensen `BF 6E 00` med plats för målradens adress, som fylls i vid
+`RUN`. CROSS och FIX letar efter just referenserna (`$BF`, och `$BE` med
+en lista för `ON`). De går genom raden ett element i taget med ROM:ens
+SKPELM (`$0EFB` i både 9913 och 11273), genom ett litet stycke Z80-kod i
+ordet `STUB`, så att ett tal eller en adress som råkar innehålla `$BF`
+inte räknas.
+
+PAC och FIX på ett program med `REM`-rader och ett hopp till en rad som
+saknas:
+
+```
+    10 REM PROV
+    20 A=1
+    30 IF A=2 THEN 10 ELSE 50
+    40 REM GAMMAL
+    50 ON A GOTO 70,40,10
+    60 GOSUB 75
+    70 REM SLUT
+    80 PRINT "REM";A;
+    90 END
+```
+
+`PAC` tar bort raderna 10, 40 och 70 och listar de rader som FIX sedan
+ändrar:
+
+```
+    30 IF A=2 THEN 20 ELSE 50
+    50 ON A GOTO 80,50,20
+    60 GOSUB 80
+```
+
+Ett hopp förbi programmets sista rad står kvar. Adresserna i
+referenserna fylls i på nytt vid varje `RUN`, så orden behöver bara
+ändra radnumren; PAC flyttar resten av programmet ned som `DEL` och gör
+sedan CLEAR, så att BASIC:s variabler börjar efter programmet. Efter
+`BYE` kan programmet köras som vanligt.
+
+Källan är `emulator/exempel/program/forth/VERKTYG.FS`. Orden
+tillsammans är större än de 272 byten på `$FB70`, så
+`emulator/exempel/program/forth/spara.sh` skriver in dem i tolken i
+omgångar med SAVEW och LOADW emellan, som filens huvud beskriver, och
+prövar sedan att filen laddas och att alla orden finns. Skriptet gör så
+med varje `NAMN.FS` i samma mapp, så ett nytt ordförråd läggs bara där.
+En ordfil hör till den Forthaid II den gjordes med, och LOADW svarar `?`
+för en annan; därför kör `gor.sh` här skriptet varje gång kretsen byggs,
+liksom exemplens `gor.sh`. Webbsidan görs sedan om med `make webb` i
+`emulator/`.
+
 ## Minnet
 
 | Var             | Vad                                                            |

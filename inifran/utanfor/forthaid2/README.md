@@ -29,7 +29,7 @@ and script names are Swedish: *gör* means make, *mätning* measurement,
 
 | File               | What                                                              |
 |--------------------|-------------------------------------------------------------------|
-| `gor.sh`           | builds `forthaid2.bin` and the banks from copies of Forthaid's and the book's sources; `-1` builds step 1, `-p` runs the tests |
+| `gor.sh`           | builds `forthaid2.bin` and the banks from copies of Forthaid's and the book's sources; `-1` builds step 1, `-p` runs the tests; then saves the word files on the example disk again (`emulator/exempel/program/forth/spara.sh`) |
 | `banker.txt`       | which bank each of Forthaid's words goes into                     |
 | `bank/fc2.py`      | the cross-compiler with banks, on the book's `e7fc.py`            |
 | `bank/fb.inc`      | the far words in the kernel: DOFAR and the way back               |
