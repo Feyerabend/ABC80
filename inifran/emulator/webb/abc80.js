@@ -217,8 +217,10 @@ function visa_lagen(alltid = false) {
     $('lage_skrivaren').textContent = skrivaren_text;
     $('lage_cmos').textContent = cmos_text;
     /* Fast markör gäller bara TKN80. Med BASIC II går varken kretsarna,
-     * CMOS-minnet, TKN80, CP/M eller P40. */
-    for (const namn of ['tkn80', 'cpm', 'krets', 'cmos', 'p40'])
+     * CMOS-minnet, TKN80, CP/M, P40 eller kassetten: ROM:en har ingen
+     * CAS: (området är nollor, CAS: ger fel 21), som Ekmans lappar. */
+    for (const namn of ['tkn80', 'cpm', 'krets', 'cmos', 'p40',
+                        'band', 'spelain', 'spara', 'play', 'bakat', 'framat', 'malare'])
         if ($(namn))
             $(namn).disabled = b2;
     $('fast').disabled = b2 || !$('tkn80').checked;
@@ -332,7 +334,9 @@ function ar_cpm(d) {
  * skivan med BBC BASIC) och d D: (utan den skivan med Zork I), och
  * ABC-DOS sitter inte i. Med BASIC II (b2_valt) är RAM:et 32 KB, som i
  * Ekmans 64K med karta 1, tolkens egen DOS läser FD2 som MO0:, och
- * kretsarna, CMOS-minnet och TKN80 sitter inte i. */
+ * kretsarna, CMOS-minnet och TKN80 sitter inte i. ROM:en bygger på
+ * Ekmans lappar (band 2, avs:abc800:ekman), men vem som gjorde den vet
+ * vi inte; därför heter valet BASIC II (64K), inte efter Ekman. */
 function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
     cmos_spara();                            /* innan minnet töms */
     const cpm = cpm_valt();
@@ -1282,7 +1286,9 @@ let spelar_in = false, har_band = false;
 
 function visa_bandet() {
     let text;
-    if (!har_band && !spelar_in)
+    if (b2_valt())
+        text = t('ingen kassett i BASIC II', 'no cassette in BASIC II');
+    else if (!har_band && !spelar_in)
         text = t('inget band', 'no tape');
     else if (spelar_in)
         text = t('spelar in ', 'recording ') + sekunder(e.bandlage());
@@ -1642,7 +1648,10 @@ async function oppna(fil, vad) {
     const namn = fil.name;
     if (!vad)
         vad = /\.wav$/i.test(namn) ? 'band' : /\.(dsk|img)$/i.test(namn) ? 'skiva' : 'program';
-    if (vad === 'band')
+    if (vad === 'band' && b2_valt())
+        meddela('BASIC II har ingen kassett (CAS: ger fel 21).',
+                'BASIC II has no cassette (CAS: gives error 21).');
+    else if (vad === 'band')
         lagg_i_band(data, namn);
     else if (vad === 'cmos') {
         cmos_byt(data);
