@@ -23,7 +23,26 @@
   mellan MALARE och /MALARE bandet MÅLAREs, som tas bort när
   exempel/malare/MALARE.wav inte finns, mellan CPM och /CPM CP/M:s, och
   mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
-  inte finns. Markeringarna står på egna rader.
+  inte finns, och mellan B2 och /B2 det om BASIC II, som tas bort när
+  roms/basicii80.rom inte finns. Markeringarna står på egna rader.
+
+  Översikt, panelerna uppifrån och valen i dem:
+    panel_maskin      rom (nya, gamla, BASIC II), tkn80, fast, skarp, cpm
+    panel_disk        diskettens knappar: exempel, systemskiva,
+                      demoskiva, och med CP/M skivorna A:, B: och D:
+    panel_band        kassetten: band, spelain, spara, play, bakat,
+                      framat, fjarr, och malare
+    panel_program     krets: Forth, Forth med CMOS, Forthaid, Forthaid II
+                      och bokens exempel 1-6 (alla på $4000 utom 5 på $7000)
+    panel_skrivaren   p40 eller centronics, båda på kort 60
+    panel_cmos        cmos på $5000-$57FF
+    panel_demo        genesis och genesis_skiva
+  Vad som går ihop står på ett ställe, i VAL i abc80.js: lägena BASIC II
+  och CP/M dimmar det som inte går med dem, och val som tar samma minne
+  ($5000 för CMOS-minnet och Forthaids banker, $5800 för TKN80 och
+  Forthaid) dimmar varandra. Skälet står i title (för kretsarna i
+  listans text). ?-parametrar som krockar reds ut i VAL:s ordning.
+  Nya val som kan krocka läggs till där, inte i panelernas kod.
 
   Sidan finns på svenska och engelska. Text står två gånger, med
   lang="sv" och lang="en", och den som inte gäller döljs (html har

@@ -23,7 +23,26 @@
   mellan MALARE och /MALARE bandet MÅLAREs, som tas bort när
   exempel/malare/MALARE.wav inte finns, mellan CPM och /CPM CP/M:s, och
   mellan GENESIS och /GENESIS demots, som tas bort när exempel/genesis/
-  inte finns. Markeringarna står på egna rader.
+  inte finns, och mellan B2 och /B2 det om BASIC II, som tas bort när
+  roms/basicii80.rom inte finns. Markeringarna står på egna rader.
+
+  Översikt, panelerna uppifrån och valen i dem:
+    panel_maskin      rom (nya, gamla, BASIC II), tkn80, fast, skarp, cpm
+    panel_disk        diskettens knappar: exempel, systemskiva,
+                      demoskiva, och med CP/M skivorna A:, B: och D:
+    panel_band        kassetten: band, spelain, spara, play, bakat,
+                      framat, fjarr, och malare
+    panel_program     krets: Forth, Forth med CMOS, Forthaid, Forthaid II
+                      och bokens exempel 1-6 (alla på $4000 utom 5 på $7000)
+    panel_skrivaren   p40 eller centronics, båda på kort 60
+    panel_cmos        cmos på $5000-$57FF
+    panel_demo        genesis och genesis_skiva
+  Vad som går ihop står på ett ställe, i VAL i abc80.js: lägena BASIC II
+  och CP/M dimmar det som inte går med dem, och val som tar samma minne
+  ($5000 för CMOS-minnet och Forthaids banker, $5800 för TKN80 och
+  Forthaid) dimmar varandra. Skälet står i title (för kretsarna i
+  listans text). ?-parametrar som krockar reds ut i VAL:s ordning.
+  Nya val som kan krocka läggs till där, inte i panelernas kod.
 
   Sidan finns på svenska och engelska. Text står två gånger, med
   lang="sv" och lang="en", och den som inte gäller döljs (html har
@@ -1289,13 +1308,14 @@ function visa_lagen(alltid = false) {
     if (skivan)
         disk = cpm_valt() ? [skivans_namn, skiva_b_namn, skiva_d_namn].join(' · ') : skivans_namn;
     const krets = $('krets');
-    const program = krets && krets.value && !b2 ? krets.options[krets.selectedIndex].textContent : '';
-    const skrivare = $('p40').checked && !b2 ? 'P40' : $('centronics').checked ? 'Centronics' : '';
+    const program = krets && krets.value && !lagets_hinder('krets') ? krets.options[krets.selectedIndex].textContent : '';
+    const skrivare = i_bruk('p40') ? 'P40' : i_bruk('centronics') ? 'Centronics' : '';
     const skrivaren_text = skrivare ? skrivare + (papper_rader
         ? ' · ' + papper_rader + t(papper_rader === 1 ? ' rad' : ' rader',
                                     papper_rader === 1 ? ' line' : ' lines') : '') : '';
-    const cmos_text = $('cmos').checked && !b2 ? t('på', 'on') : '';
-    const nytt = [maskin, disk, program, skrivaren_text, cmos_text].join('|');
+    const cmos_text = i_bruk('cmos') ? t('på', 'on') : '';
+    const valen = VAL.map(val => +valt_pa(val.id)).join('');
+    const nytt = [maskin, disk, program, skrivaren_text, cmos_text, valen].join('|');
     if (!alltid && nytt === lagen_nu)
         return;
     lagen_nu = nytt;
@@ -1304,14 +1324,181 @@ function visa_lagen(alltid = false) {
     $('lage_program').textContent = program;
     $('lage_skrivaren').textContent = skrivaren_text;
     $('lage_cmos').textContent = cmos_text;
-    /* Fast markör gäller bara TKN80. Med BASIC II går varken kretsarna,
-     * CMOS-minnet, TKN80, CP/M, P40 eller kassetten: ROM:en har ingen
-     * CAS: (området är nollor, CAS: ger fel 21), som Ekmans lappar. */
-    for (const namn of ['tkn80', 'cpm', 'krets', 'cmos', 'p40',
-                        'band', 'spelain', 'spara', 'play', 'bakat', 'framat', 'malare'])
-        if ($(namn))
-            $(namn).disabled = b2;
-    $('fast').disabled = b2 || !$('tkn80').checked;
+    regler_tillampa();
+}
+
+/* ---------------------------------------------------------------- */
+/* Valen och vad de krockar med                                      */
+
+/* Alla regler för vad som går ihop står här, i VAL; regler_tillampa()
+ * dimmar efter dem (disabled, med skälet i title, och för kretsarna i
+ * texten, som en lista inte visar title för) och regler_los() reder ut
+ * ?-parametrar som krockar. Tre sorters regler:
+ *   inte    lägena som valet inte går med: BASIC II (b2: ROM:en tar
+ *           minnet till $7FFF, har egen DOS och PR: och ingen CAS:) och
+ *           CP/M (cpm: UNI-80:s RAM, och CP/M:s LST: är V24, inte kort
+ *           60). Lägena går före: det som är på ligger kvar men dimmat,
+ *           starta() hoppar över det, och det gäller igen när läget
+ *           slås av.
+ *   tar     det i maskinen som valet använder (RESURSER). Två val som
+ *           tar samma sak går inte ihop: det som är på får vara, och det
+ *           andra dimmas.
+ *   kraver  ett val som måste vara på (fast markör kräver TKN80).
+ * Prövat 2026-10-26: Forthaid med TKN80 kraschar (Forthaid ligger till
+ * $5FEF), Forthaid med CMOS ger ERR 11 i VAR, Forthaid II:s banker och
+ * CMOS-minnet ligger på samma $5000, Genesis-demot med TKN80 blir
+ * skräp (det skriver i ABC80:s skärm), och med BASIC II ger
+ * systemskivan, demoskivan och Genesis-disketten fel 21 (DR0:).
+ * MÅLARE och demoskivan går med TKN80. P40 och Centronics delar kort 60
+ * men står inte här: den ena slår av den andra (skrivarnas rutor).
+ * Ordningen i VAL är den som gäller när ?-parametrarna krockar: det som
+ * står först går före. */
+const RESURSER = {
+    '5000': ['$5000-$57FF', '$5000-$57FF'],
+    '5800': ['$5800-$5FFF', '$5800-$5FFF'],
+    skarmen: ['skärmen', 'the screen'],
+};
+
+const LAGEN = {
+    b2: { pa: () => b2_valt(), skal: ['inte med BASIC II', 'not with BASIC II'] },
+    cpm: { pa: () => cpm_valt(), skal: ['inte med CP/M', 'not with CP/M'] },
+};
+
+const VAL = [
+    { id: 'cpm', namn: ['CP/M', 'CP/M'], inte: ['b2'] },
+    { id: 'krets', inte: ['b2', 'cpm'] },
+    { id: 'krets:forthaid', namn: ['Forthaid', 'Forthaid'], tar: ['5000', '5800'] },
+    { id: 'krets:forthaid2', namn: ['Forthaid II', 'Forthaid II'], tar: ['5000'] },
+    { id: 'cmos', namn: ['CMOS-minnet', 'the CMOS memory'], tar: ['5000'], inte: ['b2', 'cpm'] },
+    { id: 'tkn80', namn: ['TKN80', 'TKN80'], tar: ['5800', 'skarmen'], inte: ['b2'] },
+    { id: 'fast', namn: ['fast markör', 'steady cursor'], inte: ['b2'], kraver: 'tkn80' },
+    { id: 'p40', namn: ['P40', 'P40'], inte: ['b2', 'cpm'] },
+    { id: 'centronics', namn: ['Centronics', 'Centronics'], inte: ['cpm'] },
+    ...['band', 'spelain', 'spara', 'play', 'bakat', 'framat'].map(id => ({ id, inte: ['b2', 'cpm'] })),
+    { id: 'malare', inte: ['b2'] },
+    { id: 'systemskiva', inte: ['b2'] },
+    { id: 'demoskiva', inte: ['b2'] },
+    { id: 'genesis', inte: ['b2'], tar: ['skarmen'] },
+    { id: 'genesis_skiva', inte: ['b2'], tar: ['skarmen'] },
+];
+
+function valet(id) {
+    return VAL.find(val => val.id === id);
+}
+
+/* Rutan, knappen eller kretsens rad i listan (id krets:värde), eller null. */
+function valets_element(id) {
+    const [namn, varde] = id.split(':');
+    if (!varde)
+        return $(namn);
+    return $(namn) ? [...$(namn).options].find(o => o.value === varde) ?? null : null;
+}
+
+/* Rutan ikryssad eller kretsen vald; knappar är aldrig på. */
+function valt_pa(id) {
+    const [namn, varde] = id.split(':');
+    const el = $(namn);
+    if (!el)
+        return false;
+    return varde ? el.value === varde : el.type === 'checkbox' && el.checked;
+}
+
+/* Läget som valet inte går med, som skäl [sv, en], eller null. */
+function lagets_hinder(id) {
+    const val = valet(id);
+    for (const lage of val?.inte ?? [])
+        if (LAGEN[lage].pa())
+            return LAGEN[lage].skal;
+    const [namn] = id.split(':');
+    return namn !== id ? lagets_hinder(namn) : null;
+}
+
+/* På och gäller: inte dimmat av ett läge och med det som krävs. */
+function i_bruk(id) {
+    const val = valet(id);
+    return valt_pa(id) && !lagets_hinder(id) && (!val?.kraver || i_bruk(val.kraver));
+}
+
+/* Varför valet inte går nu, [sv, en], eller null. */
+function hinder(val) {
+    const lage = lagets_hinder(val.id);
+    if (lage)
+        return lage;
+    if (val.kraver && !valt_pa(val.kraver)) {
+        const namn = valet(val.kraver).namn;
+        return ['bara med ' + namn[0], 'only with ' + namn[1]];
+    }
+    if (val.tar && !valt_pa(val.id))
+        for (const annat of VAL)
+            if (annat !== val && annat.tar && i_bruk(annat.id) &&
+                annat.id.split(':')[0] !== val.id.split(':')[0])   /* en krets byter en annan */
+                for (const r of val.tar)
+                    if (annat.tar.includes(r))
+                        return ['inte med ' + annat.namn[0] + ': båda använder ' + RESURSER[r][0],
+                                'not with ' + annat.namn[1] + ': both use ' + RESURSER[r][1]];
+    return null;
+}
+
+function regler_tillampa() {
+    for (const val of VAL) {
+        const el = valets_element(val.id);
+        if (!el)
+            continue;
+        const skal = hinder(val);
+        el.disabled = !!skal;
+        if (el.tagName === 'OPTION') {
+            if (el.dataset.sv === undefined)
+                el.dataset.sv = el.textContent;
+            el.textContent = t(el.dataset.sv, el.dataset.en ?? el.dataset.sv) +
+                             (skal ? ' (' + t(...skal) + ')' : '');
+            continue;
+        }
+        const titeln = el.closest('label') ?? el;    /* rutornas title står på label */
+        if (titeln.dataset.titleEn === undefined && titeln.dataset.grund === undefined)
+            titeln.dataset.grund = titeln.title;
+        const grund = titeln.dataset.titleEn !== undefined
+            ? t(titeln.dataset.titleSv ?? titeln.title, titeln.dataset.titleEn) : titeln.dataset.grund;
+        titeln.title = skal ? grund + ' (' + t(...skal) + ')' : grund;
+    }
+}
+
+/* ?-parametrar som krockar: det som står senare i VAL slås av (rutan ur,
+ * kretsen ingen). Det som ett läge dimmar ligger kvar. Ger texten om
+ * det som slogs av eller inte gäller, [sv, en], eller null. */
+function regler_los() {
+    const tagna = {};                        /* resurs -> valet som har den */
+    const sv = [], en = [];
+    for (const val of VAL) {
+        if (!valt_pa(val.id))
+            continue;
+        const lage = lagets_hinder(val.id);
+        const namn = val.namn ?? [val.id, val.id];
+        let skal = null;
+        if (lage) {
+            sv.push(namn[0] + ' gäller inte (' + lage[0] + ')');
+            en.push(namn[1] + ' does not apply (' + lage[1] + ')');
+            continue;
+        }
+        if (val.kraver && !valt_pa(val.kraver))
+            skal = ['bara med ' + valet(val.kraver).namn[0], 'only with ' + valet(val.kraver).namn[1]];
+        for (const r of val.tar ?? [])
+            if (!skal && tagna[r])
+                skal = ['inte med ' + tagna[r].namn[0], 'not with ' + tagna[r].namn[1]];
+        if (skal) {
+            const [ruta, varde] = val.id.split(':');
+            if (varde)
+                $(ruta).value = '';
+            else
+                $(ruta).checked = false;
+            sv.push(namn[0] + ' är av (' + skal[0] + ')');
+            en.push(namn[1] + ' is off (' + skal[1] + ')');
+            continue;
+        }
+        for (const r of val.tar ?? [])
+            tagna[r] = val;
+    }
+    const mening = d => d[0].toUpperCase() + d.slice(1) + '.';
+    return sv.length ? [mening(sv.join('; ')), mening(en.join('; '))] : null;
 }
 
 /* Bytes in i WebAssemblys minne (extra nollor efter); pekaren. */
@@ -1421,8 +1608,9 @@ function ar_cpm(d) {
  * Med CP/M är disketten A: (utan den systemskivan), b B: (utan den
  * skivan med BBC BASIC) och d D: (utan den skivan med Zork I), och
  * ABC-DOS sitter inte i. Med BASIC II (b2_valt) är RAM:et 32 KB, som i
- * Ekmans 64K med karta 1, tolkens egen DOS läser FD2 som MO0:, och
- * kretsarna, CMOS-minnet och TKN80 sitter inte i. ROM:en bygger på
+ * Ekmans 64K med karta 1 och tolkens egen DOS läser FD2 som MO0:. Det
+ * som ett läge dimmar (VAL: kretsarna och CMOS-minnet med BASIC II och
+ * CP/M, TKN80 med BASIC II) sitter inte i. ROM:en bygger på
  * Ekmans lappar (band 2, avs:abc800:ekman), men vem som gjorde den vet
  * vi inte; därför heter valet BASIC II (64K), inte efter Ekman. */
 function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
@@ -1475,7 +1663,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
         skiva_d_minne = lagg_i_minnet(skiva_d, 256);
         e.skiva(44, 0, skiva_d_minne, skiva_d.length, 0);
     }
-    const val = b2 ? '' : $('krets')?.value;
+    const val = lagets_hinder('krets') ? '' : $('krets')?.value;
     const ex = EXEMPEL[val];
     if (ex) {
         for (const namn of ex.filer) {
@@ -1508,12 +1696,12 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
             $('cmos').checked = true;
     }
     cmos_pekare = 0;
-    if ($('cmos').checked && !b2) {
+    if (i_bruk('cmos')) {
         const p = lagg_i_minnet(cmos);
         cmos_pekare = e.cmos(CMOS_ADRESS, p, CMOS_STORLEK);
         e.slapp(p);
     }
-    if ($('tkn80').checked && !b2) {
+    if (i_bruk('tkn80')) {
         const p = lagg_i_minnet(ROM.tkn80);
         e.tkn80(p, ROM.tkn80.length);
         e.slapp(p);
@@ -1834,14 +2022,14 @@ function papper_visa(visa) {
  * sin drivrutin eller Centronicskortet med 9704, båda på kort 60. Den
  * som kopplas ur först, så att den andras drivrutin får ligga kvar. */
 /* Med BASIC II skriver PR: i ROM:en till kort 60, så 9704 behövs inte,
- * och P40 kopplas inte in. */
+ * och P40 kopplas inte in; med CP/M ingen av dem (i_bruk, VAL). */
 function skrivaren_koppla() {
     const b2 = b2_valt();
     for (const namn of ['p40', 'centronics'])
-        if (!$(namn).checked || (b2 && namn === 'p40'))
+        if (!i_bruk(namn))
             e[namn](0);
     for (const [namn, rom] of [['p40', ROM.p40], ['centronics', ROM.pr9704]])
-        if ($(namn).checked && !(b2 && namn === 'p40')) {
+        if (i_bruk(namn)) {
             if (!b2) {
                 const p = lagg_i_minnet(rom);
                 e.krets(0x7800, p, rom.length);
@@ -1849,7 +2037,7 @@ function skrivaren_koppla() {
             }
             e[namn](1);
         }
-    if ($('centronics').checked)
+    if (i_bruk('centronics'))
         text_starta();
 }
 
@@ -3363,6 +3551,7 @@ $('genesis_skiva')?.addEventListener('click', () => {
     const med_zork = fraga.get('zork') === 'pa' && $('cpm');
     if ((fraga.get('cpm') === 'pa' || med_zork) && $('cpm'))
         $('cpm').checked = true;
+    const krockar = regler_los();            /* det som inte går ihop */
     visa_ljudet();
     starta(null, null, null);
     visa_lagen(true);
@@ -3381,6 +3570,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
     } else if (!fraga.get('s') && !med_system)
         kom_igang();
     v24_text = fraga.get('s');
+    if (krockar)
+        meddela(...krockar);
     skarm.focus();
     requestAnimationFrame(varv);
 })();
