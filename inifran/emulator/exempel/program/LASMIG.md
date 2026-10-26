@@ -28,14 +28,17 @@ band…* eller att dra till sidan.
   originalet.
 - `AIRFIGHT`: spelet för två av Kristian Lidberg och Set Lonnert 1981,
   i den Z80-version som finns under `emulatorer/pico/04/` i samma
-  förråd. `airfight.asm` är den källan, flyttad till $E000 så att den
-  ryms i 16 KB, och med tangenterna lästa som på maskinen: bit 7 i port
-  56 är nere-signalen, och koden ligger kvar när tangenten släpps
-  (Pico-emulatorn gav 0, och då stannade spelet vid REDO!). `text/AIRFIGHT.BAS` är en laddare
-  med koden i DATA-rader, som lägger den på $E000 och startar den med
-  `CALL(57344)`. Laddningen tar en halv minut, och spelet går inte
-  tillbaka till BASIC (RESET). Svaren på J/N, namnen och spelläget (P
-  eller T) avslutas med RETURN. Spelare 1 har A och D (svänger) och X
+  förråd. `airfight.asm` är den källan, med tangenterna lästa som på
+  maskinen: bit 7 i port 56 är nere-signalen, och koden ligger kvar när
+  tangenten släpps (Pico-emulatorn gav 0, och då stannade spelet vid
+  REDO!). Det som beror på ROM:en står i en maskinfil som gor.sh lägger
+  efter källan: `airfight_abc80.asm` lägger spelet på $E000, så att det
+  ryms i 16 KB, och `airfight_b2.asm` på $9000 för BASIC II (se nedan).
+  `text/AIRFIGHT.BAS` är en laddare med koden i DATA-rader, som lägger
+  den på $E000 och startar den med `CALL(57344)`. Laddningen tar en halv
+  minut, och Ctrl-C går tillbaka till BASIC. Svaren på J/N, namnen och
+  spelläget (P eller T) avslutas med RETURN. Spelare 1 har A och D
+  (svänger) och X
   (skjuter), spelare 2 J, L och M.
 
 ## Från kassetten
@@ -76,20 +79,27 @@ styrs med A, S, W och Z). `CHIP8Z` och `SNAKE3Z` är samma två spel i
 Z80-kod, med laddare som `AIRFIGHT`: koden läggs på $9000 och startas
 med `CALL(36864)`. Laddningen tar tio sekunder, och spelen går mycket
 fortare än BASIC-versionerna. Ctrl-C går tillbaka till BASIC, och
-`SNAKE3Z` skriver poängen. gor.sh sparar alla sju på
+`SNAKE3Z` skriver poängen. `AIRFIGHT` är samma källa som för ABC80,
+assemblerad med `airfight_b2.asm`: koden på $9000 och variablerna på
+$9F00 (BASIC II har laddaren högst upp, där $E000 ligger), klockan
+$FFF5 i stället för $FDF0 och BREAK genom `BRKPTR`. Laddningen tar en
+halv minut. gor.sh sparar alla åtta på
 `diskett/program_b2.dsk`, som webbsidan har som exempeldiskett när
-BASIC II är vald. Skriv `RUN MO0:CHIP8Z` och så vidare. I terminalen:
+BASIC II är vald. Skriv `RUN MO0:CHIP8Z`, `RUN MO0:AIRFIGHT` och så vidare. I terminalen:
 
     ./abc80 -r roms/basicii80.rom -m 32 \
         -D exempel/program/diskett/program_b2.dsk@45 -DS -k 'RUN MO0:SNAKE3Z\r'
 
 ## Övriga filer
 
-- `airfight.asm`: källan till AIRFIGHT.
-- `airfight.bin`: den assemblerade koden (3 522 bytes).
+- `airfight.asm`: källan till AIRFIGHT, och maskinfilerna
+  `airfight_abc80.asm` och `airfight_b2.asm` (adresserna, klockan och
+  BREAK).
+- `airfight.bin` och `airfight_b2.bin`: den assemblerade koden för
+  ABC80 (3 584 bytes) och BASIC II (3 589 bytes).
 - `chip8.asm`, `snake3.asm`: källorna till CHIP8Z och SNAKE3Z, och
   `chip8.bin` (1 891 bytes) och `snake3.bin` (725 bytes).
 - `gor.sh`: gör om banden, disketterna och laddarna `text/AIRFIGHT.BAS`,
-  `text_b2/CHIP8Z.BAS` och `text_b2/SNAKE3Z.BAS` ur `text/`, `text_b2/`
+  `text_b2/AIRFIGHT.BAS`, `text_b2/CHIP8Z.BAS` och `text_b2/SNAKE3Z.BAS` ur `text/`, `text_b2/`
   och källorna (z80asm från `verktyg/` i det publika
   förrådet, och `../../abc80` måste vara byggd).

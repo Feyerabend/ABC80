@@ -2,7 +2,8 @@
 # Gör exempelprogrammen färdiga för band och diskett, till ABC80 inifrån.
 #
 #   1. airfight.asm assembleras med z80asm (verktyg/ i det publika
-#      förrådet, se INIFRAN i ../../prov.sh) till airfight.bin.
+#      förrådet, se INIFRAN i ../../prov.sh), med maskinfilen
+#      airfight_abc80.asm efter sig, till airfight.bin.
 #   2. airfight.bin blir laddaren text/AIRFIGHT.BAS: koden står i DATA-rader,
 #      fyra tecken för tre bytes (ASC(c)-48, sex bitar var, räknat med heltal
 #      om högst åtta bitar; flyttalen är inte exakta upp till 2^24), och sist en
@@ -17,7 +18,8 @@
 #      diskett/program_b2.dsk, för ?rom=b2 på webbsidan: samma tomma skiva
 #      och programmen i text_b2/, som är skrivna om för ABC 800-tolken
 #      (inget SET DOT, IF sist på raden, korta namn utan EXTEND), sparade
-#      med SAVE MO0:. Har skivor/hamta.py hämtat ABC 800:s CMDINT.SYS och
+#      med SAVE MO0:. AIRFIGHT, CHIP8Z och SNAKE3Z är Z80-kod på $9000;
+#      AIRFIGHT är samma källa med airfight_b2.asm efter sig. Har skivor/hamta.py hämtat ABC 800:s CMDINT.SYS och
 #      LIB.ABS till skivor/abc800/ läggs de också på skivan (skrivare.py),
 #      så att BYE når DOS:en och $BAS går tillbaka. Skivan har Luxors filer
 #      och ligger inte i förrådet.
@@ -35,7 +37,7 @@ ROM=../../roms/abc80new.rom
 DOS=../../roms/abcdos80.rom
 PROGRAM="GISSA KURVA MUSIK AIRFIGHT"
 B2ROM=../../roms/basicii80.rom
-PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z"
+PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z AIRFIGHT"
 ABC800=../../skivor/abc800
 
 # laddare BIN ADRESS NAMN REM SLUT [b2]: laddaren för BIN på stdout. REM är
@@ -85,10 +87,20 @@ print('%d DATA ".",%d' % (rad, sum(kod)))
 EOF
 }
 
-"$Z80ASM" -o airfight.bin airfight.asm || exit 1
+# AIRFIGHT: samma källa för båda ROM:arna, med maskinfilen (KOD, VAR_BASE,
+# klockan och BREAK) efter sig.
+kalla=$(mktemp)
+cat airfight.asm airfight_abc80.asm > $kalla
+"$Z80ASM" -o airfight.bin $kalla || exit 1
+cat airfight.asm airfight_b2.asm > $kalla
+"$Z80ASM" -o airfight_b2.bin $kalla || exit 1
+rm -f $kalla
 laddare airfight.bin 57344 AIRFIGHT \
-  "AIRFIGHT, KRISTIAN LIDBERG OCH SET LONNERT 1981|SPELET I Z80-KOD (AIRFIGHT.ASM) LÄGGS PÅ \$E000 OCH STARTAS" \
-  "" > text/AIRFIGHT.BAS || exit 1
+  "AIRFIGHT, KRISTIAN LIDBERG OCH SET LONNERT 1981|SPELET I Z80-KOD (AIRFIGHT.ASM) LÄGGS PÅ \$E000 OCH STARTAS, CTRL-C AVBRYTER" \
+  'PRINT CHR$(12);' > text/AIRFIGHT.BAS || exit 1
+laddare airfight_b2.bin 36864 AIRFIGHT \
+  "AIRFIGHT, KRISTIAN LIDBERG OCH SET LONNERT 1981|SPELET I Z80-KOD (AIRFIGHT.ASM) LÄGGS PÅ \$9000 OCH STARTAS, CTRL-C AVBRYTER" \
+  'PRINT CHR$(12);' b2 > text_b2/AIRFIGHT.BAS || exit 1
 
 # CHIP8 och SNAKE3 i text_b2/ också i Z80-kod på $9000, för BASIC II:
 # laddarna CHIP8Z och SNAKE3Z.

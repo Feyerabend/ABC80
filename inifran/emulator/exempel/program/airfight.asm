@@ -1,17 +1,21 @@
-; airfight.asm -- AIRFIGHT på $E000, ett exempel till ABC80 inifrån
+; airfight.asm -- AIRFIGHT för ABC80 och för BASIC II, ett exempel till
+; ABC80 inifrån
 ;
 ; Kopia av emulatorer/pico/04/src/airfight.asm i
-; <https://github.com/Feyerabend/ABC80>, med tre ändringar. ORG 0E000H i
-; stället för 8000H och VAR_BASE 0EF00H i
-; stället för 08F00H: då ryms spelet i en ABC80 med 16 KB, ovanför
-; BASIC-programmet och under stacken (STKTOP $FB00). Och tangenterna läses
-; som på maskinen: i port 56 är bit 7 strobesignalen och bit 0-6 behåller
-; koden när tangenten släpps (band 1, kapitlet om hårdvaran), så INKEY
-; väntar på att bit 7 går ned och upp, och DLYLOOP fångar en tangent som
-; är nere i KEY_LATCH, så att ett kort tryck mellan två bilder inte går
-; förlorat. Pico-emulatorn gav 0 när ingen tangent var nere. gor.sh assemblerar
-; den med z80asm och gör laddaren AIRFIGHT.BAS; spelet startar med
-; CALL(57344) och går aldrig tillbaka till BASIC.
+; <https://github.com/Feyerabend/ABC80>, med fyra ändringar. Det som beror
+; på ROM:en står inte här utan i en maskinfil som gor.sh lägger efter
+; källan: airfight_abc80.asm (koden på $E000, variablerna på $EF00) ger
+; airfight.bin och text/AIRFIGHT.BAS, airfight_b2.asm (koden på $9000,
+; variablerna på $9F00) ger airfight_b2.bin och text_b2/AIRFIGHT.BAS.
+; Maskinfilen ger KOD, VAR_BASE, CLKLO (klockans låga byte) och NOLLBRK
+; (nollar BREAK och tangentflaggan). Tangenterna läses som på maskinen:
+; i port 56 är bit 7 strobesignalen och bit 0-6 behåller koden när
+; tangenten släpps (band 1, kapitlet om hårdvaran), så INKEY väntar på
+; att bit 7 går ned och upp, och DLYLOOP fångar en tangent som är nere i
+; KEY_LATCH, så att ett kort tryck mellan två bilder inte går förlorat.
+; Pico-emulatorn gav 0 när ingen tangent var nere. Och CTRL-C (BRYT) går
+; tillbaka till BASIC: SP blir den som CALL kom med, och NOLLBRK tar bort
+; BREAK så att BASIC inte stannar eller tappar nästa tecken.
 ;
 ; AIRFIGHT for ABC80 -- Z80 assembly
 ; Original BASIC: Kristian Lidberg & Set Lonnert, 1981
@@ -36,11 +40,10 @@ PORT_KB     EQU 038H    ; Keyboard port -- IN A,(38H)
                         ; a Z80 interrupt (vector 34H) on each 20ms
                         ; strobe; keyboard is only valid just after
                         ; the strobe.
-CLKLO       EQU 0FDF0H  ; System RAM: low byte of 50Hz tick counter.
-                        ; Incremented by the ABC80 firmware ISR on
-                        ; every 20ms strobe interrupt.  Bytes at
-                        ; FDF1H/FDF2H are mid/high bytes.  DLYLOOP
-                        ; watches only the low byte (wraps ~5s).
+                        ; CLKLO, the low byte of the 50Hz tick counter,
+                        ; comes from the machine file (ABC80 or BASIC II).
+                        ; DLYLOOP watches only the low byte.
+BRYT        EQU 083H    ; CTRL-C with the strobe bit: back to BASIC
 
 
 ; SOUND VALUES  (SN76477 register bytes)
@@ -107,13 +110,13 @@ INT_SCALE   EQU 62      ; PLY_TUNE: integer FOR-NEXT speed (FOR J%=1% TO A1%: NE
                         ; Raise INT_SCALE if pitch sounds too high; lower if too low.
 
 
-; VARIABLE BLOCK  (256 bytes at 8F00H, above game code)
+; VARIABLE BLOCK  (256 bytes at VAR_BASE, above game code; VAR_BASE
+; comes from the machine file)
 ;
 ; All mutable game state lives here so it is easy to zero-init and
 ; so that addresses are known at assemble time.
 ; Arrays of 4 bytes serve both players (index 0=P1, index 1=P2)
 ; and both bullets (index 0=B1, index 1=B2).
-VAR_BASE    EQU 0EF00H
 
 CUR_ROW     EQU VAR_BASE+0   ; Current cursor row  (used by PRTCHR)
 CUR_COL     EQU VAR_BASE+1   ; Current cursor col  (used by PRTCHR)
@@ -149,8 +152,9 @@ NAME_P2     EQU VAR_BASE+96  ; Player 2 name string (32 bytes, null-term)
 INBUF       EQU VAR_BASE+128 ; General input line buffer (16 bytes)
 P_TDELAY    EQU VAR_BASE+144 ; Turn cooldown per player [0..1], stride 2 (same as P_DIR)
 KEY_LATCH   EQU VAR_BASE+148 ; Last key seen held during DLYLOOP (bit7 set), 0 = none
+SPSPAR      EQU VAR_BASE+150 ; SP from BASIC's CALL, for CTRL-C (2 bytes)
 
-        ORG 0E000H
+        ORG KOD          ; from the machine file
 
 
 ; Intro screen: border, logo, ask-played
@@ -159,6 +163,7 @@ KEY_LATCH   EQU VAR_BASE+148 ; Last key seen held during DLYLOOP (bit7 set), 0 =
 ; to restart without going back to the monitor.
 ;
 START:
+        LD (SPSPAR), SP  ; AVSLUT returns to BASIC with this SP
 COLD_START:
         DI               ; disable interrupts for clean startup
         CALL CLRSCR      ; blank all 24 rows
@@ -1780,11 +1785,12 @@ SNDOFF:
 ; In:  HL = number of 20ms ticks to wait  (HL=50 -> 1 second)
 ; Out: HL = 0
 ; Clobbers: A, B, D, E
-; Uses CLKLO (0xFDF0), the low byte of the ABC80 50Hz counter.
-; The counter is incremented by the firmware ISR on every strobe.
+; Uses CLKLO, the low byte of the 50Hz counter (machine file).  The
+; counter is incremented by the NMI 50 times a second, also with DI.
 ; Each iteration of the outer loop (DLYO) waits for the low byte to
 ; change from its current value, which takes exactly one 20ms tick.
-; 
+; CTRL-C held goes to AVSLUT.
+;
 DLYLOOP:
         LD DE, CLKLO     ; DE = address of clock low byte
 DLYO:
@@ -1794,6 +1800,8 @@ DLYI:
         IN A, (PORT_KB)  ; a key held now? keep it for KEY_POLL
         OR A
         JP P, DLYNK      ; bit7 clear: no key held
+        CP BRYT
+        JP Z, AVSLUT     ; CTRL-C: back to BASIC
         LD (KEY_LATCH), A
 DLYNK:
         LD A, (DE)       ; re-read clock
@@ -1882,7 +1890,28 @@ INKEY_W:
         IN A, (PORT_KB)
         OR A
         JP P, INKEY_W    ; bit7 clear: no key yet -- keep polling
+        CP BRYT
+        JP Z, AVSLUT     ; CTRL-C: back to BASIC
         AND 07FH         ; strip bit7 (strobe, not part of ASCII)
+        RET
+
+
+; AVSLUT  -- CTRL-C: sound off, back to BASIC after CALL
+; SP is the one START saved, so RET goes to BASIC from any depth.
+; The PIO keeps the key interrupt for CTRL-C waiting while interrupts
+; are off; it comes after the CALL that follows EI and sets BREAK.
+; NOLLBRK (machine file) then clears BREAK and the key flag, so BASIC
+; neither stops nor loses its next character.  The sound goes off
+; last, since ABC80's key interrupt writes to the sound port.
+; Out: HL = 0, the value of CALL
+;
+AVSLUT:
+        LD SP, (SPSPAR)
+        EI
+        CALL NOLLBRK     ; the waiting key interrupt comes first
+        XOR A
+        OUT (PORT_SND), A
+        LD HL, 0
         RET
 
 

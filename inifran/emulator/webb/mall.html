@@ -497,7 +497,7 @@
       <div class="knappar">
         <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva" data-title-en="A disk for ABC-DOS (FD2, 160 KB); with CP/M a disk in B:, or in A: if it is a system disk" data-en="Insert disk…">Lägg i diskett…</button>
 <!-- PROGRAM -->
-        <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS (med BASIC II: GISSA, KURVA, MUSIK, CHIP8 och SNAKE3)" data-title-en="GISSA, KURVA, MUSIK and AIRFIGHT on a disk with ABC-DOS (with BASIC II: GISSA, KURVA, MUSIK, CHIP8 and SNAKE3)" data-en="Example disk">Exempeldisketten</button>
+        <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS (med BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z och AIRFIGHT)" data-title-en="GISSA, KURVA, MUSIK and AIRFIGHT on a disk with ABC-DOS (with BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z and AIRFIGHT)" data-en="Example disk">Exempeldisketten</button>
 <!-- /PROGRAM -->
 <!-- SYSTEM -->
         <button id="systemskiva" title="Luxors systemskiva ver. 1.0 med ABC-DOS: LIB, COPY, DOSGEN …" data-title-en="Luxor's system disk ver. 1.0 with ABC-DOS: LIB, COPY, DOSGEN …" data-en="System disk">Systemskivan</button>
@@ -553,7 +553,7 @@
         D, G … som de svarta, med Caps Lock eftersom programmet väntar sig
         versaler) eller <code>RUN DR0:AIRFIGHT</code> (spelet från 1981 i
         Z80-kod, för två: A, D och X mot J, L och M; laddaren tar en halv
-        minut). Samma fyra program finns också som band, ett per program, i
+        minut, och <kbd>Ctrl</kbd>+<kbd>C</kbd> går tillbaka till BASIC). Samma fyra program finns också som band, ett per program, i
         <code>exempel/program/kassett/</code>, och som text i
         <code>exempel/program/text/</code> (<i>Skriv in…</i> och
         <code>RUN</code>).</p>
@@ -564,7 +564,7 @@
         with S, D, G … as the black keys, with Caps Lock since the program
         expects capitals) or <code>RUN DR0:AIRFIGHT</code> (the 1981 game in
         Z80 code, for two: A, D and X against J, L and M; the loader takes
-        half a minute). The same four programs are also on tape, one per
+        half a minute, and <kbd>Ctrl</kbd>+<kbd>C</kbd> returns to BASIC). The same four programs are also on tape, one per
         program, in <code>exempel/program/kassett/</code>, and as text in
         <code>exempel/program/text/</code> (<i>Type in…</i> and
         <code>RUN</code>).</p>
@@ -575,7 +575,9 @@
         för BASIC II, <code>CHIP8</code> (en CHIP-8-tolk i BASIC med Mini
         Lights Out av tobiasvl, CC0, ur John Earnests CHIP-8 Archive; håll en
         tangent tills den tas) och <code>SNAKE3</code> (orm med A, S, W och
-        Z). Disketten har ABC 800:s <code>CMDINT.SYS</code> och
+        Z), och i Z80-kod <code>CHIP8Z</code>, <code>SNAKE3Z</code> och
+        <code>AIRFIGHT</code>, som laddas på $9000 och går tillbaka till
+        BASIC med <kbd>Ctrl</kbd>+<kbd>C</kbd>. Disketten har ABC 800:s <code>CMDINT.SYS</code> och
         <code>LIB.ABS</code>, så <code>BYE</code> ger DOS:en och
         <code>LIB</code> visar filerna. Texterna står i
         <code>exempel/program/text_b2/</code>. <kbd>Ctrl</kbd>+<kbd>C</kbd>
@@ -586,7 +588,9 @@
         for BASIC II, <code>CHIP8</code> (a CHIP-8 interpreter in BASIC with
         Mini Lights Out by tobiasvl, CC0, from John Earnest's CHIP-8 Archive;
         hold a key until it is taken) and <code>SNAKE3</code> (a snake with
-        A, S, W and Z). The disk has the ABC 800's <code>CMDINT.SYS</code>
+        A, S, W and Z), and in Z80 code <code>CHIP8Z</code>,
+        <code>SNAKE3Z</code> and <code>AIRFIGHT</code>, which load at $9000
+        and return to BASIC with <kbd>Ctrl</kbd>+<kbd>C</kbd>. The disk has the ABC 800's <code>CMDINT.SYS</code>
         and <code>LIB.ABS</code>, so <code>BYE</code> gives the DOS and
         <code>LIB</code> lists the files. The texts are in
         <code>exempel/program/text_b2/</code>. <kbd>Ctrl</kbd>+<kbd>C</kbd>

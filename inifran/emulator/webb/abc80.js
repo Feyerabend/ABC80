@@ -2061,9 +2061,9 @@ $('exempel')?.addEventListener('click', () => {
     exempel_undan[skivans_namn] = null;
     starta(exempel_skivan(b2));
     if (b2)
-        meddela('Exempeldisketten för BASIC II: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out) eller SNAKE3. ' +
+        meddela('Exempeldisketten för BASIC II: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z eller AIRFIGHT. ' +
                 'BYE ger DOS:en (LIB), $BAS går tillbaka. Ctrl-C två gånger stoppar.',
-                'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out) or SNAKE3. ' +
+                'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z or AIRFIGHT. ' +
                 'BYE gives the DOS (LIB), $BAS returns. Ctrl-C twice stops.');
     else
         meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.',
