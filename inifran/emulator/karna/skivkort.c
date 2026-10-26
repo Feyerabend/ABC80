@@ -72,8 +72,13 @@ static void secio_utfor(Skivkort *s)
 
 static uint8_t secio_in(Skivkort *s, int port)
 {
-    if (port == 1)
-        return s->lage == 1 || s->lage == 2 ? 0x01 : 0x81;
+    if (port == 1)                           /* bitarna som på FD2 */
+        switch (s->lage) {
+        case 1:  return 0x3B;                /* data ut */
+        case 2:  return 0x7B;                /* data in */
+        case 3:  return (uint8_t)(0xB7 | (s->status == 0 ? 8 : 0));
+        default: return 0xBD;                /* tar emot kommandot */
+        }
     if (s->lage == 1) {                      /* data ut */
         uint8_t v = s->buffert[s->antal++];
         if (s->antal == 256) {
@@ -245,7 +250,10 @@ static void fd2_ut(Skivkort *s, int port, uint8_t varde)
 static void valj(void *data, int nummer)
 {
     Skivkort *s = data;
-    if (nummer != FD2) {                     /* FD2 behåller sitt läge */
+    /* Ett nytt kort börjar om; samma kort igen behåller sitt läge
+       (CP/M väljer kortet före varje läsning av IN 1), och FD2
+       behåller alltid sitt. */
+    if (nummer != FD2 && nummer != s->valt) {
         s->lage = 0;
         s->antal = 0;
     }
