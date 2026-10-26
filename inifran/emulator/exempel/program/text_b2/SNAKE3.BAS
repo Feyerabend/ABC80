@@ -37,11 +37,19 @@ EXTEND
 1300   R1=R(Tail-1) : C1=C(Tail-1)
 1310   Score=0
 1320   T=FNGinit
+1322   ! wait for a key, so that there is time to get ready
+1323   ; CUR(10,10);CHR$(135) 'PRESS ANY KEY' CHR$(151);
+1324   POKE -30,0
+1325   IF (PEEK(-30) AND 128)=0 THEN 1325
+1326   POKE -30,0
+1327   ; CUR(10,10);SPACE$(15);
 1330   RETURN 0
 1340 FNEND
-1350 ! keys: a left, s right, w up, z down, held down
+1350 ! keys: a left, s right, w up, z down. The key interrupt
+1352 ! puts each key in LASTKY (-29) and sets bit 7 of KEYFLG
+1354 ! (-30); INP(56) has bit 7 only while the key is down.
 1360 DEF FNGkey LOCAL K,Cu
-1370   K=INP(56) : IF K<128 THEN K=0 ELSE K=(K AND 127) OR 32
+1370   K=0 : IF PEEK(-30) AND 128 THEN K=(PEEK(-29) AND 127) OR 32 : POKE -30,0
 1380   IF 97=K AND Cu1<>3 THEN Cu=1
 1390   IF 115=K AND Cu1<>1 THEN Cu=3
 1400   IF 122=K AND Cu1<>4 THEN Cu=2

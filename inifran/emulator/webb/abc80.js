@@ -489,9 +489,28 @@ skarm.addEventListener('keydown', (h) => {
     if (!kod)
         return;
     h.preventDefault();
+    if (h.repeat)
+        return;                              /* bit 7 är redan satt */
     vack_ljudet();
-    e.tangent(kod);
+    nere_kod = h.code;
+    e.tangent_ned(kod);
 });
+
+/* Bit 7 i port $38 är satt medan tangenten hålls nere, som på maskinen
+ * (program som läser INP(56) ser den då, och BASIC II upprepar själv).
+ * Webbläsarens upprepning läggs inte i kön. */
+let nere_kod = null;
+function slapp_tangenten() {
+    if (nere_kod !== null) {
+        nere_kod = null;
+        e.tangent_upp();
+    }
+}
+skarm.addEventListener('keyup', (h) => {
+    if (h.code === nere_kod)
+        slapp_tangenten();
+});
+skarm.addEventListener('blur', slapp_tangenten);
 
 /* Ett klick i ramen runt bilden gäller också skärmen. */
 $('ram')?.addEventListener('mousedown', (h) => {

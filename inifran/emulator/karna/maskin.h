@@ -147,6 +147,11 @@ struct Maskin {
     int tangent_nere;                        /* tangenten ur kön är nere */
     long long ko_nasta;                      /* när kön går vidare */
     long tryck_ms, slapp_ms;                 /* hur länge nere och släppt */
+    /* En tangent som hålls nere utanför kön (maskin_tangent_ned och
+     * maskin_tangent_upp): 1 nere, 2 släppt men nere till fysisk_upp. */
+    int fysisk;
+    long long fysisk_upp;
+    long long fysisk_ned;                    /* när den trycktes ned */
 
     /* V24 in: tecknen som tas emot, 8 bitar, ingen paritet, en stoppbit. */
     uint8_t v24[V24_STORLEK];
@@ -215,6 +220,13 @@ void tangentko_lagg(Maskin *m, uint8_t kod);
 void tangentko_paus(Maskin *m, long ms);
 void tangentko_hall(Maskin *m, long ms);
 int  tangentko_tom(const Maskin *m);
+
+/* En tangent som trycks ned och släpps som på maskinen: bit 7 i port $38
+ * är satt från maskin_tangent_ned till maskin_tangent_upp, minst tryck_ms.
+ * Är kön inte tom, eller kommer tangenten inom tryck_ms + slapp_ms från
+ * den förra, läggs den i kön i stället. */
+void maskin_tangent_ned(Maskin *m, uint8_t kod);
+void maskin_tangent_upp(Maskin *m);
 
 /* V24 in: lägg till tecken; mottagningen börjar vid tiden start. */
 void v24_lagg(Maskin *m, uint8_t tecken);

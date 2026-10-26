@@ -67,10 +67,29 @@ sidan) och skriv `RUN`. I terminalen:
 
     ./abc80 -r roms/abc80new.rom -f exempel/program/text/KURVA.BAS -k 'RUN\r'
 
+## För BASIC II
+
+`text_b2/` har programmen skrivna om för BASIC II (ABC 800-tolken, se
+?rom=b2 på webbsidan): `GISSA`, `KURVA`, `MUSIK`, `CHIP8` (en CHIP-8-tolk
+med spelet Mini Lights Out av tobiasvl, CC0) och `SNAKE3` (en orm som
+styrs med A, S, W och Z). `CHIP8Z` och `SNAKE3Z` är samma två spel i
+Z80-kod, med laddare som `AIRFIGHT`: koden läggs på $9000 och startas
+med `CALL(36864)`. Laddningen tar tio sekunder, och spelen går mycket
+fortare än BASIC-versionerna. Ctrl-C går tillbaka till BASIC, och
+`SNAKE3Z` skriver poängen. gor.sh sparar alla sju på
+`diskett/program_b2.dsk`, som webbsidan har som exempeldiskett när
+BASIC II är vald. Skriv `RUN MO0:CHIP8Z` och så vidare. I terminalen:
+
+    ./abc80 -r roms/basicii80.rom -m 32 \
+        -D exempel/program/diskett/program_b2.dsk@45 -DS -k 'RUN MO0:SNAKE3Z\r'
+
 ## Övriga filer
 
 - `airfight.asm`: källan till AIRFIGHT.
 - `airfight.bin`: den assemblerade koden (3 522 bytes).
-- `gor.sh`: gör om banden, disketten och `text/AIRFIGHT.BAS` ur
-  `text/` och `airfight.asm` (z80asm från `verktyg/` i det publika
+- `chip8.asm`, `snake3.asm`: källorna till CHIP8Z och SNAKE3Z, och
+  `chip8.bin` (1 891 bytes) och `snake3.bin` (725 bytes).
+- `gor.sh`: gör om banden, disketterna och laddarna `text/AIRFIGHT.BAS`,
+  `text_b2/CHIP8Z.BAS` och `text_b2/SNAKE3Z.BAS` ur `text/`, `text_b2/`
+  och källorna (z80asm från `verktyg/` i det publika
   förrådet, och `../../abc80` måste vara byggd).

@@ -314,9 +314,50 @@ static void tangentko_steg(Maskin *m)
     }
     m->tangent = (uint8_t)(post | 0x80);
     m->tangent_nere = 1;
+    m->fysisk = 0;                           /* kön tar över */
     if (m->pio_a.lage == 3 && m->pio_a.avbrott && !pio_a_slapp(&m->pio_a))
         m->pio_a.vantar = 1;
     m->ko_nasta += MASKIN_MS(nere);
+}
+
+static void fysisk_slapp(Maskin *m)
+{
+    m->fysisk = 0;
+    if (m->tangent_nere)
+        return;                              /* kön har tagit över */
+    m->tangent &= 0x7F;
+    if (m->pio_a.lage == 3 && m->pio_a.avbrott && pio_a_slapp(&m->pio_a))
+        m->pio_a.vantar = 1;
+}
+
+/* En tangent som kommer inom ett tangentvarv (tryck_ms + slapp_ms) från
+ * den förra går genom kön, så att tolken hinner läsa LASTKY. */
+void maskin_tangent_ned(Maskin *m, uint8_t kod)
+{
+    long long varv = m->fysisk_ned + MASKIN_MS(m->tryck_ms + m->slapp_ms);
+    if (!tangentko_tom(m) || (m->fysisk && m->tid < varv)) {
+        int tom = m->ko_forst == m->ko_sist && !m->tangent_nere;
+        tangentko_lagg(m, kod);
+        if (tom && m->fysisk && m->ko_nasta < varv)
+            m->ko_nasta = varv;
+        return;
+    }
+    m->tangent = (uint8_t)(kod | 0x80);
+    m->fysisk = 1;
+    m->fysisk_ned = m->tid;
+    m->fysisk_upp = m->tid + MASKIN_MS(m->tryck_ms);
+    if (m->pio_a.lage == 3 && m->pio_a.avbrott && !pio_a_slapp(&m->pio_a))
+        m->pio_a.vantar = 1;
+}
+
+void maskin_tangent_upp(Maskin *m)
+{
+    if (m->fysisk != 1)
+        return;
+    if (m->tid >= m->fysisk_upp)
+        fysisk_slapp(m);
+    else
+        m->fysisk = 2;                       /* släpps efter tryck_ms */
 }
 
 /* ---------------------------------------------------------------- */
@@ -453,6 +494,8 @@ static void ga_fram(Maskin *m, int t)
     }
     if (m->tid >= m->ko_nasta)
         tangentko_steg(m);
+    if (m->fysisk == 2 && m->tid >= m->fysisk_upp)
+        fysisk_slapp(m);
     if (m->kassett && kassett_fram(m->kassett, m->tid))
         pio_b_flank(m);
 }

@@ -189,6 +189,8 @@ EXPORT(ljudprov) int16_t *ljudprov(void) { return proven; }
 /* Tangenterna                                                       */
 
 EXPORT(tangent) void tangent(int kod) { tangentko_lagg(&maskin, (uint8_t)kod); }
+EXPORT(tangent_ned) void tangent_ned_w(int kod) { maskin_tangent_ned(&maskin, (uint8_t)kod); }
+EXPORT(tangent_upp) void tangent_upp_w(void) { maskin_tangent_upp(&maskin); }
 EXPORT(paus) void paus(long ms) { tangentko_paus(&maskin, ms); }
 EXPORT(tangenter_klara) int tangenter_klara(void) { return tangentko_tom(&maskin); }
 

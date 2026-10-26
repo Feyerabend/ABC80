@@ -35,20 +35,24 @@ ROM=../../roms/abc80new.rom
 DOS=../../roms/abcdos80.rom
 PROGRAM="GISSA KURVA MUSIK AIRFIGHT"
 B2ROM=../../roms/basicii80.rom
-PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3"
+PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z"
 ABC800=../../skivor/abc800
 
-"$Z80ASM" -o airfight.bin airfight.asm || exit 1
-
-python3 - airfight.bin > text/AIRFIGHT.BAS <<'EOF' || exit 1
+# laddare BIN ADRESS NAMN REM SLUT [b2]: laddaren för BIN på stdout. REM är
+# raderna 10 och 20 och SLUT raderna efter CALL, med "|" mellan raderna.
+# Med b2 står IF sist på raden, som BASIC II vill ha det.
+laddare() {
+python3 - "$@" <<'EOF'
 import sys
-kod = open(sys.argv[1], 'rb').read()
+fil, adr, namn, rem, slut = sys.argv[1:6]
+b2 = sys.argv[6:] == ['b2']
+kod = open(fil, 'rb').read()
 kod += bytes(-len(kod) % 3)
-print("10 REM AIRFIGHT, KRISTIAN LIDBERG OCH SET LONNERT 1981")
-print("20 REM SPELET I Z80-KOD (AIRFIGHT.ASM) LÄGGS PÅ $E000 OCH STARTAS")
+print("10 REM " + rem.split('|')[0])
+print("20 REM " + rem.split('|')[1])
 print("30 DIM A$=72")
-print("40 P=57344 : S=0")
-print("50 PRINT CHR$(12);\"AIRFIGHT laddas, vänta ...\"")
+print("40 P=%s : S=0" % adr)
+print("50 PRINT CHR$(12);\"%s laddas, vänta ...\"" % namn)
 print("60 READ A$ : IF A$=\".\" THEN 130")
 print("70 FOR I%=1% TO LEN(A$) STEP 4%")
 print("80 A%=ASC(MID$(A$,I%,1%))-48% : B%=ASC(MID$(A$,I%+1%,1%))-48%")
@@ -56,8 +60,18 @@ print("90 C%=ASC(MID$(A$,I%+2%,1%))-48% : D%=ASC(MID$(A$,I%+3%,1%))-48%")
 print("100 H%=A%*4%+B%/16% : M%=(B%-B%/16%*16%)*16%+C%/4% : V%=(C%-C%/4%*4%)*64%+D%")
 print("110 POKE P,H%,M%,V% : P=P+3 : S=S+H%+M%+V% : NEXT I%")
 print("120 GOTO 60")
-print("130 READ T : IF S<>T THEN PRINT \"Fel i DATA-raderna.\" : END")
-print("140 Z=CALL(57344)")
+if b2:
+    print("130 READ T : IF S=T THEN 150")
+    print("140 PRINT \"Fel i DATA-raderna.\" : END")
+    print("150 Z=CALL(%s)" % adr)
+    rad = 160
+else:
+    print("130 READ T : IF S<>T THEN PRINT \"Fel i DATA-raderna.\" : END")
+    print("140 Z=CALL(%s)" % adr)
+    rad = 150
+for r in slut.split('|') if slut else []:
+    print("%d %s" % (rad, r))
+    rad += 10
 rad = 1000
 for i in range(0, len(kod), 54):
     del_ = kod[i:i + 54]
@@ -69,6 +83,23 @@ for i in range(0, len(kod), 54):
     rad += 10
 print('%d DATA ".",%d' % (rad, sum(kod)))
 EOF
+}
+
+"$Z80ASM" -o airfight.bin airfight.asm || exit 1
+laddare airfight.bin 57344 AIRFIGHT \
+  "AIRFIGHT, KRISTIAN LIDBERG OCH SET LONNERT 1981|SPELET I Z80-KOD (AIRFIGHT.ASM) LÄGGS PÅ \$E000 OCH STARTAS" \
+  "" > text/AIRFIGHT.BAS || exit 1
+
+# CHIP8 och SNAKE3 i text_b2/ också i Z80-kod på $9000, för BASIC II:
+# laddarna CHIP8Z och SNAKE3Z.
+"$Z80ASM" -o chip8.bin chip8.asm || exit 1
+laddare chip8.bin 36864 CHIP8Z \
+  "CHIP-8 I Z80-KOD (CHIP8.ASM) FÖR BASIC II|KODEN LÄGGS PÅ \$9000 OCH STARTAS, CTRL-C AVBRYTER" \
+  'PRINT CHR$(12);' b2 > text_b2/CHIP8Z.BAS || exit 1
+"$Z80ASM" -o snake3.bin snake3.asm || exit 1
+laddare snake3.bin 36864 SNAKE3Z \
+  "SNAKE3 I Z80-KOD (SNAKE3.ASM) FÖR BASIC II|KODEN LÄGGS PÅ \$9000 OCH STARTAS, A S W Z STYR" \
+  'PRINT CUR(12,14);CHR$(135);"Score: ";Z;CHR$(151)|PRINT CUR(22,0);' b2 > text_b2/SNAKE3Z.BAS || exit 1
 
 for p in $PROGRAM; do
   "$ABC80" -r $ROM -f text/$p.BAS -k "SAVE CAS:$p\r" -U kassett/$p.wav -t 100 > /dev/null || exit 1
@@ -111,11 +142,12 @@ eval "$ABC80 -r $ROM -l $DOS@6000 -D diskett/program.dsk@45 -DS $flaggor -t 1000
 
 [ -f $B2ROM ] || exit 0
 tom_skiva diskett/program_b2.dsk || exit 1
-flaggor=
+# En körning för varje program: INTEGER och EXTEND i ett program gäller
+# annars också för nästa, NEW tar inte bort dem.
 for p in $PROGRAM_B2; do
-  flaggor="$flaggor -f text_b2/$p.BAS -k 'SAVE MO0:$p\r\w3000\.NEW\r\w500\.'"
+  "$ABC80" -r $B2ROM -m 32 -D diskett/program_b2.dsk@45 -DS -f text_b2/$p.BAS \
+    -k "SAVE MO0:$p\r\w3000\." -t 1000 > /dev/null || exit 1
 done
-eval "$ABC80 -r $B2ROM -m 32 -D diskett/program_b2.dsk@45 -DS $flaggor -t 1000" > /dev/null || exit 1
 if [ -f $ABC800/cmdint.sys ] && [ -f $ABC800/lib.abs ]; then
   skrivare=$(mktemp)
   python3 skrivare.py CMDINT.SYS=$ABC800/cmdint.sys LIB.ABS=$ABC800/lib.abs > $skrivare || exit 1
