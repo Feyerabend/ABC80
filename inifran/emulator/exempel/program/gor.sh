@@ -24,7 +24,8 @@
 #      och programmen i text_b2/, som är skrivna om för ABC 800-tolken
 #      (inget SET DOT, IF sist på raden, korta namn utan EXTEND), sparade
 #      med SAVE MO0:. AIRFIGHT, CHIP8Z och SNAKE3Z är Z80-kod på $9000;
-#      AIRFIGHT är samma källa med airfight_b2.asm efter sig. Har skivor/hamta.py hämtat ABC 800:s CMDINT.SYS och
+#      AIRFIGHT är samma källa med airfight_b2.asm efter sig. HR80 skriver
+#      med PR: på V24 i stället för med hr80ut.asm. Har skivor/hamta.py hämtat ABC 800:s CMDINT.SYS och
 #      LIB.ABS till skivor/abc800/ läggs de också på skivan (skrivare.py),
 #      så att BYE når DOS:en och $BAS går tillbaka. Skivan har Luxors filer
 #      och ligger inte i förrådet.
@@ -40,9 +41,9 @@ Z80ASM=$INIFRAN/verktyg/z80asm
 ABC80=../../abc80
 ROM=../../roms/abc80new.rom
 DOS=../../roms/abcdos80.rom
-PROGRAM="GISSA KURVA MUSIK AIRFIGHT"
+PROGRAM="GISSA KURVA MUSIK AIRFIGHT HR80"
 B2ROM=../../roms/basicii80.rom
-PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z AIRFIGHT"
+PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z AIRFIGHT HR80"
 ABC800=../../skivor/abc800
 
 # laddare BIN ADRESS NAMN REM SLUT [b2]: laddaren för BIN på stdout. REM är
@@ -117,6 +118,21 @@ laddare chip8.bin 36864 CHIP8Z \
 laddare snake3.bin 36864 SNAKE3Z \
   "SNAKE3 I Z80-KOD (SNAKE3.ASM) FÖR BASIC II|KODEN LÄGGS PÅ \$9000 OCH STARTAS, A S W Z STYR" \
   'PRINT CUR(12,14);CHR$(135);"Score: ";Z;CHR$(151)|PRINT CUR(22,0);' b2 > text_b2/SNAKE3Z.BAS || exit 1
+
+# HR80 (grafikkortet i HR-80:s anda, utanför boken): text/HR80.BAS har
+# sändrutinen hr80ut.asm som DATA i decimalt, skrivna för hand så att de
+# går att läsa; här prövas att de är samma byte som källan ger.
+"$Z80ASM" -o hr80ut.bin hr80ut.asm || exit 1
+python3 - hr80ut.bin text/HR80.BAS <<'EOF' || exit 1
+import sys
+kod = list(open(sys.argv[1], 'rb').read())
+data = []
+for rad in open(sys.argv[2], encoding='utf-8'):
+    if ' DATA ' in rad:
+        data += [int(t) for t in rad.split(' DATA ')[1].split(',')]
+if data != kod:
+    sys.exit('text/HR80.BAS: DATA är inte hr80ut.bin (%d byte)' % len(kod))
+EOF
 
 for p in $PROGRAM; do
   "$ABC80" -r $ROM -f text/$p.BAS -k "SAVE CAS:$p\r" -U kassett/$p.wav -t 100 > /dev/null || exit 1

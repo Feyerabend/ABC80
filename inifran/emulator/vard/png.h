@@ -12,4 +12,7 @@
 /* bild har bredd * hojd bytes, 1 = svart. Ger 0 om filen inte gick att skriva. */
 int png_skriv(const char *fil, const uint8_t *bild, int bredd, int hojd);
 
+/* bild har bredd * hojd punkter 0xRRGGBB. */
+int png_skriv_farg(const char *fil, const uint32_t *bild, int bredd, int hojd);
+
 #endif

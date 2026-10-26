@@ -45,6 +45,8 @@
  *                    0-2 (hex, 7 = öppna) från tiden ms (@0 kan utelämnas);
  *                    i batchläget skrivs utgångarna (bit 3, 4) efter skärmen
  *     -L             V24-skrivaren på PIO B; tecknen skrivs som "PR: hh ..."
+ *     -H fil.png     grafikkortet i HR-80:s anda på V24 (utanför boken,
+ *                    karna/hr80v24.h); bilden skrivs efteråt, 512 x 512
  *
  * Korten på ABC-bussen (se karna/skivkort.h, skrivarkort.h, ieckort.h):
  *     -D fil[@kort[.enhet]]  en skivavbild, standard kort 44 enhet 0;
@@ -113,6 +115,7 @@
 #include "../karna/bild.h"
 #include "../karna/p40.h"
 #include "../karna/tecken.h"
+#include "hr80bild.h"
 #include "png.h"
 #include "vard.h"
 
@@ -401,7 +404,7 @@ static void hjalp(void)
 {
     fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48] [-M fil[@adr]]\n"
           "                  [-tkn80 tkn80-iii.rom] [-uni80] [-cpm system.dsk]\n"
-          "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L]\n"
+          "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L] [-H fil.png]\n"
           "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-CP fil.png]\n"
           "                  [-E adr[,text]] [-T band.wav] [-U inspelning.wav]\n"
           "                  [-t ms [-d adr,n].. [-B fil.png] [-a fil.wav] [-x adr [-p ..] [-R ..]] ...]\n"
@@ -430,6 +433,7 @@ int main(int argc, char **argv)
     static Skivkort skivkort;
     static Skrivarkort skrivarkort;
     static V24Skrivare v24_skrivare;
+    static Hr80V24 hr80;
     static Ieckort ieckort;
     static P40 p40;
     static Ljud ljud;
@@ -439,7 +443,7 @@ int main(int argc, char **argv)
     Vard *v = &vard;
     const char *romfil = NULL, *v24 = NULL, *bankarg = NULL, *cmosfil = NULL;
     const char *pappersfil = NULL;           /* -CP */
-    const char *tkn80fil = NULL, *skarmfil = NULL;
+    const char *tkn80fil = NULL, *skarmfil = NULL, *hr80fil = NULL;
     int cpm = 0;                             /* -cpm: starta i startkartan */
     const char *kretsar[16];
     int antal_kretsar = 0, ram_kb = 16, utforlig = 0, utan_lyssnare = 0;
@@ -505,9 +509,19 @@ int main(int argc, char **argv)
         else if (!strcmp(f, "-S")) maskin.baud = atol(a);
         else if (!strcmp(f, "-W")) labbtext(&maskin, a);
         else if (!strcmp(f, "-L")) {
+            if (v->hr80)
+                vard_fel("-L och -H använder båda V24", NULL);
             v24_skrivare_starta(&v24_skrivare);
             maskin.pio_b_enhet = &v24_skrivare.enhet;
             v->v24_skrivare = &v24_skrivare;
+        }
+        else if (!strcmp(f, "-H")) {
+            if (v->v24_skrivare)
+                vard_fel("-L och -H använder båda V24", NULL);
+            hr80_v24_starta(&hr80);
+            maskin.pio_b_enhet = &hr80.enhet;
+            v->hr80 = &hr80;
+            hr80fil = a;
         }
         else if (!strcmp(f, "-D")) skiva(v, a, 0);
         else if (!strcmp(f, "-DP")) skiva(v, a, 1);
@@ -647,6 +661,8 @@ int main(int argc, char **argv)
     }
     if (skarmfil)
         skarmbild(&maskin, skarmfil);
+    if (hr80fil && !hr80_bild_skriv(&hr80.kort, hr80fil, 0))
+        vard_fel("kan inte skriva", hr80fil);
     if (pappersfil) {
         int bredd, hojd;
         p40_papper(&p40, NULL, &bredd, &hojd);

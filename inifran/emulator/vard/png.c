@@ -1,10 +1,11 @@
 /*
  * png.c -- en bild till en PNG-fil, till boken ABC80 inifrån
  *
- * Svartvitt, 8 bitar grått per punkt, utan komprimering: zlib-strömmen
+ * 8 bitar grått eller RGB per punkt, utan komprimering: zlib-strömmen
  * har bara okomprimerade block (högst 65 535 bytes vart), så att inget
  * bibliotek behövs. Filerna blir större än nödvändigt men går att öppna
- * överallt. Används för P40:s papper (-CP).
+ * överallt. Används för P40:s papper (-CP), skärmen (-B) och
+ * grafikkortet hr80 (vard/hr80prov.c).
  */
 
 #include <stdio.h>
@@ -52,19 +53,11 @@ static void stycke(FILE *f, const char *typ, const uint8_t *data, size_t n)
     fwrite(svans, 1, 4, f);
 }
 
-int png_skriv(const char *fil, const uint8_t *bild, int bredd, int hojd)
+/* Raderna (var och en med filterbyte 0 först, ra bytes i allt) som en
+ * PNG med färgtypen typ (0 grått, 2 RGB); radata frigörs. */
+static int skriv(const char *fil, uint8_t *radata, size_t ra, int bredd, int hojd, int typ)
 {
     crc_starta();
-    /* Raderna med filterbyte 0 först; 1 i bilden blir svart. */
-    size_t radlangd = (size_t)bredd + 1, ra = radlangd * hojd;
-    uint8_t *radata = malloc(ra);
-    if (!radata)
-        return 0;
-    for (int y = 0; y < hojd; y++) {
-        radata[y * radlangd] = 0;
-        for (int x = 0; x < bredd; x++)
-            radata[y * radlangd + 1 + x] = bild[(size_t)y * bredd + x] ? 0x20 : 0xFF;
-    }
     /* zlib: huvud, okomprimerade block, Adler-32. */
     size_t block = (ra + 65534) / 65535, zn = 2 + ra + 5 * (block ? block : 1) + 4;
     uint8_t *z = malloc(zn);
@@ -103,7 +96,7 @@ int png_skriv(const char *fil, const uint8_t *bild, int bredd, int hojd)
     skriv32(ihdr, (unsigned long)bredd);
     skriv32(ihdr + 4, (unsigned long)hojd);
     ihdr[8] = 8;                             /* 8 bitar */
-    ihdr[9] = 0;                             /* grått */
+    ihdr[9] = (uint8_t)typ;                  /* 0 grått, 2 RGB */
     ihdr[10] = ihdr[11] = ihdr[12] = 0;
     fwrite(signatur, 1, 8, f);
     stycke(f, "IHDR", ihdr, 13);
@@ -114,4 +107,36 @@ int png_skriv(const char *fil, const uint8_t *bild, int bredd, int hojd)
     free(radata);
     free(z);
     return ok;
+}
+
+int png_skriv(const char *fil, const uint8_t *bild, int bredd, int hojd)
+{
+    /* Raderna med filterbyte 0 först; 1 i bilden blir svart. */
+    size_t radlangd = (size_t)bredd + 1, ra = radlangd * hojd;
+    uint8_t *radata = malloc(ra);
+    if (!radata)
+        return 0;
+    for (int y = 0; y < hojd; y++) {
+        radata[y * radlangd] = 0;
+        for (int x = 0; x < bredd; x++)
+            radata[y * radlangd + 1 + x] = bild[(size_t)y * bredd + x] ? 0x20 : 0xFF;
+    }
+    return skriv(fil, radata, ra, bredd, hojd, 0);
+}
+
+int png_skriv_farg(const char *fil, const uint32_t *bild, int bredd, int hojd)
+{
+    size_t radlangd = 3 * (size_t)bredd + 1, ra = radlangd * hojd;
+    uint8_t *radata = malloc(ra);
+    if (!radata)
+        return 0;
+    for (int y = 0; y < hojd; y++) {
+        uint8_t *p = radata + y * radlangd;
+        *p++ = 0;
+        for (int x = 0; x < bredd; x++) {
+            uint32_t c = bild[(size_t)y * bredd + x];
+            *p++ = (uint8_t)(c >> 16); *p++ = (uint8_t)(c >> 8); *p++ = (uint8_t)c;
+        }
+    }
+    return skriv(fil, radata, ra, bredd, hojd, 2);
 }

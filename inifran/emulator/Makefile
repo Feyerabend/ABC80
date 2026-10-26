@@ -14,6 +14,9 @@
 #   make webb    bygg webb/abc80.html, emulatorn i en enda sida som går
 #                att öppna direkt i webbläsaren (kräver clang och wasm-ld)
 #   make cpmprov provet till start-PROM:en och BIOS:en (cpm/prov.sh)
+#   make hr80    grafikkortet i HR-80:s anda utan maskinen, till PNG
+#                (vard/hr80fil.c; utanför boken, se karna/hr80.h)
+#   make hr80prov  bilderna i hr80prov/prov.sh mot de sparade summorna
 #   make clean   ta bort det byggda
 
 CC     ?= cc
@@ -21,9 +24,9 @@ CFLAGS ?= -std=c11 -O2 -Wall -Wextra
 
 KARNA = karna/z80.c karna/maskin.c karna/tecken.c karna/bussen.c \
         karna/skivkort.c karna/skrivarkort.c karna/ieckort.c karna/ljud.c karna/kassett.c \
-        karna/p40.c karna/bild.c karna/uni80.c
+        karna/p40.c karna/bild.c karna/uni80.c karna/hr80.c karna/hr80v24.c
 VARD  = vard/abc80.c vard/terminal.c vard/batch.c vard/anrop.c vard/tstenhet.c \
-        vard/kassettfil.c vard/wav.c vard/png.c
+        vard/kassettfil.c vard/wav.c vard/png.c vard/hr80bild.c
 
 # WebAssembly utan C-bibliotek: clang och lld (wasm-ld) räcker, t.ex.
 # Apple clang och Homebrews lld. Bara kärnan, utan IEC-kortet, med
@@ -31,7 +34,8 @@ VARD  = vard/abc80.c vard/terminal.c vard/batch.c vard/anrop.c vard/tstenhet.c \
 CLANG   ?= clang
 WASM_LD ?= $(firstword $(wildcard /opt/homebrew/opt/lld/bin/wasm-ld /usr/local/opt/lld/bin/wasm-ld) wasm-ld)
 WEBB_C   = karna/z80.c karna/maskin.c karna/bussen.c karna/skivkort.c karna/skrivarkort.c \
-           karna/ljud.c karna/p40.c karna/kassett.c karna/bild.c karna/uni80.c vard/wav.c webb/webb.c webb/libc.c
+           karna/ljud.c karna/p40.c karna/kassett.c karna/bild.c karna/uni80.c karna/hr80.c karna/hr80v24.c \
+           vard/wav.c webb/webb.c webb/libc.c
 WEBB_FLAGGOR = --target=wasm32 -std=c11 -O2 -Wall -Wextra -ffreestanding -nostdlib \
            -isystem webb/libc -fuse-ld=$(WASM_LD) -Wl,--no-entry -Wl,--strip-all \
            -Wl,-z,stack-size=1048576
@@ -156,12 +160,18 @@ cpm/d.dsk: cpm/zork/zork1.z3 cpm/systemskiva.py
 prov: abc80 $(ROMAR)
 	@./prov.sh
 
+hr80: karna/hr80.c karna/hr80.h karna/teckensnitt.h vard/hr80fil.c vard/hr80bild.c vard/hr80bild.h vard/png.c vard/png.h
+	$(CC) $(CFLAGS) -o $@ karna/hr80.c vard/hr80fil.c vard/hr80bild.c vard/png.c
+
+hr80prov: hr80
+	@hr80prov/prov.sh
+
 cpmprov: abc80 cpm/cpm22.bin cpm/bios.bin cpm/b.dsk cpm/skriv.com cpm/ztolk.com cpm/d.dsk | $(Z80ASM)
 	@Z80ASM=$(Z80ASM) cpm/prov.sh
 
 clean:
-	rm -rf abc80 prov webb/abc80.wasm cpm/cpm22.asm cpm/system.dsk cpm/b.dsk \
+	rm -rf abc80 hr80 hr80prov/ut prov webb/abc80.wasm cpm/cpm22.asm cpm/system.dsk cpm/b.dsk \
 	       cpm/bios.lst cpm/skriv/med_bios.asm cpm/skriv.com cpm/skriv.txt cpm/bbc/sida.asm cpm/bbc/sida.bin cpm/bbcbasic.com \
 	       cpm/zork/med_bios.asm cpm/ztolk.com cpm/d.dsk
 
-.PHONY: roms skivor alla prov cpmprov webb clean
+.PHONY: roms skivor alla prov cpmprov hr80prov webb clean

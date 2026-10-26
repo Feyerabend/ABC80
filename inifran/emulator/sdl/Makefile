@@ -12,7 +12,8 @@ SDL_LIBS   ?= $(shell pkg-config --libs sdl3 2>/dev/null || echo -L/opt/homebrew
 
 KARNA = ../karna/z80.c ../karna/maskin.c ../karna/tecken.c ../karna/bussen.c \
         ../karna/skivkort.c ../karna/ljud.c ../karna/kassett.c ../karna/p40.c \
-        ../karna/bild.c ../karna/uni80.c
+        ../karna/bild.c ../karna/uni80.c ../karna/skrivarkort.c \
+        ../karna/hr80.c ../karna/hr80v24.c
 VARD  = ../vard/kassettfil.c ../vard/wav.c
 
 abc80f: fonster.c $(KARNA) $(VARD) ../karna/*.h ../vard/*.h

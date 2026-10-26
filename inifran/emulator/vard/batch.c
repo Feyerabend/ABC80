@@ -225,6 +225,8 @@ void batch_kor(Vard *v)
     skriv_sektorer(v);
     if (v->v24_skrivare)
         skriv_bytes("PR:", v->v24_skrivare->utskrift, v->v24_skrivare->antal);
+    if (v->hr80)
+        printf("HR-80: %ld tecken\n", v->hr80->antal);
     if (m->antal_labb)
         printf("V24 ut: bit 3 = %d, bit 4 = %d\n", m->pio_b_skrivet >> 3 & 1, m->pio_b_skrivet >> 4 & 1);
     if (v->skrivarkort)

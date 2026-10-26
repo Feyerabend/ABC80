@@ -12,6 +12,7 @@
  * bit 1 som 0 (klar), bit 2 som 1 och bit 3-6 som det senast skrivna.
  * TxD är bit 3 i varje OUT medan bit 4 = 0, en OUT per bit: vila,
  * start, 8 data (låg först), stopp; bit 4 = 1 avslutar tecknet.
+ * Avkodningen (V24Avkodare) delas med grafikkortet (hr80v24.c).
  */
 
 #ifndef SKRIVARKORT_H
@@ -33,9 +34,14 @@ typedef struct Skrivarkort {
     int antal;
 } Skrivarkort;
 
+/* TxD på PIO B, en OUT per bit. */
+typedef struct V24Avkodare {
+    int bitar[16], antal_bitar;
+} V24Avkodare;
+
 typedef struct V24Skrivare {
     PioBEnhet enhet;                         /* maskin.pio_b_enhet = &enhet */
-    int bitar[16], antal_bitar;
+    V24Avkodare avkodare;
     uint8_t utskrift[SKRIVARE_BUFFERT];
     int antal;
 } V24Skrivare;
@@ -43,5 +49,11 @@ typedef struct V24Skrivare {
 void skrivarkort_starta(Skrivarkort *s, uint8_t status, uint8_t status_upptagen,
                         int antal_upptagen);
 void v24_skrivare_starta(V24Skrivare *s);
+
+/* En OUT till port $3A: tecknet när det är helt, annars -1. */
+int v24_avkoda(V24Avkodare *a, uint8_t varde);
+
+/* IN från port $3A för en mottagare som alltid är klar (bit 1 = 0). */
+uint8_t v24_las_klar(void *data, uint8_t senast_skrivet, int rxd);
 
 #endif

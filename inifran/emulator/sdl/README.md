@@ -52,12 +52,27 @@ programmet ligger. CP/M-skivorna (`../cpm/system.dsk`, `b.dsk`,
 | `-tyst`                 | utan ljud                                              |
 | `-fast`                 | fast markör (TKN80 med byglingen)                      |
 | `-skarp`                | skarpa punkter, utan sken och efterlysning             |
+| `-H`                    | grafikkortet i HR-80:s anda på V24, i ett andra fönster (se nedan) |
 
 Exempel:
 
     ./abc80f -k 'PRINT 2+2\r'
     ./abc80f -r ../roms/abc80new.rom -tkn80 ../roms/tkn80-iii.rom
     ./abc80f -cpm ../cpm/system.dsk
+
+## Grafikkortet i HR-80:s anda
+
+Med `-H` sitter ett grafikkort på V24, och dess bild visas i ett andra
+fönster, *HR-80*, 512 × 512 punkter med skarpa punkter i ABC 810:s åtta
+färger. Det är ett projekt utanför boken: en egen tolk efter Libers
+annons för HR-80 (1984), ett kort med egen processor som tog emot
+kommandon på V24. Manualen är inte funnen, så det som annonsen inte
+säger är gissat (`../karna/hr80.c`, `../PLAN.md`). Stängs HR-80-fönstret
+göms det bara; ABC80-fönstret avslutar som förut. Exempelprogrammet
+`HR80` på exempeldisketterna ritar en bild:
+
+    ./abc80f -H -l ../roms/abcdos80.rom@6000 \
+        -D ../exempel/program/diskett/program.dsk@45 -k '\w1500RUN DR0:HR80\r'
     ./abc80f -r ../../utanfor/comal/ut/comal.rom -l ../../utanfor/comal/ut/comal.krets@4000
 
 Det sista är COMAL-försöket ur `utanfor/comal`, ABC80-BASIC med

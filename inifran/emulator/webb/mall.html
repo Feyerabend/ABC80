@@ -214,6 +214,30 @@
   #papper_text .kursiv { font-style: italic; }
   #papper_text hr { border: 0; border-top: 1px dashed #b8b4a8; margin: 6px -14px; }
   #papper_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
+  /* Grafikkortets bild: en lapp som papperet, men den ligger kvar när
+   * man klickar utanför (popover manual), så att man kan skriva medan
+   * kortet ritar. 512 x 256 punkter visas 512 x 512, som -H. */
+  #hr80_lapp {
+    position: fixed; inset: 16px 16px auto auto; margin: 0; padding: 0;
+    width: min(514px, calc(100vw - 32px));
+    background: var(--yta); color: var(--text);
+    border: 1px solid var(--kant); border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
+  }
+  #hr80_lapp { display: none; flex-direction: column; }
+  #hr80_lapp.oppen, #hr80_lapp:popover-open { display: flex; }
+  #hr80_lapp header {
+    display: flex; align-items: center; gap: 6px; padding: 6px 8px;
+    border-bottom: 1px solid var(--kant); font-size: 13px; color: var(--dampad);
+    cursor: move; touch-action: none; user-select: none; -webkit-user-select: none;
+  }
+  #hr80_lapp header span { flex: 1; }
+  #hr80_lapp header button { cursor: pointer; }
+  #hr80_bild {
+    display: block; width: 100%; aspect-ratio: 1; background: #000;
+    image-rendering: pixelated; border-radius: 0 0 10px 10px;
+  }
+  #hr80_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
   /* Kom igång: en ruta mitt på sidan (popover). */
   #rubrik { display: flex; align-items: flex-start; gap: 8px; }
   #rubrik h1 { flex: 1; }
@@ -515,7 +539,7 @@
       <div class="knappar">
         <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva" data-title-en="A disk for ABC-DOS (FD2, 160 KB); with CP/M a disk in B:, or in A: if it is a system disk" data-en="Insert disk…">Lägg i diskett…</button>
 <!-- PROGRAM -->
-        <button id="exempel" title="GISSA, KURVA, MUSIK och AIRFIGHT på en diskett med ABC-DOS (med BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z och AIRFIGHT)" data-title-en="GISSA, KURVA, MUSIK and AIRFIGHT on a disk with ABC-DOS (with BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z and AIRFIGHT)" data-en="Example disk">Exempeldisketten</button>
+        <button id="exempel" title="GISSA, KURVA, MUSIK, AIRFIGHT och HR80 på en diskett med ABC-DOS (med BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT och HR80)" data-title-en="GISSA, KURVA, MUSIK, AIRFIGHT and HR80 on a disk with ABC-DOS (with BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT and HR80)" data-en="Example disk">Exempeldisketten</button>
 <!-- /PROGRAM -->
 <!-- SYSTEM -->
         <button id="systemskiva" title="Luxors systemskiva ver. 1.0 med ABC-DOS: LIB, COPY, DOSGEN …" data-title-en="Luxor's system disk ver. 1.0 with ABC-DOS: LIB, COPY, DOSGEN …" data-en="System disk">Systemskivan</button>
@@ -564,25 +588,29 @@
         ABC-DOS disk comes back.</p>
 <!-- /CPM -->
 <!-- PROGRAM -->
-        <p lang="sv"><i>Exempeldisketten</i> lägger i en diskett med fyra
+        <p lang="sv"><i>Exempeldisketten</i> lägger i en diskett med fem
         program: <code>RUN DR0:GISSA</code> (gissa talet), <code>RUN
         DR0:KURVA</code> (kurvor med <code>SETDOT</code>), <code>RUN
         DR0:MUSIK</code> (en orgel från 1981 på tangenterna Z, X, C … med S,
         D, G … som de svarta, med Caps Lock eftersom programmet väntar sig
-        versaler) eller <code>RUN DR0:AIRFIGHT</code> (spelet från 1981 i
+        versaler), <code>RUN DR0:AIRFIGHT</code> (spelet från 1981 i
         Z80-kod, för två: A, D och X mot J, L och M; laddaren tar en halv
-        minut, och <kbd>Ctrl</kbd>+<kbd>C</kbd> går tillbaka till BASIC). Samma fyra program finns också som band, ett per program, i
+        minut, och <kbd>Ctrl</kbd>+<kbd>C</kbd> går tillbaka till BASIC)
+        eller <code>RUN DR0:HR80</code> (en bild på grafikkortet, se
+        panelen Grafikkortet). Samma fem program finns också som band, ett per program, i
         <code>exempel/program/kassett/</code>, och som text i
         <code>exempel/program/text/</code> (<i>Skriv in…</i> och
         <code>RUN</code>).</p>
-        <p lang="en"><i>Example disk</i> inserts a disk with four programs
+        <p lang="en"><i>Example disk</i> inserts a disk with five programs
         (in Swedish): <code>RUN DR0:GISSA</code> (guess the number),
         <code>RUN DR0:KURVA</code> (curves with <code>SETDOT</code>),
         <code>RUN DR0:MUSIK</code> (an organ from 1981 on the keys Z, X, C …
         with S, D, G … as the black keys, with Caps Lock since the program
-        expects capitals) or <code>RUN DR0:AIRFIGHT</code> (the 1981 game in
+        expects capitals), <code>RUN DR0:AIRFIGHT</code> (the 1981 game in
         Z80 code, for two: A, D and X against J, L and M; the loader takes
-        half a minute, and <kbd>Ctrl</kbd>+<kbd>C</kbd> returns to BASIC). The same four programs are also on tape, one per
+        half a minute, and <kbd>Ctrl</kbd>+<kbd>C</kbd> returns to BASIC)
+        or <code>RUN DR0:HR80</code> (a picture on the graphics card, see
+        the panel Graphics card). The same five programs are also on tape, one per
         program, in <code>exempel/program/kassett/</code>, and as text in
         <code>exempel/program/text/</code> (<i>Type in…</i> and
         <code>RUN</code>).</p>
@@ -595,7 +623,8 @@
         tangent tills den tas) och <code>SNAKE3</code> (orm med A, S, W och
         Z), och i Z80-kod <code>CHIP8Z</code>, <code>SNAKE3Z</code> och
         <code>AIRFIGHT</code>, som laddas på $9000 och går tillbaka till
-        BASIC med <kbd>Ctrl</kbd>+<kbd>C</kbd>. Disketten har ABC 800:s <code>CMDINT.SYS</code> och
+        BASIC med <kbd>Ctrl</kbd>+<kbd>C</kbd>, och <code>HR80</code>, som
+        ritar på grafikkortet med <code>PR:</code> på V24. Disketten har ABC 800:s <code>CMDINT.SYS</code> och
         <code>LIB.ABS</code>, så <code>BYE</code> ger DOS:en och
         <code>LIB</code> visar filerna. Texterna står i
         <code>exempel/program/text_b2/</code>. <kbd>Ctrl</kbd>+<kbd>C</kbd>
@@ -608,7 +637,9 @@
         hold a key until it is taken) and <code>SNAKE3</code> (a snake with
         A, S, W and Z), and in Z80 code <code>CHIP8Z</code>,
         <code>SNAKE3Z</code> and <code>AIRFIGHT</code>, which load at $9000
-        and return to BASIC with <kbd>Ctrl</kbd>+<kbd>C</kbd>. The disk has the ABC 800's <code>CMDINT.SYS</code>
+        and return to BASIC with <kbd>Ctrl</kbd>+<kbd>C</kbd>, and
+        <code>HR80</code>, which draws on the graphics card with
+        <code>PR:</code> on V24. The disk has the ABC 800's <code>CMDINT.SYS</code>
         and <code>LIB.ABS</code>, so <code>BYE</code> gives the DOS and
         <code>LIB</code> lists the files. The texts are in
         <code>exempel/program/text_b2/</code>. <kbd>Ctrl</kbd>+<kbd>C</kbd>
@@ -1015,6 +1046,71 @@
       </div>
     </details>
 
+    <details class="panel" id="panel_hr80">
+      <summary><span lang="sv">Grafikkortet</span><span lang="en">Graphics card</span><span class="lage" id="lage_hr80"></span><button class="info" title="Mer om grafikkortet" data-title-en="More about the graphics card">i</button></summary>
+      <div class="knappar">
+        <label title="Ett färggrafikkort i HR-80:s anda på V24 (utanför boken)" data-title-en="A colour graphics card in the spirit of the HR-80 on V24 (outside the book)"><input type="checkbox" id="hr80"> HR-80</label>
+        <button id="hr80_knapp" popovertarget="hr80_lapp" title="Visa kortets bild; den kommer fram av sig själv när kortet börjar rita" data-title-en="Show the card's picture; it appears by itself when the card starts drawing" data-en="The picture" disabled>Bilden</button>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>Grafikkortet</i> står utanför boken. Det är inspirerat
+        av Libers HR-80 från 1984, ett kort med en egen processor och en tolk
+        i EPROM som tog emot kommandon på V24 och ritade i färg på en egen
+        skärm. Manualen till HR-80 är inte funnen, så kommandona här är
+        gjorda efter annonsen och resten är gissat: ett exempel på vad som
+        hade gått att bygga då, inte en avbild av kortet. Bilden är 256 x 256
+        punkter i fyra av ABC 810:s åtta färger åt gången och visas på en
+        lapp bredvid ABC80:s skärm; <i>Spara</i> ger den som en bild.</p>
+        <p lang="en"><i>The graphics card</i> is outside the book. It is
+        inspired by Liber's HR-80 from 1984, a card with its own processor
+        and an interpreter in EPROM that took commands on V24 and drew in
+        colour on a screen of its own. The HR-80 manual has not been found,
+        so the commands here follow the advertisement and the rest is
+        guessed: an example of what could have been built then, not a copy
+        of the card. The picture is 256 x 256 dots in four of the ABC 810's
+        eight colours at a time and is shown on a sheet beside the ABC80's
+        screen; <i>Save</i> gives it as an image.</p>
+        <p lang="sv">Kortet tar emot tecken på V24 i 9600 baud. Några av
+        kommandona: 12 rensar, 1 <i>f</i> väljer färg, 28 <i>x y</i> sätter
+        den fasta punkten, 2 <i>x y</i> ritar en punkt, 4 <i>x y</i> en linje
+        dit, 5 <i>x y</i> fyller från punkten, 18 <i>rad+32 kolumn+32</i>
+        flyttar markören för text, och ESC 0-3 <i>f</i> väljer de fyra
+        färgerna bland de åtta; y = 0 är längst ner. ABC80:s egen ROM skriver
+        inte på V24, så exemplet <code>RUN DR0:HR80</code> på
+        <i>Exempeldisketten</i> lägger en liten rutin i maskinkod på
+        <code>$FF80</code> och skickar varje tecken med
+        <code>Z=CALL(65408,T)</code>. Med BASIC II går det med
+        <code>OPEN "PR:VSA70A99.7" AS FILE 1</code> och <code>PRINT
+        #1,A$;</code> (<code>RUN "MO0:HR80"</code>). Utan kortet väntar
+        rutinen; <kbd>Ctrl</kbd>+<kbd>C</kbd> stoppar. Alla kommandon står i
+        <code>emulator/karna/hr80.h</code>.</p>
+        <p lang="en">The card takes characters on V24 at 9600 baud. Some of
+        the commands: 12 clears, 1 <i>c</i> chooses the colour, 28 <i>x
+        y</i> sets the fixed point, 2 <i>x y</i> draws a dot, 4 <i>x y</i> a
+        line there, 5 <i>x y</i> fills from the point, 18 <i>row+32
+        column+32</i> moves the cursor for text, and ESC 0-3 <i>c</i> choose
+        the four colours among the eight; y = 0 is at the bottom. The
+        ABC80's own ROM does not print on V24, so the example <code>RUN
+        DR0:HR80</code> on the <i>Example disk</i> puts a small machine code
+        routine at <code>$FF80</code> and sends each character with
+        <code>Z=CALL(65408,T)</code>. With BASIC II it works with
+        <code>OPEN "PR:VSA70A99.7" AS FILE 1</code> and <code>PRINT
+        #1,A$;</code> (<code>RUN "MO0:HR80"</code>). Without the card the
+        routine waits; <kbd>Ctrl</kbd>+<kbd>C</kbd> stops it. All the
+        commands are in <code>emulator/karna/hr80.h</code>.</p>
+        <p lang="sv">Kortet kopplas in och ur medan maskinen går, och bilden
+        ligger kvar tills <i>Rensa</i> på lappen. I en länk kopplar
+        <code>?v24=hr80</code> in det; i terminalen <code>abc80 -H
+        bild.png</code>, och <code>abc80f -H</code> visar det i ett eget
+        fönster.</p>
+        <p lang="en">The card is connected and disconnected while the machine
+        runs, and the picture stays until <i>Clear</i> on the sheet. In a
+        link, <code>?v24=hr80</code> connects it; in the terminal
+        <code>abc80 -H bild.png</code>, and <code>abc80f -H</code> shows it
+        in a window of its own.</p>
+      </div>
+    </details>
+
     <details class="panel" id="panel_cmos">
       <summary><span lang="sv">CMOS-minnet</span><span lang="en">CMOS memory</span><span class="lage" id="lage_cmos"></span><button class="info" title="Mer om CMOS-minnet" data-title-en="More about the CMOS memory">i</button></summary>
       <div class="knappar">
@@ -1182,6 +1278,15 @@ RUN</pre>
         <button id="papper_stang" title="Stäng (Esc, eller klicka utanför)" data-title-en="Close (Esc, or click outside)">✕</button>
       </header>
       <div id="papper_rulle"><canvas id="pappret" width="1064" height="16"></canvas><pre id="papper_text" hidden></pre></div>
+    </div>
+    <div id="hr80_lapp" class="lapp" popover="manual">
+      <header>
+        <span id="hr80_rubrik">HR-80</span>
+        <button id="hr80_rensa" title="Rensa kortets bild och makron" data-title-en="Clear the card's picture and macros" data-en="Clear">Rensa</button>
+        <button id="hr80_spara" title="Ladda ner bilden som PNG (som -H bild.png i terminalen)" data-title-en="Download the picture as PNG (like -H bild.png in the terminal)" data-en="Save">Spara</button>
+        <button id="hr80_stang" title="Stäng" data-title-en="Close">✕</button>
+      </header>
+      <canvas id="hr80_bild" width="512" height="256"></canvas>
     </div>
   </div>
 </main>

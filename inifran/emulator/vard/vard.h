@@ -9,6 +9,7 @@
 #ifndef VARD_H
 #define VARD_H
 
+#include "../karna/hr80v24.h"
 #include "../karna/ieckort.h"
 #include "../karna/maskin.h"
 #include "../karna/skivkort.h"
@@ -32,6 +33,7 @@ typedef struct Vard {
     int antal_visa_sektorer;
     Skrivarkort *skrivarkort;
     V24Skrivare *v24_skrivare;
+    Hr80V24 *hr80;                           /* -H, utanför boken */
     Ieckort *ieckort;
     int kortets_bildminne;                   /* -CR: $4000-$43FF */
 

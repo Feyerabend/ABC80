@@ -33,6 +33,9 @@
  *     -tyst          utan ljud
  *     -fast          fast markör (TKN80 med byglingen)
  *     -skarp         skarpa punkter, utan sken och efterlysning
+ *     -H             grafikkortet i HR-80:s anda på V24 (utanför boken,
+ *                    ../karna/hr80v24.h), i ett andra fönster; stängs det
+ *                    göms det bara
  *
  * Tangenterna: som på webbsidan. RETURN, ← och → (backsteg är ←), ESC,
  * TAB, DEL och Ctrl-A till Ctrl-Z; å ä ö é ü och Å Ä Ö É Ü blir ABC80:s
@@ -49,6 +52,7 @@
 #include <SDL3/SDL_main.h>
 
 #include "../karna/bild.h"
+#include "../karna/hr80v24.h"
 #include "../karna/kassett.h"
 #include "../karna/ljud.h"
 #include "../karna/maskin.h"
@@ -73,6 +77,7 @@ static Ljud ljud;
 static Kassett kassett;
 static Skivkort skivkort;
 static Uni80 uni80;
+static Hr80V24 hr80;
 static int cpm_lage;
 
 static const char *skivfil[SKIVKORT_ENHETER];
@@ -318,7 +323,7 @@ static void hjalp(void)
 {
     fputs("användning: abc80f [-r rom] [-l fil@adr].. [-m 16|32|48] [-tkn80 fil] [-cpm system.dsk]\n"
           "                   [-D fil[@kort[.enhet]]].. [-DS] [-T band.wav] [-U fil.wav]\n"
-          "                   [-k text] [-z n] [-tyst] [-fast] [-skarp]\n"
+          "                   [-k text] [-z n] [-tyst] [-fast] [-skarp] [-H]\n"
           "F12 är RESET; se huvudet i sdl/fonster.c\n", stderr);
     exit(1);
 }
@@ -331,6 +336,7 @@ int main(int argc, char **argv)
     const char *bandfil = NULL, *inspelningsfil = NULL, *tangenter = NULL;
     const char *kretsar[16];
     int antal_kretsar = 0, ram_kb = 16, skala = 3, tyst = 0, fast = 0, spara = 0, skarp = 0;
+    int med_hr80 = 0;
     const char *skivor[SKIVKORT_ENHETER];
     int antal_skivargument = 0;
 
@@ -340,6 +346,7 @@ int main(int argc, char **argv)
         if (!strcmp(f, "-tyst")) { tyst = 1; continue; }
         if (!strcmp(f, "-fast")) { fast = 1; continue; }
         if (!strcmp(f, "-skarp")) { skarp = 1; continue; }
+        if (!strcmp(f, "-H")) { med_hr80 = 1; continue; }
         if (k + 1 >= argc)
             hjalp();
         const char *a = argv[++k];
@@ -418,6 +425,10 @@ int main(int argc, char **argv)
         }
         maskin.kassett = &kassett;
     }
+    if (med_hr80) {
+        hr80_v24_starta(&hr80);
+        maskin.pio_b_enhet = &hr80.enhet;
+    }
     if (tangenter)
         skriv(tangenter, 1);
 
@@ -433,6 +444,26 @@ int main(int argc, char **argv)
                                      SDL_LOGICAL_PRESENTATION_LETTERBOX);
     SDL_SetRenderVSync(ritare, 1);
     SDL_StartTextInput(fonster);
+
+    /* Grafikkortets fönster: 512 x 512 (varje rad två gånger), skarpa
+       punkter och utan vsync, så att ABC80:s fönster bestämmer takten. */
+    SDL_Window *hr80_fonster = NULL;
+    SDL_Renderer *hr80_ritare = NULL;
+    SDL_Texture *hr80_bild = NULL;
+    if (med_hr80) {
+        if (!SDL_CreateWindowAndRenderer("HR-80", skala * HR80_BREDD / 2, skala * HR80_BREDD / 2,
+                                         SDL_WINDOW_RESIZABLE, &hr80_fonster, &hr80_ritare))
+            vard_fel("SDL: ", SDL_GetError());
+        SDL_SetRenderLogicalPresentation(hr80_ritare, HR80_BREDD, 2 * HR80_HOJD,
+                                         SDL_LOGICAL_PRESENTATION_LETTERBOX);
+        hr80_bild = SDL_CreateTexture(hr80_ritare, SDL_PIXELFORMAT_ARGB8888,
+                                      SDL_TEXTUREACCESS_STREAMING, HR80_BREDD, HR80_HOJD);
+        if (!hr80_bild)
+            vard_fel("SDL: ", SDL_GetError());
+        SDL_SetTextureScaleMode(hr80_bild, SDL_SCALEMODE_NEAREST);
+        SDL_StartTextInput(hr80_fonster);
+        SDL_RaiseWindow(fonster);
+    }
 
     SDL_AudioStream *strom = NULL;
     if (!tyst) {
@@ -462,6 +493,12 @@ int main(int argc, char **argv)
         while (SDL_PollEvent(&h)) {
             if (h.type == SDL_EVENT_QUIT)
                 slut = 1;
+            else if (h.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
+                if (hr80_fonster && h.window.windowID == SDL_GetWindowID(hr80_fonster))
+                    SDL_HideWindow(hr80_fonster);
+                else
+                    slut = 1;
+            }
             else if (h.type == SDL_EVENT_KEY_DOWN)
                 tangent_ned(&h.key);
             else if (h.type == SDL_EVENT_TEXT_INPUT)
@@ -517,6 +554,20 @@ int main(int argc, char **argv)
         SDL_SetRenderDrawColor(ritare, 0, 0, 0, 255);
         SDL_RenderClear(ritare);
         SDL_RenderTexture(ritare, bild, NULL, NULL);
+        if (hr80_fonster && !(SDL_GetWindowFlags(hr80_fonster) & SDL_WINDOW_HIDDEN)) {
+            /* Svart, röd, grön, gul, blå, magenta, cyan, vit (ABC 810). */
+            static const uint32_t hr80_farger[8] = {
+                0xFF000000, 0xFFFF0000, 0xFF00FF00, 0xFFFFFF00,
+                0xFF0000FF, 0xFFFF00FF, 0xFF00FFFF, 0xFFFFFFFF
+            };
+            static uint32_t hr80_punkter[HR80_BREDD * HR80_HOJD];
+            hr80_rita(&hr80.kort, hr80_punkter, hr80_farger, markor);
+            SDL_UpdateTexture(hr80_bild, NULL, hr80_punkter, HR80_BREDD * 4);
+            SDL_SetRenderDrawColor(hr80_ritare, 0, 0, 0, 255);
+            SDL_RenderClear(hr80_ritare);
+            SDL_RenderTexture(hr80_ritare, hr80_bild, NULL, NULL);
+            SDL_RenderPresent(hr80_ritare);
+        }
         SDL_RenderPresent(ritare);           /* väntar på skärmen (vsync) */
     }
 

@@ -207,8 +207,9 @@ function visa_lagen(alltid = false) {
         ? ' · ' + papper_rader + t(papper_rader === 1 ? ' rad' : ' rader',
                                     papper_rader === 1 ? ' line' : ' lines') : '') : '';
     const cmos_text = i_bruk('cmos') ? t('på', 'on') : '';
+    const hr80_text = i_bruk('hr80') ? (hr80_sett ? hr80_sett + t(' tecken', ' characters') : t('på', 'on')) : '';
     const valen = VAL.map(val => +valt_pa(val.id)).join('');
-    const nytt = [maskin, disk, program, skrivaren_text, cmos_text, valen].join('|');
+    const nytt = [maskin, disk, program, skrivaren_text, cmos_text, hr80_text, valen].join('|');
     if (!alltid && nytt === lagen_nu)
         return;
     lagen_nu = nytt;
@@ -217,6 +218,7 @@ function visa_lagen(alltid = false) {
     $('lage_program').textContent = program;
     $('lage_skrivaren').textContent = skrivaren_text;
     $('lage_cmos').textContent = cmos_text;
+    $('lage_hr80').textContent = hr80_text;
     regler_tillampa();
 }
 
@@ -267,6 +269,7 @@ const VAL = [
     { id: 'fast', namn: ['fast markör', 'steady cursor'], inte: ['b2'], kraver: 'tkn80' },
     { id: 'p40', namn: ['P40', 'P40'], inte: ['b2', 'cpm'] },
     { id: 'centronics', namn: ['Centronics', 'Centronics'], inte: ['cpm'] },
+    { id: 'hr80', namn: ['grafikkortet', 'the graphics card'] },
     ...['band', 'spelain', 'spara', 'play', 'bakat', 'framat'].map(id => ({ id, inte: ['b2', 'cpm'] })),
     { id: 'malare', inte: ['b2'] },
     { id: 'systemskiva', inte: ['b2'] },
@@ -641,6 +644,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
     }
     papper_tomt();
     skrivaren_koppla();
+    hr80_koppla();                           /* bilden ligger kvar */
     e.aterstall();
     nasta = null;
 }
@@ -1484,10 +1488,122 @@ function varv() {
             rita();
     }
     fosfor();
+    hr80_rita(markor);
     visa_bandet();
     visa_lagen();
     requestAnimationFrame(varv);
 }
+
+/* ---------------------------------------------------------------- */
+/* Grafikkortet i HR-80:s anda                                       */
+
+/* Kortet på V24, utanför boken (karna/hr80.h, abc80 -H). Bilden, 512 x
+ * 256 punkter, ritas på canvasen hr80_bild medan lappen är öppen och
+ * visas 512 x 512. Lappen kommer fram av sig själv när kortet får sina
+ * första tecken (efter Rensa); är den stängd sedan lyser knappen när det
+ * kommer fler. */
+const hr80_lappen = $('hr80_lapp');
+const hr80_ritning = $('hr80_bild').getContext('2d');
+const HR80_NYCKEL = 'abc80_hr80';
+let hr80_pixlar = null;
+let hr80_sett = 0;                           /* tecknen som sidan har sett */
+let hr80_visad = false;                      /* lappen har kommit fram sedan Rensa */
+
+function hr80_oppen() {
+    return med_popover ? hr80_lappen.matches(':popover-open') : hr80_lappen.classList.contains('oppen');
+}
+
+function hr80_visa(visa) {
+    if (visa === hr80_oppen())
+        return;
+    if (med_popover)
+        visa ? hr80_lappen.showPopover() : hr80_lappen.hidePopover();
+    else
+        hr80_lappen.classList.toggle('oppen', visa);
+    if (visa)
+        $('hr80_knapp').classList.remove('nytt');
+}
+
+/* Kortet in eller ur, som rutan säger; efter varje start (starta()
+ * tömmer maskinen) och när rutan ändras. */
+function hr80_koppla() {
+    e.hr80(i_bruk('hr80') ? 1 : 0);
+    $('hr80_knapp').disabled = !$('hr80').checked && !hr80_sett;
+}
+
+/* Kortets bild i canvasen, med markören om markor. */
+function hr80_bilden(markor) {
+    hr80_pixlar ??= hr80_ritning.createImageData(512, 256);
+    hr80_pixlar.data.set(new Uint8Array(e.memory.buffer, e.hr80_bild(markor), 512 * 256 * 4));
+    hr80_ritning.putImageData(hr80_pixlar, 0, 0);
+}
+
+/* En gång per varv: nya tecken tar fram lappen eller tänder knappen. */
+function hr80_rita(markor) {
+    const antal = e.hr80_antal();
+    if (antal !== hr80_sett) {
+        if (antal > hr80_sett && !hr80_visad) {
+            hr80_visad = true;
+            hr80_visa(true);
+        } else if (!hr80_oppen())
+            $('hr80_knapp').classList.add('nytt');
+        hr80_sett = antal;
+        $('hr80_knapp').disabled = false;
+    }
+    if (hr80_oppen())
+        hr80_bilden(markor);
+}
+
+lapp_flyttbar(hr80_lappen, HR80_NYCKEL);
+hr80_lappen.addEventListener('toggle', () => {
+    if (hr80_oppen()) {
+        lapp_lage(hr80_lappen, HR80_NYCKEL);
+        $('hr80_knapp').classList.remove('nytt');
+    }
+});
+if (!med_popover)                            /* annars popovertarget */
+    $('hr80_knapp').addEventListener('click', () => hr80_visa(!hr80_oppen()));
+$('hr80').addEventListener('change', () => {
+    hr80_koppla();
+    if ($('hr80').checked)
+        meddela('Grafikkortet på V24: RUN DR0:HR80 på exempeldisketten (med BASIC II RUN "MO0:HR80"); i under Grafikkortet berättar mer.',
+                'The graphics card on V24: RUN DR0:HR80 on the example disk (with BASIC II RUN "MO0:HR80"); i under Graphics card tells more.');
+    else
+        meddela('Grafikkortet är urkopplat; bilden ligger kvar.',
+                'The graphics card is disconnected; the picture stays.');
+    skarm.focus();
+});
+$('hr80_rensa').addEventListener('click', () => {
+    e.hr80_rensa();
+    hr80_sett = 0;
+    hr80_visad = false;
+    $('hr80_knapp').classList.remove('nytt');
+    hr80_bilden(0);
+    meddela('Kortets bild och makron är rensade.', "The card's picture and macros are cleared.");
+    skarm.focus();
+});
+$('hr80_spara').addEventListener('click', () => {
+    hr80_bilden(0);                          /* utan markören, som -H */
+    const dubbel = document.createElement('canvas');
+    dubbel.width = dubbel.height = 512;
+    const ritning = dubbel.getContext('2d');
+    ritning.imageSmoothingEnabled = false;
+    ritning.drawImage($('hr80_bild'), 0, 0, 512, 512);
+    dubbel.toBlob(blob => {
+        const lank = document.createElement('a');
+        lank.href = URL.createObjectURL(blob);
+        lank.download = 'hr80.png';
+        lank.click();
+        setTimeout(() => URL.revokeObjectURL(lank.href), 10000);
+    });
+    meddela('hr80.png laddas ner (som -H hr80.png i terminalen).',
+            'hr80.png is downloaded (like -H hr80.png in the terminal).');
+    skarm.focus();
+});
+$('hr80_stang').addEventListener('click', () => {
+    hr80_visa(false);
+    skarm.focus();
+});
 
 /* ---------------------------------------------------------------- */
 /* Kassetten                                                         */
@@ -2061,13 +2177,13 @@ $('exempel')?.addEventListener('click', () => {
     exempel_undan[skivans_namn] = null;
     starta(exempel_skivan(b2));
     if (b2)
-        meddela('Exempeldisketten för BASIC II: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z eller AIRFIGHT. ' +
+        meddela('Exempeldisketten för BASIC II: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT eller HR80 (med grafikkortet). ' +
                 'BYE ger DOS:en (LIB), $BAS går tillbaka. Ctrl-C två gånger stoppar.',
-                'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z or AIRFIGHT. ' +
+                'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT or HR80 (with the graphics card). ' +
                 'BYE gives the DOS (LIB), $BAS returns. Ctrl-C twice stops.');
     else
-        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK eller RUN DR0:AIRFIGHT.',
-                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK or RUN DR0:AIRFIGHT.');
+        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT eller RUN DR0:HR80 (med grafikkortet).',
+                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT or RUN DR0:HR80 (with the graphics card).');
     oppna_panel('panel_disk');
     skarm.focus();
 });
@@ -2234,61 +2350,66 @@ $('hjalp').addEventListener('toggle', h => {
         skarm.focus();
 });
 
-/* Papperet flyttas genom att man drar i listen (inte i knapparna). Var
- * det står sparas i webbläsaren; det hålls inne på sidan. */
-const PAPPER_NYCKEL = 'abc80_papper';
-let papper_drag = null;                      /* {dx, dy} medan det dras */
-
-function papper_flytta(x, y) {
-    const r = papperet.getBoundingClientRect();
+/* Lapparna (papperet och grafikkortets bild) flyttas genom att man
+ * drar i listen (inte i knapparna). Var de står sparas i webbläsaren;
+ * de hålls inne på sidan. */
+function lapp_flytta(lapp, x, y) {
+    const r = lapp.getBoundingClientRect();
     x = Math.max(0, Math.min(x, innerWidth - r.width));
     y = Math.max(0, Math.min(y, innerHeight - 40));
-    papperet.style.left = x + 'px';
-    papperet.style.top = y + 'px';
-    papperet.style.right = 'auto';
+    lapp.style.left = x + 'px';
+    lapp.style.top = y + 'px';
+    lapp.style.right = 'auto';
     return [x, y];
 }
 
-function papper_lage() {
+/* Lappen dit den stod sist, när den öppnas. */
+function lapp_lage(lapp, nyckel) {
     try {
-        const l = JSON.parse(localStorage.getItem(PAPPER_NYCKEL));
+        const l = JSON.parse(localStorage.getItem(nyckel));
         if (l && isFinite(l.x) && isFinite(l.y))
-            papper_flytta(l.x, l.y);
+            lapp_flytta(lapp, l.x, l.y);
     } catch (fel) { /* utan localStorage: uppe till höger */ }
 }
 
-const listen = papperet.querySelector('header');
-listen.addEventListener('pointerdown', h => {
-    if (h.target.closest('button') || h.button !== 0)
-        return;
-    const r = papperet.getBoundingClientRect();
-    papper_drag = { dx: h.clientX - r.left, dy: h.clientY - r.top };
-    listen.setPointerCapture(h.pointerId);
-    h.preventDefault();
-});
-listen.addEventListener('pointermove', h => {
-    if (papper_drag)
-        papper_flytta(h.clientX - papper_drag.dx, h.clientY - papper_drag.dy);
-});
-function papper_slapp() {
-    if (!papper_drag)
-        return;
-    papper_drag = null;
-    const r = papperet.getBoundingClientRect();
-    try {
-        localStorage.setItem(PAPPER_NYCKEL, JSON.stringify({ x: r.left, y: r.top }));
-    } catch (fel) { /* sparas inte */ }
+function lapp_flyttbar(lapp, nyckel) {
+    const listen = lapp.querySelector('header');
+    let drag = null;                         /* {dx, dy} medan den dras */
+    listen.addEventListener('pointerdown', h => {
+        if (h.target.closest('button') || h.button !== 0)
+            return;
+        const r = lapp.getBoundingClientRect();
+        drag = { dx: h.clientX - r.left, dy: h.clientY - r.top };
+        listen.setPointerCapture(h.pointerId);
+        h.preventDefault();
+    });
+    listen.addEventListener('pointermove', h => {
+        if (drag)
+            lapp_flytta(lapp, h.clientX - drag.dx, h.clientY - drag.dy);
+    });
+    const slapp = () => {
+        if (!drag)
+            return;
+        drag = null;
+        const r = lapp.getBoundingClientRect();
+        try {
+            localStorage.setItem(nyckel, JSON.stringify({ x: r.left, y: r.top }));
+        } catch (fel) { /* sparas inte */ }
+    };
+    listen.addEventListener('pointerup', slapp);
+    listen.addEventListener('pointercancel', slapp);
+    addEventListener('resize', () => {
+        if (lapp.style.left)
+            lapp_flytta(lapp, parseFloat(lapp.style.left), parseFloat(lapp.style.top));
+    });
 }
-listen.addEventListener('pointerup', papper_slapp);
-listen.addEventListener('pointercancel', papper_slapp);
-addEventListener('resize', () => {
-    if (papperet.style.left)
-        papper_flytta(parseFloat(papperet.style.left), parseFloat(papperet.style.top));
-});
+
+const PAPPER_NYCKEL = 'abc80_papper';
+lapp_flyttbar(papperet, PAPPER_NYCKEL);
 
 papperet.addEventListener('toggle', () => {
     if (papper_oppet()) {
-        papper_lage();
+        lapp_lage(papperet, PAPPER_NYCKEL);
         $('papper_knapp').classList.remove('nytt');
         const ruta = $('papper_rulle');
         ruta.scrollTop = ruta.scrollHeight;
@@ -2468,6 +2589,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
         oppna_panel('panel_skrivaren');
     }
     papper_slag();
+    if (fraga.get('v24') === 'hr80') {
+        $('hr80').checked = true;
+        oppna_panel('panel_hr80');
+    }
     if (fraga.get('tkn80') === 'pa')
         $('tkn80').checked = true;
     if (fraga.get('fast') === 'pa')
