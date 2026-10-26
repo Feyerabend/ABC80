@@ -4,7 +4,7 @@
 
   Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
   till abc80.html. På raden med FILER läggs WebAssembly-koden, ROM:arna,
-  exempeldisketten, Luxors systemskiva och demoskiva, Forth-kretsen, Forthaid, bokens exempel 1-6, MÅLARE-bandet och
+  exempeldisketten, Luxors systemskiva och demoskiva, Forth-kretsen, Forthaid, Forthaid II, bokens exempel 1-6, MÅLARE-bandet och
   Genesis-demot (band och diskett), om de finns, in som base64, och
   abc80.js efter. Då är abc80.html en enda fil som går att öppna direkt i
   webbläsaren, utan server och utan att något installeras.
@@ -17,7 +17,8 @@
   mellan KRETS och /KRETS Forth-kretsens, som tas bort när
   exempel/krets/forth.bin inte finns, mellan FORTHAID och /FORTHAID
   Forthaids, som tas bort när ../utanfor/forthaid/forthaid.bin inte
-  finns, mellan EXEMPEL och /EXEMPEL
+  finns, mellan FORTHAID2 och /FORTHAID2 Forthaid II:s, som tas bort när
+  ../utanfor/forthaid2/forthaid2.bin och bankerna inte finns, mellan EXEMPEL och /EXEMPEL
   exemplens, som tas bort när exempel/krets/e1.bin med flera inte finns,
   mellan MALARE och /MALARE bandet MÅLAREs, som tas bort när
   exempel/malare/MALARE.wav inte finns, mellan CPM och /CPM CP/M:s, och
@@ -693,6 +694,9 @@
 <!-- FORTHAID -->
           <option value="forthaid" data-en="Forthaid (outside the book)">Forthaid (utanför boken)</option>
 <!-- /FORTHAID -->
+<!-- FORTHAID2 -->
+          <option value="forthaid2" data-en="Forthaid II (outside the book)">Forthaid II (utanför boken)</option>
+<!-- /FORTHAID2 -->
 <!-- EXEMPEL -->
           <option value="e1" data-en="Example 1: the key interrupt">Exempel 1: tangentavbrottet</option>
           <option value="e2" data-en="Example 2: capitals">Exempel 2: versaler</option>
@@ -778,6 +782,31 @@
         <code>utanfor/forthaid/MANUAL.md</code> in the book's code
         repository.</p>
 <!-- /FORTHAID -->
+<!-- FORTHAID2 -->
+        <p lang="sv"><i>Forthaid II</i> är Forthaid på ett påhittat kort med
+        banker, så att den fungerar också med TKN80: en fast del på
+        <code>$4000</code> och fem banker à 2 KB i fönstret på
+        <code>$5000</code>, under TKN80:s bildminne. Kommandona är desamma
+        och kopplas in på samma sätt, med <code>Z=CALL(16384,2)</code>. Med
+        TKN80 i 80-teckensläget räknar skärmeditorn, <code>ED</code> och
+        <code>LIST</code> med 80 kolumner. <code>SAVEW namn</code> sparar de
+        egna Forth-orden på skivan och <code>LOADW namn</code> laddar dem;
+        det kräver ett skivminne, till exempel <i>Systemskivan</i>. Manualen
+        står i <code>utanfor/forthaid2/MANUAL.md</code> i bokens
+        kodförråd.</p>
+        <p lang="en"><i>Forthaid II</i> is Forthaid on an imagined card with
+        banks, so that it works with TKN80 too: a fixed part at
+        <code>$4000</code> and five banks of 2 KB in the window at
+        <code>$5000</code>, below the screen memory of TKN80. The commands
+        are the same and are hooked in the same way, with
+        <code>Z=CALL(16384,2)</code>. With TKN80 in 80-column mode the screen
+        editor, <code>ED</code> and <code>LIST</code> use 80 columns.
+        <code>SAVEW name</code> saves your own Forth words on disk and
+        <code>LOADW name</code> loads them; this needs a disk drive, such as
+        the <i>System disk</i>. The manual (in Swedish) is
+        <code>utanfor/forthaid2/MANUAL.md</code> in the book's code
+        repository.</p>
+<!-- /FORTHAID2 -->
 <!-- EXEMPEL -->
         <p lang="sv"><i>Exempel 1</i>–<i>6</i> är programmen i band 2,
         kapitlet Egna exempel, i den tänkta kretsen: på <code>$4000</code>,

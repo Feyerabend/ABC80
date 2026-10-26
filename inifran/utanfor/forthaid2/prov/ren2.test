@@ -1,0 +1,3 @@
+# REN utan intervall, och en referens till en rad som saknas: fel 6
+# före ändringen, som i BASIC:s REN.
+-k '10 PRINT "A"\r20 GOSUB 50\r30 ON X GOTO 10,50\r50 RETURN\rZ=CALL(16384)\r\w300\.REN 100\r\w300\.LIST\r\w500\.BYE\r\w300\.70 GOTO 99\rZ=CALL(16384)\r\w300\.REN\r\w300\.LIST\r\w300\.'

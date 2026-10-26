@@ -1,0 +1,3 @@
+# AUTO: tre rader, den sista ersätter en som fanns; en tom rad slutar.
+# Ett fel i raden går till BASIC.
+-k '5 REM START\r30 PRINT "GAMMAL"\rZ=CALL(16384)\r\w300\.AUTO 10,10\r\w300\.A=2\r\w300\.PRINT A*A\r\w300\.PRINT "NY"\r\w300\.\r\w300\.AUTO 100\r\w300\.PRINT +\r\w300\.LIST\r\w500\.RUN\r\w300\.'

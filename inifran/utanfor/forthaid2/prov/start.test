@@ -1,0 +1,5 @@
+# START n: programmet körs från rad n utan att variablerna nollställs
+# (B från körningen som stannade); med ett nummer som inte finns från
+# nästa rad, utan nummer från början. När programmet är slut nollställs
+# de som efter RUN. Från OK med Z=CALL(16384) som direkt i BASIC.
+-k '10 B=7\r20 STOP\r30 PRINT "B";B\rZ=CALL(16384,2)\r\w300\.RUN\r\w300\.START 25\r\w300\.START 30\r\w300\.START\r\w300\.Z=CALL(16384)\r\w300\.START 30\r\w300\.'

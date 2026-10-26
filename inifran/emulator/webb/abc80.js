@@ -399,6 +399,17 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
                 e.krets(ex.adress, p, data.length);
             e.slapp(p);
         }
+    } else if (val === 'forthaid2') {
+        /* Den fasta delen på $4000 och bankerna i fönstret på $5000. */
+        const data = FILER.forthaid2;
+        const krets = lagg_i_minnet(data);
+        e.krets(0x4000, krets, data.length);
+        e.slapp(krets);
+        for (const bank of FILER.forthaid2_banker) {
+            const p = lagg_i_minnet(bank);
+            e.bank(0x5000, p, bank.length);
+            e.slapp(p);
+        }
     } else if (val) {
         const data = val === 'cmos' ? FILER.krets_cmos
                    : val === 'forthaid' ? FILER.forthaid : FILER.krets;
@@ -1887,9 +1898,9 @@ $('demoskiva')?.addEventListener('click', () => {
     skarm.focus();
 });
 
-/* Forth-kretsarna (exempel/krets/) och Forthaid (utanför boken,
- * utanfor/forthaid/), när de ligger i sidan: maskinen
- * startas om med den valda kretsen eller utan. */
+/* Forth-kretsarna (exempel/krets/), Forthaid och Forthaid II (utanför
+ * boken, utanfor/forthaid/ och utanfor/forthaid2/), när de ligger i
+ * sidan: maskinen startas om med den valda kretsen eller utan. */
 const KRETSAR = {
     '': ['', ''],
     forth: ['Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
@@ -1898,6 +1909,8 @@ const KRETSAR = {
            'Forth with CMOS: Z=CALL(16384,3); the words are saved in the CMOS memory at $5000.'],
     forthaid: ['Forthaid på $4000: Z=CALL(16384,2) kopplar in den, HELP visar kommandona, EX kopplar ur.',
                'Forthaid at $4000: Z=CALL(16384,2) hooks it in, HELP shows the commands, EX unhooks it.'],
+    forthaid2: ['Forthaid II på $4000 och fem banker på $5000, också med TKN80: Z=CALL(16384,2) kopplar in den, HELP visar kommandona, EX kopplar ur. SAVEW och LOADW sparar och laddar de egna orden på en diskett.',
+                'Forthaid II at $4000 and five banks at $5000, also with TKN80: Z=CALL(16384,2) hooks it in, HELP shows the commands, EX unhooks it. SAVEW and LOADW save and load your own words on a diskette.'],
 };
 
 /* Bokens exempel 1-6 (band 2, kapitlet Egna exempel; exempel/krets/),
@@ -2214,6 +2227,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
     }
     if (FILER.forthaid)
         FILER.forthaid = base64(FILER.forthaid);
+    if (FILER.forthaid2) {
+        FILER.forthaid2 = base64(FILER.forthaid2);
+        FILER.forthaid2_banker = FILER.forthaid2_banker.map(base64);
+    }
     cmos_las_in();
 
     if (fraga.get('rom') === 'gammal' || (fraga.get('rom') === 'b2' && ROM.b2))
@@ -2230,7 +2247,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
         $('krets').hidden = true;            /* varken Forth eller exemplen */
     const krets = fraga.get('krets');
     if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) ||
-                       (FILER.forthaid && krets === 'forthaid') || krets in EXEMPEL)) {
+                       (FILER.forthaid && krets === 'forthaid') ||
+                       (FILER.forthaid2 && krets === 'forthaid2') || krets in EXEMPEL)) {
         $('krets').value = krets;
         oppna_panel('panel_program');
     }

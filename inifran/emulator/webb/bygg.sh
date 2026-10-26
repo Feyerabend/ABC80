@@ -12,7 +12,10 @@
 # och /SYSTEM). Finns exempel/krets/forth.bin och
 # forth_cmos.bin kommer Forth-kretsarna med (KRETS och /KRETS). Finns
 # ../utanfor/forthaid/forthaid.bin (utanför boken) kommer Forthaid med
-# (FORTHAID och /FORTHAID). Finns
+# (FORTHAID och /FORTHAID). Finns ../utanfor/forthaid2/forthaid2.bin
+# och forthaid2_b0.bin med flera (../utanfor/forthaid2/gor.sh) kommer
+# Forthaid II med, den fasta delen och bankerna (FORTHAID2 och
+# /FORTHAID2). Finns
 # exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
 # bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
 # exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
@@ -40,6 +43,7 @@ DEMO=skivor/demoskiva.dsk
 KRETS=exempel/krets/forth.bin
 KRETS_CMOS=exempel/krets/forth_cmos.bin
 FORTHAID=../utanfor/forthaid/forthaid.bin
+FORTHAID2=../utanfor/forthaid2/forthaid2.bin
 EXEMPEL="e1 e2 e3 e4a e4b e5 e6"
 MALARE=exempel/malare/MALARE.wav
 SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
@@ -74,6 +78,15 @@ exemplen() {
     for n in $EXEMPEL; do echo exempel/krets/$n.bin; done
 }
 
+forthaid2_banker() {
+    ls ../utanfor/forthaid2/forthaid2_b[0-9].bin 2>/dev/null
+}
+
+# Forthaid II: den fasta delen och minst en bank.
+forthaid2_finns() {
+    if [ -f "$FORTHAID2" ] && [ -n "$(forthaid2_banker)" ]; then echo ja; else echo nej; fi
+}
+
 finns() {
     for f in "$@"; do [ -f "$f" ] || { echo nej; return; }; done
     echo ja
@@ -86,6 +99,7 @@ sida() {
         avsnitt SYSTEM "$(finns "$SYSTEM" "$DEMO")" |
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
         avsnitt FORTHAID "$(finns "$FORTHAID")" |
+        avsnitt FORTHAID2 "$(forthaid2_finns)" |
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
         avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B" "$CPM_D")" |
@@ -121,6 +135,14 @@ if [ -f "$KRETS" ] && [ -f "$KRETS_CMOS" ]; then
 fi
 if [ -f "$FORTHAID" ]; then
     printf '  forthaid: "%s",\n' "$(base64_av "$FORTHAID")"
+fi
+if [ "$(forthaid2_finns)" = ja ]; then
+    printf '  forthaid2: "%s",\n' "$(base64_av "$FORTHAID2")"
+    printf '  forthaid2_banker: [\n'
+    for f in $(forthaid2_banker); do
+        printf '    "%s",\n' "$(base64_av "$f")"
+    done
+    printf '  ],\n'
 fi
 if [ "$(finns $(exemplen))" = ja ]; then
     printf '  exempel: {\n'

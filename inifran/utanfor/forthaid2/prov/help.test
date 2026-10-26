@@ -1,0 +1,2 @@
+# HELP: kommandona och de egna orden (de som ligger i RAM).
+-k 'Z=CALL(16384)\r\w300\.HELP\r\w300\.: SQ DUP * ;\r\w300\.: KUB DUP SQ * ;\r\w300\.HELP\r\w300\.3 KUB . BOFA @ H.\r\w300\.BYE\r\w300\.'

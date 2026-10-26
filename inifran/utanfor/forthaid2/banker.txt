@@ -1,0 +1,41 @@
+\ Forthaid II: vilken bank orden hamnar i (steg 4 i PLAN.md, utanför
+\ boken). Läses av bank/fc2.py (-m). Ord som inte står här ligger i den
+\ fasta delen på $4000: kärnan, tolken (e7.fs, e7i.fs) och de av
+\ Forthaids ord som flera banker eller KBD använder. Ett ord som står i
+\ flera banker får en kopia i var och en; anrop utifrån går till den
+\ första. Ordningen här spelar ingen roll, källornas ordning gäller.
+
+\ Bank 0: listningen, sökningen, minnet och editorn.
+0: FINDLN PAGE BRK? MORE? DETOK COLS LISTLINE (LIST) LIST
+0: PEEKC SKIPBL GETNUM RANGE
+0: DIG H2 H. PCHAR PEEKROW DIGIT? NUMBER? PEEK
+0: REST SEARCH HIT? FIND SYS START LN? EDIT ED DEL
+
+\ Bank 1: variablerna.
+1: PEEKC SKIPBL
+1: ADV1 VARNAME VKEY MATCHVAR USES? .VAR SETVARS ALLVARS VAR
+1: NAME? RENAME CHANGE
+
+\ Bank 2: radnumren.
+2: FINDLN PEEKC SKIPBL GETNUM RANGE
+2: +V GETN COMMA? IN? PREVLN RENOK? RENUM REN (INS) AUTO
+2: CLEAR CHAIN OLD HELP
+
+\ Bank 3: kompilatorn (steg 7). Orden som bara behövs när man definierar
+\ nya ord (e7i.fs, "Kompilatorn"); den yttre tolken når dem genom sina
+\ fjärrord, också de som är IMMEDIATE.
+3: S, HEADER REVEAL IMMEDIATE : ; VARIABLE CONSTANT ' LITERAL
+3: IF THEN ELSE BEGIN UNTIL AGAIN WHILE REPEAT DO LOOP ."
+
+\ Bank 4: SAVEW och LOADW (steg 7, bank/fil.fs), de egna orden till en
+\ fil och tillbaka, med FCALL (bank/fil.inc).
+4: FCALL FB BP BN R1 NN SCR NBK BM ROM FCLOSE FGET FPUT BLK OPENF CALL? BTOP
+4: GETB PUTB GETW PUTW FGETS FPUTS REGION N1 REL MELLAN IN-ORD?
+4: BIT SETBIT FIXA CELLER ORDET ALLA SAVEW PLATS RYMS? RELOC LOADW
+
+\ Ord i bankerna som ska gå att skriva vid OK (MANUAL.md), också när
+\ de bara används i sin bank.
+h: H. FINDLN LISTLINE DETOK
+h: S, HEADER REVEAL IMMEDIATE : ; VARIABLE CONSTANT ' LITERAL
+h: IF THEN ELSE BEGIN UNTIL AGAIN WHILE REPEAT DO LOOP ."
+h: SAVEW LOADW

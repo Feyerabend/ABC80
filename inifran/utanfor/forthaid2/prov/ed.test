@@ -1,0 +1,4 @@
+# Editorn: CTRL-W fyra rader upp till en listad rad, CTRL-S till
+# kolumn 10, CTRL-P två gånger, CTRL-A tillbaka; högerpilen läser in
+# raden och XY skrivs i luckan. CTRL-L rensar skärmen.
+-k '10 PRINT "AB"\r20 END\rZ=CALL(16384,2)\r\w300\.LIST\r\w300\.\x17\x17\x17\x17\x13\x13\x13\x13\x13\x13\x13\x13\x13\x13\x10\x10\x01\x01\x01\x01\x01\x01\x01\x01\x01\x01\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09XY\x09\x09\x09\x09\r\w300\.\x0cLIST\r\w300\.RUN\r\w300\.'

@@ -1,0 +1,3 @@
+# FIND: ett nyckelord, en variabel, en text i en sträng, ett radnummer
+# och något som inte finns.
+-k '10 A=1:B$="HEJ DU"\r20 PRINT A;B$\r30 IF A=1 THEN 10\r40 REM HEJ\rZ=CALL(16384)\r\w300\.FIND PRINT\r\w300\.FIND A\r\w300\.FIND HEJ D\r\w300\.FIND THEN 10\r\w300\.FIND XYZ\r\w300\.BYE\r\w300\.'

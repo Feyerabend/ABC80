@@ -1,0 +1,4 @@
+# Versaler och gemener: kommandona och Forth-orden gäller med gemener
+# (find, list, words), och egna ord hittas hur de än skrivs. Argumentet
+# ändras inte: find a söker efter ett litet a.
+-k '10 PRINT "A"\r20 REM a\rZ=CALL(16384,2)\r\w300\.find A\r\w300\.find a\r\w300\.List 20\r\w300\.forth\r\w300\.: Tre 3 ;\r\w300\.tre TRE . .\r\w300\.bye\r\w300\.'

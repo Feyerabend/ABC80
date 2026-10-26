@@ -1,0 +1,5 @@
+# Kompilatorn (bank 3 i steg 7): IF ELSE THEN, DO LOOP, BEGIN WHILE
+# REPEAT, UNTIL, AGAIN, .", VARIABLE, CONSTANT, LITERAL, IMMEDIATE och '
+# nås från den yttre tolken genom sina fjärrord. Hela provet ryms på en
+# skärm med 40 kolumner, så att det kan jämföras med 80-teckensläget.
+-k 'Z=CALL(16384,2)\r\w300\.forth\r\w300\.: S 0< IF ." N" ELSE ." P" THEN ;\r\w300\.-5 S 7 S\r\w300\.: U 0 5 0 DO I + LOOP . ; U\r\w300\.: C BEGIN ?DUP WHILE DUP . 1- REPEAT ;\r\w300\.3 C\r\w300\.: D BEGIN 1- DUP 0= UNTIL . ; 5 D\r\w300\.: A BEGIN 1- DUP 0= IF EXIT THEN AGAIN ;\r\w300\.4 A .\r\w300\.VARIABLE V 42 V ! V @ .\r\w300\.7 CONSTANT K K .\r\w300\.9 : L LITERAL ; L . '"'"' K EXECUTE .\r\w300\.: M ." IM" ; IMMEDIATE : T M ; T\r\w300\.bye\r\w300\.'

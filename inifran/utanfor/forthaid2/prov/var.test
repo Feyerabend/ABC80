@@ -1,0 +1,3 @@
+# VAR: alla variabler (med siffra, %, $ och index), och VAR namn för
+# några av dem; A och A( är olika, liksom A och A1.
+-k '10 A=1:A1=2:B%=3:C$="X"\r20 DIM A(5):A(1)=A+A1\r30 PRINT B%;C$:IF A>0 THEN Z=SIN(A)\r40 REM A A1\rZ=CALL(16384)\r\w300\.VAR\r\w300\.VAR A\r\w300\.VAR A(\r\w300\.VAR A1\r\w300\.VAR C$\r\w300\.VAR Q\r\w300\.BYE\r\w300\.'

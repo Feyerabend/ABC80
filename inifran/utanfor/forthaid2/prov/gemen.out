@@ -1,0 +1,24 @@
+ABC80
+10 PRINT "A"
+20 REM a
+Z=CALL(16384,2)
+
+ABC80
+find A
+10 PRINT "A"
+
+ABC80
+find a
+20 REM a
+
+ABC80
+List 20
+20 REM a
+
+ABC80
+forth
+: Tre 3 ; OK
+tre TRE . . 3 3 OK
+bye
+ABC80
+_

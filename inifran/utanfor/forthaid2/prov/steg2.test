@@ -1,0 +1,5 @@
+# Paus och fortsättning: CTRL-C gör paus, en annan tangent (blanksteg)
+# låter programmet gå vidare, CTRL-C igen gör paus och CTRL-C i pausen
+# bryter. Raden efter brytningen (ERR 11 om pausens tangent hade
+# fångats) och EX fungerar.
+-k '10 I=I+1\r20 GOTO 10\rZ=CALL(16384,2)\r\w300\.RUN\r\w300\.\x03\w300\. \w300\.\x03\w300\.\x03\w300\.EX\r\w300\.PRINT I\r\w300\.'

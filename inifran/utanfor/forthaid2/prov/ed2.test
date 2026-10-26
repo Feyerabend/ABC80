@@ -1,0 +1,3 @@
+# Editorn: vänsterpilen och CTRL-X tar bort ur raden; CTRL-D tar bort
+# ett tecken ur en listad rad; CTRL-Q går till övre vänstra hörnet.
+-k 'Z=CALL(16384,2)\r\w300\.PRINT 12\x083\r\w300\.PRINT 7\x18PRINT 5\r\w300\.10 PRINT "XAB"\r\w300\.LIST\r\w300\.\x17\x17\x17\x13\x13\x13\x13\x13\x13\x13\x13\x13\x13\x04\x01\x01\x01\x01\x01\x01\x01\x01\x01\x01\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\r\w300\.\x11PRINT 8\r\w300\.LIST\r\w300\.'
