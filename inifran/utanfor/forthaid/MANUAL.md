@@ -90,20 +90,20 @@ I inkopplat läge läses raderna med en editor där markören går fritt
 över skärmen, som i Smartaid. En rad på skärmen kan läsas in igen med
 högerpilen, eventuellt ändrad.
 
-| Tangent       | Vad                                                    |
-|---------------|--------------------------------------------------------|
-| högerpilen    | tecknet under markören läses in i raden                |
-| vänsterpilen  | det sista tecknet i raden tas bort                     |
-| CTRL-X        | hela raden tas bort                                    |
-| CTRL-W        | markören upp                                           |
-| CTRL-Z        | markören ned                                           |
-| CTRL-A        | markören åt vänster                                    |
-| CTRL-S        | markören åt höger                                      |
-| CTRL-Q        | markören till övre vänstra hörnet                      |
-| CTRL-L        | skärmen rensas                                         |
-| CTRL-D        | tecknet under markören tas bort ur skärmraden          |
-| CTRL-P        | ett blanktecken sätts in i skärmraden                  |
-| RETURN        | raden är klar                                          |
+| Tangent       | Vad                                            |
+|---------------|------------------------------------------------|
+| högerpilen    | tecknet under markören läses in i raden        |
+| vänsterpilen  | det sista tecknet i raden tas bort             |
+| CTRL-X        | hela raden tas bort                            |
+| CTRL-W        | markören upp                                   |
+| CTRL-Z        | markören ned                                   |
+| CTRL-A        | markören åt vänster                            |
+| CTRL-S        | markören åt höger                              |
+| CTRL-Q        | markören till övre vänstra hörnet              |
+| CTRL-L        | skärmen rensas                                 |
+| CTRL-D        | tecknet under markören tas bort ur skärmraden  |
+| CTRL-P        | ett blanktecken sätts in i skärmraden          |
+| RETURN        | raden är klar                                  |
 
 Raden är det som har skrivits eller lästs in med högerpilen, inte det
 som står på skärmen. Flyttar man markören med CTRL-W, A, S eller Z läses
@@ -121,6 +121,11 @@ I beskrivningarna är *n* och *m* radnummer. Ett radintervall skrivs som
 i BASIC:s LIST: `n` (bara den raden), `n-m`, `n-` (till slutet), `-m`
 (från början) eller ingenting (allt). Komma går lika bra som bindestreck.
 Ett kommando som inte förstår det som står efter det svarar `?`.
+
+Kommandona och Forth-orden kan skrivas med versaler eller gemener:
+`list`, `List` och `LIST` är samma kommando, och ett eget ord som
+definierats som `Tre` hittas också som `tre` och `TRE`. Det som står
+efter kommandot ändras inte, så `find a` söker efter ett litet a.
 
 Listor som fyller skärmen (LIST, FIND, VAR och PEEK) stannar efter 22
 rader och väntar på en tangent: mellanslag ger en rad till, RETURN en
@@ -363,16 +368,16 @@ behöver man först `EX`, sedan `Z=CALL(16384,1)`.
 
 Bokens tolk (exempel 7, band 2) har de vanliga orden:
 
-| Slag             | Ord                                                              |
-|------------------|------------------------------------------------------------------|
-| stacken          | `DUP DROP SWAP OVER ROT ?DUP >R R> R@`                          |
-| räkning          | `+ - * U/MOD NEGATE 1+ 1- 2* 10*`                                |
-| jämförelser      | `= < U< 0= 0< AND OR`                                            |
-| minnet           | `@ ! C@ C! +! CMOVE HERE , C, ALLOT`                             |
-| in och ut        | `EMIT TYPE KEY ACCEPT CR SPACE . U. ."`                          |
+| Slag             | Ord                                                                   |
+|------------------|-----------------------------------------------------------------------|
+| stacken          | `DUP DROP SWAP OVER ROT ?DUP >R R> R@`                                |
+| räkning          | `+ - * U/MOD NEGATE 1+ 1- 2* 10*`                                     |
+| jämförelser      | `= < U< 0= 0< AND OR`                                                 |
+| minnet           | `@ ! C@ C! +! CMOVE HERE , C, ALLOT`                                  |
+| in och ut        | `EMIT TYPE KEY ACCEPT CR SPACE . U. ."`                               |
 | styrning         | `IF ELSE THEN BEGIN UNTIL AGAIN WHILE REPEAT DO LOOP I J UNLOOP EXIT` |
-| definitioner     | `: ; VARIABLE CONSTANT IMMEDIATE ' EXECUTE LITERAL`              |
-| tolken           | `WORDS BYE PARSE-NAME LOOKUP`                                    |
+| definitioner     | `: ; VARIABLE CONSTANT IMMEDIATE ' EXECUTE LITERAL`                   |
+| tolken           | `WORDS BYE PARSE-NAME LOOKUP`                                         |
 
 Forthaid lägger till:
 
@@ -396,14 +401,14 @@ står i band 1.
 
 ## Minnet
 
-| Var             | Vad                                                         |
-|-----------------|-------------------------------------------------------------|
-| `$4000`–`$5FFF` | kretsen; vektortabellen för avbrotten på `$5F34`            |
+| Var             | Vad                                                            |
+|-----------------|----------------------------------------------------------------|
+| `$4000`–`$5FFF` | kretsen; vektortabellen för avbrotten på `$5F34`               |
 | `$7C78`–`$7EFE` | tolkens och kommandonas variabler, i bildminnets osynliga byte |
-| `$7F7E`–`$7F7F` | stegningens flagga                                          |
-| `$FB00`–`$FB4F` | radbufferten                                                |
-| `$FB50`–`$FC7F` | de egna orden                                               |
-| `$FC80`–`$FCFF` | stackarna, medan kretsen läser en rad eller kör ett kommando |
+| `$7F7E`–`$7F7F` | stegningens flagga                                             |
+| `$FB00`–`$FB4F` | radbufferten                                                   |
+| `$FB50`–`$FC7F` | de egna orden                                                  |
+| `$FC80`–`$FCFF` | stackarna, medan kretsen läser en rad eller kör ett kommando   |
 
 Kretsen tar inget av BASIC:s minne. Ett program som själv använder
 bildminnets osynliga byte, som vissa skrivarrutiner gör, krockar med

@@ -19,7 +19,7 @@ tangentbordet.
 | `fak.inc`      | de nya maskinkodsorden                                            |
 | `fai.asm`      | tangentbordets avbrott och stegningen, i assembler                |
 | `MANUAL.md`    | manualen: inkopplingen, kommandona, editorn, stegningen och Forth |
-| `prov/`        | 24 prov, vart och ett i 9913 och 11273 (`prov/kor.sh`)            |
+| `prov/`        | 25 prov, vart och ett i 9913 och 11273 (`prov/kor.sh`)            |
 | `matning.sh`   | tiderna för FIND, VAR och REN, och storleken per kommando         |
 | `forthaid.bin` | kretsen, 8 176 byte                                               |
 
@@ -57,7 +57,13 @@ till `bygg/` och bygger där; bokens filer ändras aldrig. I kopiorna:
 - kärnans `BYE` heter `(BYE)`, så att `BYE` i `fa.fs` kan gå tillbaka på
   två sätt: som förut, eller till ROM:ens programslut (`ENDPRG`, CLEAR
   och ABC80) när ett kommando har ändrat programmet, eftersom raden med
-  `CALL` och dess variabel då kan vara borta.
+  `CALL` och dess variabel då kan vara borta;
+- kärnans `(LOOKUP)` tas bort; `fak.inc` har ett eget som inte skiljer
+  på versaler och gemener (2026-10-26), så att `list`, `List` och
+  `LIST` är samma kommando, både i BASIC och vid OK. Det som står efter
+  kommandot ändras inte (`find a` söker efter ett litet a). Kretsen blev
+  17 byte större, och stegningens prov hinner ett varv kortare
+  (`steg.out`, `steg2.emu.out`); `prov/gemen` prövar det nya.
 
 Nya maskinkodsord i `fak.inc`: `*`, `U/MOD`, `DETOK` (ett nyckelord ur
 ROM:ens tabell), `MATCHVAR` (nästa förekomst av en variabel i en rad),
@@ -65,7 +71,8 @@ ROM:ens tabell), `MATCHVAR` (nästa förekomst av en variabel i en rad),
 annan, för FIND), `J`, `CMOVE`,
 `ROMCALL`, `ENDPRG`, `(INS)` (en rad in i programmet), `I@` och `I!`
 (I-registret), `TOROM` (tillbaka in i kommandoloopen), `CMD?` (är ordet
-ett kommando) och `EDIT` med skärmeditorn `EDLIN`. Tangentbordets
+ett kommando), `(LOOKUP)` (ordlistan utan skillnad på versaler och gemener, i
+stället för kärnans) och `EDIT` med skärmeditorn `EDLIN`. Tangentbordets
 avbrott och stegningen är skrivna i assembler i `fai.asm`, som läggs
 sist; vektortabellen måste ligga på `$5F34` (I = `$5F`), vilket
 `gor.sh` prövar.
@@ -173,11 +180,11 @@ som ensamt använder det, också maskinkodsorden i `fak.inc`):
 | START                        |    56 |
 | HELP                         |   159 |
 | EX, BYE                      |    65 |
-| ord som flera kommandon använder     | 1 713     |
+| ord som flera kommandon använder     | 1 791     |
 | inkopplingen (`PA`, `KBD`)   |   261 |
 | avbrottet och stegningen (`fai.asm`) | 212       |
-| bokens tolk, utan exempelorden       | 2 672     |
-| ledigt före vektortabellen på `$5F34` | 92       |
+| bokens tolk, utan exempelorden       | 2 611     |
+| ledigt före vektortabellen på `$5F34` | 75       |
 | **summa**                            | **8 176** |
 
 Före ED och START räknades editorn (`EDIT`) till inkopplingen, som då
@@ -243,7 +250,7 @@ kommandona går att bygga ut.
   när programmet tar slut (som efter `RUN`).
 - **ED** ger ROM:en raden bara fram till markören; det som står efter på
   skärmen måste tas med högerpilen, som mallen med TAB i ROM:ens ED.
-- **8 084 av 8 192 byte** är använda: 92 byte är lediga före
+- **8 101 av 8 192 byte** är använda: 75 byte är lediga före
   vektortabellen och 16 efter `fai.asm`. Det som ska läggas till måste
   rymmas där eller ersätta något.
 
@@ -280,7 +287,7 @@ Finns inte värdemulatorn kör `kor.sh` proven i `emulator/abc80`, med
 ROM:arna i `emulator/roms` (hämtas med `hamta.py` där). Den räknar
 tiden i T-cykler och värdemulatorn i instruktioner (6 000 per 20 ms), så
 programmen i `steg` och `steg2` hinner olika långt; de har egna utdata, `steg.emu.out`
-och `steg2.emu.out`. Alla 24 prov går i båda emulatorerna.
+och `steg2.emu.out`. Alla 25 prov går i båda emulatorerna.
 
 
 ## Slutsatserna

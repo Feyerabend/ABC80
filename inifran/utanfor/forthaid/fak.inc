@@ -554,3 +554,60 @@ EDREST: LD   A,39           ; BC = 39 - kolumnen, Z om 0
         LD   C,A
         LD   B,0
         RET
+
+;W (LOOKUP) ILOOK
+; ( a n h -- h' | 0 ) Som kärnans (LOOKUP), som gor.sh tar bort ur
+; kopian av kärnan, men tecknen jämförs utan
+; skillnad på versaler och gemener: $61-$7E (a-z och ä ö å ü) blir
+; $41-$5E i båda namnen före jämförelsen.
+ILOOK:  POP  HL             ; n
+        EX   (SP),HL        ; HL = a, n på stacken
+        EX   DE,HL          ; DE = a, HL = IP
+        EX   (SP),HL        ; HL = n, IP på stacken
+        PUSH HL             ; n överst
+IL1:    LD   A,B
+        OR   C
+        JR   Z,IL9          ; listans slut, BC = 0
+        LD   H,B
+        LD   L,C
+        INC  HL
+        INC  HL
+        LD   A,(HL)
+        AND  $7F            ; namnets längd
+        EX   (SP),HL
+        CP   L              ; = n?
+        EX   (SP),HL
+        JR   NZ,IL3
+        PUSH BC
+        PUSH DE
+        LD   B,A
+IL2:    INC  HL             ; jämför tecken för tecken
+        LD   A,(HL)
+        CALL UPPER
+        LD   C,A
+        LD   A,(DE)
+        CALL UPPER
+        CP   C
+        JR   NZ,IL4
+        INC  DE
+        DJNZ IL2
+        POP  DE             ; lika: BC = huvudet
+        POP  BC
+        JR   IL9
+IL4:    POP  DE
+        POP  BC
+IL3:    LD   H,B            ; nästa huvud
+        LD   L,C
+        LD   C,(HL)
+        INC  HL
+        LD   B,(HL)
+        JR   IL1
+IL9:    POP  HL
+        POP  DE
+        JP   NEXT
+UPPER:  CP   $61            ; A = tecknet i versal
+        RET  C
+        CP   $7F
+        RET  NC
+        SUB  $20
+        RET

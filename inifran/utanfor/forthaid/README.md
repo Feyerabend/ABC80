@@ -23,7 +23,7 @@ and script names are Swedish: *gör* means make, *mätning* measurement,
 | `fak.inc`      | the new machine-code words                                          |
 | `fai.asm`      | the keyboard interrupt and single-stepping, in assembler            |
 | `MANUAL.md`    | the manual (Swedish): starting, commands, editor, stepping, Forth   |
-| `prov/`        | 24 tests, each run in ROM 9913 and 11273 (`prov/kor.sh`)            |
+| `prov/`        | 25 tests, each run in ROM 9913 and 11273 (`prov/kor.sh`)            |
 | `matning.sh`   | timings of FIND, VAR and REN, and the size per command              |
 | `forthaid.bin` | the ROM, 8 176 bytes                                                |
 
@@ -64,14 +64,21 @@ there; the book's files are never changed. In the copies:
 - the kernel's `BYE` is renamed `(BYE)`, so that `BYE` in `fa.fs` can
   return in two ways: as before, or to the ROM's end of program
   (`ENDPRG`, CLEAR and the ABC80 prompt) when a command has changed the
-  program, since the line with `CALL` and its variable may then be gone.
+  program, since the line with `CALL` and its variable may then be gone;
+- the kernel's `(LOOKUP)` is removed; `fak.inc` has its own, which
+  ignores case (2026-10-26), so that `list`, `List` and `LIST` are the
+  same command, both in BASIC and at OK. What follows the command is
+  left as it is (`find a` searches for a lower-case a). The ROM grew by
+  17 bytes, and the stepping tests run one loop shorter (`steg.out`,
+  `steg2.emu.out`); `prov/gemen` tests the new behaviour.
 
 New machine-code words in `fak.inc`: `*`, `U/MOD`, `DETOK` (a keyword
 from the ROM's table), `MATCHVAR` (the next occurrence of a variable in
 a line), `SETVARS` (a line's variables into VAR's table), `SEARCH` (a
 string in another, for FIND), `J`, `CMOVE`, `ROMCALL`, `ENDPRG`, `(INS)`
 (insert a line into the program), `I@` and `I!` (the I register),
-`TOROM` (back into the command loop), `CMD?` (is the word a command)
+`TOROM` (back into the command loop), `CMD?` (is the word a command), `(LOOKUP)` (the dictionary search without
+regard to case, replacing the kernel's)
 and `EDIT` with the screen editor `EDLIN`. The keyboard interrupt and
 stepping are written in assembler in `fai.asm`, which goes last; the
 vector table must be at `$5F34` (I = `$5F`), which `gor.sh` checks.
@@ -153,11 +160,11 @@ uses it, including machine-code words):
 | START                                 |    56     |
 | HELP                                  |   159     |
 | EX, BYE                               |    65     |
-| words shared by several commands      | 1 713     |
+| words shared by several commands      | 1 791     |
 | hooking in (`PA`, `KBD`)              |   261     |
 | interrupt and stepping (`fai.asm`)    |   212     |
-| the book's interpreter, without the example words | 2 672 |
-| free before the vector table at `$5F34` |  92     |
+| the book's interpreter, without the example words | 2 611 |
+| free before the vector table at `$5F34` |  75     |
 | **total**                             | **8 176** |
 
 Against the estimate made before building (2026-10-20):
@@ -201,7 +208,7 @@ commands can be extended.
   the program ends.
 - **ED** gives the ROM the line only up to the cursor; the rest must be
   taken with the right arrow, like the template with TAB in the ROM's ED.
-- **8 084 of 8 192 bytes** are used: 92 are free before the vector table
+- **8 101 of 8 192 bytes** are used: 75 are free before the vector table
   and 16 after `fai.asm`.
 
 
@@ -232,7 +239,7 @@ in `emulator/roms` (fetched with `hamta.py` there). The book's own host
 emulator counts time in instructions (6 000 per 20 ms) and
 `emulator/abc80` in T-states, so the programs in `steg` and `steg2` get
 different distances; they have their own output, `steg.emu.out` and
-`steg2.emu.out`. All 24 tests pass in both emulators.
+`steg2.emu.out`. All 25 tests pass in both emulators.
 
 
 ## Conclusions

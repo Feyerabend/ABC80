@@ -40,6 +40,17 @@ PY
 # till BASIC på två sätt (etiketten BYE, som BOOT använder, är kvar).
 sed 's/^;W BYE BYE$/;W (BYE) BYE/' $BOK/e7k.inc | cat - fak.inc > bygg/e7k.inc || exit 1
 grep -q '^;W (BYE) BYE$' bygg/e7k.inc || { echo "gor.sh: BYE finns inte i kärnan"; exit 1; }
+# Kärnans (LOOKUP) tas bort ur kopian; fak.inc har ett eget, som inte
+# skiljer på versaler och gemener.
+python3 - bygg/e7k.inc <<'PY' || exit 1
+import re, sys
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+s, n = re.subn(r"(?s);W \(LOOKUP\) XLOOK\n.*?(?=;W )", "", s, count=1)
+if n != 1:
+    sys.exit("gor.sh: (LOOKUP) finns inte i kärnan")
+open(p, "w", encoding="utf-8").write(s)
+PY
 
 # Bara en bild: tolken och kommandona på $4000, nya ord i RAM (FORTH i
 # fa.fs sätter HERE, SLUT används inte).
