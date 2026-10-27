@@ -2,51 +2,57 @@
 % rättas här för hand.
 
 \chapter{Systemvariabler och externa adresser}\label{kap:variabler}\index{systemvariabler|textbf}
+\begingroup\setlength{\parskip}{5pt plus 1pt}
+\par\noindent Kapitlet är en uppslagstabell till kapitlen om koden. Där en rutin läser eller skriver en fast adress i RAM står adressens namn i texten, och här står vad den används till. Namnen är valda för den här boken, som rutinernas namn; ROM:en själv innehåller inga namn. De tre första raderna är inga variabler utan adresser i tilläggs-ROM:arna, som ROM:en anropar eller hoppar till om en sådan krets sitter i (se avsnittet Minneskarta, s.~\pageref{avs:hardvaran:minneskarta}, och Anropen till tilläggskretsarna, s.~\pageref{avs:rom:extjp}).\par
+\par\noindent Systemvariablerna ligger på \adr{FDD0}–\adr{FE3F}, och direkt efter dem kommer radbufferten \namn{BUF1} (se avsnittet Minnet, s.~\pageref{avs:arkitektur:minnet}). IY pekar hela tiden på \adr{FE16}, och de variabler som ROM:en når genom IY har förskjutningen inom parentes, till exempel IY+\adrx{0F} för \namn{FLAGS}. Adresser som inte står i tabellen används inte av ROM:en med eget namn.\par
+\par\noindent De första variablerna delas av två delar av ROM:en. ASCII-aritmetiken (\kw{ADD\$}, \kw{SUB\$} och de andra, kapitlet ASCII-aritmetiken, s.~\pageref{kap:rom:ascii}) räknar med två tal skrivna som text, a och b, och sparar där var de börjar och slutar. Flyttalsfunktionerna (\kw{SIN}, \kw{LOG} och de andra, kapitlet Flyttalen, s.~\pageref{kap:rom:flyttal}) använder samma byte som arbetsminne. Eftersom de två aldrig räknar samtidigt kan de dela platsen.\par
+\TabNeed{8\baselineskip}
 \begin{longtable}{@{}l l p{0.62\textwidth}@{}}
 \textbf{Namn} & \textbf{Adress} & \textbf{Beskrivning}\\\hline\endhead
 \T{v:V405C}\texttt{V405C} & \texttt{\$405C} & tilläggs-ROM: målet för \kw{RST \$08}\\
-\T{v:V604B}\texttt{V604B} & \texttt{\$604B} & tilläggs-ROM: start vid kallstart, om det står \kw{JP} här\\
-\T{v:V6051}\texttt{V6051} & \texttt{\$6051} & tilläggs-ROM: felmeddelande, om bit 0 i \namn{EXTFLG} är satt\\
-\T{v:ASBBEG}\texttt{ASBBEG} & \texttt{\$FDD0} & ASCII-aritmetik: b:s början; flyttalsfunktioner: x (\namn{FLDX})\\
-\T{v:ASBEND}\texttt{ASBEND} & \texttt{\$FDD2} & ASCII-aritmetik: b:s slut (\adrx{83})\\
-\T{v:ASABEG}\texttt{ASABEG} & \texttt{\$FDD4} & ASCII-aritmetik: a:s början\\
-\T{v:ASAEND}\texttt{ASAEND} & \texttt{\$FDD6} & ASCII-aritmetik: a:s slut (\adrx{83})\\
-\T{v:SINQ}\texttt{SINQ} & \texttt{\$FDE4} & \kw{SIN}/\kw{COS}: kvadranten\\
-\T{v:ASARG1}\texttt{ASARG1} & \texttt{\$FDE7} & ASCII-aritmetik: a\$ i bufferten\\
-\T{v:ASEND}\texttt{ASEND} & \texttt{\$FDE9} & ASCII-aritmetik: där argumenten började; flyttal: resultatets adress\\
-\T{v:ASDEC}\texttt{ASDEC} & \texttt{\$FDEB} & ASCII-aritmetik: n, antal decimaler\\
-\T{v:ASCODE}\texttt{ASCODE} & \texttt{\$FDED} & ASCII-aritmetik: rutinens kod (DE)\\
-\T{v:NMICNT}\texttt{NMICNT} & \texttt{\$FDEF} & NMI: skrivs tillbaka oförändrad\\
-\T{v:CLOCKH}\texttt{CLOCKH} & \texttt{\$FDF1} & \namnx{CLOCK}:s två höga byte (\adr{FDF1}–\adr{FDF2}), räknas ned var 256:e NMI\\
+\T{v:V604B}\texttt{V604B} & \texttt{\$604B} & tilläggs-ROM (skivminnets DOS): anropas vid kallstart om det står en \kw{JP}-instruktion (\adrx{C3}) här\\
+\T{v:V6051}\texttt{V6051} & \texttt{\$6051} & tilläggs-ROM: anropas för att skriva ut ett felmeddelande, om bit 0 i \namn{EXTFLG} är satt\\
+\T{v:ASBBEG}\texttt{ASBBEG} & \texttt{\$FDD0} & ASCII-aritmetiken: var b börjar; flyttalsfunktionerna: en kopia av argumentet x på \adr{FDD0}–\adr{FDD4} (\namn{FLDX})\\
+\T{v:ASBEND}\texttt{ASBEND} & \texttt{\$FDD2} & ASCII-aritmetiken: var b slutar (byten \adrx{83} efter sista siffran)\\
+\T{v:ASABEG}\texttt{ASABEG} & \texttt{\$FDD4} & ASCII-aritmetiken: var a börjar\\
+\T{v:ASAEND}\texttt{ASAEND} & \texttt{\$FDD6} & ASCII-aritmetiken: var a slutar (byten \adrx{83})\\
+\T{v:SINQ}\texttt{SINQ} & \texttt{\$FDE4} & \kw{SIN} och \kw{COS}: vinkelns kvadrant\\
+\T{v:ASARG1}\texttt{ASARG1} & \texttt{\$FDE7} & ASCII-aritmetiken: var kopian av a\$ står i bufferten på stacken\\
+\T{v:ASEND}\texttt{ASEND} & \texttt{\$FDE9} & ASCII-aritmetiken: där argumenten började på stacken; flyttalsfunktionerna: adressen där resultatet ska skrivas\\
+\T{v:ASDEC}\texttt{ASDEC} & \texttt{\$FDEB} & ASCII-aritmetiken: n, antalet decimaler\\
+\T{v:ASCODE}\texttt{ASCODE} & \texttt{\$FDED} & ASCII-aritmetiken: DE, platsen i uttryckets kod, sparad medan räkningen pågår\\
+\T{v:NMICNT}\texttt{NMICNT} & \texttt{\$FDEF} & byten före \namnx{CLOCK}. \namn{NMICLK} läser BC från \adr{FDEF} för att få klockans låga byte i B och skriver tillbaka C oförändrad\\
+\T{v:CLOCKH}\texttt{CLOCKH} & \texttt{\$FDF1} & \namnx{CLOCK}:s två höga byte (\adr{FDF1}–\adr{FDF2}), räknas ned var 256:e NMI; den låga byten på \adr{FDF0} räknas ned vid varje NMI\\
 \T{v:CURROW}\texttt{CURROW} & \texttt{\$FDF3} & markörens rad (0–23)\\
 \T{v:CURCOL}\texttt{CURCOL} & \texttt{\$FDF4} & markörens kolumn (0–39)\\
-\T{v:KEYFLG}\texttt{KEYFLG} & \texttt{\$FDF5} & bit 7 = tangent väntar (sätts av \namn{KEYINT})\\
-\T{v:RPTDLY}\texttt{RPTDLY} & \texttt{\$FDF7} & autorepetition: fördröjning\\
-\T{v:CASST}\texttt{CASST} & \texttt{\$FDF8} & kassettläsning: \adrx{FF} = pågår, annars resultat\\
-\T{v:CASBUF}\texttt{CASBUF} & \texttt{\$FDF9} & kassett: aktuell läsbuffert (0 = ingen)\\
-\T{v:EDPTR}\texttt{EDPTR} & \texttt{\$FDFB} & \namn{INLINE}: mallrad för TAB-tangenten\\
-\T{v:CASBLK}\texttt{CASBLK} & \texttt{\$FDFD} & kassett: blocknummer\\
-\T{v:RCVPTR}\texttt{RCVPTR} & \texttt{\$FDFF} & kassettläsning: sparat DE\\
-\T{v:RCVBC}\texttt{RCVBC} & \texttt{\$FE01} & kassettläsning: C = skiftregister, B = bitar kvar\\
-\T{v:RCVCONT}\texttt{RCVCONT} & \texttt{\$FE03} & kassettläsning: korutinens fortsättningsadress\\
-\T{v:RCVSUM}\texttt{RCVSUM} & \texttt{\$FE05} & kassettläsning: checksumma\\
+\T{v:KEYFLG}\texttt{KEYFLG} & \texttt{\$FDF5} & bit 7 = en tangent väntar (sätts av \namn{KEYINT})\\
+\T{v:RPTDLY}\texttt{RPTDLY} & \texttt{\$FDF7} & autorepetitionen: tiden till nästa upprepning, i varv om 256; 70 efter en ny tangent, sedan 8\\
+\T{v:CASST}\texttt{CASST} & \texttt{\$FDF8} & kassettläsningen: \adrx{FF} medan ett block tas emot, sedan resultatet: 0 = rätt, \adrx{A5} = formatfel (ETX saknas), \adrx{A3} = fel checksumma\\
+\T{v:CASBUF}\texttt{CASBUF} & \texttt{\$FDF9} & kassetten: bufferten som läses till (0 = ingen läsning pågår)\\
+\T{v:EDPTR}\texttt{EDPTR} & \texttt{\$FDFB} & \namn{INLINE}: mallraden som TAB-tangenten hämtar tecken ur\\
+\T{v:CASBLK}\texttt{CASBLK} & \texttt{\$FDFD} & kassetten: blocknumret\\
+\T{v:RCVPTR}\texttt{RCVPTR} & \texttt{\$FDFF} & kassettläsningen: DE, nästa byte i bufferten, sparad mellan avbrotten\\
+\T{v:RCVBC}\texttt{RCVBC} & \texttt{\$FE01} & kassettläsningen: C = skiftregistret, B = antalet bitar kvar\\
+\T{v:RCVCONT}\texttt{RCVCONT} & \texttt{\$FE03} & kassettläsningen: adressen där korutinen fortsätter vid nästa avbrott\\
+\T{v:RCVSUM}\texttt{RCVSUM} & \texttt{\$FE05} & kassettläsningen: checksumman\\
 \T{v:BRKFLG}\texttt{BRKFLG} & \texttt{\$FE07} & skilt från 0 om BREAK (CTRL-C) har tryckts\\
-\T{v:DEVHEAD}\texttt{DEVHEAD} & \texttt{\$FE0A} & första posten i enhetslistan\\
-\T{v:EXTFLG}\texttt{EXTFLG} & \texttt{\$FE0F} & bit 0: tilläggs-ROM skriver felmeddelanden\\
+\T{v:DEVHEAD}\texttt{DEVHEAD} & \texttt{\$FE0A} & första posten i enhetslistan (avsnittet Enhetslistan, s.~\pageref{avs:arkitektur:enhetslistan})\\
+\T{v:EXTFLG}\texttt{EXTFLG} & \texttt{\$FE0F} & bit 0 = tilläggs-ROM:en skriver felmeddelandena (via \adr{6051})\\
 \T{v:BOFA}\texttt{BOFA} & \texttt{\$FE1C} & programmets början\\
 \T{v:EOFA}\texttt{EOFA} & \texttt{\$FE1E} & programmets slut (slutmarkeringen \adrx{01})\\
-\T{v:HEAP}\texttt{HEAP} & \texttt{\$FE20} & slutet av variablerna = första lediga byte\\
-\T{v:FLAGS}\texttt{FLAGS} & \texttt{\$FE25} & flaggor: bit 4 = \namn{TRACE}, bit 5 = skyddat program (IY+\adrx{0F})\\
-\T{v:STKTOP}\texttt{STKTOP} & \texttt{\$FE27} & stackens startvärde\\
-\T{v:VARLST}\texttt{VARLST} & \texttt{\$FE29} & variabellistan\\
-\texttt{VFE2B} & \texttt{\$FE2B} & kortvalet: senaste värdet till port 1, skrivs till port 1 igen före varje \kw{OUT} och \kw{INP} (IY+\adrx{15})\\
-\T{v:CURLIN}\texttt{CURLIN} & \texttt{\$FE2C} & adress till raden som körs (eller hade fel)\\
-\T{v:DATPTR}\texttt{DATPTR} & \texttt{\$FE2E} & \namn{DATA}: pekare till nästa värde\\
-\T{v:DATLIN}\texttt{DATLIN} & \texttt{\$FE30} & \namn{DATA}: aktuell rad\\
+\T{v:HEAP}\texttt{HEAP} & \texttt{\$FE20} & slutet av variablerna = första lediga byte på heapen\\
+\T{v:FLAGS}\texttt{FLAGS} & \texttt{\$FE25} & flaggor: bit 4 = \kw{TRACE}, bit 5 = skyddat program (IY+\adrx{0F})\\
+\T{v:STKTOP}\texttt{STKTOP} & \texttt{\$FE27} & stackens startvärde, som SP sätts till vid varje ny kommandorad och efter ett fel\\
+\T{v:VARLST}\texttt{VARLST} & \texttt{\$FE29} & första posten i variabellistan (0 = inga variabler)\\
+\T{v:VFE2B}\texttt{VFE2B} & \texttt{\$FE2B} & kortvalet: det senaste värdet till port 1, som skrivs till port 1 igen före varje \kw{OUT} och \kw{INP} (IY+\adrx{15})\\
+\T{v:CURLIN}\texttt{CURLIN} & \texttt{\$FE2C} & adressen till raden som körs (eller hade fel)\\
+\T{v:DATPTR}\texttt{DATPTR} & \texttt{\$FE2E} & \kw{READ}: nästa värde i \kw{DATA}-raderna\\
+\T{v:DATLIN}\texttt{DATLIN} & \texttt{\$FE30} & \kw{READ}: \kw{DATA}-raden som läses\\
 \T{v:FILLST}\texttt{FILLST} & \texttt{\$FE32} & fillistan: första FCB i kedjan (IY+\adrx{1C})\\
-\T{v:VFE33}\texttt{VFE33} & \texttt{\$FE33} & \namn{FILLST}:s höga byte, 0 = inga filer (IY+\adrx{1D})\\
-\T{v:ONERR}\texttt{ONERR} & \texttt{\$FE34} & \kw{ON ERROR GOTO}: radadress, 0 = inget (IY+\adrx{1E}/\adrx{1F})\\
-\T{v:STMSP}\texttt{STMSP} & \texttt{\$FE36} & SP när satsen startade, för \kw{ON ERROR}\\
-\T{v:FNFRAM}\texttt{FNFRAM} & \texttt{\$FE3E} & ramen för aktuellt \kw{FN}-anrop (argumenten)\\
-\T{v:BUF1}\texttt{BUF1} & \texttt{\$FE40} & \namn{BUF1}: radbuffert, vid \namn{PRELNK} pekare till \namn{FOR}-kedjan\\
+\T{v:VFE33}\texttt{VFE33} & \texttt{\$FE33} & \namn{FILLST}:s höga byte; 0 = inga öppna filer (IY+\adrx{1D})\\
+\T{v:ONERR}\texttt{ONERR} & \texttt{\$FE34} & \kw{ON ERROR GOTO}: radens adress; höga byten 0 = avstängt (IY+\adrx{1E}/\adrx{1F})\\
+\T{v:STMSP}\texttt{STMSP} & \texttt{\$FE36} & SP när satsen startade; \kw{ON ERROR} återställer stacken därifrån\\
+\T{v:FNFRAM}\texttt{FNFRAM} & \texttt{\$FE3E} & ramen för det \kw{FN}-anrop som räknas, alltså var argumenten står\\
+\T{v:BUF1}\texttt{BUF1} & \texttt{\$FE40} & radbufferten; medan en rad länkas (\namn{PRELNK}) pekare till det innersta öppna \kw{FOR}-blocket\\
 \end{longtable}
+\endgroup

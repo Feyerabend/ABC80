@@ -40,7 +40,7 @@ CMDKMP: JP   CMPSTX
 
 ; Körningen. DE pekar i den kompilerade koden efter CMD. RST38 beräknar
 ; uttrycket, flyttar fram DE och lämnar strängen på stacken:
-;   SP+0  S, antalet bytes med strängens tecken längre ned
+;   SP+0  S, antalet bytes med strängens tecken (SP+6)
 ;   SP+2  teckens adress
 ;   SP+4  längden
 ;   SP+6  S bytes

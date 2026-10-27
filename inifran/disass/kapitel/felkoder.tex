@@ -2,19 +2,22 @@
 % rättas här för hand.
 
 \chapter{Felkoder}\label{bil:felkoder}
-\noindent Felkoden\index{felkoder|textbf}\index{felhantering} är $\$80+n$. Den ges med \kw{RST \$10} följt av
-koden, eller med ett hopp till en felingång (en \kw{RST \$10} med
-koden efter). ROM:en skriver bara ut \texttt{ERR n}; texterna är
-ABC80:s fellista. \emph{Fångas} betyder att felet står i
-\hyperlink{l:ERRTRP}{\texttt{ERRTRP}} och kan tas om hand av
-\kw{ON ERROR GOTO}\index{ON ERROR GOTO@\kw{ON ERROR GOTO}}. \emph{Ingång} är felingången på
-\adrx{06F7}–\adrx{072B}, där felet kan ges med ett hopp (avsnittet
-Felen, i boken). Kolumnen \emph{ges i} är de namngivna rutiner där
-koden ger felet (ur hoppen till felingångarna och felkoderna efter
-\kw{RST \$10}); listan är inte nödvändigtvis fullständig. Namnen länkar
-till raden i Rutinerna.\par\medskip
+\noindent När något går fel skriver ABC80 bara ett nummer, \texttt{ERR n}.
+Tabellen ger för varje nummer texten och de rutiner i ROM:en där felet
+kommer ifrån. Texterna\index{felkoder|textbf}\index{felhantering} står inte
+i ROM:en utan kommer ur ABC80:s fellista.
+\par\smallskip\noindent Felkoden är $\$80+n$. Den ges med \kw{RST \$10} följt av
+koden, eller med ett hopp till en felingång, som är en \kw{RST \$10} med
+koden efter. \emph{Fångas} betyder att felet står i listan
+\namn{ERRTRP} och kan tas om hand av
+\kw{ON ERROR GOTO}\index{ON ERROR GOTO@\kw{ON ERROR GOTO}} när ett program
+körs. \namn{ERRTRP} har också 36, 39–41 och 43, som ROM:en själv aldrig
+ger. \emph{Ingång} är felets ingång på \adrx{06F7}–\adrx{072B} (avsnittet
+Felen, i boken). \emph{Ges i} är de namngivna rutiner
+som ger felet, med en \kw{RST \$10} eller ett hopp till ingången; det kan
+finnas fler ställen. Namnen länkar till raden i Rutinerna.\par\medskip
 \TabNeed{30mm}
-\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}r l p{0.3\textwidth} l l >{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}r l >{\raggedright\arraybackslash\hyphenpenalty=10000}p{0.3\textwidth} l l >{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
 \textbf{Nr} & \textbf{Kod} & \textbf{Text} & \textbf{Fångas} & \textbf{Ingång} & \textbf{Ges i}\\\hline\endhead
 0 & \texttt{\$80} & EJ TILLÅTET ÖKA {\char34}DIM{\char34} &  & \texttt{L06F9} & \hyperlink{l:DIM1}{\texttt{DIM1}}, \hyperlink{l:DIMSTR}{\texttt{DIMSTR}}\\
 1 & \texttt{\$81} & FEL ANTAL INDEX &  & \texttt{L06FB} & \hyperlink{l:LNKSRC}{\texttt{LNKSRC}}\\
@@ -78,11 +81,12 @@ till raden i Rutinerna.\par\medskip
   i boken).
 \item Fel 13 är det tänkta felet för \kw{DIM A} och \kw{DIM A(1,2,3)}, men
   stacken är fel efter felet i \namn{CMPDMI}, och ABC80 ger i stället
-  ett fel som beror på slumpen, oftast 4 (avsnittet \kw{DIM},
-  i boken).
-  9913 ger fel 13.
+  ett fel som beror på vad som råkar ligga i minnet, oftast 4 (avsnittet
+  \kw{DIM}, i boken). Den senare ROM:en 9913 ger fel 13
+  (i boken).
 \item Fel 61 kommer aldrig: kontrollen av kommat i \namn{CMPDOT} slår
   inte till (avsnittet Grafikpunkterna, i boken).
 \item Fel 62 kommer bara från \kw{SETDOT} och \kw{CLRDOT}. \kw{DOT}
-  utanför skärmen ger inget fel (samma avsnitt).
+  utanför skärmen ger inget fel, utan $-$1 eller 0 efter en byte i ROM:en
+  (i boken).
 \end{itemize}

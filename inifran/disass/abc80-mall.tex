@@ -1773,7 +1773,7 @@
 \Gap
 \Sec{TXTINP: läs en textrad från blockad fil (enhetsrutin 3 för CAS)}{\texttt{TXTINP}: läs en textrad från blockad fil (enhetsrutin 3 för CAS)}{09A0}
 \begin{Note}\par\noindent Kopierar till DE tills CR. \texttt{\$03} = blockslut: nästa block hämtas med \hyperlink{l:GET}{\texttt{GET}}. \texttt{\$09} n expanderas till n blanktecken. \texttt{\$00} = filslut (A = 0, CY = 1). Tecken över \texttt{\$7F} ger fel 58, och för lång rad ger fel 20.\par
-\par\noindent In: HL = mottagaren, C = platsen. Raden med CR måste vara kortare än C, annars fel 20 (prövat). Positionen i FCB:t sparas bara efter CR, och ett LF i filen följer med raden.\par\end{Note}
+\par\noindent In: HL = mottagaren, C = platsen. Raden med CR måste vara kortare än C, annars fel 20 (prövat). Positionen i FCB:n sparas bara efter CR, och ett LF i filen följer med raden.\par\end{Note}
 \CL{\T{a:09A0}\Ad{09A0}\SP{2}\By{?}\SP{11}\T{l:TXTINP}\label{l:TXTINP}\Lb{TXTINP:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:09A1}\Ad{09A1}\SP{2}\By{?}\SP{2}\SP{8}\Fy{c}{}\SP{5}}{lediga = 1 (?)}
 \CL{\T{a:09A5}\Ad{09A5}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{7}}{HL = positionen i blocket}
@@ -3627,7 +3627,7 @@
 \CL{\T{a:1448}\Ad{1448}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
 \Sec{ROTTXT: flytta den senast skrivna texten bakåt}{\texttt{ROTTXT}: flytta den senast skrivna texten bakåt}{1449}
-\begin{Note}\par\noindent På stacken (under returadressen) ligger två adresser p2 och p1 (p2 lades senast). Texten mellan p1 och DE ser ut så här:\par
+\begin{Note}\par\noindent På stacken (ovanför returadressen) ligger två adresser p2 och p1 (p2 lades senast och ligger närmast). Texten mellan p1 och DE ser ut så här:\par
 \begin{Verb}
 \VL{\SP{6}p1\SP{9}p2\SP{9}DE}
 \VL{\SP{6}[\SP{1}text\SP{1}1\SP{3}][\SP{1}text\SP{1}2\SP{3}]}
@@ -4007,7 +4007,7 @@
 \CL{\T{a:163C}\Ad{163C}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{L15D8}}{}
 \CL{\T{a:163F}\Ad{163F}\SP{2}\By{?}\SP{5}\T{l:L163F}\label{l:L163F}\Lb{L163F:}\SP{2}\Fy{c}{L1564}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:FLTEXP}{\texttt{FLTEXP}}: A = exponenten ur antalet siffror (IX+6) och talet efter {\char34}E{\char34} (L). Spill (utanför \mbox{-}128..127) går till fel (CY från \hyperlink{l:GETFLT}{\texttt{GETFLT}}).\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:FLTEXP}{\texttt{FLTEXP}}: A = exponenten ur antalet siffror (IX+6) och talet efter {\char34}E{\char34} (L). Spill (utanför \mbox{-}127..127) går till fel (CY från \hyperlink{l:GETFLT}{\texttt{GETFLT}}).\par\end{Cmt}
 \CL{\T{a:1642}\Ad{1642}\SP{2}\By{?}\SP{5}\T{l:FLTEXP}\label{l:FLTEXP}\Lb{FLTEXP:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:1645}\Ad{1645}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:1646}\Ad{1646}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
@@ -4894,7 +4894,7 @@
 \CL{\T{a:1B76}\Ad{1B76}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:1B77}\Ad{1B77}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:1B78}\Ad{1B78}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
-\CL{\T{a:1B79}\Ad{1B79}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{resultatet överst, argumenten borta}
+\CL{\T{a:1B79}\Ad{1B79}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{resultatet vid SP, argumenten borta}
 \CL{\T{a:1B7A}\Ad{1B7A}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
 \begin{Cmt}\par\noindent \hyperlink{l:FNRES}{\texttt{FNRES}}: hitta slutet på argumenten. HL = IX = ramen (\hyperlink{v:FNFRAM}{\texttt{FNFRAM}}), E = \texttt{\$FF}: \hyperlink{l:ARGWLK}{\texttt{ARGWLK}} går igenom alla argumentposter och ger HL = första byten ovanför det första argumentet, där resultatet ska ligga.\par
@@ -5012,7 +5012,7 @@
 \CL{\T{a:1BFD}\Ad{1BFD}\SP{2}\By{?}\SP{11}\T{l:LET}\label{l:LET}\Lb{LET:}\SP{4}\Fy{c}{}}{}
 \Gap
 \Sec{DIMELM: \$CC i uttryckskoden, dimensionera en variabel}{\texttt{DIMELM}: \texttt{\$CC} i uttryckskoden, dimensionera en variabel}{1BFE}
-\begin{Note}\par\noindent Efter \texttt{\$CC} kommer variabeln (5 byte); IX = dess post. Värdena på stacken, överst först: [längd (strängar)] [index 2] [index 1].\par
+\begin{Note}\par\noindent Efter \texttt{\$CC} kommer variabeln (5 byte); IX = dess post. Värdena på stacken, från SP och uppåt: [längd (strängar)] [index 2] [index 1].\par
 \par\noindent Bit 2–3 i namnbyten (antal index) väljer fall:\par
 \begin{Verb}
 \VL{\SP{4}0\SP{1}index\SP{3}sträng:\SP{1}\hyperlink{l:DIMSTR}{DIMSTR}\SP{1}med\SP{1}längden}
@@ -5908,11 +5908,11 @@
 \Gap
 \Sec{OPEN / PREPARE vid körning}{\texttt{OPEN} / \texttt{PREPARE} vid körning}{2074}
 \begin{Note}\par\noindent A = 0 (\hyperlink{l:OPEN}{\texttt{OPEN}}) eller 1 (\texttt{PREPARE}) läggs på stacken, sedan namnet (en sträng på stacken) och filnumret. Fil 0 gör ingenting.\par
-\par\noindent Filerna har var sitt FCB på 15 byte, i en kedja från \hyperlink{v:FILLST}{\texttt{FILLST}}:\par
+\par\noindent Filerna har var sin FCB på 15 byte, i en kedja från \hyperlink{v:FILLST}{\texttt{FILLST}}:\par
 \begin{Verb}
 \VL{\SP{4}+0/1\SP{1}nästa\SP{1}FCB\SP{3}+2\SP{1}filnummer\SP{3}+3-\SP{1}se\SP{1}\hyperlink{l:OPEN}{OPEN}\SP{1}(\hyperlink{a:07E2}{\$07E2})}
 \end{Verb}
-\par\noindent Finns filnumret redan stängs den filen först och FCB:t används igen. Annars reserveras ett nytt FCB och läggs sist i kedjan.\par
+\par\noindent Finns filnumret redan stängs den filen först och FCB:n används igen. Annars reserveras en ny FCB och läggs sist i kedjan.\par
 \par\noindent Sedan \hyperlink{l:OPEN}{\texttt{OPEN}} med HL = namnet, BC = längden och A = typen. A hämtas från stacken ovanför strängens tillfälliga område.\par
 \par\noindent Till sist tas strängen och A bort från stacken.\par
 \par\noindent Vid fil 0 tolkas inte ens namnet: \texttt{OPEN {\char34}XYZ:{\char34} AS FILE 0} ger inget fel. Filen står öppen efter \hyperlink{l:STOP}{\texttt{STOP}}, men programslutet (\hyperlink{l:ENDPRG}{\texttt{ENDPRG}} via \hyperlink{l:CLEAR}{\texttt{CLEAR}} till \hyperlink{l:CLSALL}{\texttt{CLSALL}}) stänger den, och en senare \texttt{INPUT \#n} ger fel 32.\par\end{Note}
@@ -5931,7 +5931,7 @@
 \CL{\T{a:2082}\Ad{2082}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{FNDFIL}\SP{11}}{finns filen?}
 \CL{\T{a:2085}\Ad{2085}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L209D}\SP{10}}{Z: filen finns}
 \CL{\T{a:2087}\Ad{2087}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
-\CL{\T{a:2088}\Ad{2088}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{9}}{nytt FCB, 15 byte}
+\CL{\T{a:2088}\Ad{2088}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{9}}{ny FCB, 15 byte}
 \CL{\T{a:208B}\Ad{208B}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{ALLOC}}{}
 \CL{\T{a:208E}\Ad{208E}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{7}}{sist i kedjan}
 \CL{\T{a:2091}\Ad{2091}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}}{}
@@ -6366,7 +6366,7 @@
 \CL{\T{a:22C3}\Ad{22C3}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:22C4}\Ad{22C4}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{CMPINX}\SP{11}}{k}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:SETDOT}{\texttt{SETDOT}} / \hyperlink{l:CLRDOT}{\texttt{CLRDOT}}: sätt eller släck en punkt i skärmens grafik.\par
+\begin{Cmt}\par\noindent \hyperlink{l:SETDOT}{\texttt{SETDOT}} / \hyperlink{l:CLRDOT}{\texttt{CLRDOT}}: sätt eller släck en grafikpunkt i skärmens grafik.\par
 \par\noindent Bit 5 sätts alltid, så att tecknet blir ett grafiktecken. Står det text där ORas biten in i tecknet ({\char34}A{\char34} blir {\char34}a{\char34}). \hyperlink{l:CLRDOT}{\texttt{CLRDOT}} lämnar bit 5, så ett tomt grafiktecken blir \texttt{\$20}. r och k avrundas nedåt.\par\end{Cmt}
 \CL{\T{a:22C7}\Ad{22C7}\SP{2}\By{?}\SP{5}\T{l:SETDOT}\label{l:SETDOT}\Lb{SETDOT:}\SP{1}\Fy{c}{DOTARG}}{}
 \CL{\T{a:22CA}\Ad{22CA}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{13}}{sätt biten}
@@ -6379,7 +6379,7 @@
 \CL{\T{a:22D3}\Ad{22D3}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:22D4}\Ad{22D4}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L22CB}}{}
 \Gap
-\begin{Cmt}\par\noindent DOT(r,k): \mbox{-}1 om punkten är satt, annars 0. CY från \hyperlink{l:DOTADR}{\texttt{DOTADR}} prövas inte: utanför skärmen blir det inget fel 62, utan A \texttt{AND} en ROM-byte (på adressen k, eller \hyperlink{a:0372}{\texttt{\$0372}} när r {\char62}= 72). Även texttecken ger \mbox{-}1 när biten råkar vara satt.\par\end{Cmt}
+\begin{Cmt}\par\noindent DOT(r,k): \mbox{-}1 om grafikpunkten är satt, annars 0. CY från \hyperlink{l:DOTADR}{\texttt{DOTADR}} prövas inte: utanför skärmen blir det inget fel 62, utan A \texttt{AND} en ROM-byte (på adressen k, eller \hyperlink{a:0372}{\texttt{\$0372}} när r {\char62}= 72). Även texttecken ger \mbox{-}1 när biten råkar vara satt.\par\end{Cmt}
 \CL{\T{a:22D6}\Ad{22D6}\SP{2}\By{?}\SP{11}\T{l:EXDOT}\label{l:EXDOT}\Lb{EXDOT:}\SP{2}\Fy{c}{}\SP{15}}{k}
 \CL{\T{a:22D7}\Ad{22D7}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{r}
 \CL{\T{a:22D8}\Ad{22D8}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{DOTADR}}{}
@@ -6389,7 +6389,7 @@
 \CL{\T{a:22E1}\Ad{22E1}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{ja: \mbox{-}1}
 \CL{\T{a:22E2}\Ad{22E2}\SP{2}\By{?}\SP{11}\T{l:L22E2}\label{l:L22E2}\Lb{L22E2:}\SP{2}\Fy{c}{}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:DOTARG}{\texttt{DOTARG}}: räkna ut r och k (koden {\char34}r \texttt{\$BA} , k \texttt{\$BA}{\char34}) och ta fram adress och bit med \hyperlink{l:DOTADR}{\texttt{DOTADR}}. Fel 62 om punkten är utanför skärmen.\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:DOTARG}{\texttt{DOTARG}}: räkna ut r och k (koden {\char34}r \texttt{\$BA} , k \texttt{\$BA}{\char34}) och ta fram adress och bit med \hyperlink{l:DOTADR}{\texttt{DOTADR}}. Fel 62 om grafikpunkten är utanför skärmen.\par\end{Cmt}
 \CL{\T{a:22E3}\Ad{22E3}\SP{2}\By{?}\SP{11}\T{l:DOTARG}\label{l:DOTARG}\Lb{DOTARG:}\SP{1}\Fy{c}{}\SP{14}}{r}
 \CL{\T{a:22E4}\Ad{22E4}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:22E5}\Ad{22E5}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{hoppa över {\char34},{\char34}}
@@ -6402,7 +6402,7 @@
 \Gap
 \Sec{DOTADR: skärmadress och bit för en grafikpunkt}{\texttt{DOTADR}: skärmadress och bit för en grafikpunkt}{22EE}
 \begin{Note}\par\noindent In:  BC = r (rad, 0–71), HL = k (kolumn, 0–79).\par
-\par\noindent Ut:  HL = tecknets adress på skärmen, A = biten. CY = utanför. Varje tecken är 2 × 3 punkter:\par
+\par\noindent Ut:  HL = tecknets adress på skärmen, A = biten. CY = utanför. Varje tecken är 2 × 3 grafikpunkter:\par
 \begin{Verb}
 \VL{\SP{4}k\SP{1}jämn\SP{2}k\SP{1}udda}
 \VL{\SP{4}\$01\SP{5}\$02\SP{7}r\SP{1}mod\SP{1}3\SP{1}=\SP{1}0}
@@ -7268,11 +7268,11 @@
 \VL{\SP{11}(0\SP{1}=\SP{1}talet\SP{1}är\SP{1}noll).\SP{1}Flyttalsrutinerna\SP{1}får\SP{1}adressen\SP{1}till}
 \VL{\SP{11}exponentbyten\SP{1}(den\SP{1}högsta),\SP{1}och\SP{1}en\SP{1}flyttalsvariabels}
 \VL{\SP{11}adress\SP{1}pekar\SP{1}också\SP{1}på\SP{1}exponenten.}
-\VL{\SP{2}sträng\SP{3}tre\SP{1}ord,\SP{1}överst\SP{1}först:}
+\VL{\SP{2}sträng\SP{3}tre\SP{1}ord,\SP{1}från\SP{1}SP\SP{1}och\SP{1}uppåt:}
 \VL{\SP{13}[n\SP{1}=\SP{1}antal\SP{1}tillfälliga\SP{1}byte]\SP{1}[adress]\SP{1}[längd]}
 \VL{\SP{11}följda\SP{1}av\SP{1}n\SP{1}byte.\SP{1}För\SP{1}en\SP{1}variabel\SP{1}är\SP{1}n\SP{1}=\SP{1}0;\SP{1}en\SP{1}ny}
 \VL{\SP{11}sträng\SP{1}(som\SP{1}från\SP{1}CHR\$)\SP{1}ligger\SP{1}i\SP{1}de\SP{1}n\SP{1}byten,\SP{1}direkt}
-\VL{\SP{11}under\SP{1}beskrivningen.}
+\VL{\SP{11}ovanför\SP{1}beskrivningen.}
 \VL{\SP{2}variabeladress\SP{1}2\SP{1}byte\SP{2}(för\SP{1}tilldelning).}
 \end{Verb}
 \par\noindent När en rutin startar är CY = 0 och B = 0 (\hyperlink{l:SUBI}{\texttt{SUBI}} och \hyperlink{l:EXFUNC}{\texttt{EXFUNC}} räknar med det). Typen i B vid slutet: 0 = flyttal, 1 = heltal, 2 = sträng.\par\end{Note}
@@ -7301,8 +7301,8 @@
 \CL{\T{a:285C}\Ad{285C}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:285E}\Ad{285E}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:ENDF}{\texttt{ENDF}} (\texttt{\$B9}): slut, flyttal. Flyttalet ska bli kvar på stacken, så returadressen under det flyttas upp: de 9 byten (flyttalet och två sparade ord) flyttas 2 byte uppåt, och returadressen hamnar överst.\par\end{Cmt}
-\CL{\T{a:285F}\Ad{285F}\SP{2}\By{?}\SP{5}\T{l:ENDF}\label{l:ENDF}\Lb{ENDF:}\SP{3}\Fy{c}{}\SP{9}}{returadressen, under flyttalet}
+\begin{Cmt}\par\noindent \hyperlink{l:ENDF}{\texttt{ENDF}} (\texttt{\$B9}): slut, flyttal. Flyttalet ska bli kvar på stacken, och returadressen ovanför det måste bort: de 9 byten (flyttalet och två sparade ord) flyttas 2 byte uppåt, över den, och returadressen hamnar vid SP.\par\end{Cmt}
+\CL{\T{a:285F}\Ad{285F}\SP{2}\By{?}\SP{5}\T{l:ENDF}\label{l:ENDF}\Lb{ENDF:}\SP{3}\Fy{c}{}\SP{9}}{returadressen, ovanför flyttalet}
 \CL{\T{a:2862}\Ad{2862}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2863}\Ad{2863}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2864}\Ad{2864}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
@@ -7685,7 +7685,7 @@
 \CL{\T{a:2A75}\Ad{2A75}\SP{2}\By{?}\SP{5}\T{l:GEF}\label{l:GEF}\Lb{GEF:}\SP{4}\Fy{c}{FCMPST}}{}
 \CL{\T{a:2A78}\Ad{2A78}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L2A63}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:FCMPST}{\texttt{FCMPST}}: jämför de två flyttalen överst på stacken (\hyperlink{l:FCMP}{\texttt{FCMP}}) och ta bort dem. Returadressen tas först bort och hoppet tillbaka görs med \texttt{JP} (IX). Flaggorna sparas över SP-justeringen med \texttt{RLA}/\texttt{RRA}.\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:FCMPST}{\texttt{FCMPST}}: jämför de två flyttalen närmast SP (\hyperlink{l:FCMP}{\texttt{FCMP}}) och ta bort dem. Returadressen tas först bort och hoppet tillbaka görs med \texttt{JP} (IX). Flaggorna sparas över SP-justeringen med \texttt{RLA}/\texttt{RRA}.\par\end{Cmt}
 \CL{\T{a:2A7A}\Ad{2A7A}\SP{2}\By{?}\SP{8}\T{l:FCMPST}\label{l:FCMPST}\Lb{FCMPST:}\SP{1}\Fy{c}{}\SP{15}}{returadressen}
 \CL{\T{a:2A7C}\Ad{2A7C}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{9}}{höger operand}
 \CL{\T{a:2A7F}\Ad{2A7F}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
@@ -7944,7 +7944,7 @@
 \begin{Note}\par\noindent \texttt{ADD\$(a\$,b\$,n)} och så vidare ger en sträng med n decimaler; \texttt{COMP\%(a\$,b\$)} ger \mbox{-}1, 0 eller 1. För \texttt{COMP\%} läggs n = 0 på stacken. BC = rutinen: \hyperlink{l:AADD}{\texttt{AADD}}, \hyperlink{l:ASUB}{\texttt{ASUB}}, \hyperlink{l:AMUL}{\texttt{AMUL}}, \hyperlink{l:ADIV}{\texttt{ADIV}} (från \hyperlink{a:37A6}{\texttt{\$37A6}}) eller \hyperlink{l:ASCCMP}{\texttt{ASCCMP}}.\par
 \par\noindent\hangindent=1.5em\makebox[1.5em][l]{1.}\hyperlink{l:ROOM}{\texttt{ROOM}}: det ska finnas 185 + 100 byte ledigt över \hyperlink{v:HEAP}{\texttt{HEAP}}.\par
 \par\noindent\hangindent=1.5em\makebox[1.5em][l]{2.}n till \hyperlink{v:ASDEC}{\texttt{ASDEC}}, DE (koden) till \hyperlink{v:ASCODE}{\texttt{ASCODE}}. 87 byte buffert på stacken.\par
-\par\noindent\hangindent=1.5em\makebox[1.5em][l]{3.}\hyperlink{l:ASCARG}{\texttt{ASCARG}} kopierar b\$ (överst) till bufferten och sedan a\$, som fylls ut till n+1 decimaler och högerjusteras med mellanslag (\hyperlink{v:ASARG1}{\texttt{ASARG1}} = a\$ i bufferten). Varje kopia slutar med \texttt{\$83}. Tal längre än 29 tecken ger fel 65, SPILL I ASCII-ARITMETIK, och en tom sträng fel 66, STRÄNG EJ NUMERISK.\par
+\par\noindent\hangindent=1.5em\makebox[1.5em][l]{3.}\hyperlink{l:ASCARG}{\texttt{ASCARG}} kopierar b\$ (vid SP) till bufferten och sedan a\$, som fylls ut till n+1 decimaler och högerjusteras med mellanslag (\hyperlink{v:ASARG1}{\texttt{ASARG1}} = a\$ i bufferten). Varje kopia slutar med \texttt{\$83}. Tal längre än 29 tecken ger fel 65, SPILL I ASCII-ARITMETIK, och en tom sträng fel 66, STRÄNG EJ NUMERISK.\par
 \par\noindent\hangindent=1.5em\makebox[1.5em][l]{4.}Rutinen anropas med HL = a\$ (\hyperlink{v:ASARG1}{\texttt{ASARG1}}) och DE = b\$. Resultatet hamnar i a\$:s plats, med a\$:s bredd och n+1 decimaler.\par
 \par\noindent\hangindent=1.5em\makebox[1.5em][l]{5.}n över 26 ger fel 66. Under \hyperlink{v:ASEND}{\texttt{ASEND}}, där argumenten började, skrivs 29 nollor med en punkt före de n sista, och \texttt{\$83}. Resultatet adderas till det med \hyperlink{l:AADD}{\texttt{AADD}}, som avrundar till n decimaler (exakt hälft uppåt för positiva, nedåt i belopp för negativa resultat). Se \hyperlink{a:37A6}{\texttt{\$37A6}}.\par
 \par\noindent\hangindent=1.5em\makebox[1.5em][l]{6.}Inledande mellanslag hoppas över, och texten blir en tillfällig sträng på stacken: [längd+1] [adress] [längd] [text \texttt{\$83}].\par
@@ -8191,14 +8191,14 @@
 \CL{\T{a:2D0F}\Ad{2D0F}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2D10}\Ad{2D10}\SP{2}\By{?}\SP{11}\T{l:L2D10}\label{l:L2D10}\Lb{L2D10:}\SP{2}\Fy{c}{}}{}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:VARIDX}{\texttt{VARIDX}}: IX = variabelns post (adressen i koden), DE = 10, skriv in storlek och offset. Koden-pekaren läggs under returadressen.\par
+\begin{Cmt}\par\noindent \hyperlink{l:VARIDX}{\texttt{VARIDX}}: IX = variabelns post (adressen i koden), DE = 10, skriv in storlek och offset. Koden-pekaren läggs ovanför returadressen.\par
 \par\noindent Ut: Z om variabeln inte är dimensionerad.\par\end{Cmt}
 \CL{\T{a:2D11}\Ad{2D11}\SP{2}\By{?}\SP{11}\T{l:VARIDX}\label{l:VARIDX}\Lb{VARIDX:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:2D12}\Ad{2D12}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2D13}\Ad{2D13}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{RDDE1}\SP{12}}{variabelns post}
 \CL{\T{a:2D16}\Ad{2D16}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2D17}\Ad{2D17}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
-\CL{\T{a:2D19}\Ad{2D19}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{10}}{koden under returadressen}
+\CL{\T{a:2D19}\Ad{2D19}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{10}}{koden ovanför returadressen}
 \CL{\T{a:2D1A}\Ad{2D1A}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2D1B}\Ad{2D1B}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{9}}{förvalt högsta index}
 \CL{\T{a:2D1E}\Ad{2D1E}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{7}}{storlek}
@@ -8525,7 +8525,7 @@
 \CL{\T{a:2EE2}\Ad{2EE2}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
 \Sec{Strängfunktionerna}{Strängfunktionerna}{2EE3}
-\begin{Note}\par\noindent Argumenten ligger på stacken, sista argumentet överst. En sträng är beskrivningen [n][adress][längd] följd av n tillfälliga byte (se \hyperlink{a:2842}{\texttt{\$2842}}). En ny sträng byggs direkt på stacken och blir en tillfällig sträng med n = längden.\par
+\begin{Note}\par\noindent Argumenten ligger på stacken, sista argumentet vid SP. En sträng är beskrivningen [n][adress][längd] följd av n tillfälliga byte (se \hyperlink{a:2842}{\texttt{\$2842}}). En ny sträng byggs direkt på stacken och blir en tillfällig sträng med n = längden.\par
 \begin{Verb}
 \VL{\SP{2}LEN(s\$)\SP{8}längden}
 \VL{\SP{2}ASC(s\$)\SP{8}första\SP{1}tecknets\SP{1}kod,\SP{1}0\SP{1}för\SP{1}en\SP{1}tom\SP{1}sträng}
@@ -8600,7 +8600,7 @@
 \CL{\T{a:2F46}\Ad{2F46}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
 \Sec{CONCAT (\$F6): a\$ + b\$}{\texttt{CONCAT} (\texttt{\$F6}): a\$ + b\$}{2F47}
-\begin{Note}\par\noindent b\$ ligger överst, a\$ under. Den nya strängen byggs först under stacken (\hyperlink{l:ROOM}{\texttt{ROOM}} kontrollerar att det finns plats): a\$ och sedan b\$ kopieras dit. Sedan flyttas den med \texttt{LDDR} uppåt så att den slutar där a\$:s tillfälliga byte slutade, och ersätter båda strängarna. Den blir en tillfällig sträng [n = längd][adress][längd].\par
+\begin{Note}\par\noindent b\$ ligger vid SP, a\$ ovanför. Den nya strängen byggs först under stacken (\hyperlink{l:ROOM}{\texttt{ROOM}} kontrollerar att det finns plats): a\$ och sedan b\$ kopieras dit. Sedan flyttas den med \texttt{LDDR} uppåt så att den slutar där a\$:s tillfälliga byte slutade, och ersätter båda strängarna. Den blir en tillfällig sträng [n = längd][adress][längd].\par
 \par\noindent \hyperlink{l:STRPSH}{\texttt{STRPSH}} (\hyperlink{a:2FBB}{\texttt{\$2FBB}}) är gemensamt slut för \hyperlink{l:CONCAT}{\texttt{CONCAT}} och \texttt{CHR\$}: HL = strängen (och ny SP), BC = längden; beskrivningen läggs överst.\par\end{Note}
 \CL{\T{a:2F47}\Ad{2F47}\SP{2}\By{?}\SP{2}\T{l:CONCAT}\label{l:CONCAT}\Lb{CONCAT:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:2F4B}\Ad{2F4B}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{}}{}
@@ -8669,7 +8669,7 @@
 \CL{\T{a:2FB9}\Ad{2FB9}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:2FBA}\Ad{2FBA}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{HL = strängen}
 \CL{\T{a:2FBB}\Ad{2FBB}\SP{2}\By{?}\SP{11}\T{l:STRPSH}\label{l:STRPSH}\Lb{STRPSH:}\SP{1}\Fy{c}{}\SP{15}}{koden}
-\CL{\T{a:2FBC}\Ad{2FBC}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{strängen överst på stacken}
+\CL{\T{a:2FBC}\Ad{2FBC}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{strängen vid SP}
 \CL{\T{a:2FBD}\Ad{2FBD}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{längd}
 \CL{\T{a:2FBE}\Ad{2FBE}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{adress}
 \CL{\T{a:2FBF}\Ad{2FBF}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{n = längd}
@@ -8730,7 +8730,7 @@
 \CL{\T{a:300D}\Ad{300D}\SP{2}\By{?}\SP{5}\T{l:GES}\label{l:GES}\Lb{GES:}\SP{4}\Fy{c}{STRCMP}}{}
 \CL{\T{a:3010}\Ad{3010}\SP{2}\By{?}\SP{8}\SP{8}\Fy{c}{L2FFB}\SP{12}}{mindre: falskt, annars sant}
 \Gap
-\begin{Cmt}\par\noindent \hyperlink{l:STRCMP}{\texttt{STRCMP}}: jämför a\$ och b\$ (b\$ överst, under returadressen) tecken för tecken. Ut: Z = lika, CY = a\$ {\char60} b\$. Om den ena strängen är början av den andra är den kortare minst. Båda strängarna tas bort. CY sparas i bit 7 av A (\texttt{RRA} ... \texttt{RLA}) medan \texttt{ADD} HL,SP ändrar CY. Stacken efter \texttt{PUSH} DE: SP+2 returadress, SP+4 b\$:s beskrivning, sedan b\$:s tillfälliga byte och a\$:s beskrivning (IX+\texttt{\$0C}/\texttt{\$0E}).\par\end{Cmt}
+\begin{Cmt}\par\noindent \hyperlink{l:STRCMP}{\texttt{STRCMP}}: jämför a\$ och b\$ (b\$ närmast ovanför returadressen) tecken för tecken. Ut: Z = lika, CY = a\$ {\char60} b\$. Om den ena strängen är början av den andra är den kortare minst. Båda strängarna tas bort. CY sparas i bit 7 av A (\texttt{RRA} ... \texttt{RLA}) medan \texttt{ADD} HL,SP ändrar CY. Stacken efter \texttt{PUSH} DE: SP+2 returadress, SP+4 b\$:s beskrivning, sedan b\$:s tillfälliga byte och a\$:s beskrivning (IX+\texttt{\$0C}/\texttt{\$0E}).\par\end{Cmt}
 \CL{\T{a:3012}\Ad{3012}\SP{2}\By{?}\SP{11}\T{l:STRCMP}\label{l:STRCMP}\Lb{STRCMP:}\SP{1}\Fy{c}{}}{}
 \CL{\T{a:3013}\Ad{3013}\SP{2}\By{?}\SP{5}\SP{8}\Fy{c}{}\SP{9}}{b\$:s längd}
 \CL{\T{a:3016}\Ad{3016}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
@@ -9225,7 +9225,7 @@
 \CL{\T{a:32D8}\Ad{32D8}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{11}}{exponenten}
 \CL{\T{a:32D9}\Ad{32D9}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \CL{\T{a:32DA}\Ad{32DA}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{15}}{koden}
-\CL{\T{a:32DB}\Ad{32DB}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{resultatet överst}
+\CL{\T{a:32DB}\Ad{32DB}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{resultatet vid SP}
 \CL{\T{a:32DC}\Ad{32DC}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}}{}
 \Gap
 \CL{\T{a:32DD}\Ad{32DD}\SP{2}\By{?}\SP{5}\SP{8}\Fy{bxxx}{}\SP{6}}{faktorns byte 3\mbox{-}1; byte 4 = \texttt{\$F7} på \hyperlink{a:32DC}{\texttt{\$32DC}}}
@@ -9365,7 +9365,7 @@
 \VL{\SP{4}IX+0\SP{2}avstånd\SP{1}till\SP{1}förra\SP{1}posten\SP{1}(0\SP{1}=\SP{1}den\SP{1}första)}
 \VL{\SP{4}IX+2\SP{2}parameterns\SP{1}typ}
 \end{Verb}
-\par\noindent \hyperlink{l:ARGWLK}{\texttt{ARGWLK}} hoppar över nn argument uppifrån, med storleken enligt typen: flyttal 5, heltal 2, sträng 6 + n. För ett flyttal pekar HL till sist på exponenten (+4), som för vanliga variabler.\par
+\par\noindent \hyperlink{l:ARGWLK}{\texttt{ARGWLK}} hoppar över nn argument nedifrån, från SP-sidan, med storleken enligt typen: flyttal 5, heltal 2, sträng 6 + n. För ett flyttal pekar HL till sist på exponenten (+4), som för vanliga variabler.\par
 \par\noindent \hyperlink{l:FNRES}{\texttt{FNRES}} använder \hyperlink{l:ARGWLK}{\texttt{ARGWLK}} med nn = \texttt{\$FF} för att hoppa över alla.\par\end{Note}
 \CL{\T{a:33AB}\Ad{33AB}\SP{2}\By{?}\SP{11}\T{l:FNPAR}\label{l:FNPAR}\Lb{FNPAR:}\SP{2}\Fy{c}{}}{}
 \CL{\T{a:33AC}\Ad{33AC}\SP{2}\By{?}\SP{11}\SP{8}\Fy{c}{}\SP{12}}{E = nn}

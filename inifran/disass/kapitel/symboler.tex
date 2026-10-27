@@ -2,18 +2,19 @@
 % rättas här för hand.
 
 \chapter{Symbolförteckning}
-\noindent Förteckningen tar upp alla namn som satts på adresser i
-ROM:en: rutiner, hoppmål, tabeller och texter. Namnen är valda för den
-här genomgången; ROM:en själv innehåller inga. Varje rad ger namnet,
-adressen och sidan i listningen där namnet står. I den
-elektroniska utgåvan är namnet dessutom en länk dit.
-\par\smallskip\noindent Två slags namn saknas. Adresser som bara har fått ett namn efter sitt
-läge tas inte med, eftersom namnet redan säger var de står. Ett sådant
-namn är en bokstav följd av adressen: \texttt{S} för en rutin som
-anropas med \texttt{CALL}, \texttt{L} för ett hoppmål och \texttt{D}
-för data, till exempel \texttt{L0709} för ett hoppmål på
-\texttt{\$0709}. Variablerna i RAM och adresserna utanför ROM:en står
-inte här utan i kapitlet Systemvariabler och externa adresser.
+\noindent Förteckningen är till för att hitta ett namn som står i texten
+när man inte vet adressen. Kapitlet Rutinerna (i boken)
+har namnen i adressordning med uppgiften i korthet; här står samma namn i
+bokstavsordning. Varje rad ger namnet, adressen och sidan i Rutinerna där
+namnet står. I den elektroniska utgåvan är namnet dessutom en länk dit.
+Namnen är valda för den här boken; ROM:en själv innehåller inga.
+\par\smallskip\noindent Namn som bara är en bokstav och en adress tas
+inte med, eftersom namnet redan säger var det står i Rutinerna. Ett J är
+en ingång i början av ROM:en och ett D en text eller en tabell, till
+exempel \namn{D0501} på \adr{0501}. Hoppmålen inne i rutinerna, ett L
+och adressen, står inte heller i Rutinerna. Variablerna i RAM och
+adresserna utanför ROM:en står i kapitlet Systemvariabler och externa
+adresser (i boken).
 \par\medskip
 \begin{multicols}{3}\footnotesize\raggedright
 \noindent\hyperlink{l:AADD}{\texttt{AADD}}\hfill\texttt{\$37A6~\phantom{000}\llap{\pageref{l:AADD}}}\par

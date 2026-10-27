@@ -21,6 +21,10 @@
 % xurl: långa adresser (Inskannad: i källorna) får brytas efter varje
 % tecken, inte bara vid / och -, så att de inte går ut i marginalen
 \RequirePackage{xurl}
+% Långa \kw{...} och namn bryts inte; hittar TeX ingen jämn nog rad lämnar
+% den annars raden för lång, ut i marginalen. emergencystretch ger ett
+% tredje försök med glesare rader och rör bara sådana stycken.
+\setlength{\emergencystretch}{3em}
 % Sakregistret: \index{...} i kapitlen, bandN-ny.idx sorteras av
 % tools/mkind.py (tectonic kör inte makeindex), se bygg.sh.
 \RequirePackage{makeidx}\makeindex
@@ -54,6 +58,13 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 \frenchspacing
+% inga ensamma rader: ett stycke lämnar aldrig bara sin första rad längst
+% ned på en sida eller bara sin sista rad överst på nästa (report.cls har 150;
+% \@clubpenalty är det som listorna sätter tillbaka \clubpenalty till)
+\makeatletter
+\clubpenalty=10000 \@clubpenalty=\clubpenalty
+\widowpenalty=10000 \displaywidowpenalty=10000
+\makeatother
 
 \titleformat{\chapter}[display]{\normalfont\bfseries\Huge\raggedright}{}{0pt}{}
 \titlespacing*{\chapter}{0pt}{0pt}{24pt}
@@ -90,8 +101,12 @@
 \makeatletter
 \newcommand{\Ad}[1]{\textcolor{dim}{#1}\edef\abc@w{\noexpand\write\noexpand\@auxout
   {\noexpand\string\noexpand\abcpa{\noexpand\thepage}{#1}{\thesection}}}\abc@w}
+% intervallet är sidans lägsta och högsta adress: står citat ur olika
+% rutiner på samma sida blir det ändå inte baklänges
 \def\abcpa#1#2#3{\@ifundefined{abcf@#1}{\global\@namedef{abcf@#1}{#2}%
-  \global\@namedef{abcs@#1}{#3}}{}\global\@namedef{abcl@#1}{#2}}
+  \global\@namedef{abcl@#1}{#2}\global\@namedef{abcs@#1}{#3}}{%
+  \ifnum"#2<"\csname abcf@#1\endcsname\relax\global\@namedef{abcf@#1}{#2}\fi
+  \ifnum"#2>"\csname abcl@#1\endcsname\relax\global\@namedef{abcl@#1}{#2}\fi}}
 \newcommand{\pagerange}{\@ifundefined{abcf@\thepage}{}{%
   \ttfamily\$\csname abcf@\thepage\endcsname\textendash\$\csname abcl@\thepage\endcsname}}
 \newcommand{\pagesec}{\@ifundefined{abcs@\thepage}{\rightmark}{%

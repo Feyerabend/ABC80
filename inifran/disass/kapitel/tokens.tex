@@ -2,9 +2,25 @@
 % rättas här för hand.
 
 \chapter{Tokens och tabeller}\label{bil:tokens}
+\noindent Bilagan samlar ROM:ens tabeller över nyckelord, operatorer och
+funktioner. För varje ord står den byte, token, som ordet blir i den
+kompilerade koden, och de rutiner som kompilerar och kör det. Den är till
+för att läsa en kompilerad rad byte för byte eller för att hitta rutinen
+bakom ett ord. Namnen länkar till kapitlet Rutinerna
+(i boken). Stubbarna som bara hoppar vidare till en
+tilläggskrets, som \texttt{L017A} för \kw{BYE}, står inte där; adressen
+i kretsen står inom parentes.
+\par\smallskip\noindent Orden står som i ROM:en, utan mellanslag.
+\namn{KWSRCH} hoppar över blanka, så \kw{INPUT LINE} och \kw{INPUTLINE}
+är samma ord (avsnittet Nyckelordssökningen, i boken).
+Där en rutin står med \emph{tillägg} och en adress går ROM:en till en
+tilläggskrets: står det ett \kw{JP} på adressen hoppar den dit, annars blir
+det fel 8 (avsnittet Anropen till tilläggskretsarna,
+i boken).
 \section{Direktkommandon}
-\noindent Ur \hyperlink{l:CMDKW}{\texttt{CMDKW}} och
-\hyperlink{l:CMDTAB}{\texttt{CMDTAB}}. Koden är index i CMDTAB\index{direktkommando}.\par\medskip
+\noindent Kommandona\index{direktkommando} söks i \namn{CMDKW}, och koden
+väljer rutinen i \namn{CMDTAB}: koden $-$ \adrx{80} är platsen i
+tabellen. \kw{SCR} har samma kod som \kw{NEW}.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l@{}}
 \textbf{Kommando} & \textbf{Kod} & \textbf{Rutin}\\\hline\endhead
@@ -22,13 +38,13 @@
 \texttt{UNSAVE} & \texttt{\$8A} & \texttt{L014C} {\footnotesize(tillägg \texttt{\$605A})}\\
 \end{longtable}\end{small}
 \section{Satser}
-\noindent Token\index{token} $\$80$--$\$96$ ur \hyperlink{l:STKW1}{\texttt{STKW1}}.
-Kompileringsrutinen står i \hyperlink{l:STTAB1}{\texttt{STTAB1}} och
-körrutinen i \hyperlink{l:STEXE1}{\texttt{STEXE1}}, båda med index
-token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
-\hyperlink{l:STKW2}{\texttt{STKW2}} och har rutinerna i
-\hyperlink{l:STTAB2}{\texttt{STTAB2}} och
-\hyperlink{l:STEXE2}{\texttt{STEXE2}}.\par\medskip
+\noindent En sats med ett ord ur \namn{STKW1} blir en token\index{token}
+\adrx{80}–\adrx{96}. Token $-$ \adrx{80} är platsen både i
+\namn{STTAB1}, med rutinen som kompilerar satsen, och i \namn{STEXE1}, med
+rutinen som kör den. Några token har inget ord att söka på: kompilatorn
+skriver dem själv (avsnittet Satsens nyckelord,
+i boken). Där kompileringen är \namn{RESET} står
+adressen 0 i \namn{STTAB1}, men den nås aldrig.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l@{}}
 \textbf{Token} & \textbf{Ord} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
@@ -37,9 +53,9 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$82} & \texttt{LET} & \hyperlink{l:CMPLET}{\texttt{CMPLET}} & \hyperlink{l:LET}{\texttt{LET}}\\
 \texttt{\$83} & (\kw{LET} utan ordet) & \hyperlink{l:CMPLET}{\texttt{CMPLET}} & \hyperlink{l:LET}{\texttt{LET}}\\
 \texttt{\$84} & \texttt{PRINT} & \hyperlink{l:CMPPRT}{\texttt{CMPPRT}} & \hyperlink{l:PRINTS}{\texttt{PRINTS}}\\
-\texttt{\$85} & \texttt{;} & \hyperlink{l:CMPPRT}{\texttt{CMPPRT}} & \hyperlink{l:PRINTS}{\texttt{PRINTS}}\\
+\texttt{\$85} & \texttt{;} (som \kw{PRINT}) &\hyperlink{l:CMPPRT}{\texttt{CMPPRT}} & \hyperlink{l:PRINTS}{\texttt{PRINTS}}\\
 \texttt{\$86} & (tabell 2, kod följer) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:EXEST2}{\texttt{EXEST2}}\\
-\texttt{\$87} & (hopp framåt, \kw{IF}) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:EXESKP}{\texttt{EXESKP}}\\
+\texttt{\$87} & (hopp förbi \kw{THEN}- eller \kw{ELSE}-delen) & \hyperlink{l:RESET}{\texttt{RESET}} & \hyperlink{l:EXESKP}{\texttt{EXESKP}}\\
 \texttt{\$88} & \texttt{IF} & \hyperlink{l:CMPIF}{\texttt{CMPIF}} & \hyperlink{l:IF}{\texttt{IF}}\\
 \texttt{\$89} & \texttt{INPUT} & \hyperlink{l:CMPINP}{\texttt{CMPINP}} & \hyperlink{l:INPT}{\texttt{INPT}}\\
 \texttt{\$8A} & \texttt{INPUTLINE} & \hyperlink{l:CMPINL}{\texttt{CMPINL}} & \hyperlink{l:INPLIN}{\texttt{INPLIN}}\\
@@ -53,10 +69,14 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$92} & \texttt{ON} & \hyperlink{l:CMPON}{\texttt{CMPON}} & \hyperlink{l:ON}{\texttt{ON}}\\
 \texttt{\$93} & \texttt{DATA} & \hyperlink{l:CMPREM}{\texttt{CMPREM}} & \hyperlink{l:DATA}{\texttt{DATA}}\\
 \texttt{\$94} & \texttt{ONERRORGOTO} & \hyperlink{l:CMPREF}{\texttt{CMPREF}} & \hyperlink{l:ONERRG}{\texttt{ONERRG}}\\
-\texttt{\$95} & (felaktig rad) & \hyperlink{l:RESET}{\texttt{RESET}} & fel 53\\
+\texttt{\$95} & (rad som inte gick att kompilera) & \hyperlink{l:RESET}{\texttt{RESET}} & fel 53\\
 \texttt{\$96} & \texttt{DEFFN} & \hyperlink{l:CMPDEF}{\texttt{CMPDEF}} & \hyperlink{l:DEF}{\texttt{DEF}}\\
 \end{longtable}\end{small}
 \section{Satser, tabell 2}
+\noindent En sats med ett ord ur \namn{STKW2} skrivs som \adrx{86} följd
+av \adrx{80} + k, där k är platsen i \namn{STKW2} och i rutinernas
+tabeller \namn{STTAB2} och \namn{STEXE2}. \adrx{86} \adrx{83} har en
+kompileringsrutin men inget ord, så den kan inte skrivas.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l@{}}
 \textbf{Kod} & \textbf{Ord} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
@@ -84,8 +104,14 @@ token${}-\$80$. Satser i tabell 2 skrivs som $\$86$ följt av koden i
 \texttt{\$86 \$95} & \texttt{NOTRACE} & \hyperlink{l:NOCODE}{\texttt{NOCODE}} & \hyperlink{l:NOTRAC}{\texttt{NOTRAC}}\\
 \end{longtable}\end{small}
 \section{Övriga nyckelord}
-\noindent Tabeller med ett ord\index{nyckelord} var, som kompileringsrutinerna söker i.
-Token skrivs i satsens kod och listas genom STKW1.\par\medskip
+\noindent Efter \namn{STKW1} står sex tabeller med ett ord\index{nyckelord}
+var. Fem av dem söker en kompileringsrutin i när den väntar ett visst ord:
+\kw{IF} söker \kw{THEN} och \kw{ELSE}, \kw{FOR} \kw{TO} och \kw{STEP},
+och \kw{OPEN} och \kw{PREPARE} \kw{AS FILE}. Ordets token skrivs i satsens kod.
+\namn{KWAS} söker ingen rutin i (avsnittet Satsens nyckelord,
+i boken). \kw{LIST} hittar orden, eftersom
+\namn{DETOK} letar efter token från \namn{STKW1} och framåt (avsnittet
+Raden som text, i boken).\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l@{}}
 \textbf{Tabell} & \textbf{Token} & \textbf{Ord}\\\hline\endhead
@@ -97,10 +123,13 @@ Token skrivs i satsens kod och listas genom STKW1.\par\medskip
 \hyperlink{l:KWAS}{\texttt{KWAS}} & \texttt{\$B7} & \texttt{AS}\\
 \end{longtable}\end{small}
 \section{Operatorer}
-\noindent Nivåerna i uttryckskompilatorn, från lägst till högst
-prioritet\index{prioritet (operatorer)} (\hyperlink{l:PREC1}{\texttt{PREC1}}). Aritmetik och jämförelser
-har en token per typ: bas${}+0$ flyttal, ${}+1$ heltal, ${}+2$ sträng;
-körrutinerna står i \hyperlink{l:EXPTAB1}{\texttt{EXPTAB1}}.\par\medskip
+\noindent Uttryckskompilatorn har tio nivåer, från \namn{PREC1} med den
+lägsta prioriteten\index{prioritet (operatorer)} till \namn{PREC10}, det
+primära uttrycket. Sju av dem kompileras av \namn{PRECLV} (avsnittet En
+nivå med binära operatorer, i boken). Aritmetiken och
+jämförelserna har en token per typ: tabellens token för flyttal, +1 för
+heltal och +2 för strängar. För \^{} är +2 ett flyttal upphöjt till ett
+heltal. Körrutinerna står i \namn{EXPTAB1}.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l l >{\raggedright\arraybackslash}p{0.3\textwidth}@{}}
 \textbf{Nivå} & \textbf{Operator} & \textbf{Token} & \textbf{Klass} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
@@ -124,10 +153,14 @@ körrutinerna står i \hyperlink{l:EXPTAB1}{\texttt{EXPTAB1}}.\par\medskip
 \hyperlink{l:PREC10}{\texttt{PREC10}} &  &  & primärt uttryck & \hyperlink{l:PRIMARY}{\texttt{PRIMARY}} & \\
 \end{longtable}\end{small}
 \section{Funktioner}
-\noindent Token $\$80+k$ ur \hyperlink{l:FNKW}{\texttt{FNKW}};
-koden $k$ är index i \hyperlink{l:EXPTAB2}{\texttt{EXPTAB2}}. Formen och
-typerna är ur \hyperlink{l:FNTYPE}{\texttt{FNTYPE}}: \texttt{x} flyttal,
-\texttt{i} heltal, \texttt{s\$} sträng, \texttt{[ ]} får utelämnas.\par\medskip
+\noindent Funktionernas namn står i \namn{FNKW}, var och en med token
+\adrx{80} + k, där k är funktionens kod. I uttryckskoden blir anropet
+\adrx{CD}–\adrx{D1} efter antalet argument, 0–4, följt av 2k, och k är
+platsen i \namn{EXPTAB2} (avsnittet Körningen av uttryckskoden,
+i boken). Formen och resultatets typ kommer ur
+\namn{FNTYPE}: \texttt{x} är ett flyttal, \texttt{i} ett heltal och
+\texttt{s\$} en sträng, och det som står inom \texttt{[ ]} får
+utelämnas.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l@{}}
 \textbf{Kod} & \textbf{Form} & \textbf{Resultat} & \textbf{Rutin}\\\hline\endhead
@@ -172,11 +205,14 @@ typerna är ur \hyperlink{l:FNTYPE}{\texttt{FNTYPE}}: \texttt{x} flyttal,
 \texttt{\$33} & \texttt{DIV\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXDIV}{\texttt{EXDIV}}\\
 \texttt{\$34} & \texttt{COMP\%(s\$,s\$)} & heltal & \hyperlink{l:EXCOMP}{\texttt{EXCOMP}}\\
 \end{longtable}\end{small}
-\noindent Koder utan namn i FNKW: \texttt{\$22}, \texttt{\$24}, \texttt{\$25}, \texttt{\$26}, \texttt{\$27}, \texttt{\$28}, \texttt{\$29}, \texttt{\$2A}, \texttt{\$2B}, \texttt{\$2C}, \texttt{\$2D}, \texttt{\$2E}, \texttt{\$2F} (fel 8).\par
+\noindent Koderna \adrx{22} och \adrx{24}–\adrx{2F} har inget namn i
+\namn{FNKW} och kan inte skrivas. I \namn{EXPTAB2} ger de fel 8.\par
 \section{Uttryckskod}
-\noindent Token $\$B6$--$\$FF$ i den kompilerade uttryckskoden och
-rutinen i \hyperlink{l:EXPTAB1}{\texttt{EXPTAB1}} som utför den. Vad varje
-token betyder står i avsnittet Körningen av uttryckskoden (i boken).\par\medskip
+\noindent Den kompilerade uttryckskoden har token \adrx{B6}–\adrx{FF}, och
+\namn{EXPTAB1} ger rutinen som kör var och en; token $-$ \adrx{B6} är
+platsen i tabellen. Operatorerna står med sin text. Vad varje token betyder
+står i avsnittet Körningen av uttryckskoden
+(i boken).\par\medskip
 \begin{multicols}{3}\small\raggedright
 \noindent\texttt{\$B6}\quad \hyperlink{l:ASGNF}{\texttt{ASGNF}}\par
 \noindent\texttt{\$B7}\quad \hyperlink{l:ASGNI}{\texttt{ASGNI}}\par
