@@ -8,6 +8,9 @@ längre ett experiment går från dem, desto mindre säger det om ABC80
 som den var. Därför står det i varje mapps `LASMIG.md` vad som är
 ändrat och mot vad.
 
+Experimenten är beskrivna i häftet *ABC80 inifrån. Utanför boken*
+([`utanfor.pdf`](utanfor.pdf), 54 sidor), i bokens stil.
+
 Bokens egna filer ändras aldrig härifrån: skripten kopierar det de
 behöver (i det publika förrådet från `inifran/forth/` och
 `inifran/verktyg/`) och ändrar kopian.

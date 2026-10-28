@@ -62,7 +62,7 @@ och ROM:arna i `emulator/roms/` ändras inte.
   i stället för (IX+n), tabeller i stället för slingor, en prövning
   mindre per sats och mönstret.
 - *Proven.* Proven är 16 program ur `ABC80/abc802` i det publika
-  förrådet. B1-B8 är Rugg/Feldman (Kilobaud 1977), B8 från PCW 1978 med
+  förrådet. B1-B7 är Rugg/Feldman (Kilobaud 1977), B8 lades till av PCW 1978, med
   100 varv; NOEL och NOEL1 är oförändrade. De andra är ändrade så att
   ABC80 kan köra dem:
   - `MOD(A,B)` är `A-INT(A/B)*B` och `WHILE` är `IF`/`GOTO`;
@@ -564,11 +564,11 @@ lönat sig att göra som här, men från början och i ROM:en:
 - Ta bort prövningarna i satsslingan (`a_brk`, 3,5-7,3 % för 8 byte).
 - Gör variabeln och värdet till en kod (`a_var`, upp till 9,8 % för 35
   byte).
-- Känn igen `V=V+X` (`a_sup`, upp till 23 % för 297 byte).
+- Känn igen `V=V+X` (`a_sup`, upp till 23 % för 297 byte, med `a_var` i sig).
 - Skriv BCD-divisionen med HL och DE (`a_fdiv`, upp till 22 % för 72
   byte).
 
-Det är 412 byte för det mesta av vinsten. Tabellerna i `a_tab` (512
+Det är 377 byte för det mesta av vinsten. Tabellerna i `a_tab` (512
 byte för 0,5-2,4 %) och bytet i `a_fswp`, som beror på programmet, hade
 fått stå tillbaka. Det enda som en hel omskrivning hade köpt utöver det
 är flyttalen. Det priset betalade BASIC II: en annan kod, andra tal, ett

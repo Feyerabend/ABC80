@@ -165,17 +165,23 @@
   {\end{list}}
 \newenvironment{Verb}{\par\vspace{1pt}\begingroup\upshape\fontsize{8.6}{10.4}\selectfont\setcw\lineskiplimit=-\maxdimen\parskip=0pt\relax}{\par\endgroup\vspace{1pt}}
 % ABC80:s skärm, 24 rader à 40 tecken, centrerad i en tv-ruta (en
-% superellips |x/a|^4 + |y/b|^4 = 1, liggande 4:3 tätt runt texten, eller
-% bredare om texten kräver det); raderna med \VL
+% superellips |x/a|^6 + |y/b|^6 = 1, liggande 4:3 tätt runt texten, eller
+% bredare om texten kräver det, och så mycket större att textens hörn, med
+% 6 pt luft, ligger innanför kurvan); raderna med \VL
 \newsavebox{\Skarmlada}
 \newenvironment{Skarm}{\par\vspace{3pt}\begingroup\upshape\fontsize{8.6}{10.4}\selectfont\setcw
   \renewcommand{\VL}[1]{\par\noindent{\ttfamily ##1}\par}%
   \begin{lrbox}{\Skarmlada}\begin{minipage}{40\cw}\lineskiplimit=-\maxdimen\parskip=0pt\relax}%
   {\end{minipage}\end{lrbox}\par\noindent\hfil\begin{tikzpicture}
-    \pgfmathsetmacro{\Sb}{(\ht\Skarmlada+\dp\Skarmlada)/2+10}%
-    \pgfmathsetmacro{\Sa}{max(\Sb*4/3,\wd\Skarmlada/2+14)}%
-    \draw[line width=.6pt] plot[domain=1:359,samples=180,smooth]
-      ({\Sa*sign(cos(\x))*abs(cos(\x))^0.5*1pt},{\Sb*sign(sin(\x))*abs(sin(\x))^0.5*1pt}) -- cycle;
+    \pgfmathsetmacro{\Sh}{(\ht\Skarmlada+\dp\Skarmlada)/2}%
+    \pgfmathsetmacro{\Sw}{\wd\Skarmlada/2}%
+    \pgfmathsetmacro{\Sb}{\Sh+10}%
+    \pgfmathsetmacro{\Sa}{max(\Sb*4/3,\Sw+14)}%
+    \pgfmathsetmacro{\Sf}{max(1,(((\Sw+6)/\Sa)^6+((\Sh+6)/\Sb)^6)^(1/6))}%
+    \pgfmathsetmacro{\Sa}{\Sa*\Sf}%
+    \pgfmathsetmacro{\Sb}{\Sb*\Sf}%
+    \draw[line width=.6pt] plot[domain=1:359,samples=240,smooth]
+      ({\Sa*sign(cos(\x))*abs(cos(\x))^(1/3)*1pt},{\Sb*sign(sin(\x))*abs(sin(\x))^(1/3)*1pt}) -- cycle;
     \node[inner sep=0pt] {\usebox{\Skarmlada}};
   \end{tikzpicture}\hfil\par\endgroup\vspace{3pt}}
 \newcommand{\Hd}[1]{\par\vspace{8pt}\noindent{\bfseries #1}\par\vspace{2pt}}

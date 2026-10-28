@@ -24,4 +24,5 @@ Sidan går också att bygga själv: ROM:arna ligger inte i förrådet, och
   exempelprogram på band och diskett
 - [`utanfor/`](utanfor/): utanför boken, men i dess anda: experiment om
   hur ABC80 kunde ha utvecklats, till exempel en snabbare Forth, med vad
-  som är ändrat och mot vad
+  som är ändrat och mot vad; häftet *Utanför boken* beskriver dem
+  ([`utanfor/utanfor.pdf`](utanfor/utanfor.pdf))

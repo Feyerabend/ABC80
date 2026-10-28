@@ -125,8 +125,8 @@ står på var åttonde rad, mot Q1 (`CHANGE B1 TO Q1` i Smartaid 3).
 
 Forthaid är alltså 3,5–4,5 gånger långsammare med FIND, 1,2–3 gånger
 med VAR, 1,3–1,8 gånger med REN och 1,2–1,3 gånger med CHANGE. Skillnaden
-krymper med programmets längd, eftersom en del av den är fast. REN går
-fortare än FIND, eftersom det mesta arbetet görs av ROM:ens egna
+krymper med programmets längd, eftersom en del av den är fast. REN ligger
+närmare Smartaid 3 än FIND, eftersom det mesta arbetet görs av ROM:ens egna
 rutiner, LNKREF och REN:s tredje varv.
 
 FIND var först 10 gånger långsammare (0,98, 4,19 och 6,37 s). Den gör

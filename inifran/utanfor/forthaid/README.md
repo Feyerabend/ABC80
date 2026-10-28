@@ -125,8 +125,8 @@ with Q1 (`CHANGE B1 TO Q1` in Smartaid 3).
 
 Forthaid is 3.5–4.5 times slower with FIND, 1.2–3 times with VAR,
 1.3–1.8 times with REN and 1.2–1.3 times with CHANGE. The gap shrinks
-with program length, since part of it is fixed. REN is faster than FIND
-because most of the work is done by the ROM's own routines.
+with program length, since part of it is fixed. REN is closer
+to Smartaid 3 than FIND, because most of the work is done by the ROM's own routines.
 
 FIND was at first 10 times slower: it turns each line into text with
 `DETOK` and then compared the text in a Forth `DO` loop. The

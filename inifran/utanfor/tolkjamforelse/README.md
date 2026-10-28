@@ -72,7 +72,7 @@ Patch names start with `a_` for the ABC80 and `b_` for BASIC II.
   HL instead of (IX+n), tables instead of loops, one test less per
   statement, and the pattern.
 - *The tests.* The tests are 16 programs from `ABC80/abc802` in the
-  public repository. B1-B8 are Rugg/Feldman (Kilobaud 1977), B8 from PCW
+  public repository. B1-B7 are Rugg/Feldman (Kilobaud 1977), B8 added by PCW
   1978 with 100 iterations; NOEL and NOEL1 are unchanged. The others are
   changed so that the ABC80 can run them:
   - `MOD(A,B)` is `A-INT(A/B)*B` and `WHILE` is `IF`/`GOTO`;
@@ -603,11 +603,11 @@ would have paid to do as here, but from the start and in the ROM:
   bytes).
 - Make the variable and the value one code (`a_var`, up to 9.8 % for
   35 bytes).
-- Recognise `V=V+X` (`a_sup`, up to 23 % for 297 bytes).
+- Recognise `V=V+X` (`a_sup`, up to 23 % for 297 bytes, including `a_var`).
 - Write the BCD division with HL and DE (`a_fdiv`, up to 22 % for 72
   bytes).
 
-That is 412 bytes for most of the gain. The tables in `a_tab` (512
+That is 377 bytes for most of the gain. The tables in `a_tab` (512
 bytes for 0.5-2.4 %) and the swap in `a_fswp`, which depends on the
 program, would have had to give way. The only thing a complete rewrite
 would have bought beyond that is the floating point. BASIC II paid that
