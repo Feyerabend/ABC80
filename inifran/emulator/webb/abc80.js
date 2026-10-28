@@ -188,6 +188,7 @@ let lagen_nu = '';
 function visa_lagen(alltid = false) {
     const b2 = b2_valt();
     const delar = [b2 ? 'BASIC II'
+                   : comal_valt() ? t('COMAL-ROM:en', 'COMAL ROM')
                    : t($('rom').value === 'gammal' ? 'gamla ROM:en' : 'nya ROM:en',
                        $('rom').value === 'gammal' ? 'old ROM' : 'new ROM')];
     if ($('tkn80').checked && !b2)
@@ -264,6 +265,7 @@ const VAL = [
     { id: 'krets', inte: ['b2', 'cpm'] },
     { id: 'krets:forthaid', namn: ['Forthaid', 'Forthaid'], tar: ['5000', '5800'] },
     { id: 'krets:forthaid2', namn: ['Forthaid II', 'Forthaid II'], tar: ['5000'] },
+    { id: 'krets:comal', namn: ['COMAL 0,5', 'COMAL 0.5'] },
     { id: 'cmos', namn: ['CMOS-minnet', 'the CMOS memory'], tar: ['5000'], inte: ['b2', 'cpm'] },
     { id: 'tkn80', namn: ['TKN80', 'TKN80'], tar: ['5800', 'skarmen'], inte: ['b2'] },
     { id: 'fast', namn: ['fast markör', 'steady cursor'], inte: ['b2'], kraver: 'tkn80' },
@@ -526,6 +528,12 @@ function cpm_valt() {
     return !!$('cpm')?.checked && !b2_valt();
 }
 
+/* COMAL 0,5 (utanför boken): den lappade gamla ROM:en i stället för den
+ * valda, med kretsen på $4000; inte när kretsarna är dimmade. */
+function comal_valt() {
+    return $('krets')?.value === 'comal' && !!ROM.comal && !lagets_hinder('krets');
+}
+
 /* En CP/M-systemskiva börjar med startblocket, "CP/M" (cpm/start.asm). */
 function ar_cpm(d) {
     return d && d.length >= 4 && String.fromCharCode(...d.subarray(0, 4)) === 'CP/M';
@@ -548,7 +556,7 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
     cmos_spara();                            /* innan minnet töms */
     const cpm = cpm_valt();
     const b2 = b2_valt();
-    const rom = ROM[$('rom').value];
+    const rom = comal_valt() ? ROM.comal : ROM[$('rom').value];
     const p = lagg_i_minnet(rom);
     e.starta(b2 ? 32 : 16, p, rom.length, provtakt);
     e.slapp(p);
@@ -619,7 +627,8 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
         }
     } else if (val) {
         const data = val === 'cmos' ? FILER.krets_cmos
-                   : val === 'forthaid' ? FILER.forthaid : FILER.krets;
+                   : val === 'forthaid' ? FILER.forthaid
+                   : val === 'comal' ? FILER.comal_krets : FILER.krets;
         const krets = lagg_i_minnet(data);
         e.krets(0x4000, krets, data.length);
         e.slapp(krets);
@@ -2218,9 +2227,10 @@ $('demoskiva')?.addEventListener('click', () => {
     skarm.focus();
 });
 
-/* Forth-kretsarna (exempel/krets/), Forthaid och Forthaid II (utanför
- * boken, utanfor/forthaid/ och utanfor/forthaid2/), när de ligger i
- * sidan: maskinen startas om med den valda kretsen eller utan. */
+/* Forth-kretsarna (exempel/krets/), Forthaid, Forthaid II och COMAL 0,5
+ * (utanför boken, utanfor/forthaid/, utanfor/forthaid2/ och
+ * utanfor/comal/), när de ligger i sidan: maskinen startas om med den
+ * valda kretsen eller utan. */
 const KRETSAR = {
     '': ['', ''],
     forth: ['Forth-kretsen på $4000: POKE 65052,0,208, NEW och Z=CALL(16384,3).',
@@ -2231,6 +2241,8 @@ const KRETSAR = {
                'Forthaid at $4000: Z=CALL(16384,2) hooks it in, HELP shows the commands, EX unhooks it.'],
     forthaid2: ['Forthaid II på $4000 och fem banker på $5000, också med TKN80: Z=CALL(16384,2) kopplar in den, HELP visar kommandona, EX kopplar ur. SAVEW och LOADW sparar och laddar de egna orden på en diskett.',
                 'Forthaid II at $4000 and five banks at $5000, also with TKN80: Z=CALL(16384,2) hooks it in, HELP shows the commands, EX unhooks it. SAVEW and LOADW save and load your own words on a diskette.'],
+    comal: ['COMAL 0,5: den gamla ROM:en med en krets på $4000. WHILE, REPEAT, IF … ENDIF, PROC/EXEC och CASE finns direkt; LIST drar in blocken.',
+            'COMAL 0.5: the old ROM with an add-on at $4000. WHILE, REPEAT, IF … ENDIF, PROC/EXEC and CASE are there at once; LIST indents the blocks.'],
 };
 
 /* Bokens exempel 1-6 (band 2, kapitlet Egna exempel; exempel/krets/),
@@ -2556,6 +2568,10 @@ $('genesis_skiva')?.addEventListener('click', () => {
         FILER.forthaid2 = base64(FILER.forthaid2);
         FILER.forthaid2_banker = FILER.forthaid2_banker.map(base64);
     }
+    if (FILER.comal_rom) {
+        ROM.comal = base64(FILER.comal_rom);
+        FILER.comal_krets = base64(FILER.comal_krets);
+    }
     cmos_las_in();
 
     if (fraga.get('rom') === 'gammal' || (fraga.get('rom') === 'b2' && ROM.b2))
@@ -2573,7 +2589,8 @@ $('genesis_skiva')?.addEventListener('click', () => {
     const krets = fraga.get('krets');
     if ($('krets') && ((FILER.krets && ['forth', 'cmos'].includes(krets)) ||
                        (FILER.forthaid && krets === 'forthaid') ||
-                       (FILER.forthaid2 && krets === 'forthaid2') || krets in EXEMPEL)) {
+                       (FILER.forthaid2 && krets === 'forthaid2') ||
+                       (FILER.comal_rom && krets === 'comal') || krets in EXEMPEL)) {
         $('krets').value = krets;
         oppna_panel('panel_program');
     }

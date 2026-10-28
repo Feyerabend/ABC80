@@ -15,7 +15,10 @@
 # (FORTHAID och /FORTHAID). Finns ../utanfor/forthaid2/forthaid2.bin
 # och forthaid2_b0.bin med flera (../utanfor/forthaid2/gor.sh) kommer
 # Forthaid II med, den fasta delen och bankerna (FORTHAID2 och
-# /FORTHAID2). Finns
+# /FORTHAID2). Finns ../utanfor/comal/ut/comal.rom och comal.krets
+# (../utanfor/comal/bygg.py) kommer COMAL 0,5 med, den lappade gamla
+# ROM:en och kretsens första 4 KB, där koden ligger (COMAL och /COMAL).
+# Finns
 # exempel/krets/e1.bin till e6.bin (e4 som e4a.bin och e4b.bin) kommer
 # bokens exempel 1-6 med (EXEMPEL och /EXEMPEL). Finns
 # exempel/malare/MALARE.wav kommer bandet med MÅLARE med (MALARE och
@@ -44,6 +47,8 @@ KRETS=exempel/krets/forth.bin
 KRETS_CMOS=exempel/krets/forth_cmos.bin
 FORTHAID=../utanfor/forthaid/forthaid.bin
 FORTHAID2=../utanfor/forthaid2/forthaid2.bin
+COMAL_ROM=../utanfor/comal/ut/comal.rom
+COMAL_KRETS=../utanfor/comal/ut/comal.krets
 EXEMPEL="e1 e2 e3 e4a e4b e5 e6"
 MALARE=exempel/malare/MALARE.wav
 SKIVA=exempel/genesis/GenesisProject_ABCDemo.dsk
@@ -100,6 +105,7 @@ sida() {
         avsnitt KRETS "$(finns "$KRETS" "$KRETS_CMOS")" |
         avsnitt FORTHAID "$(finns "$FORTHAID")" |
         avsnitt FORTHAID2 "$(forthaid2_finns)" |
+        avsnitt COMAL "$(finns "$COMAL_ROM" "$COMAL_KRETS")" |
         avsnitt EXEMPEL "$(finns $(exemplen))" |
         avsnitt MALARE "$(finns "$MALARE")" |
         avsnitt CPM "$(finns "$CPM_START" "$CPM_SKIVA" "$CPM_B" "$CPM_D")" |
@@ -143,6 +149,10 @@ if [ "$(forthaid2_finns)" = ja ]; then
         printf '    "%s",\n' "$(base64_av "$f")"
     done
     printf '  ],\n'
+fi
+if [ "$(finns "$COMAL_ROM" "$COMAL_KRETS")" = ja ]; then
+    printf '  comal_rom: "%s",\n' "$(base64_av "$COMAL_ROM")"
+    printf '  comal_krets: "%s",\n' "$(head -c 4096 "$COMAL_KRETS" | base64 | tr -d '\n')"
 fi
 if [ "$(finns $(exemplen))" = ja ]; then
     printf '  exempel: {\n'

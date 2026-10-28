@@ -157,6 +157,7 @@ const KROCKAR = [
     ['fast=pa', ['fast'], '', 'Fast markör är av'],
     ['rom=b2&tkn80=pa', [], '', 'TKN80 gäller inte'],
     ['cpm=pa&krets=forth', [], 'forth', ''],
+    ['rom=b2&krets=comal', [], 'comal', 'COMAL 0,5 gäller inte'],
 ];
 
 async function krockarna(w) {
@@ -183,7 +184,7 @@ async function krockarna(w) {
 /* Alla par: varje val på för sig som en ?-parameter. */
 const ENSKILDA = ['rom=gammal', 'rom=b2', 'tkn80=pa', 'fast=pa', 'cpm=pa', 'cmos=pa', 'p40=pa',
                   'centronics=pa', 'krets=forth', 'krets=cmos', 'krets=forthaid', 'krets=forthaid2',
-                  'krets=e1', 'krets=e4', 'krets=e5', 'skiva=system'];
+                  'krets=comal', 'krets=e1', 'krets=e4', 'krets=e5', 'skiva=system'];
 
 async function paren(w) {
     const alla = [];

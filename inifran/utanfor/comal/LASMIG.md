@@ -66,6 +66,11 @@ BASIC II:s WHILE/WEND. Bokens filer och ROM:arna i `emulator/roms/`
 Programmen byggs med emulatorns kärna (`../../emulator/karna`) och
 lapparna med `../../dis/build/z80asm`.
 
+På emulatorns webbsida finns COMAL 0,5 bland kretsarna, eller med
+`?krets=comal` efter adressen (2026-10-28): sidan byter till
+`ut/comal.rom` och sätter kretsens första 4 KB på `$4000`. Den går
+också med TKN80 och med skivminnet; med BASIC II gäller den inte.
+
 ## Satserna
 
 | Sats                         | Fel                                       |

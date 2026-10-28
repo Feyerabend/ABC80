@@ -77,6 +77,11 @@ The programs are built with the emulator core (`../../emulator/karna`)
 and the patches with `../../dis/build/z80asm`. `ut/comal.rom` and
 `ut/comal.krets` (load at `$4000`) are the result.
 
+On the emulator's web page COMAL 0.5 is among the ROMs, or add
+`?krets=comal` to the address: the page swaps in `ut/comal.rom` and puts
+the first 4 KB of the add-on at `$4000`. It also works with TKN80 and
+with the disk drive; with BASIC II it does not apply.
+
 ## The statements
 
 | Statement                    | Error                                     |

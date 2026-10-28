@@ -89,6 +89,8 @@ webb/abc80.html: webb/mall.html webb/abc80.js webb/abc80.wasm webb/bygg.sh \
                             ../utanfor/forthaid/forthaid.bin \
                             ../utanfor/forthaid2/forthaid2.bin \
                             ../utanfor/forthaid2/forthaid2_b*.bin \
+                            ../utanfor/comal/ut/comal.rom \
+                            ../utanfor/comal/ut/comal.krets \
                             $(wildcard exempel/krets/e*.bin) \
                             exempel/malare/MALARE.wav \
                             exempel/genesis/GenesisProject_ABCDemo.dsk \

@@ -18,7 +18,9 @@
   exempel/krets/forth.bin inte finns, mellan FORTHAID och /FORTHAID
   Forthaids, som tas bort när ../utanfor/forthaid/forthaid.bin inte
   finns, mellan FORTHAID2 och /FORTHAID2 Forthaid II:s, som tas bort när
-  ../utanfor/forthaid2/forthaid2.bin och bankerna inte finns, mellan EXEMPEL och /EXEMPEL
+  ../utanfor/forthaid2/forthaid2.bin och bankerna inte finns, mellan
+  COMAL och /COMAL COMAL 0,5:s, som tas bort när ../utanfor/comal/ut/
+  inte finns (../utanfor/comal/bygg.py), mellan EXEMPEL och /EXEMPEL
   exemplens, som tas bort när exempel/krets/e1.bin med flera inte finns,
   mellan MALARE och /MALARE bandet MÅLAREs, som tas bort när
   exempel/malare/MALARE.wav inte finns, mellan CPM och /CPM CP/M:s, och
@@ -770,6 +772,9 @@
 <!-- FORTHAID2 -->
           <option value="forthaid2" data-en="Forthaid II (outside the book)">Forthaid II (utanför boken)</option>
 <!-- /FORTHAID2 -->
+<!-- COMAL -->
+          <option value="comal" data-en="COMAL 0.5 (outside the book)">COMAL 0,5 (utanför boken)</option>
+<!-- /COMAL -->
 <!-- EXEMPEL -->
           <option value="e1" data-en="Example 1: the key interrupt">Exempel 1: tangentavbrottet</option>
           <option value="e2" data-en="Example 2: capitals">Exempel 2: versaler</option>
@@ -900,6 +905,42 @@
         <code>utanfor/forthaid2/MANUAL.md</code> in the book's code
         repository.</p>
 <!-- /FORTHAID2 -->
+<!-- COMAL -->
+        <p lang="sv"><i>COMAL 0,5</i> är inte med i boken: den gamla ROM:en
+        (11273) med COMAL:s strukturer, i en krets på <code>$4000</code> och
+        23 byte i ROM:en som hoppar dit. Valet byter ROM:en och startar om
+        maskinen; den gamla eller nya ROM:en i listan ovanför gäller igen när
+        kretsen tas ur. Det nya är <code>WHILE</code>/<code>ENDWHILE</code>,
+        <code>REPEAT</code>/<code>UNTIL</code>, <code>IF</code> … <code>THEN</code>
+        på egen rad med <code>ELIF</code>, <code>ELSE</code> och
+        <code>ENDIF</code>, <code>PROC</code>/<code>ENDPROC</code> med
+        parametrar och <code>LOCAL</code>, som anropas med
+        <code>EXEC</code>, och <code>CASE</code>/<code>WHEN</code>/<code>OTHERWISE</code>/<code>ENDCASE</code>.
+        <code>LIST</code> drar in raderna i blocken. Till exempel
+        <code>10 I=1</code>, <code>20 WHILE I&lt;=5</code>, <code>30 PRINT
+        I;</code>, <code>40 I=I+1</code>, <code>50 ENDWHILE</code>, sedan
+        <code>LIST</code> och <code>RUN</code>. Gamla program går som förut.
+        Mer står i <code>utanfor/comal/LASMIG.md</code> i bokens
+        kodförråd.</p>
+        <p lang="en"><i>COMAL 0.5</i> is not part of the book: the old ROM
+        (11273) with COMAL's structures, in a ROM at <code>$4000</code> and 23
+        bytes in the BASIC ROM that jump there. The choice swaps the ROM and
+        restarts the machine; the old or new ROM in the list above applies
+        again when the add-on is removed. New are
+        <code>WHILE</code>/<code>ENDWHILE</code>,
+        <code>REPEAT</code>/<code>UNTIL</code>, <code>IF</code> …
+        <code>THEN</code> on a line of its own with <code>ELIF</code>,
+        <code>ELSE</code> and <code>ENDIF</code>,
+        <code>PROC</code>/<code>ENDPROC</code> with parameters and
+        <code>LOCAL</code>, called with <code>EXEC</code>, and
+        <code>CASE</code>/<code>WHEN</code>/<code>OTHERWISE</code>/<code>ENDCASE</code>.
+        <code>LIST</code> indents the lines in the blocks. For example
+        <code>10 I=1</code>, <code>20 WHILE I&lt;=5</code>, <code>30 PRINT
+        I;</code>, <code>40 I=I+1</code>, <code>50 ENDWHILE</code>, then
+        <code>LIST</code> and <code>RUN</code>. Old programs run as before.
+        More in <code>utanfor/comal/README.md</code> in the book's code
+        repository.</p>
+<!-- /COMAL -->
 <!-- EXEMPEL -->
         <p lang="sv"><i>Exempel 1</i>–<i>6</i> är programmen i band 2,
         kapitlet Egna exempel, i den tänkta kretsen: på <code>$4000</code>,
