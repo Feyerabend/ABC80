@@ -30,8 +30,8 @@ iteration:
 2. the data stack has not come down to BASIC's variables (HEAP + 64),
 3. the return stack has not come down to the canary (as in `DOCOL`).
 
-That costs about 190 T-states, more than half of an empty `DO LOOP`
-iteration (about 410 T). The variant checks only the second, the one
+That costs 218 T-states, more than half of an empty `DO LOOP`
+iteration (405 T). The variant checks only the second, the one
 that protects the BASIC program, and only on the high byte:
 
 ```asm

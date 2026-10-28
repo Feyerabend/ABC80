@@ -8,7 +8,7 @@ LC_ALL=C; export LC_ALL
 K=../../emulator/karna
 R=../../emulator/roms
 [ prof -nt prof.c ] || cc -std=c11 -O2 -I$K -o prof prof.c \
-    $K/z80.c $K/maskin.c $K/bussen.c $K/ljud.c $K/kassett.c $K/tecken.c || exit 1
+    $K/z80.c $K/maskin.c $K/bussen.c $K/ljud.c $K/kassett.c $K/tecken.c $K/uni80.c || exit 1
 mkdir -p ut
 [ $# -gt 0 ] || set -- $(cd prov && ls *.BAS | sed 's/\.BAS$//')
 printf '%-8s %9s %9s %9s %7s\n' prov gamla nya "BASIC II" kvot

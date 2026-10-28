@@ -26,8 +26,8 @@ prövar den tre saker varje varv:
 2. datastacken inte nere vid BASIC:s variabler (HEAP + 64),
 3. returstacken inte nere vid kanariefågeln (som `DOCOL`).
 
-Det kostar omkring 190 T-cykler, mer än hälften av ett tomt `DO LOOP`-varv
-(omkring 410 T). Varianten prövar bara den andra, den som skyddar
+Det kostar 218 T-cykler, mer än hälften av ett tomt `DO LOOP`-varv
+(405 T). Varianten prövar bara den andra, den som skyddar
 BASIC-programmet, och bara på den höga byten:
 
     BRANCH: LD   HL,-64

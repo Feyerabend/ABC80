@@ -36,9 +36,11 @@
 ; parametrar, vars argument är noll. PROC i den vanliga följden hoppar förbi
 ; ENDPROC.
 ;
-; CASE prövar WHEN-delarna i tur och ordning. Koden för "v a =" (med
-; $DA där heltal och flyttal blandas) byggs på stacken och räknas av
-; RST $38, så att alla tre typerna jämförs som i ROM:en. Stämmer ingen
+; CASE räknar väljaren en gång och lägger den på stacken. WHEN-delarna
+; prövas i tur och ordning: varje värde räknas där det står (RST $38
+; lämnar DE efter det) och jämförs med väljaren, två bytes för heltal,
+; FCMP för flyttal (ett heltal görs om med INTTOF), längden och tecknen
+; för strängar. Stämmer ingen
 ; och OTHERWISE saknas blir det fel 73. En WHEN eller OTHERWISE i den
 ; vanliga följden hoppar till efter ENDCASE.
 ;

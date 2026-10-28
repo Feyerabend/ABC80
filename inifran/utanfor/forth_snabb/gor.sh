@@ -28,7 +28,7 @@ cp $BOK/e7fc.py $BOK/e7.fs $BOK/e7i.fs $BOK/e7c.fs bygg/ || exit 1
 
 # BRANCH: bokens version prövar tre saker i varje slinga (datastacken
 # inte tömd förbi S0, inte nere vid HEAP + 64, returstacken inte nere
-# vid kanariefågeln), omkring 190 T-cykler. Här finns bara den farligaste
+# vid kanariefågeln), 218 T-cykler. Här finns bara den farligaste
 # kvar: att datastacken växer ned i BASIC:s variabler. Den prövas på
 # den höga byten: fel om SP - 64 ligger på samma 256-bytessida som HEAP
 # eller lägre. Prövningen slår alltså till upp till 256 bytes för tidigt,

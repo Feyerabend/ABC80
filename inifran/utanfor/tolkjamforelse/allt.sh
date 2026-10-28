@@ -16,7 +16,7 @@
 #   ./allt.sh
 cd "$(dirname "$0")"
 K=../../emulator/karna
-KARNA="$K/z80.c $K/maskin.c $K/bussen.c $K/ljud.c $K/kassett.c $K/tecken.c"
+KARNA="$K/z80.c $K/maskin.c $K/bussen.c $K/ljud.c $K/kassett.c $K/tecken.c $K/uni80.c"
 for p in fprov mulprov; do
     [ $p -nt $p.c ] || cc -std=c11 -O2 -I$K -o $p $p.c $KARNA || exit 1
 done
