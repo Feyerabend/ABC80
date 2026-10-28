@@ -87,6 +87,19 @@ mus i stället för styrspak.
    hörn och kapas vid kanten, så att `HR80.BAS` kan ritas i ett fönster
    utan ändringar. Allt nytt står som påhittat i hr80.c och här. Prov i
    hr80prov/ som de gamla.
+   **Klart 2026-10-28:** `ESC O n r k h b titel CR`, `ESC V n` (välj
+   och lyft) och `ESC S n` som i FONSTER.BAS, och `ESC T n` som väljer
+   utan att lyfta (n = 8 är skrivbordet, ytan utanför fönstren). Ramen
+   tar en textruta på varje sida: titelrad med stängningsruta, fylld i
+   det översta fönstret. Allt efter V eller T ritas i det valda fönstret
+   och kapas vid ramen och vid fönstren ovanför; fyllningen stannar vid
+   kanterna, texten bryts och rullar inom fönstret. Inget sparas under:
+   det som blir synligt fylls med bakgrunden, och `omrita` får en bit
+   per fönster som tappade innehåll (till händelserna i steg 4).
+   Fönstertabellen räknas till 320 byte, så makrona får 1 728 byte i
+   stället för 2 KB (häftets kapitel om HR-80 säger 2 KB; rättas i
+   steg 8). De fyra gamla provbilderna är oförändrade; nya prov e
+   (text, lyft, stäng) och f (grafik och fyllning kapade).
 3. **Pekaren och musen.** `hr80_mus(h, dx, dy, knapp)` i tolken.
    Pekaren ritas ovanpå bilden i `hr80_rita`, inte i bildminnet, så att
    den inte behöver spara något under sig (på ett riktigt kort en
@@ -94,6 +107,22 @@ mus i stället för styrspak.
    dragning i titelraden flyttar det (med ramen som kontur medan det
    dras), klick i stängningsrutan stänger. Varje sådan sak ger en
    händelse i kön.
+   **Klart 2026-10-28:** `hr80_mus(h, dx, dy, knapp)` med rörelsen i
+   bildens punkter (512 x 256) och `hr80_handelse(h, ut)` som tar den
+   äldsta händelsen ur kön. Pekaren är en pil ovanpå bilden, och den
+   dragna ramen är streckad ovanpå; inget av dem i bildminnet. Ett tryck
+   i stängningsrutan stänger (som ESC S), i titelraden lyfter och börjar
+   en dragning, i fönstret lyfter och ger ett klick, på skrivbordet bara
+   klicket. Fönstret flyttas där knappen släpps, i hela textrutor; det
+   ligger överst och syns helt, så innehållet flyttas med i bildminnet.
+   Det valda fönstret byts inte. Händelserna är fyra byte: `K n x y`
+   (klick, grafikens x och y i fönstret, n = 8 skrivbordet), `L n`
+   (lyft), `F n r k` (flyttat till rad r, kolumn k) och `S n`
+   (stängt); kön rymmer 16. Med kön räknas fönstertabellen till 384
+   byte, och makrona får 1 664. `omrita` kan ha kvar bitar för stängda
+   fönster; steg 4 frågar bara efter de öppna. `hr80 -u dx,dy,k` ger
+   musen och `-e` skriver kön, och provet g jämför både bilden och
+   händelserna.
 4. **Händelserna tillbaka på V24.** Ett kommando ”finns något?” som
    kortet svarar på med ett kort, fast format (händelsen, fönstret,
    x, y; eller ”inget”). I emulatorn går svaret till maskinens RxD med

@@ -6,14 +6,16 @@
  * till V24 med abc80 -H.
  *
  * Användning:
- *     hr80 [-s text].. [-f fil].. [-m] fil.png
+ *     hr80 [-s text].. [-f fil].. [-u dx,dy,k].. [-m] [-e] fil.png
  *
  *     -s text   tecken till kortet; \xHH är koden HH, \r 13, \n 10,
  *               \e 27 och \\ ett \
  *     -f fil    filens bytes till kortet
+ *     -u dx,dy,k  musen: en rörelse i bildens punkter, knappen (1 nere)
  *     -m        rita markören
+ *     -e        skriv händelserna i kön och omrita på stdout
  *
- * -s och -f skickas i den ordning de står.
+ * -s, -f och -u går till kortet i den ordning de står.
  */
 
 #include <stdio.h>
@@ -77,23 +79,35 @@ static void skicka_fil(const char *namn)
 int main(int argc, char **argv)
 {
     const char *ut = NULL;
-    int markor = 0;
+    int markor = 0, handelser = 0;
     hr80_starta(&kort);
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-s") && i + 1 < argc)
             skicka_text(argv[++i]);
         else if (!strcmp(argv[i], "-f") && i + 1 < argc)
             skicka_fil(argv[++i]);
-        else if (!strcmp(argv[i], "-m"))
+        else if (!strcmp(argv[i], "-u") && i + 1 < argc) {
+            int dx, dy, k;
+            if (sscanf(argv[++i], "%d,%d,%d", &dx, &dy, &k) != 3)
+                fel("-u vill ha dx,dy,knapp: ", argv[i]);
+            hr80_mus(&kort, dx, dy, k);
+        } else if (!strcmp(argv[i], "-m"))
             markor = 1;
+        else if (!strcmp(argv[i], "-e"))
+            handelser = 1;
         else if (argv[i][0] != '-' && !ut)
             ut = argv[i];
         else
-            fel("användning: hr80 [-s text].. [-f fil].. [-m] fil.png", NULL);
+            fel("användning: hr80 [-s text].. [-f fil].. [-u dx,dy,k].. [-m] [-e] fil.png", NULL);
     }
     if (!ut)
-        fel("användning: hr80 [-s text].. [-f fil].. [-m] fil.png", NULL);
+        fel("användning: hr80 [-s text].. [-f fil].. [-u dx,dy,k].. [-m] [-e] fil.png", NULL);
     if (!hr80_bild_skriv(&kort, ut, markor))
         fel("kan inte skriva ", ut);
+    uint8_t e[4];
+    while (handelser && hr80_handelse(&kort, e))
+        printf("%c %d %d %d\n", e[0], e[1], e[2], e[3]);
+    if (handelser)
+        printf("omrita %03X\n", kort.omrita);
     return 0;
 }
