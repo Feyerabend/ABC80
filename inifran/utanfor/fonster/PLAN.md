@@ -7,8 +7,9 @@ Plan 2026-10-28. Utanför boken, som de andra mapparna här: bokens filer
 
 Jag pratade på 80-talet med Olle Wolkert, som ledde OWOCO (OW efter
 hans namn), om fönster för ABC80 och ABC800, med Macintoshen som vi
-hade på OWOCO (den som jag typsatte Smartaids manual på) som förebild,
-och gjorde då ett enkelt demo i BASIC för Olle:
+hade på OWOCO (den som jag typsatte Smartaids manual på) och
+Lisp-maskinerna på Uppsala universitet, med fönster och mus, som
+förebilder, och gjorde då ett enkelt demo i BASIC för Olle:
 fönster i textläget, ritade med `-` för vågräta streck, `!` för lodräta
 och `+` i hörnen. Man flyttade kanske mellan dem med TAB eller någon
 annan tangent; det minns jag inte säkert. Demot finns inte kvar.
