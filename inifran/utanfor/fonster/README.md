@@ -1,7 +1,7 @@
 # Fönster
 
 Utanför boken. Textfönster på ABC80 i BASIC, efter ett demo som
-författaren gjorde för Olle Wolkert på 80-talet. Demot finns inte kvar,
+jag gjorde för Olle Wolkert på 80-talet. Demot finns inte kvar,
 och `FONSTER.BAS` är en ny version av det. Samma koder fungerar sedan
 på grafikkortet i HR-80:s anda (`emulator/karna/hr80.c`), som har fått
 fönster, en mus och händelser tillbaka till ABC80; `FONSTER2.BAS` visar
