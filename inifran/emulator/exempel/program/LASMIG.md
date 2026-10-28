@@ -48,7 +48,7 @@ band…* eller att dra till sidan.
   bytes) på $FF80, i de 128 bytes som bruksanvisningen lämnar till egen
   maskinkod, och skickar varje tecken med `Z=CALL(65408,T)`: startbit,
   8 databitar och stoppbit på PIO B, 9600 baud, som BASIC II:s PR:.
-  Hela bilden, 335 tecken, tar omkring tio sekunder. Utan kortet väntar
+  Hela bilden, 335 tecken, tar omkring sex sekunder efter RUN. Utan kortet väntar
   rutinen på att mottagaren ska bli klar, och Ctrl-C avbryter.
   På webbsidan kopplas kortet in i panelen Grafikkortet (eller med
   `?v24=hr80`), och bilden kommer fram på en lapp. I terminalen kopplas
