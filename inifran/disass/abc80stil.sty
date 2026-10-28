@@ -54,7 +54,9 @@
 \definecolor{labc}{HTML}{7A1F1F}
 \definecolor{rulec}{HTML}{C8C8C8}
 
-\shorthandoff{"}
+% babel slår på " igen vid \begin{document}, så det stängs av där: annars
+% blir "A i \kw{OPEN "PR:" AS FILE 1} ett Ä och citattecknet försvinner.
+\AtBeginDocument{\shorthandoff{"}}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 \frenchspacing

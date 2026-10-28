@@ -29,7 +29,7 @@ Allt annat ligger i emulatorn, där kortet redan fanns. Bokens filer
 | `emulator/webb/webb.c`, `abc80.js`, `mall.html` | musen på kortets bild på webbsidan, och hjälpen |
 | `emulator/exempel/program/text/FONSTER.BAS`    | textfönstren i BASIC (steg 1), utan kortet |
 | `emulator/exempel/program/text/FONSTER2.BAS`   | fönster på kortet (steg 5) |
-| `emulator/exempel/program/hr80in.asm`          | läsrutinen, 64 byte på $FFBB efter `hr80ut.asm` |
+| `emulator/exempel/program/hr80in.asm`          | läsrutinen, 64 byte på $FFBB efter `hr80ut.asm`; krockar med UFD-DOS:ens korttabell på $FFC0, inte med ABC-DOS |
 | `emulator/exempel/program/fonster2.mus`        | musen till FONSTER2 i proven |
 
 Utan `ESC O` gör kortet som förut: de fyra gamla provbilderna (a-d) har

@@ -19,6 +19,10 @@
 ; bitar som återstår så mycket, men de läses fortfarande inom sin bit.
 ; Kommer ingen startbit på omkring en sekund (inget kort) slutar
 ; rutinen, och SVAR börjar då med 0.
+;
+; UFD-DOS kopierar sin korttabell till $FFC0-$FFE0 och har UFDUN på
+; $FFF9, så rutinen går inte med UFD-DOS. ABC-DOS (exempeldisketten)
+; lämnar $FFB0-$FFFF orört.
 
 SKICKA  EQU $FF80               ; hr80ut.asm: tecknet i E
 SVAR    EQU $FFFC               ; fyra byte

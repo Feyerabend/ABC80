@@ -201,7 +201,9 @@ Kön på kortet rymmer 16 händelser. Läsrutinen i ABC80 är `hr80in.asm`
 sändrutinen `hr80ut.asm`. `Z=CALL(65467)` skickar `ESC ?`, letar upp
 startbiten med avbrotten av och läser varje bit mitt i; svaret läses med
 `PEEK(65532)` till `PEEK(65535)`. Kommer inget svar på en sekund blir
-den första byten 0.
+den första byten 0. Rutinen ligger där UFD-DOS:en har sin korttabell
+(`$FFC0`–`$FFE0`) och UFDUN (`$FFF9`), så den går inte med UFD-DOS,
+bara utan DOS eller med ABC-DOS, som lämnar `$FFB0`–`$FFFF` orört.
 
 ### FONSTER2.BAS
 
