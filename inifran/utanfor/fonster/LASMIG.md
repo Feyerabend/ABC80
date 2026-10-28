@@ -1,6 +1,6 @@
 # Fönster (utanför boken)
 
-**Inte med i boken.** Ett demo som jag gjorde för Olle Wolkert
+**Inte med i boken.** Ett demo som jag gjorde för Olle Wolkert (OWOCO)
 på 80-talet, textfönster i BASIC, gjort om, och samma tanke förd vidare
 till grafikkortet i HR-80:s anda: fönster, en mus och händelser tillbaka
 till ABC80 på V24. **Fönstren, musen och frågan `ESC ?` på kortet är

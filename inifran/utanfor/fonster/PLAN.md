@@ -5,13 +5,15 @@ Plan 2026-10-28. Utanför boken, som de andra mapparna här: bokens filer
 
 ## Bakgrunden
 
-Författaren pratade på 80-talet med Olle Wolkert om ”windows” för
-ABC80 och ABC800, och gjorde då ett enkelt demo i BASIC för Olle:
+Jag pratade på 80-talet med Olle Wolkert, som ledde OWOCO (OW efter
+hans namn), om fönster för ABC80 och ABC800, med Macintoshen som vi
+hade på OWOCO (den som jag typsatte Smartaids manual på) som förebild,
+och gjorde då ett enkelt demo i BASIC för Olle:
 fönster i textläget, ritade med `-` för vågräta streck, `!` för lodräta
 och `+` i hörnen. Man flyttade kanske mellan dem med TAB eller någon
-annan tangent; det minns författaren inte säkert. Demot finns inte kvar.
+annan tangent; det minns jag inte säkert. Demot finns inte kvar.
 
-Två saker minns författaren (2026-10-28): programmet ritades och
+Två saker minns jag (2026-10-28): programmet ritades och
 förklarades med strukturerad programmering, JSP (Jacksons metod, med
 trädet av sekvens, val och upprepning), och fönstren styrdes med koder
 i texten, inspirerade av styrkoderna man skickade till skrivare: ett
@@ -22,7 +24,7 @@ eller rensar.
 Försöket tar tanken två steg: först demot igen, i BASIC och i
 textläget, sedan fönster på grafikkortet i HR-80:s anda (emulator/,
 karna/hr80.c) med en mus på kortet och händelser tillbaka till ABC80
-på V24. Valen (författaren 2026-10-28): tolken i C först, och en enkel
+på V24. Valen (mina, 2026-10-28): tolken i C först, och en enkel
 mus i stället för styrspak.
 
 ## Det som sätter gränserna
@@ -179,7 +181,7 @@ mus i stället för styrspak.
 7. **Storleken.** Räkna vad fönstren och musen tar i hr80.c, och om
    tolken med dem hade fått plats i 4 KB EPROM och 2 KB arbetsminne på
    en processor av den tiden. Skrivs om till Z80 bara om det visar sig
-   intressant (författaren 2026-10-28: C först).
+   intressant (jag 2026-10-28: C först).
    **Klart 2026-10-28:** [STORLEK.md](STORLEK.md) och `storlek.sh`
    (clang för AVR, MSP430 och Cortex-M0, SDCC för Z80). Fönstren och
    musen gör tolken 2,2-2,5 gånger större: utan värdens bild 3,8-4,4 KB
