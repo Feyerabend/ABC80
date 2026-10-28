@@ -238,6 +238,7 @@
   #hr80_bild {
     display: block; width: 100%; aspect-ratio: 1; background: #000;
     image-rendering: pixelated; border-radius: 0 0 10px 10px;
+    cursor: none; touch-action: none;        /* kortet ritar pekaren */
   }
   #hr80_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
   /* Kom igång: en ruta mitt på sidan (popover). */
@@ -541,7 +542,7 @@
       <div class="knappar">
         <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva" data-title-en="A disk for ABC-DOS (FD2, 160 KB); with CP/M a disk in B:, or in A: if it is a system disk" data-en="Insert disk…">Lägg i diskett…</button>
 <!-- PROGRAM -->
-        <button id="exempel" title="GISSA, KURVA, MUSIK, AIRFIGHT, HR80 och FONSTER på en diskett med ABC-DOS (med BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT och HR80)" data-title-en="GISSA, KURVA, MUSIK, AIRFIGHT, HR80 and FONSTER on a disk with ABC-DOS (with BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT and HR80)" data-en="Example disk">Exempeldisketten</button>
+        <button id="exempel" title="GISSA, KURVA, MUSIK, AIRFIGHT, HR80, FONSTER och FONSTER2 på en diskett med ABC-DOS (med BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT och HR80)" data-title-en="GISSA, KURVA, MUSIK, AIRFIGHT, HR80, FONSTER and FONSTER2 on a disk with ABC-DOS (with BASIC II: GISSA, KURVA, MUSIK, CHIP8, SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT and HR80)" data-en="Example disk">Exempeldisketten</button>
 <!-- /PROGRAM -->
 <!-- SYSTEM -->
         <button id="systemskiva" title="Luxors systemskiva ver. 1.0 med ABC-DOS: LIB, COPY, DOSGEN …" data-title-en="Luxor's system disk ver. 1.0 with ABC-DOS: LIB, COPY, DOSGEN …" data-en="System disk">Systemskivan</button>
@@ -590,7 +591,7 @@
         ABC-DOS disk comes back.</p>
 <!-- /CPM -->
 <!-- PROGRAM -->
-        <p lang="sv"><i>Exempeldisketten</i> lägger i en diskett med sex
+        <p lang="sv"><i>Exempeldisketten</i> lägger i en diskett med sju
         program: <code>RUN DR0:GISSA</code> (gissa talet), <code>RUN
         DR0:KURVA</code> (kurvor med <code>SETDOT</code>), <code>RUN
         DR0:MUSIK</code> (en orgel från 1981 på tangenterna Z, X, C … med S,
@@ -599,14 +600,18 @@
         Z80-kod, för två: A, D och X mot J, L och M; laddaren tar en halv
         minut, och <kbd>Ctrl</kbd>+<kbd>C</kbd> går tillbaka till BASIC)
         <code>RUN DR0:HR80</code> (en bild på grafikkortet, se
-        panelen Grafikkortet) eller <code>RUN DR0:FONSTER</code>
+        panelen Grafikkortet), <code>RUN DR0:FONSTER</code>
         (textfönster som styrs med koder, som en skrivare: <kbd>Tab</kbd>
         byter fönster, <kbd>Ctrl</kbd>+<kbd>X</kbd> stänger och
-        <kbd>Ctrl</kbd>+<kbd>A</kbd> öppnar). Samma sex program finns också som band, ett per program, i
+        <kbd>Ctrl</kbd>+<kbd>A</kbd> öppnar) eller <code>RUN
+        DR0:FONSTER2</code> (fönster på grafikkortet, som frågar kortet
+        efter händelser och ritar om det som behövs; koppla in kortet
+        under Grafikkortet först, och använd musen på kortets bild: dra i
+        titelraden, stäng i rutan, klicka i BILD). Samma sju program finns också som band, ett per program, i
         <code>exempel/program/kassett/</code>, och som text i
         <code>exempel/program/text/</code> (<i>Skriv in…</i> och
         <code>RUN</code>).</p>
-        <p lang="en"><i>Example disk</i> inserts a disk with six programs
+        <p lang="en"><i>Example disk</i> inserts a disk with seven programs
         (in Swedish): <code>RUN DR0:GISSA</code> (guess the number),
         <code>RUN DR0:KURVA</code> (curves with <code>SETDOT</code>),
         <code>RUN DR0:MUSIK</code> (an organ from 1981 on the keys Z, X, C …
@@ -615,10 +620,14 @@
         Z80 code, for two: A, D and X against J, L and M; the loader takes
         half a minute, and <kbd>Ctrl</kbd>+<kbd>C</kbd> returns to BASIC)
         <code>RUN DR0:HR80</code> (a picture on the graphics card, see
-        the panel Graphics card) or <code>RUN DR0:FONSTER</code> (text
+        the panel Graphics card), <code>RUN DR0:FONSTER</code> (text
         windows controlled by codes, like a printer: <kbd>Tab</kbd> switches
         window, <kbd>Ctrl</kbd>+<kbd>X</kbd> closes and
-        <kbd>Ctrl</kbd>+<kbd>A</kbd> opens). The same six programs are also on tape, one per
+        <kbd>Ctrl</kbd>+<kbd>A</kbd> opens) or <code>RUN
+        DR0:FONSTER2</code> (windows on the graphics card, asking the card
+        for events and redrawing what is needed; connect the card under
+        Graphics card first, and use the mouse on the card's picture: drag
+        the title bar, close in the box, click in BILD). The same seven programs are also on tape, one per
         program, in <code>exempel/program/kassett/</code>, and as text in
         <code>exempel/program/text/</code> (<i>Type in…</i> and
         <code>RUN</code>).</p>
@@ -1131,6 +1140,11 @@
         #1,A$;</code> (<code>RUN "MO0:HR80"</code>). Utan kortet väntar
         rutinen; <kbd>Ctrl</kbd>+<kbd>C</kbd> stoppar. Alla kommandon står i
         <code>emulator/karna/hr80.h</code>.</p>
+        <p lang="sv">Kortet har också påhittade fönster och en mus. Musen
+        på bilden är kortets mus: kortet ritar pekaren, lyfter och flyttar
+        fönster (dra i titelraden) och stänger dem (rutan i hörnet), och
+        lägger det som hänt i en kö som ABC80 frågar efter med ESC ?.
+        <code>RUN DR0:FONSTER2</code> visar det.</p>
         <p lang="en">The card takes characters on V24 at 9600 baud. Some of
         the commands: 12 clears, 1 <i>c</i> chooses the colour, 28 <i>x
         y</i> sets the fixed point, 2 <i>x y</i> draws a dot, 4 <i>x y</i> a
@@ -1145,6 +1159,12 @@
         #1,A$;</code> (<code>RUN "MO0:HR80"</code>). Without the card the
         routine waits; <kbd>Ctrl</kbd>+<kbd>C</kbd> stops it. All the
         commands are in <code>emulator/karna/hr80.h</code>.</p>
+        <p lang="en">The card also has invented windows and a mouse. The
+        mouse on the picture is the card's mouse: the card draws the
+        pointer, raises and moves windows (drag the title bar) and closes
+        them (the box in the corner), and puts what happened in a queue that
+        the ABC80 asks for with ESC ?. <code>RUN DR0:FONSTER2</code> shows
+        it.</p>
         <p lang="sv">Kortet kopplas in och ur medan maskinen går, och bilden
         ligger kvar tills <i>Rensa</i> på lappen. I en länk kopplar
         <code>?v24=hr80</code> in det; i terminalen <code>abc80 -H

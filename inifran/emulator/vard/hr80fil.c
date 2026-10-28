@@ -13,7 +13,8 @@
  *     -f fil    filens bytes till kortet
  *     -u dx,dy,k  musen: en rörelse i bildens punkter, knappen (1 nere)
  *     -m        rita markören
- *     -e        skriv händelserna i kön och omrita på stdout
+ *     -e        skriv händelserna i kön och omrita på stdout, och
+ *               svaren på ESC ? när de kommer (svar a b c d)
  *
  * -s, -f och -u går till kortet i den ordning de står.
  */
@@ -26,6 +27,16 @@
 #include "hr80bild.h"
 
 static Hr80 kort;
+static int handelser;
+
+/* Ett tecken till kortet, och svaret om det var ESC ?. */
+static void till(uint8_t tecken)
+{
+    uint8_t svar[4];
+    hr80_tecken(&kort, tecken);
+    if (hr80_svar(&kort, svar) && handelser)
+        printf("svar %d %d %d %d\n", svar[0], svar[1], svar[2], svar[3]);
+}
 
 static void fel(const char *text, const char *tillagg)
 {
@@ -45,7 +56,7 @@ static void skicka_text(const char *s)
 {
     while (*s) {
         if (*s != '\\') {
-            hr80_tecken(&kort, (uint8_t)*s++);
+            till((uint8_t)*s++);
             continue;
         }
         s++;
@@ -53,13 +64,13 @@ static void skicka_text(const char *s)
         case 'x':
             if (hex(s[1]) < 0 || hex(s[2]) < 0)
                 fel("\\x vill ha två hexsiffror: ", s - 1);
-            hr80_tecken(&kort, (uint8_t)(hex(s[1]) * 16 + hex(s[2])));
+            till((uint8_t)(hex(s[1]) * 16 + hex(s[2])));
             s += 3;
             break;
-        case 'r':  hr80_tecken(&kort, 13); s++; break;
-        case 'n':  hr80_tecken(&kort, 10); s++; break;
-        case 'e':  hr80_tecken(&kort, 27); s++; break;
-        case '\\': hr80_tecken(&kort, '\\'); s++; break;
+        case 'r':  till(13); s++; break;
+        case 'n':  till(10); s++; break;
+        case 'e':  till(27); s++; break;
+        case '\\': till('\\'); s++; break;
         default:   fel("okänd \\-kod: ", s - 1);
         }
     }
@@ -72,14 +83,14 @@ static void skicka_fil(const char *namn)
         fel("kan inte öppna ", namn);
     int c;
     while ((c = getc(f)) != EOF)
-        hr80_tecken(&kort, (uint8_t)c);
+        till((uint8_t)c);
     fclose(f);
 }
 
 int main(int argc, char **argv)
 {
     const char *ut = NULL;
-    int markor = 0, handelser = 0;
+    int markor = 0;
     hr80_starta(&kort);
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-s") && i + 1 < argc)

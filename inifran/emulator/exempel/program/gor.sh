@@ -41,7 +41,7 @@ Z80ASM=$INIFRAN/verktyg/z80asm
 ABC80=../../abc80
 ROM=../../roms/abc80new.rom
 DOS=../../roms/abcdos80.rom
-PROGRAM="GISSA KURVA MUSIK AIRFIGHT HR80 FONSTER"
+PROGRAM="GISSA KURVA MUSIK AIRFIGHT HR80 FONSTER FONSTER2"
 B2ROM=../../roms/basicii80.rom
 PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z AIRFIGHT HR80"
 ABC800=../../skivor/abc800
@@ -119,20 +119,36 @@ laddare snake3.bin 36864 SNAKE3Z \
   "SNAKE3 I Z80-KOD (SNAKE3.ASM) FÖR BASIC II|KODEN LÄGGS PÅ \$9000 OCH STARTAS, A S W Z STYR" \
   'PRINT CUR(12,14);CHR$(135);"Score: ";Z;CHR$(151)|PRINT CUR(22,0);' b2 > text_b2/SNAKE3Z.BAS || exit 1
 
-# HR80 (grafikkortet i HR-80:s anda, utanför boken): text/HR80.BAS har
-# sändrutinen hr80ut.asm som DATA i decimalt, skrivna för hand så att de
-# går att läsa; här prövas att de är samma byte som källan ger.
+# HR80 och FONSTER2 (grafikkortet i HR-80:s anda och dess fönster, utanför
+# boken) har sändrutinen hr80ut.asm, och FONSTER2 läsrutinen hr80in.asm
+# efter den, som DATA i decimalt, skrivna så att de går att läsa; här
+# prövas att de är samma byte som källorna ger. Läsrutinen ligger på
+# $FFBB och måste sluta före svaret på $FFFC: 59 + 64 + 4 av de 128 byte.
 "$Z80ASM" -o hr80ut.bin hr80ut.asm || exit 1
-python3 - hr80ut.bin text/HR80.BAS <<'EOF' || exit 1
+"$Z80ASM" -o hr80in.bin hr80in.asm || exit 1
+[ $(wc -c < hr80ut.bin) -eq 59 ] && [ $(wc -c < hr80in.bin) -le 65 ] ||
+  { echo 'hr80ut.bin eller hr80in.bin får inte plats på $FF80' >&2; exit 1; }
+data() {
+python3 - "$@" <<'EOF'
 import sys
-kod = list(open(sys.argv[1], 'rb').read())
+bas, kod = sys.argv[1], b''.join(open(f, 'rb').read() for f in sys.argv[2:])
 data = []
-for rad in open(sys.argv[2], encoding='utf-8'):
+for rad in open(bas, encoding='utf-8'):
     if ' DATA ' in rad:
         data += [int(t) for t in rad.split(' DATA ')[1].split(',')]
-if data != kod:
-    sys.exit('text/HR80.BAS: DATA är inte hr80ut.bin (%d byte)' % len(kod))
+if data != list(kod):
+    sys.exit('%s: DATA är inte %s (%d byte)' % (bas, ' + '.join(sys.argv[2:]), len(kod)))
 EOF
+}
+data text/HR80.BAS hr80ut.bin || exit 1
+data text/FONSTER2.BAS hr80ut.bin hr80in.bin || exit 1
+# FONSTER2 med musen ur fonster2.mus: händelserna som programmet skriver
+# ska vara dessa (lyft och klick i BILD, RÄKNARE flyttad, TEXT stängd och
+# öppnad igen med ett klick på skrivbordet, och omritningarna).
+handelser=$("$ABC80" -r $ROM -f text/FONSTER2.BAS -k 'RUN\r' -t 50000 -H /dev/null \
+  -Hm fonster2.mus | sed -n '/^Händelserna/,/^HR-80/p' | grep '^[A-Z] ' | tr '\n' ' ')
+[ "$handelser" = "L 0 0 0 K 0 45 46 R 0 0 0 L 2 0 0 F 2 14 1 R 1 0 0 R 8 0 0 S 1 0 0 R 0 0 0 R 8 0 0 K 8 200 15 " ] ||
+  { echo "FONSTER2: andra händelser: $handelser" >&2; exit 1; }
 
 for p in $PROGRAM; do
   "$ABC80" -r $ROM -f text/$p.BAS -k "SAVE CAS:$p\r" -U kassett/$p.wav -t 100 > /dev/null || exit 1

@@ -161,19 +161,45 @@ static void wav_fyll(Maskin *m)
     }
 }
 
+static Vard *musens_vard;                    /* -Hm, med grafikkortet */
+static long long musens_start;               /* när tangenterna är skrivna */
+
+/* Musens rörelser fram till maskinens tid; den första som återstår. */
+static long long mus_till(Maskin *m)
+{
+    Vard *v = musens_vard;
+    while (v && v->nasta_mus < v->antal_mus
+           && musens_start + MASKIN_MS(v->mus[v->nasta_mus].ms) <= m->tid) {
+        hr80_mus(&v->hr80->kort, v->mus[v->nasta_mus].dx,
+                 v->mus[v->nasta_mus].dy, v->mus[v->nasta_mus].knapp);
+        v->nasta_mus++;
+    }
+    if (!v || v->nasta_mus == v->antal_mus)
+        return -1;
+    return musens_start + MASKIN_MS(v->mus[v->nasta_mus].ms);
+}
+
 /* Kör t T-cykler; med ljudet en bild i taget. Bilderna slutar där en
- * enda körning hade gått förbi, så instruktionerna blir desamma. */
+ * enda körning hade gått förbi, så instruktionerna blir desamma. Med
+ * musen (-Hm) stannar körningen också vid varje rörelse. */
 static void kor(Maskin *m, long long t)
 {
-    if (!wav) {
+    long long slut = m->tid + t;
+    long long nasta = mus_till(m);
+    if (!wav && nasta < 0) {
         maskin_kor(m, t);
         return;
     }
-    long long slut = m->tid + t;
     while (m->tid < slut && !m->stoppad) {
         long long bild = slut - m->tid;
-        maskin_kor(m, bild < MASKIN_BILD ? bild : MASKIN_BILD);
-        wav_fyll(m);
+        if (bild > MASKIN_BILD)
+            bild = MASKIN_BILD;
+        if (nasta >= 0 && nasta - m->tid < bild)
+            bild = nasta - m->tid > 0 ? nasta - m->tid : 1;
+        maskin_kor(m, bild);
+        if (wav)
+            wav_fyll(m);
+        nasta = mus_till(m);
     }
 }
 
@@ -197,6 +223,10 @@ void batch_kor(Vard *v)
         anrop_borja(v);
     while (!tangentko_tom(m) && !m->stoppad)
         kor(m, MASKIN_BILD);
+    if (v->hr80 && v->antal_mus) {
+        musens_vard = v;
+        musens_start = m->tid;
+    }
     v24_starta(m, m->tid + MASKIN_KLOCKA / 10);   /* 100 ms efter tangenterna */
     if (m->antal_v24)
         kor(m, m->v24_start - m->tid + v24_tid(m));

@@ -1,11 +1,11 @@
 # Exempelprogram till ABC80 inifrån
 
-Sex program för ABC80. Alla sex finns i tre former, en mapp för var:
+Sju program för ABC80. Alla sju finns i tre former, en mapp för var:
 
 | Mapp        | Vad                                  | Laddas med                  |
 |-------------|--------------------------------------|-----------------------------|
 | `kassett/`  | ett band per program, `NAMN.wav`     | `RUN CAS:` (kassetten)      |
-| `diskett/`  | alla sex på `program.dsk`            | `RUN DR0:NAMN` (ABC-DOS)    |
+| `diskett/`  | alla sju på `program.dsk`            | `RUN DR0:NAMN` (ABC-DOS)    |
 | `text/`     | programmen som text, `NAMN.BAS`      | skrivs in som tangenter     |
 
 Webbsidan har disketten inbyggd, på knappen *Exempeldisketten*. Banden
@@ -68,6 +68,25 @@ band…* eller att dra till sidan.
   stängt fönster ritas om av programmet, ur dess egna rader. Starten
   tar omkring fyra sekunder; variablerna är heltal (`%`), annars tar
   den fyra gånger så lång tid.
+- `FONSTER2`: fönster på grafikkortet, utanför boken
+  (`utanfor/fonster/`, steg 5). Tre fönster på kortet: BILD med
+  HR80-bilden, TEXT med några rader och RÄKNARE som räknar varven i
+  slingan. Slingan frågar kortet med `Z=CALL(65467)` (`hr80in.asm`
+  efter `hr80ut.asm`, båda som DATA) och läser svaret med PEEK:
+  ett klick i BILD sätter en stjärna där (de åtta senaste ritas om),
+  ett klick på skrivbordet öppnar de stängda fönstren igen, och
+  `R n` (rita om) ritar fönstrets innehåll igen. Händelserna skrivs
+  också på ABC80:s skärm. Musen sitter på kortet: lyft, dragning i
+  titelraden och stängningsrutan sköter kortet själv. Fönstren är
+  ritade efter omkring sex sekunder. I terminalen ger `-Hm` musen ur
+  en fil, en rad `ms dx dy knapp` per rörelse, ms från det att
+  tangenterna skrivits:
+
+      ./abc80 -r roms/abc80new.rom -f exempel/program/text/FONSTER2.BAS \
+          -k 'RUN\r' -H fonster2.png -Hm exempel/program/fonster2.mus -t 50000
+
+  På webbsidan och i `abc80f -H` är datorns mus på kortets bild
+  kortets mus (steg 6).
 
 ## Från kassetten
 
@@ -81,10 +100,11 @@ avslutar):
 
 ## Från disketten
 
-`diskett/program.dsk` har alla sex, som `NAMN.BAC`, på en diskett för
+`diskett/program.dsk` har alla sju, som `NAMN.BAC`, på en diskett för
 ABC-DOS (FD2, 160 KB). I webbsidan: *Exempeldisketten* (eller *Lägg i
 diskett…* med den här filen) och skriv `RUN DR0:GISSA`, `RUN DR0:KURVA`,
-`RUN DR0:MUSIK`, `RUN DR0:AIRFIGHT`, `RUN DR0:HR80` eller `RUN DR0:FONSTER`. I terminalen, med ABC-DOS på
+`RUN DR0:MUSIK`, `RUN DR0:AIRFIGHT`, `RUN DR0:HR80`, `RUN DR0:FONSTER`
+eller `RUN DR0:FONSTER2`. I terminalen, med ABC-DOS på
 FD2-kortet:
 
     ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 \
@@ -147,6 +167,15 @@ BASIC II är vald. Skriv `RUN MO0:CHIP8Z`, `RUN MO0:AIRFIGHT` och så vidare. I 
 - `hr80ut.asm`: sändrutinen till HR80, och `hr80ut.bin` (59 bytes).
   DATA-raderna i `text/HR80.BAS` är skrivna för hand, och gor.sh prövar
   att de är samma byte.
+- `hr80in.asm`: läsrutinen till grafikkortets fönster (utanfor/fonster/,
+  steg 4), och `hr80in.bin` (64 bytes) direkt efter sändrutinen, på
+  $FFBB. `Z=CALL(65467)` skickar ESC ? och läser kortets svar, fyra
+  bytes, till 65532-65535 (0 i den första: inget). 59 + 64 + 4 av de
+  128 bytes; gor.sh prövar att den får plats, och att DATA-raderna i
+  `text/FONSTER2.BAS` är `hr80ut.bin` och `hr80in.bin`.
+- `fonster2.mus`: musen till FONSTER2, som gor.sh kör med `-Hm` och
+  jämför händelserna (klick i BILD, RÄKNARE flyttad, TEXT stängd och
+  öppnad igen).
 - `gor.sh`: gör om banden, disketterna och laddarna `text/AIRFIGHT.BAS`,
   `text_b2/AIRFIGHT.BAS`, `text_b2/CHIP8Z.BAS` och `text_b2/SNAKE3Z.BAS` ur `text/`, `text_b2/`
   och källorna (z80asm från `verktyg/` i det publika

@@ -69,10 +69,18 @@ annons för HR-80 (1984), ett kort med egen processor som tog emot
 kommandon på V24. Manualen är inte funnen, så det som annonsen inte
 säger är gissat (`../karna/hr80.c`, `../PLAN.md`). Stängs HR-80-fönstret
 göms det bara; ABC80-fönstret avslutar som förut. Exempelprogrammet
-`HR80` på exempeldisketterna ritar en bild:
+`HR80` på exempeldisketterna ritar en bild.
+
+Kortet har också påhittade fönster och en mus (`../../utanfor/fonster`).
+Datorns mus i HR-80-fönstret är kortets mus, med vänsterknappen; kortet
+ritar pekaren själv, så datorns pekare göms över fönstret. `FONSTER2` på
+exempeldisketten öppnar tre fönster som kan dras i titelraden, stängas i
+rutan och klickas i:
 
     ./abc80f -H -l ../roms/abcdos80.rom@6000 \
         -D ../exempel/program/diskett/program.dsk@45 -k '\w1500RUN DR0:HR80\r'
+    ./abc80f -H -l ../roms/abcdos80.rom@6000 \
+        -D ../exempel/program/diskett/program.dsk@45 -k '\w1500RUN DR0:FONSTER2\r'
     ./abc80f -r ../../utanfor/comal/ut/comal.rom -l ../../utanfor/comal/ut/comal.krets@4000
 
 Det sista är COMAL-försöket ur `utanfor/comal`, ABC80-BASIC med

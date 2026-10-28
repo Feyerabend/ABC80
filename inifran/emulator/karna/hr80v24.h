@@ -3,7 +3,9 @@
  *
  * Utanför boken; tolken är hr80.c. Här kopplas den till PIO B som
  * V24-skrivaren (skrivarkort.h): TxD avkodas med samma V24Avkodare och
- * varje helt tecken går till hr80_tecken. Kortet är alltid klart (port
+ * varje helt tecken går till hr80_tecken. Svaret på ESC ? går tillbaka
+ * på maskinens RxD (port $3A bit 0) i 9600 baud, som sätts i maskinen, en
+ * millisekund efter frågan; det som låg i RxD:s lista innan kastas. Kortet är alltid klart (port
  * $3A bit 1 = 0): tolken ritar på en gång, så CTS behövs inte här. Ett
  * riktigt kort med en egen processor behöver CTS när fyllningen tar tid.
  *
@@ -24,9 +26,10 @@ typedef struct Hr80V24 {
     PioBEnhet enhet;                         /* maskin.pio_b_enhet = &enhet */
     V24Avkodare avkodare;
     Hr80 kort;
+    Maskin *maskin;                          /* svaren går till dess RxD */
     long antal;                              /* tecknen hittills */
 } Hr80V24;
 
-void hr80_v24_starta(Hr80V24 *h);
+void hr80_v24_starta(Hr80V24 *h, Maskin *m);
 
 #endif

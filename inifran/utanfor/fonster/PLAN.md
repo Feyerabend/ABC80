@@ -129,19 +129,78 @@ mus i stället för styrspak.
    `v24_lagg` och `v24_starta`, i 9600 baud. `hr80in.asm` på $FF80
    efter sändrutinen läser svaret; `A=CALL(...)` ger det till BASIC.
    Byte räknade och prövade mot en riktig bitström i emulatorn.
+   **Klart 2026-10-28:** `ESC ?` (63, oanvänd i annonsen). Svaret är
+   alltid fyra byte: den äldsta händelsen i kön, annars `R n 0 0` om
+   fönster n (8 skrivbordet) har en bit i `omrita` (biten tas bort;
+   bitarna för stängda fönster kastas), annars fyra nollor. Kortet
+   sänder bara efter frågan, en millisekund efter, i 9600 baud på RxD
+   (hr80v24.c med maskinen, `v24_ny` tömmer listan). `hr80in.asm`
+   (emulator/exempel/program/) är 64 byte på $FFBB: sänder ESC ? med
+   SKICKA, letar upp startbiten med avbrotten av och läser varje bit
+   mitt i, 310 T-cykler isär; svaret hamnar på $FFFC-$FFFF (65532-65535)
+   och läses med PEEK. 59 + 64 + 4 av de 128 byte. NMI-klockan (omkring
+   110 T) flyttar bitarna men de läses inom sin bit. Får rutinen inget
+   svar på en sekund slutar den med 0 först. Prövat i emulatorn: 1 000
+   svar med alla bytevärden (en provkopia av kortet som svarar med en
+   räknare) utan fel, och mot det riktiga kortet med två fönster där det
+   översta stängs (`R 0`, `R 8`, sedan 0). `hr80 -e` skriver svaren
+   (`svar a b c d`), och provet h frågar tolv gånger efter musen i g.
 5. **Exemplet.** `FONSTER2.BAS` (namnet bestäms då): några fönster på
    kortet, ett med HR80-bilden, ett med text och ett som räknar;
    BASIC-slingan frågar efter händelser och ritar om det som behövs.
-6. **Värdarna.** `abc80 -H` med musens rörelser ur en fil (för proven),
+   **Klart 2026-10-28:** `emulator/exempel/program/text/FONSTER2.BAS`,
+   på exempeldisketten och som band. Tre fönster: BILD (HR80-bilden
+   med solen, kullarna och två hus från makrot), TEXT och RÄKNARE (varv
+   i slingan). Slingan anropar `Z=CALL(65467)` och läser svaret med
+   PEEK; inget svar räknar upp RÄKNARE, `R n` ritar fönster n igen
+   (8: texten på skrivbordet), ett klick i BILD lägger en stjärna där
+   (de åtta senaste sparas och ritas om), ett klick på skrivbordet
+   öppnar de stängda fönstren, och den senaste händelsen står i
+   RÄKNARE och på ABC80:s skärm. Båda rutinerna som DATA, 123 byte på
+   65408-65530; gor.sh prövar dem mot källorna. Det första ur steg 6
+   gjordes här för provens skull: `abc80 -Hm fil` läser musen, en rad
+   `ms dx dy knapp` per rörelse, ms räknat från det att tangenterna
+   (`-k`, `-f`) skrivits; `fonster2.mus` klickar, drar RÄKNARE, stänger
+   TEXT och öppnar det igen, och gor.sh jämför händelserna.
+6. **Värdarna.** `abc80 -H` med musens rörelser ur en fil (för proven,
+   gjort i steg 5: `-Hm`),
    SDL-fönstret HR-80 med datorns mus, webbsidans blad med Grafikkortet
    med webbläsarens mus. Webbsidan prövas i Chromium och WebKit med
    Playwright.
+   **Klart 2026-10-28:** i `abc80f -H` är datorns mus i HR-80-fönstret
+   kortets mus (läget räknas om till bildens punkter, vänsterknappen,
+   datorns pekare göms över fönstret). På webbsidan är musen på kortets
+   bild kortets mus, med pointer capture så att en dragning fortsätter
+   utanför bilden; skärmen behåller fokus, så tangenterna går till
+   ABC80. `hr80_mus` i webb.c tar läget, inte rörelsen. Prövat med
+   Playwright i Chromium och WebKit: FONSTER2 med samma klick och
+   dragning som `fonster2.mus` ger samma händelser som i gor.sh.
+   Hjälpen under Grafikkortet nämner fönstren och musen.
 7. **Storleken.** Räkna vad fönstren och musen tar i hr80.c, och om
    tolken med dem hade fått plats i 4 KB EPROM och 2 KB arbetsminne på
    en processor av den tiden. Skrivs om till Z80 bara om det visar sig
    intressant (författaren 2026-10-28: C först).
+   **Klart 2026-10-28:** [STORLEK.md](STORLEK.md) och `storlek.sh`
+   (clang för AVR, MSP430 och Cortex-M0, SDCC för Z80). Fönstren och
+   musen gör tolken 2,2-2,5 gånger större: utan värdens bild 3,8-4,4 KB
+   före och 8,4-9,7 KB efter i Thumb och MSP430 (7,9 och 19,7 KB med
+   SDCC). Tolken före fönstren ligger nära annonsens 4 KB, men med
+   fönstren behövs 16 KB EPROM. I arbetsminnet saknades fyllningens
+   stack, makrotabellen och processorns stack i räkningen; på ett kort
+   hade makrona fått omkring 670 byte, inte 1 664. C-tolken är
+   oförändrad.
 8. **LASMIG.md och README.md**, raden i `utanfor/README.md`, och
    eventuellt ett kapitel i häftet (bok/extra/PLAN.md).
+   **Klart 2026-10-28 utom kapitlet:** [LASMIG.md](LASMIG.md) med
+   filerna som ändrats i emulatorn; README.md har kortets koder, musen,
+   händelserna, FONSTER2 och storleken; raden i `utanfor/README.md`.
+   Häftets kapitel om HR-80 (`bok/extra/kapitel/hr80.tex` och figuren
+   `hr80vag.tex`) säger nu att makrona delar de 2 kilobyte med fönstren
+   (1 664 byte), att 4 212 byte var tolken före fönstren, och att
+   fönsterförsöket är gjort och hade behövt 16 kilobyte EPROM. C-tolken
+   är oförändrad: emulatorn visar ett kort med 16 KB EPROM och mer
+   arbetsminne. Om försöket blir ett eget kapitel i häftet är inte
+   bestämt.
 
 Varje steg committas för sig.
 

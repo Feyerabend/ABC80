@@ -105,6 +105,13 @@
  *     'S' n 0 0   fönster n stängdes
  * Kön rymmer 16; blir den full tappas de nya.
  *
+ * Kortet sänder bara när ABC80 frågar (steg 4), för ABC80 läser V24 bit
+ * för bit och tappar det som kommer medan BASIC gör annat:
+ *     ESC 63 (?)      svaret är fyra byte på V24: den äldsta händelsen,
+ *                     annars 'R' n 0 0 om fönster n (8 skrivbordet) ska
+ *                     ritas om, annars 0 0 0 0
+ * Svaret börjar en millisekund efter frågan.
+ *
  * Fönstertabellen och kön räknas till 384 byte av de 2 KB: nio poster
  * om 32 (fem byte läge och storlek i rutor, fyra markören och den fasta
  * punkten, färgerna, 16 titeln), ordningen, kön om 64 och tillståndet.
@@ -571,6 +578,36 @@ int hr80_handelse(Hr80 *h, uint8_t ut[4])
     return 1;
 }
 
+/* ESC ?: svaret är den äldsta händelsen, annars ett öppet fönster (8
+ * skrivbordet) som ska ritas om, och biten tas bort, annars fyra nollor.
+ * Bitarna för stängda fönster kastas. */
+static void fraga(Hr80 *h)
+{
+    h->svar_finns = 1;
+    if (hr80_handelse(h, h->svar))
+        return;
+    for (int n = 0; n <= HR80_SKRIVBORDET; n++) {
+        uint16_t bit = (uint16_t)(1 << n);
+        if (!(h->omrita & bit))
+            continue;
+        h->omrita &= (uint16_t)~bit;
+        if (n == HR80_SKRIVBORDET || h->fonster[n].oppen) {
+            h->svar[0] = 'R'; h->svar[1] = (uint8_t)n; h->svar[2] = h->svar[3] = 0;
+            return;
+        }
+    }
+    memset(h->svar, 0, 4);
+}
+
+int hr80_svar(Hr80 *h, uint8_t ut[4])
+{
+    if (!h->svar_finns)
+        return 0;
+    h->svar_finns = 0;
+    memcpy(ut, h->svar, 4);
+    return 1;
+}
+
 /* Det översta fönstret n till ytterkanten (x, y). Det syns helt, så
  * punkterna flyttas i bildminnet, i en ordning som inte skriver över det
  * som ska flyttas; det som blir synligt där det var ritas som vid
@@ -839,6 +876,7 @@ static void esc(Hr80 *h, uint8_t kod)
     case 82: hr80_starta(h); return;
     case 52: h->svartvit = 0; stang_alla(h); rensa(h); return;
     case 56: h->svartvit = 1; stang_alla(h); rensa(h); return;
+    case 63: fraga(h); return;
     }
     if (argument_till(256 + kod)) {
         h->kommando = 256 + kod;

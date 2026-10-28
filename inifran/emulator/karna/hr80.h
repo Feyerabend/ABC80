@@ -104,6 +104,8 @@ typedef struct Hr80 {
     /* Händelserna till ABC80: slaget, fönstret och två tal. */
     uint8_t ko[HR80_KO][4];
     int ko_forsta, ko_antal;
+    uint8_t svar[4];                         /* svaret på ESC ? */
+    int svar_finns;
 } Hr80;
 
 /* Som efter ESC R: allt nollställt, makrona också. */
@@ -119,6 +121,9 @@ void hr80_mus(Hr80 *h, int dx, int dy, int knapp);
 
 /* Den äldsta händelsen ur kön till ut[4]; 0 om kön är tom. */
 int hr80_handelse(Hr80 *h, uint8_t ut[4]);
+
+/* Svaret på ESC ? till ut[4], en gång; 0 om ingen fråga har kommit. */
+int hr80_svar(Hr80 *h, uint8_t ut[4]);
 
 /* Bilden, HR80_BREDD x HR80_HOJD punkter uppifrån: i färgläget är varje
  * punkt två breda. farger[0-7] är de åtta färgerna i värdens format

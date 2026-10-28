@@ -47,6 +47,11 @@
  *     -L             V24-skrivaren på PIO B; tecknen skrivs som "PR: hh ..."
  *     -H fil.png     grafikkortet i HR-80:s anda på V24 (utanför boken,
  *                    karna/hr80v24.h); bilden skrivs efteråt, 512 x 512
+ *     -Hm fil        musen på grafikkortet i batchläget (påhittad,
+ *                    utanfor/fonster/): en rad "ms dx dy knapp" för
+ *                    varje rörelse, i tidsordning, ms från det att
+ *                    tangenterna är skrivna (som -t); # börjar en
+ *                    kommentar
  *
  * Korten på ABC-bussen (se karna/skivkort.h, skrivarkort.h, ieckort.h):
  *     -D fil[@kort[.enhet]]  en skivavbild, standard kort 44 enhet 0;
@@ -223,6 +228,34 @@ static void labbtext(Maskin *m, const char *s)
             break;
         s = slut + 1;
     }
+}
+
+/* -Hm fil: musens rörelser, "ms dx dy knapp" på varje rad. */
+static void musfil(Vard *v, const char *namn)
+{
+    FILE *f = fopen(namn, "r");
+    if (!f)
+        vard_fel("kan inte öppna ", namn);
+    char rad[200];
+    while (fgets(rad, sizeof rad, f)) {
+        char *s = rad + strspn(rad, " \t");
+        if (*s == '#' || *s == '\n' || !*s)
+            continue;
+        if (v->antal_mus == VARD_MUS)
+            vard_fel("för många rader i ", namn);
+        long ms;
+        int dx, dy, k;
+        if (sscanf(s, "%ld %d %d %d", &ms, &dx, &dy, &k) != 4)
+            vard_fel("vill ha ms dx dy knapp i ", namn);
+        if (v->antal_mus > 0 && ms < v->mus[v->antal_mus - 1].ms)
+            vard_fel("tiderna ska växa i ", namn);
+        v->mus[v->antal_mus].ms = ms;
+        v->mus[v->antal_mus].dx = dx;
+        v->mus[v->antal_mus].dy = dy;
+        v->mus[v->antal_mus].knapp = k;
+        v->antal_mus++;
+    }
+    fclose(f);
 }
 
 /* ---------------------------------------------------------------- */
@@ -404,7 +437,7 @@ static void hjalp(void)
 {
     fputs("användning: abc80 [-r rom] [-l fil@adr]... [-b f0,f1..@adr] [-m 16|32|48] [-M fil[@adr]]\n"
           "                  [-tkn80 tkn80-iii.rom] [-uni80] [-cpm system.dsk]\n"
-          "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L] [-H fil.png]\n"
+          "                  [-k text] [-f fil] [-K ms,ms] [-s text] [-S baud] [-W h@ms,..] [-L] [-H fil.png [-Hm fil]]\n"
           "                  [-D fil[@kort[.enhet]]].. [-C hh[,bb,n]] [-CR] [-CP fil.png]\n"
           "                  [-E adr[,text]] [-T band.wav] [-U inspelning.wav]\n"
           "                  [-t ms [-d adr,n].. [-B fil.png] [-a fil.wav] [-x adr [-p ..] [-R ..]] ...]\n"
@@ -518,11 +551,12 @@ int main(int argc, char **argv)
         else if (!strcmp(f, "-H")) {
             if (v->v24_skrivare)
                 vard_fel("-L och -H använder båda V24", NULL);
-            hr80_v24_starta(&hr80);
+            hr80_v24_starta(&hr80, &maskin);
             maskin.pio_b_enhet = &hr80.enhet;
             v->hr80 = &hr80;
             hr80fil = a;
         }
+        else if (!strcmp(f, "-Hm")) musfil(v, a);
         else if (!strcmp(f, "-D")) skiva(v, a, 0);
         else if (!strcmp(f, "-DP")) skiva(v, a, 1);
         else if (!strcmp(f, "-DS")) v->spara_skivor = 1;

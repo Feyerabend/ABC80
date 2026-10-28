@@ -17,6 +17,9 @@
 #      fönstret med innehållet, klick på skrivbordet, stängningsrutan, och
 #      en dragning som pågår (streckad ram) med pekaren; händelserna och
 #      omrita ska vara som i ut/g.txt
+#   h  frågan ESC ? (påhittad): samma som g utan den sista dragningen,
+#      sedan tolv frågor; svaren är de åtta händelserna, 'R' för fönster
+#      0 och 2 och skrivbordet (det stängda 1 kastas) och sedan nollor
 cd "$(dirname "$0")"
 mkdir -p ut
 fel=0
@@ -33,6 +36,7 @@ d|-s '\eD\x80R\x1e\x10\x00\x1e\x00\x10\x1e\xf0\x00\x1e\x00\xf0\xfe' -s '\eD\x81B
 e|-m -s '\eO\x20\x20\x20\x2c\x3aANTECKNINGAR\rSKRIV H\x5dR. TEXTEN BRYTS VID RAMEN OCH RULLAR N\x5eR F\x5bNSTRET \x5eR FULLT.\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\eO\x21\x224\x2b4KODERNA\rESC O, V, T, S\r\nFF RENSAR\eO\x22\x2b\x28\x2c8INK\x5cP\rMJ\x5cLK\r\nBR\x5cD\r\nOST\eV\x20\r\nLYFT\eS\x21'
 f|-s '\e0\x04\eO\x20\x21\x2248GRAFIK\r\x01\x01\x1c\x00\x00\x04\xff\xff\x01\x02\x1c\x00\x40\x04\x60\x00\x04\x00\x00\x05\x28\x04\eO\x21\x2a0\x2a6OVANP\x5b\rT: UNDER\eT\x20\x01\x03\x1c\x00\x60\x04\xff\x60\x05\x60\x70\eT\x28\x01\x01\x1c\x00\x00\x04\xff\xff\x12\x37\x20SKRIVBORDET'
 g|-e -m -s '\eO\x20\x20\x20\x2c\x3aANTECKNINGAR\rETT\r\nTV\x5d\eO\x21\x224\x2b4KODERNA\rESC O, V, T, S\eO\x22\x2b\x28\x2c8INK\x5cP\rMJ\x5cLK\r\nBR\x5cD\eV\x21' -u 300,200,0 -u 0,0,1 -u 0,0,0 -u -240,-186,1 -u 40,60,1 -u 0,0,0 -u 400,-69,1 -u 0,0,0 -u -18,27,1 -u 0,0,0 -u -182,188,1 -u 0,0,0 -u 0,-98,1 -u -60,-50,1
+h|-e -s '\eO\x20\x20\x20\x2c\x3aANTECKNINGAR\rETT\r\nTV\x5d\eO\x21\x224\x2b4KODERNA\rESC O, V, T, S\eO\x22\x2b\x28\x2c8INK\x5cP\rMJ\x5cLK\r\nBR\x5cD\eV\x21' -u 300,200,0 -u 0,0,1 -u 0,0,0 -u -240,-186,1 -u 40,60,1 -u 0,0,0 -u 400,-69,1 -u 0,0,0 -u -18,27,1 -u 0,0,0 -u -182,188,1 -u 0,0,0 -s '\e?\e?\e?\e?\e?\e?\e?\e?\e?\e?\e?\e?'
 FALL
 if [ "$1" = -n ]; then cp ut/summor.txt summor.txt; echo "summor.txt omskriven"; exit $fel; fi
 while read -r namn summa; do

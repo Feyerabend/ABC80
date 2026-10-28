@@ -16,6 +16,7 @@
 #include "../karna/skrivarkort.h"
 
 #define VARD_LISTA 32
+#define VARD_MUS 256
 
 /* Allt som värden håller reda på utöver maskinen. */
 typedef struct Vard {
@@ -34,6 +35,8 @@ typedef struct Vard {
     Skrivarkort *skrivarkort;
     V24Skrivare *v24_skrivare;
     Hr80V24 *hr80;                           /* -H, utanför boken */
+    struct { long ms; int dx, dy, knapp; } mus[VARD_MUS];   /* -Hm */
+    int antal_mus, nasta_mus;
     Ieckort *ieckort;
     int kortets_bildminne;                   /* -CR: $4000-$43FF */
 

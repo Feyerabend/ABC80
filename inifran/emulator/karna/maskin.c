@@ -369,6 +369,12 @@ void v24_lagg(Maskin *m, uint8_t tecken)
         m->v24[m->antal_v24++] = tecken;
 }
 
+void v24_ny(Maskin *m)
+{
+    m->antal_v24 = 0;
+    m->v24_start = -1;
+}
+
 void v24_starta(Maskin *m, long long start)
 {
     m->v24_start = start;

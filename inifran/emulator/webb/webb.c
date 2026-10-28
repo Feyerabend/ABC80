@@ -379,7 +379,7 @@ EXPORT(centronics_hamtat) void centronics_hamtat(void) { snittkortet.antal = 0; 
 EXPORT(hr80) void hr80(int in)
 {
     if (in && !hr80_startat) {
-        hr80_v24_starta(&hr80_kortet);
+        hr80_v24_starta(&hr80_kortet, &maskin);
         hr80_startat = 1;
     }
     maskin.pio_b_enhet = in ? &hr80_kortet.enhet : NULL;
@@ -395,6 +395,16 @@ EXPORT(hr80_rensa) void hr80_rensa(void)
 /* Tecknen som kortet har fått, så att sidan ser när något har hänt. */
 EXPORT(hr80_antal) long hr80_antal(void) { return hr80_startat ? hr80_kortet.antal : 0; }
 
+/* Webbläsarens mus på bilden blir kortets mus (påhittad): läget i
+ * bildens punkter, 512 x 256 uppifrån, och knappen (1 nere). */
+EXPORT(hr80_mus) void hr80_mus_till(int x, int y, int knapp)
+{
+    if (!hr80_startat)
+        return;
+    Hr80 *k = &hr80_kortet.kort;
+    hr80_mus(k, x - k->mx, y - k->my, knapp);
+}
+
 /* Bilden, 512 x 256 punkter i RGBA (varje rad visas två gånger), med
  * kortets markör om markor. ABC 810:s åtta färger, R först. */
 EXPORT(hr80_bild) const uint32_t *hr80_bild(int markor)
@@ -405,7 +415,7 @@ EXPORT(hr80_bild) const uint32_t *hr80_bild(int markor)
         0xFFFF0000u, 0xFFFF00FFu, 0xFFFFFF00u, 0xFFFFFFFFu,
     };
     if (!hr80_startat) {
-        hr80_v24_starta(&hr80_kortet);
+        hr80_v24_starta(&hr80_kortet, &maskin);
         hr80_startat = 1;
     }
     hr80_rita(&hr80_kortet.kort, punkter, farger, markor);

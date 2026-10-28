@@ -1563,6 +1563,34 @@ function hr80_rita(markor) {
         hr80_bilden(markor);
 }
 
+/* Musen på bilden är kortets mus (påhittad, karna/hr80.h): läget i
+ * kortets punkter och knappen. Kortet ritar pekaren själv. Med
+ * pointer capture fortsätter en dragning utanför bilden, och skärmen
+ * behåller fokus, så att tangenterna går till ABC80. */
+function hr80_musen(h, knapp) {
+    const ruta = $('hr80_bild').getBoundingClientRect();
+    const x = Math.floor((h.clientX - ruta.left) * 512 / ruta.width);
+    const y = Math.floor((h.clientY - ruta.top) * 256 / ruta.height);
+    e.hr80_mus(Math.max(0, Math.min(511, x)), Math.max(0, Math.min(255, y)), knapp);
+}
+let hr80_knappen = 0;
+$('hr80_bild').addEventListener('pointerdown', h => {
+    if (h.button !== 0)
+        return;
+    h.preventDefault();
+    $('hr80_bild').setPointerCapture(h.pointerId);
+    hr80_knappen = 1;
+    hr80_musen(h, 1);
+});
+$('hr80_bild').addEventListener('pointermove', h => hr80_musen(h, hr80_knappen));
+for (const namn of ['pointerup', 'pointercancel'])
+    $('hr80_bild').addEventListener(namn, h => {
+        if (!hr80_knappen)
+            return;
+        hr80_knappen = 0;
+        hr80_musen(h, 0);
+    });
+
 lapp_flyttbar(hr80_lappen, HR80_NYCKEL);
 hr80_lappen.addEventListener('toggle', () => {
     if (hr80_oppen()) {
@@ -2191,8 +2219,8 @@ $('exempel')?.addEventListener('click', () => {
                 'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT or HR80 (with the graphics card). ' +
                 'BYE gives the DOS (LIB), $BAS returns. Ctrl-C twice stops.');
     else
-        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (med grafikkortet) eller RUN DR0:FONSTER (textfönster).',
-                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (with the graphics card) or RUN DR0:FONSTER (text windows).');
+        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (med grafikkortet), RUN DR0:FONSTER (textfönster) eller RUN DR0:FONSTER2 (fönster på grafikkortet).',
+                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (with the graphics card), RUN DR0:FONSTER (text windows) or RUN DR0:FONSTER2 (windows on the graphics card).');
     oppna_panel('panel_disk');
     skarm.focus();
 });

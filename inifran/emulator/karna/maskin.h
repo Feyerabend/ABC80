@@ -230,6 +230,7 @@ void maskin_tangent_upp(Maskin *m);
 
 /* V24 in: lägg till tecken; mottagningen börjar vid tiden start. */
 void v24_lagg(Maskin *m, uint8_t tecken);
+void v24_ny(Maskin *m);                      /* listan tömd, inte börjat */
 void v24_starta(Maskin *m, long long start);
 long long v24_tid(const Maskin *m);          /* T-cykler för alla tecken */
 

@@ -35,7 +35,8 @@
  *     -skarp         skarpa punkter, utan sken och efterlysning
  *     -H             grafikkortet i HR-80:s anda på V24 (utanför boken,
  *                    ../karna/hr80v24.h), i ett andra fönster; stängs det
- *                    göms det bara
+ *                    göms det bara; datorns mus i fönstret är kortets
+ *                    mus (vänsterknappen)
  *
  * Tangenterna: som på webbsidan. RETURN, ← och → (backsteg är ←), ESC,
  * TAB, DEL och Ctrl-A till Ctrl-Z; å ä ö é ü och Å Ä Ö É Ü blir ABC80:s
@@ -220,6 +221,46 @@ static void text_in(const char *s)
         if (kod)
             tangentko_lagg(&maskin, (uint8_t)kod);
     }
+}
+
+/* Datorns mus i grafikkortets fönster blir kortets mus (påhittad, se
+ * ../karna/hr80.h): läget i bildens punkter och vänsterknappen. Kortet
+ * ritar pekaren själv, så datorns pekare göms över fönstret. 1 om
+ * händelsen hörde till fönstret. */
+static int hr80_musen(SDL_Event *h, SDL_Window *f, SDL_Renderer *r)
+{
+    static int knapp;
+    SDL_WindowID id = SDL_GetWindowID(f);
+    switch (h->type) {
+    case SDL_EVENT_WINDOW_MOUSE_ENTER:
+    case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+        if (h->window.windowID != id)
+            return 0;
+        if (h->type == SDL_EVENT_WINDOW_MOUSE_ENTER)
+            SDL_HideCursor();
+        else
+            SDL_ShowCursor();
+        return 1;
+    case SDL_EVENT_MOUSE_MOTION:
+        if (h->motion.windowID != id)
+            return 0;
+        break;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+        if (h->button.windowID != id)
+            return 0;
+        if (h->button.button == SDL_BUTTON_LEFT)
+            knapp = h->type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+        break;
+    default:
+        return 0;
+    }
+    SDL_ConvertEventToRenderCoordinates(r, h);   /* 512 x 512, raderna dubbla */
+    float x = h->type == SDL_EVENT_MOUSE_MOTION ? h->motion.x : h->button.x;
+    float y = h->type == SDL_EVENT_MOUSE_MOTION ? h->motion.y : h->button.y;
+    Hr80 *k = &hr80.kort;
+    hr80_mus(k, (int)x - k->mx, (int)y / 2 - k->my, knapp);
+    return 1;
 }
 
 /* ---------------------------------------------------------------- */
@@ -426,7 +467,7 @@ int main(int argc, char **argv)
         maskin.kassett = &kassett;
     }
     if (med_hr80) {
-        hr80_v24_starta(&hr80);
+        hr80_v24_starta(&hr80, &maskin);
         maskin.pio_b_enhet = &hr80.enhet;
     }
     if (tangenter)
@@ -503,6 +544,8 @@ int main(int argc, char **argv)
                 tangent_ned(&h.key);
             else if (h.type == SDL_EVENT_TEXT_INPUT)
                 text_in(h.text.text);
+            else if (hr80_fonster && hr80_musen(&h, hr80_fonster, hr80_ritare))
+                ;
         }
         double nu = (double)SDL_GetTicksNS() * 1e-9;
 
