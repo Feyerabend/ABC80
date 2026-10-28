@@ -2191,8 +2191,8 @@ $('exempel')?.addEventListener('click', () => {
                 'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT or HR80 (with the graphics card). ' +
                 'BYE gives the DOS (LIB), $BAS returns. Ctrl-C twice stops.');
     else
-        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT eller RUN DR0:HR80 (med grafikkortet).',
-                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT or RUN DR0:HR80 (with the graphics card).');
+        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (med grafikkortet) eller RUN DR0:FONSTER (textfönster).',
+                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (with the graphics card) or RUN DR0:FONSTER (text windows).');
     oppna_panel('panel_disk');
     skarm.focus();
 });

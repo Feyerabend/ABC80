@@ -1,11 +1,11 @@
 # Exempelprogram till ABC80 inifrån
 
-Fem program för ABC80. Alla fem finns i tre former, en mapp för var:
+Sex program för ABC80. Alla sex finns i tre former, en mapp för var:
 
 | Mapp        | Vad                                  | Laddas med                  |
 |-------------|--------------------------------------|-----------------------------|
 | `kassett/`  | ett band per program, `NAMN.wav`     | `RUN CAS:` (kassetten)      |
-| `diskett/`  | alla fem på `program.dsk`            | `RUN DR0:NAMN` (ABC-DOS)    |
+| `diskett/`  | alla sex på `program.dsk`            | `RUN DR0:NAMN` (ABC-DOS)    |
 | `text/`     | programmen som text, `NAMN.BAS`      | skrivs in som tangenter     |
 
 Webbsidan har disketten inbyggd, på knappen *Exempeldisketten*. Banden
@@ -56,6 +56,18 @@ band…* eller att dra till sidan.
 
       ./abc80 -r roms/abc80new.rom -f exempel/program/text/HR80.BAS \
           -k 'RUN\r' -H hr80.png -t 15000
+- `FONSTER`: textfönster ritade med `+`, `-` och `!`, utanför boken
+  (`utanfor/fonster/`): ett demo som författaren gjorde för Olle
+  Wolkert på 80-talet, gjort om. Programmet skriver allt genom en
+  rutin (rad 1000) som tolkar styrkoder i texten, som en skrivare:
+  `CHR$(27)` och `O` öppnar ett fönster, `V` väljer ett och `S`
+  stänger ett, med talen + 32 som tecken efter bokstaven, och FF
+  rensar. Det aktiva fönstret har `=` i ramen och ligger överst.
+  Tab (högerpilen) byter fönster, Ctrl-X stänger det aktiva och Ctrl-A
+  öppnar det första stängda igen, högst åtta. Det som låg under ett
+  stängt fönster ritas om av programmet, ur dess egna rader. Starten
+  tar omkring fyra sekunder; variablerna är heltal (`%`), annars tar
+  den fyra gånger så lång tid.
 
 ## Från kassetten
 
@@ -69,10 +81,10 @@ avslutar):
 
 ## Från disketten
 
-`diskett/program.dsk` har alla fem, som `NAMN.BAC`, på en diskett för
+`diskett/program.dsk` har alla sex, som `NAMN.BAC`, på en diskett för
 ABC-DOS (FD2, 160 KB). I webbsidan: *Exempeldisketten* (eller *Lägg i
 diskett…* med den här filen) och skriv `RUN DR0:GISSA`, `RUN DR0:KURVA`,
-`RUN DR0:MUSIK`, `RUN DR0:AIRFIGHT` eller `RUN DR0:HR80`. I terminalen, med ABC-DOS på
+`RUN DR0:MUSIK`, `RUN DR0:AIRFIGHT`, `RUN DR0:HR80` eller `RUN DR0:FONSTER`. I terminalen, med ABC-DOS på
 FD2-kortet:
 
     ./abc80 -r roms/abc80new.rom -l roms/abcdos80.rom@6000 \
