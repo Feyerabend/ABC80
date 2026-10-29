@@ -5,10 +5,15 @@ namn och kommentarer på svenska. Dokumenten byggs ur samma anteckningar
 som boken *ABC80 inifrån*, men bokens text är inte med: här finns bara
 listningarna och tabellerna till dem.
 
-Här finns inte själva koden, bara mallarna: listningarna med adresser,
+Grunden är mallarna: listningarna med adresser,
 namn och kommentarer, men utan byten och instruktionerna. Koden är
 upphovsrättsligt skyddad och hör till sina upphovsmän. `bygg.py` hämtar
 ROM:en, fyller i koden ur den och bygger PDF:en.
+
+Färdiga PDF:er ligger också här, så att det går att se hur resultatet
+blir: [`abc80rom.pdf`](abc80rom.pdf) och [`basicii80.pdf`](basicii80.pdf).
+De innehåller koden och tas bort om rättighetsinnehavaren invänder;
+mallarna och `bygg.py` finns kvar för den som vill bygga själv.
 
 ## Bygga
 
@@ -52,6 +57,7 @@ oanvända svansen $7379–$77FF rester av äldre kod där arkivets har $FF.
 
 | Fil | Innehåll |
 |---|---|
+| `abc80rom.pdf`, `basicii80.pdf` | färdigbyggda exempel på resultatet |
 | `bygg.py` | hämtar ROM:en, fyller i mallen och bygger PDF:en |
 | `bygg.sh` | kör `bygg.py` |
 | `fyll.py` | fyller i mallen: avkodar instruktionen eller datan på varje rads adress |
@@ -78,10 +84,12 @@ Emulatorn i [`../verktyg/`](../verktyg/) startar båda; ROM:arna ligger i
 ## In English
 
 Commented disassemblies (in Swedish) of two ABC80 ROMs, built from the
-same notes as the listings in the book *ABC80 inifrån*. Only templates are
-published here: the listings with addresses, names and comments, but
+same notes as the listings in the book *ABC80 inifrån*. The sources published here are
+templates: the listings with addresses, names and comments, but
 without the code itself, which is copyrighted by its authors. `bygg.py`
-downloads the ROM, fills the code in from it and builds the PDF:
+downloads the ROM, fills the code in from it and builds the PDF. Ready-built
+PDFs (`abc80rom.pdf`, `basicii80.pdf`) are included as examples of the result;
+they contain the code and will be removed if the rights holder objects.
 `python3 bygg.py abc80` gives `ut/abc80rom.pdf` (the ABC80 BASIC and system
 ROM, revision 11273), `python3 bygg.py basicii80` gives `ut/basicii80.pdf`
 (BASIC II for the ABC80). It needs Python 3 and a TeX that handles fontspec. A ROM
