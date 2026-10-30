@@ -66,6 +66,32 @@ EXPORT(slapp) void slapp(void *p) { free(p); }
 /* ---------------------------------------------------------------- */
 /* Maskinen                                                          */
 
+/* Lamporna på sidan: skrivningar på V24 och byte till skivkortet.
+ * Bit 4 låg på port $3A betyder att ett tecken sänds och bit 3 är TxD;
+ * vila (bit 3 hög) skrivs först i varje tecken, också när BASIC II
+ * sedan väntar på CTS. Kassetten skriver aldrig bit 3. Räknas på varje
+ * OUT, före kortet; de börjar inte om när maskinen startar om. */
+static long v24_ut_antal, skiva_ut_antal;
+
+static void port_ut(void *data, Maskin *m, uint8_t port, uint8_t varde)
+{
+    (void)data;
+    (void)m;
+    if (port == 0x3A && (varde & 0x18) == 0x08)
+        v24_ut_antal++;
+    else if ((port == 0 || port == 2 || port == 4) && skivkortet_kopplat)
+        for (int k = 0; k < skivkort.antal_enheter; k++)
+            if (skivkort.enhet[k].kort == skivkort.valt) {
+                skiva_ut_antal++;
+                break;
+            }
+}
+
+EXPORT(v24_sant) long v24_sant(void) { return v24_ut_antal; }
+/* Mitt i ett tecken på V24, till exempel när CTS inte kommer. */
+EXPORT(v24_mitt_i) int v24_mitt_i(void) { return (maskin.pio_b_skrivet & 0x18) == 0x08; }
+EXPORT(skivan_rord) long skivan_rord(void) { return skiva_ut_antal; }
+
 /* Töm maskinen och lägg i ROM:en (16 eller 32 KB). Ljudet räknas med
  * provtakt prov per sekund. 0 om ROM:en har fel storlek. Efter kretsar
  * och skivor: aterstall(). */
@@ -87,6 +113,7 @@ EXPORT(starta) int starta(int ram_kb, const uint8_t *rom, long storlek, long pro
     skrivaren_kopplad = 0;
     snittkortet_kopplat = 0;
     cpm_lage = 0;                            /* maskin.uni80 är NULL igen */
+    maskin.krokar.port_ut = port_ut;
     return 1;
 }
 

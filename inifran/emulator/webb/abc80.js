@@ -223,6 +223,43 @@ function visa_lagen(alltid = false) {
     regler_tillampa();
 }
 
+/* Lamporna i panelernas listar: grön när något är inkopplat, ljusare en
+ * stund efter att det har använts. V24 har ingen egen panel; sänder
+ * maskinen där utan grafikkortet blir grafikkortets lampa gul, så att
+ * det syns vart till exempel PR: går. */
+const LAMPAN_LYSER = 250;                    /* ms efter senaste rörelsen */
+const lampor_sett = {}, lampor_tand = {};
+
+function lampa(id, pa, raknare, varning) {
+    const nu = performance.now();
+    if (raknare !== lampor_sett[id]) {
+        if (lampor_sett[id] !== undefined)
+            lampor_tand[id] = nu;
+        lampor_sett[id] = raknare;
+    }
+    const ror = nu - (lampor_tand[id] ?? -Infinity) < LAMPAN_LYSER;
+    const lage = ror ? (pa || !varning ? 'rorelse' : 'varning') : pa ? 'pa' : '';
+    const el = $('lampa_' + id);
+    const klass = 'lampa' + (lage ? ' ' + lage : '');
+    if (el.className !== klass)
+        el.className = klass;
+    const titel = lage === 'varning'
+        ? t('Maskinen sänder på V24, men inget är inkopplat där', 'The machine is sending on V24, but nothing is connected there')
+        : lage === 'rorelse' ? t('Används', 'In use')
+        : lage === 'pa' ? t('Inkopplad', 'Connected') : '';
+    if (el.title !== titel)
+        el.title = titel;
+}
+
+function visa_lamporna() {
+    lampa('disk', !!skivan, e.skivan_rord());
+    lampa('band', har_band, e.motor() || e.bandet_gar() ? performance.now() : 0);
+    lampa('program', !!$('lage_program').textContent, 0);
+    lampa('skrivaren', i_bruk('p40') || i_bruk('centronics'), papper_ritat);
+    lampa('hr80', i_bruk('hr80'), e.v24_sant() + (e.v24_mitt_i() ? performance.now() : 0), true);
+    lampa('cmos', i_bruk('cmos'), 0);
+}
+
 /* ---------------------------------------------------------------- */
 /* Valen och vad de krockar med                                      */
 
@@ -1500,6 +1537,7 @@ function varv() {
     hr80_rita(markor);
     visa_bandet();
     visa_lagen();
+    visa_lamporna();
     requestAnimationFrame(varv);
 }
 

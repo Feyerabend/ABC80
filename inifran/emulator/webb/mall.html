@@ -53,7 +53,9 @@
   data-en och rutornas title-text i data-title-en; abc80.js byter.
 
   Knapparna ligger i paneler (details) som fälls ut och ihop; ⓘ i
-  panelens list visar panelens hjälptext.
+  panelens list visar panelens hjälptext. Lampan (lampa_*) i listen är
+  grön när det är inkopplat och ljusare när det används; räknarna är
+  skivan_rord, v24_sant och v24_mitt_i i webb.c (visa_lamporna).
 
   Skärmen är två canvas: skarm har punkterna med efterlysningen, och
   sken, som täcker hela ramen, är samma bild suddig (CSS filter: blur),
@@ -146,6 +148,15 @@
     font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+  /* Lampan: grön när något är inkopplat, ljusare när det används och gul
+   * när maskinen sänder på V24 utan något på andra sidan. */
+  .lampa {
+    flex: none; width: 7px; height: 7px; margin-left: 6px; border-radius: 50%;
+    background: transparent;
+  }
+  .lampa.pa { background: #3f8f4a; }
+  .lampa.rorelse { background: #6be27a; box-shadow: 0 0 5px #6be27a; }
+  .lampa.varning { background: #e8b23a; box-shadow: 0 0 5px #e8b23a; }
   .panel .info {
     flex: none; width: 22px; height: 22px; padding: 0; border-radius: 50%;
     font-size: 12px; line-height: 20px; color: var(--dampad); background: transparent;
@@ -327,7 +338,11 @@
         FD2 heter här <code>MO0:</code> (DR0: är kort 44), till exempel
         <code>SAVE "MO0:PROV"</code>. ABC80-BASIC:ens <code>.BAC</code>-filer
         går inte att ladda (fel 203), men program som text går med
-        <i>Skriv in</i>. PR: skriver till Centronics på kort 60. Kretsarna på
+        <i>Skriv in</i>. PR: skriver till Centronics på kort 60, eller till
+        V24 om det inte finns. En inställning i namnet, som
+        <code>OPEN "PR:VSA70A99.7"</code> (V24), gäller sedan också för
+        <code>LIST "PR:"</code> tills maskinen startar om;
+        <code>LIST "PR:CSA36C70"</code> går till kortet igen. Kretsarna på
         <code>$4000</code>, CMOS-minnet, TKN80, CP/M, P40 och kassetten går
         inte med BASIC II: ROM:en har ingen CAS:, och <code>LOAD CAS:</code>
         ger fel 21. I terminalen: <code>-r roms/basicii80.rom -m 32</code>.</p>
@@ -355,7 +370,10 @@
         card 44), for example <code>SAVE "MO0:PROV"</code>. ABC80 BASIC's
         <code>.BAC</code> files cannot be loaded (error 203), but programs as
         text can be typed in with <i>Type in</i>. PR: prints to the Centronics
-        printer on card 60. The ROMs at <code>$4000</code>, the CMOS memory,
+        printer on card 60, or to V24 if there is none. A setting in the
+        name, like <code>OPEN "PR:VSA70A99.7"</code> (V24), then also holds
+        for <code>LIST "PR:"</code> until the machine restarts;
+        <code>LIST "PR:CSA36C70"</code> goes to the card again. The ROMs at <code>$4000</code>, the CMOS memory,
         TKN80, CP/M, the P40 and the cassette do not go with BASIC II: the
         ROM has no CAS:, and <code>LOAD CAS:</code> gives error 21. In the
         terminal:
@@ -538,7 +556,7 @@
     </details>
 
     <details class="panel" id="panel_disk">
-      <summary><span lang="sv">Disketten</span><span lang="en">Floppy disk</span><span class="lage" id="lage_disk"></span><button class="info" title="Mer om disketten" data-title-en="More about the floppy disk">i</button></summary>
+      <summary><span lang="sv">Disketten</span><span lang="en">Floppy disk</span><span class="lampa" id="lampa_disk"></span><span class="lage" id="lage_disk"></span><button class="info" title="Mer om disketten" data-title-en="More about the floppy disk">i</button></summary>
       <div class="knappar">
         <button id="skiva" title="En diskett för ABC-DOS (FD2, 160 KB); med CP/M en skiva i B:, eller i A: om den är en systemskiva" data-title-en="A disk for ABC-DOS (FD2, 160 KB); with CP/M a disk in B:, or in A: if it is a system disk" data-en="Insert disk…">Lägg i diskett…</button>
 <!-- PROGRAM -->
@@ -696,7 +714,7 @@
     </details>
 
     <details class="panel" id="panel_band">
-      <summary><span lang="sv">Kassetten</span><span lang="en">Cassette</span><span class="lage" id="bandstatus"></span><button class="info" title="Mer om kassetten" data-title-en="More about the cassette">i</button></summary>
+      <summary><span lang="sv">Kassetten</span><span lang="en">Cassette</span><span class="lampa" id="lampa_band"></span><span class="lage" id="bandstatus"></span><button class="info" title="Mer om kassetten" data-title-en="More about the cassette">i</button></summary>
       <div class="knappar">
         <button id="band" title="En WAV-fil att spela upp (LOAD, RUN CAS:)" data-title-en="A WAV file to play back (LOAD, RUN CAS:)" data-en="Insert tape…">Lägg i band…</button>
         <button id="spelain" title="Ett tomt band med inspelningsknappen nere (SAVE CAS:)" data-title-en="A blank tape with the record button down (SAVE CAS:)" data-en="Record">Spela in</button>
@@ -772,7 +790,7 @@
     </details>
 
     <details class="panel" id="panel_program">
-      <summary><span lang="sv">Program och kretsar</span><span lang="en">Programs and ROMs</span><span class="lage" id="lage_program"></span><button class="info" title="Mer om program och kretsar" data-title-en="More about programs and ROMs">i</button></summary>
+      <summary><span lang="sv">Program och kretsar</span><span lang="en">Programs and ROMs</span><span class="lampa" id="lampa_program"></span><span class="lage" id="lage_program"></span><button class="info" title="Mer om program och kretsar" data-title-en="More about programs and ROMs">i</button></summary>
       <div class="knappar">
         <button id="program" title="En textfil med ett BASIC-program skrivs in som tangenter" data-title-en="A text file with a BASIC program is typed in as keys" data-en="Type in…">Skriv in…</button>
         <select id="krets" title="En krets: Forth-tolken eller ett av bokens exempel" data-title-en="A ROM: the Forth interpreter or one of the book's examples">
@@ -1007,7 +1025,7 @@
     </details>
 
     <details class="panel" id="panel_skrivaren">
-      <summary><span lang="sv">Skrivaren</span><span lang="en">The printer</span><span class="lage" id="lage_skrivaren"></span><button class="info" title="Mer om skrivaren" data-title-en="More about the printer">i</button></summary>
+      <summary><span lang="sv">Skrivaren</span><span lang="en">The printer</span><span class="lampa" id="lampa_skrivaren"></span><span class="lage" id="lage_skrivaren"></span><button class="info" title="Mer om skrivaren" data-title-en="More about the printer">i</button></summary>
       <div class="knappar">
         <label title="Nålskrivaren på kort 60 och drivrutinen på $7800" data-title-en="The dot matrix printer on card 60 and the driver at $7800"><input type="checkbox" id="p40"> P40</label>
         <label title="En Centronicsskrivare, som Epsons, på kort 60 och skrivarkretsen 9704 på $7800" data-title-en="A Centronics printer, like Epson's, on card 60 and the printer ROM 9704 at $7800"><input type="checkbox" id="centronics"> Centronics</label>
@@ -1103,7 +1121,7 @@
     </details>
 
     <details class="panel" id="panel_hr80">
-      <summary><span lang="sv">Grafikkortet</span><span lang="en">Graphics card</span><span class="lage" id="lage_hr80"></span><button class="info" title="Mer om grafikkortet" data-title-en="More about the graphics card">i</button></summary>
+      <summary><span lang="sv">Grafikkortet</span><span lang="en">Graphics card</span><span class="lampa" id="lampa_hr80"></span><span class="lage" id="lage_hr80"></span><button class="info" title="Mer om grafikkortet" data-title-en="More about the graphics card">i</button></summary>
       <div class="knappar">
         <label title="Ett färggrafikkort i HR-80:s anda på V24 (utanför boken)" data-title-en="A colour graphics card in the spirit of the HR-80 on V24 (outside the book)"><input type="checkbox" id="hr80"> HR-80</label>
         <button id="hr80_knapp" popovertarget="hr80_lapp" title="Visa kortets bild; den kommer fram av sig själv när kortet börjar rita" data-title-en="Show the card's picture; it appears by itself when the card starts drawing" data-en="The picture" disabled>Bilden</button>
@@ -1179,7 +1197,7 @@
     </details>
 
     <details class="panel" id="panel_cmos">
-      <summary><span lang="sv">CMOS-minnet</span><span lang="en">CMOS memory</span><span class="lage" id="lage_cmos"></span><button class="info" title="Mer om CMOS-minnet" data-title-en="More about the CMOS memory">i</button></summary>
+      <summary><span lang="sv">CMOS-minnet</span><span lang="en">CMOS memory</span><span class="lampa" id="lampa_cmos"></span><span class="lage" id="lage_cmos"></span><button class="info" title="Mer om CMOS-minnet" data-title-en="More about the CMOS memory">i</button></summary>
       <div class="knappar">
         <label title="2 KB RAM med batteri på $5000-$57FF; innehållet sparas i webbläsaren" data-title-en="2 KB battery-backed RAM at $5000-$57FF; the contents are saved in the browser"><input type="checkbox" id="cmos"> <span lang="sv">på $5000</span><span lang="en">at $5000</span></label>
         <button id="cmos_tom" title="Nollställ CMOS-minnet" data-title-en="Clear the CMOS memory" data-en="Clear">Töm</button>
@@ -1273,6 +1291,11 @@ RUN</pre>
       <i>i</i> i varje panel berättar mer om det som finns där. Sidan
       kommer ihåg vilka som är öppna. <i>EN</i> överst visar sidan på
       engelska.</p>
+      <p>En liten lampa i listen visar vad som är inkopplat: grön för
+      disketten, kassetten, kretsen, skrivaren, grafikkortet och
+      CMOS-minnet, ljusare när maskinen använder dem. Sänder maskinen på
+      V24 utan grafikkortet blir grafikkortets lampa gul; så syns det om
+      till exempel <code>PR:</code> går dit i stället för till skrivaren.</p>
       <p>Ljudet är på, men webbläsaren släpper inte fram det förrän man har
       klickat på sidan eller skrivit något.</p>
       <p>En länk kan ge tangenter att skriva efter starten, med
@@ -1327,6 +1350,12 @@ RUN</pre>
       <i>i</i> in each panel tells more about what is in it. The page
       remembers which are open. <i>SV</i> at the top shows the page in
       Swedish.</p>
+      <p>A small lamp in the bar shows what is connected: green for the
+      floppy disk, the cassette, the ROM, the printer, the graphics card
+      and the CMOS memory, brighter when the machine uses them. If the
+      machine sends on V24 without the graphics card, the graphics card's
+      lamp turns yellow; that shows if, for example, <code>PR:</code> goes
+      there instead of to the printer.</p>
       <p>Sound is on, but the browser lets it through only after you have
       clicked on the page or typed something.</p>
       <p>A link can give keys to type after the start, with
