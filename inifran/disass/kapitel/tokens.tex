@@ -2,21 +2,20 @@
 % rättas här för hand.
 
 \chapter{Tokens och tabeller}\label{bil:tokens}
-\noindent Bilagan samlar ROM:ens tabeller över nyckelord, operatorer och
-funktioner. För varje ord står den byte, token, som ordet blir i den
-kompilerade koden, och de rutiner som kompilerar och kör det. Den är till
-för att läsa en kompilerad rad byte för byte eller för att hitta rutinen
-bakom ett ord. Namnen länkar till kapitlet Rutinerna
-(i boken). Stubbarna som bara hoppar vidare till en
-tilläggskrets, som \texttt{L017A} för \kw{BYE}, står inte där; adressen
-i kretsen står inom parentes.
-\par\smallskip\noindent Orden står som i ROM:en, utan mellanslag.
-\namn{KWSRCH} hoppar över blanka, så \kw{INPUT LINE} och \kw{INPUTLINE}
-är samma ord (avsnittet Nyckelordssökningen, i boken).
-Där en rutin står med \emph{tillägg} och en adress går ROM:en till en
-tilläggskrets: står det ett \kw{JP} på adressen hoppar den dit, annars blir
-det fel 8 (avsnittet Anropen till tilläggskretsarna,
-i boken).
+\noindent Här står ROM:ens tabeller över kommandon, satser, operatorer
+och funktioner, ordnade efter den byte (token) som ordet blir i den
+kompilerade raden. Bredvid ordet står rutinen som kompilerar det och
+rutinen som kör det, med länk till listningen. Tabellerna hjälper när en
+kompilerad rad ska läsas byte för byte, eller när man vill veta vilken
+rutin som gör arbetet för ett ord. För ord som går till en tilläggskrets
+står stubben, till exempel \texttt{L017A} för \kw{BYE}, med kretsens
+adress inom parentes.
+\par\smallskip\noindent Orden skrivs utan mellanslag, så som de står i
+ROM:en. \namn{KWSRCH} hoppar över blanka när den jämför, och därför är
+\kw{INPUT LINE} och \kw{INPUTLINE} samma ord. Står det \emph{tillägg}
+och en adress tittar ROM:en efter ett \kw{JP} där
+(\namn{EXTJP1}, \namn{EXTJP2}): finns det hoppar den dit, annars ger
+ordet fel 8.
 \section{Direktkommandon}
 \noindent Kommandona\index{direktkommando} söks i \namn{CMDKW}, och koden
 väljer rutinen i \namn{CMDTAB}: koden $-$ \adrx{80} är platsen i
@@ -134,10 +133,10 @@ heltal. Körrutinerna står i \namn{EXPTAB1}.\par\medskip
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l l l l l >{\raggedright\arraybackslash}p{0.3\textwidth}@{}}
 \textbf{Nivå} & \textbf{Operator} & \textbf{Token} & \textbf{Klass} & \textbf{Kompilering} & \textbf{Körning}\\\hline\endhead
 \hyperlink{l:PREC1}{\texttt{PREC1}} & \texttt{EQV} & \texttt{\$DC} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPEQV}{\texttt{OPEQV}}\\
-\hyperlink{l:PREC2}{\texttt{PREC2}} & \texttt{IMP} & \texttt{\$DD} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPIMP}{\texttt{OPIMP}}\\
-\hyperlink{l:PREC3}{\texttt{PREC3}} & \texttt{OR} & \texttt{\$DE} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPOR}{\texttt{OPOR}}\\
-\hyperlink{l:PREC3}{\texttt{PREC3}} & \texttt{XOR} & \texttt{\$DF} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPXOR}{\texttt{OPXOR}}\\
-\hyperlink{l:PREC4}{\texttt{PREC4}} & \texttt{AND} & \texttt{\$E0} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPAND}{\texttt{OPAND}}\\
+\namn{PREC2} & \texttt{IMP} & \texttt{\$DD} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPIMP}{\texttt{OPIMP}}\\
+\namn{PREC3} & \texttt{OR} & \texttt{\$DE} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPOR}{\texttt{OPOR}}\\
+\namn{PREC3} & \texttt{XOR} & \texttt{\$DF} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPXOR}{\texttt{OPXOR}}\\
+\namn{PREC4} & \texttt{AND} & \texttt{\$E0} & logisk & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:OPAND}{\texttt{OPAND}}\\
 \hyperlink{l:PREC5}{\texttt{PREC5}} & \texttt{NOT} & \texttt{\$E1} & unär & \hyperlink{l:CMPNOT}{\texttt{CMPNOT}} & \hyperlink{l:OPNOT}{\texttt{OPNOT}}\\
 \hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char60}=} & \texttt{\$F1} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:LEF}{\texttt{LEF}} \hyperlink{l:LEI}{\texttt{LEI}} \hyperlink{l:LES}{\texttt{LES}}\\
 \hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char60}{\char62}} & \texttt{\$E5} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:NEF}{\texttt{NEF}} \hyperlink{l:NEI}{\texttt{NEI}} \hyperlink{l:NES}{\texttt{NES}}\\
@@ -145,8 +144,8 @@ heltal. Körrutinerna står i \namn{EXPTAB1}.\par\medskip
 \hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char62}=} & \texttt{\$EB} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:GEF}{\texttt{GEF}} \hyperlink{l:GEI}{\texttt{GEI}} \hyperlink{l:GES}{\texttt{GES}}\\
 \hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{{\char62}} & \texttt{\$EE} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:GTF}{\texttt{GTF}} \hyperlink{l:GTI}{\texttt{GTI}} \hyperlink{l:GTS}{\texttt{GTS}}\\
 \hyperlink{l:PREC6}{\texttt{PREC6}} & \texttt{=} & \texttt{\$E2} & jämförelse & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:EQF}{\texttt{EQF}} \hyperlink{l:EQI}{\texttt{EQI}} \hyperlink{l:EQS}{\texttt{EQS}}\\
-\hyperlink{l:PREC7}{\texttt{PREC7}} & \texttt{+} & \texttt{\$F4} & aritmetik & \hyperlink{l:CMPADD}{\texttt{CMPADD}} & \hyperlink{l:ADDF}{\texttt{ADDF}} \hyperlink{l:ADDI}{\texttt{ADDI}} \hyperlink{l:CONCAT}{\texttt{CONCAT}}\\
-\hyperlink{l:PREC7}{\texttt{PREC7}} & \texttt{-} & \texttt{\$F7} & aritmetik & \hyperlink{l:CMPADD}{\texttt{CMPADD}} & \hyperlink{l:SUBF}{\texttt{SUBF}} \hyperlink{l:SUBI}{\texttt{SUBI}}\\
+\namn{PREC7} & \texttt{+} & \texttt{\$F4} & aritmetik & \hyperlink{l:CMPADD}{\texttt{CMPADD}} & \hyperlink{l:ADDF}{\texttt{ADDF}} \hyperlink{l:ADDI}{\texttt{ADDI}} \hyperlink{l:CONCAT}{\texttt{CONCAT}}\\
+\namn{PREC7} & \texttt{-} & \texttt{\$F7} & aritmetik & \hyperlink{l:CMPADD}{\texttt{CMPADD}} & \hyperlink{l:SUBF}{\texttt{SUBF}} \hyperlink{l:SUBI}{\texttt{SUBI}}\\
 \hyperlink{l:PREC8}{\texttt{PREC8}} & \texttt{*} & \texttt{\$F9} & aritmetik & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:MULF}{\texttt{MULF}} \hyperlink{l:MULI}{\texttt{MULI}}\\
 \hyperlink{l:PREC8}{\texttt{PREC8}} & \texttt{/} & \texttt{\$FB} & aritmetik & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:DIVF}{\texttt{DIVF}} \hyperlink{l:DIVI}{\texttt{DIVI}}\\
 \hyperlink{l:PREC9}{\texttt{PREC9}} & \texttt{\^{}}, \texttt{**} & \texttt{\$FD} & potens & \hyperlink{l:PRECLV}{\texttt{PRECLV}} & \hyperlink{l:POWF}{\texttt{POWF}} \hyperlink{l:POWI}{\texttt{POWI}} \hyperlink{l:POWFI}{\texttt{POWFI}}\\
@@ -166,19 +165,19 @@ utelämnas.\par\medskip
 \textbf{Kod} & \textbf{Form} & \textbf{Resultat} & \textbf{Rutin}\\\hline\endhead
 \texttt{\$00} & \texttt{FN} & -- & \hyperlink{l:FN}{\texttt{FN}}\\
 \texttt{\$01} & \texttt{ABS(x)} & flyttal & \hyperlink{l:EXABS}{\texttt{EXABS}}\\
-\texttt{\$02} & \texttt{ATN(x)} & flyttal & \hyperlink{l:EXATN}{\texttt{EXATN}}\\
-\texttt{\$03} & \texttt{COS(x)} & flyttal & \hyperlink{l:EXCOS}{\texttt{EXCOS}}\\
-\texttt{\$04} & \texttt{EXP(x)} & flyttal & \hyperlink{l:EXEXP1}{\texttt{EXEXP1}}\\
+\texttt{\$02} & \texttt{ATN(x)} & flyttal & \namn{EXATN}\\
+\texttt{\$03} & \texttt{COS(x)} & flyttal & \namn{EXCOS}\\
+\texttt{\$04} & \texttt{EXP(x)} & flyttal & \namn{EXEXP1}\\
 \texttt{\$05} & \texttt{FIX(x)} & flyttal & \hyperlink{l:EXFIX}{\texttt{EXFIX}}\\
-\texttt{\$06} & \texttt{INT(x)} & flyttal & \hyperlink{l:EXINT}{\texttt{EXINT}}\\
-\texttt{\$07} & \texttt{LOG(x)} & flyttal & \hyperlink{l:EXLOG}{\texttt{EXLOG}}\\
-\texttt{\$08} & \texttt{LOG10(x)} & flyttal & \hyperlink{l:EXLG10}{\texttt{EXLG10}}\\
+\texttt{\$06} & \texttt{INT(x)} & flyttal & \namn{EXINT}\\
+\texttt{\$07} & \texttt{LOG(x)} & flyttal & \namn{EXLOG}\\
+\texttt{\$08} & \texttt{LOG10(x)} & flyttal & \namn{EXLG10}\\
 \texttt{\$09} & \texttt{PI} & flyttal & \hyperlink{l:EXPI}{\texttt{EXPI}}\\
 \texttt{\$0A} & \texttt{RND[(x)]} & flyttal & \hyperlink{l:EXRND}{\texttt{EXRND}}\\
 \texttt{\$0B} & \texttt{SGN(x)} & heltal & \hyperlink{l:EXSGN}{\texttt{EXSGN}}\\
-\texttt{\$0C} & \texttt{SIN(x)} & flyttal & \hyperlink{l:EXSIN}{\texttt{EXSIN}}\\
+\texttt{\$0C} & \texttt{SIN(x)} & flyttal & \namn{EXSIN}\\
 \texttt{\$0D} & \texttt{SQR(x)} & flyttal & \hyperlink{l:EXSQR}{\texttt{EXSQR}}\\
-\texttt{\$0E} & \texttt{TAN(x)} & flyttal & \hyperlink{l:EXTAN}{\texttt{EXTAN}}\\
+\texttt{\$0E} & \texttt{TAN(x)} & flyttal & \namn{EXTAN}\\
 \texttt{\$0F} & \texttt{ASC(s\$)} & heltal & \hyperlink{l:EXASC}{\texttt{EXASC}}\\
 \texttt{\$10} & \texttt{CHR\$(i[,i[,i[,i]]])} & sträng & \hyperlink{l:EXCHR}{\texttt{EXCHR}}\\
 \texttt{\$11} & \texttt{LEFT\$(s\$,i)} & sträng & \hyperlink{l:EXLEFT}{\texttt{EXLEFT}}\\
@@ -200,9 +199,9 @@ utelämnas.\par\medskip
 \texttt{\$21} & \texttt{CUR(i,i)} & sträng & \hyperlink{l:EXCUR}{\texttt{EXCUR}}\\
 \texttt{\$23} & \texttt{DOT(i,i)} & heltal & \hyperlink{l:EXDOT}{\texttt{EXDOT}}\\
 \texttt{\$30} & \texttt{ADD\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXADD}{\texttt{EXADD}}\\
-\texttt{\$31} & \texttt{SUB\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXSUB}{\texttt{EXSUB}}\\
-\texttt{\$32} & \texttt{MUL\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXMUL}{\texttt{EXMUL}}\\
-\texttt{\$33} & \texttt{DIV\$(s\$,s\$,i)} & sträng & \hyperlink{l:EXDIV}{\texttt{EXDIV}}\\
+\texttt{\$31} & \texttt{SUB\$(s\$,s\$,i)} & sträng & \namn{EXSUB}\\
+\texttt{\$32} & \texttt{MUL\$(s\$,s\$,i)} & sträng & \namn{EXMUL}\\
+\texttt{\$33} & \texttt{DIV\$(s\$,s\$,i)} & sträng & \namn{EXDIV}\\
 \texttt{\$34} & \texttt{COMP\%(s\$,s\$)} & heltal & \hyperlink{l:EXCOMP}{\texttt{EXCOMP}}\\
 \end{longtable}\end{small}
 \noindent Koderna \adrx{22} och \adrx{24}–\adrx{2F} har inget namn i

@@ -15,7 +15,7 @@ lualatex (dokumentet använder fontspec, så pdflatex går inte); -m väljer:
 Med TeX Live eller MiKTeX behövs typsnitten TeX Gyre Pagella och
 Inconsolata (paketen tex-gyre och inconsolata).
 
-I abc80-förrådet hämtas band 1:s kapitel ur ../../band1 och stilen ur
+I abc80-förrådet hämtas kapitlen ur ../bygg (abc80rom.sh) och ../../band1 och stilen ur
 ../../gemensamt; i det publika förrådet ligger allt här (inifran.sh).
 """
 import os, shutil, subprocess, sys, urllib.request
@@ -112,7 +112,10 @@ def main():
         python(kw, fylld, os.path.join("ut", "listningar", "abc80.tex"))
         os.remove(fylld)
         hv = "abc80rom.tex" if os.path.exists("abc80rom.tex") else os.path.join("..", "abc80rom.tex")
-        sok = ["ut"] + [d for d in (os.path.join("..", "..", "band1"),
+        # här i abc80-förrådet: listningens egna kapitel ur ../bygg
+        # (abc80rom.sh) före band 1:s
+        sok = ["ut"] + [d for d in (os.path.join("..", "bygg"),
+                                    os.path.join("..", "..", "band1"),
                                     os.path.join("..", "..", "gemensamt")) if os.path.isdir(d)]
         pdf = "abc80rom"
     else:

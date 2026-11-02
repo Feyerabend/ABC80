@@ -2,20 +2,18 @@
 % rättas här för hand.
 
 \chapter{Felkoder}\label{bil:felkoder}
-\noindent När något går fel skriver ABC80 bara ett nummer, \texttt{ERR n}.
-Tabellen ger för varje nummer texten och de rutiner i ROM:en där felet
-kommer ifrån. Texterna\index{felkoder|textbf}\index{felhantering} står inte
-i ROM:en utan kommer ur ABC80:s fellista.
-\par\smallskip\noindent Felkoden är $\$80+n$. Den ges med \kw{RST \$10} följt av
-koden, eller med ett hopp till en felingång, som är en \kw{RST \$10} med
-koden efter. \emph{Fångas} betyder att felet står i listan
-\namn{ERRTRP} och kan tas om hand av
-\kw{ON ERROR GOTO}\index{ON ERROR GOTO@\kw{ON ERROR GOTO}} när ett program
-körs. \namn{ERRTRP} har också 36, 39–41 och 43, som ROM:en själv aldrig
-ger. \emph{Ingång} är felets ingång på \adrx{06F7}–\adrx{072B} (avsnittet
-Felen, i boken). \emph{Ges i} är de namngivna rutiner
-som ger felet, med en \kw{RST \$10} eller ett hopp till ingången; det kan
-finnas fler ställen. Namnen länkar till raden i Rutinerna.\par\medskip
+\noindent ABC80 skriver ett fel som \texttt{ERR n}, utan text. Tabellen
+har ett nummer per rad med felets text och de ställen i ROM:en som ger
+det. Texterna finns inte i ROM:en; de är hämtade ur ABC80:s fellista.
+\par\smallskip\noindent I koden är felet byten $\$80+n$. Den står efter en
+\kw{RST \$10}, antingen direkt i rutinen eller i en av felingångarna på
+\adrx{06F7}–\adrx{072B}, som rutinen hoppar till (kolumnen
+\emph{Ingång}). Ett \emph{ja} under \emph{Fångas} betyder att numret finns i
+tabellen \namn{ERRTRP}, så att \kw{ON ERROR GOTO} får ta hand om felet i
+ett körande program; tabellen räknar också upp 36, 39–41 och 43, som
+ROM:en aldrig ger själv. Under \emph{Ges i} står de namngivna rutiner där
+felet uppstår. Listan är inte fullständig, och namnen är länkar till
+raden i listningen.\par\medskip
 \TabNeed{30mm}
 \begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}r l >{\raggedright\arraybackslash\hyphenpenalty=10000}p{0.3\textwidth} l l >{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
 \textbf{Nr} & \textbf{Kod} & \textbf{Text} & \textbf{Fångas} & \textbf{Ingång} & \textbf{Ges i}\\\hline\endhead
@@ -24,8 +22,8 @@ finnas fler ställen. Namnen länkar till raden i Rutinerna.\par\medskip
 2 & \texttt{\$82} & OTILLÅTET SOM KOMMANDO &  & \texttt{L06FD} & \hyperlink{l:NODIR}{\texttt{NODIR}}, \hyperlink{l:LNKFOR}{\texttt{LNKFOR}}, \hyperlink{l:RETURN}{\texttt{RETURN}}\\
 3 & \texttt{\$83} & MINNET FULLT &  & \texttt{L06FF} & \hyperlink{l:INSLIN}{\texttt{INSLIN}}, \hyperlink{l:CMDMERG}{\texttt{CMDMERG}}, \hyperlink{l:FN}{\texttt{FN}}, \hyperlink{l:CONCAT}{\texttt{CONCAT}}, \hyperlink{l:STRFIL}{\texttt{STRFIL}}, \hyperlink{l:EXVAL}{\texttt{EXVAL}}, \hyperlink{l:DIM1}{\texttt{DIM1}}, \hyperlink{l:DIM2}{\texttt{DIM2}}, \hyperlink{l:DIMSTR}{\texttt{DIMSTR}}, \hyperlink{l:MEMFUL}{\texttt{MEMFUL}}\\
 4 & \texttt{\$84} & FÖR STORT FLYTTAL & ja & \texttt{L0701} & \hyperlink{l:POWI}{\texttt{POWI}}, \hyperlink{l:FADDC}{\texttt{FADDC}}, \hyperlink{l:FMUL}{\texttt{FMUL}}, \hyperlink{l:FMRND}{\texttt{FMRND}}, \hyperlink{l:FDIV}{\texttt{FDIV}}, \hyperlink{l:FDRND}{\texttt{FDRND}}, \hyperlink{l:FOVFL}{\texttt{FOVFL}}, \hyperlink{l:FEXP}{\texttt{FEXP}}, \hyperlink{l:FLOG}{\texttt{FLOG}}\\
-5 & \texttt{\$85} & FÖR STORT INDEX &  & \texttt{L0703} & \hyperlink{l:VAR1}{\texttt{VAR1}}, \hyperlink{l:ERRIDX}{\texttt{ERRIDX}}\\
-6 & \texttt{\$86} & HITTAR EJ DETTA RADNUMMER &  & \texttt{L0705} & \hyperlink{l:CMDED}{\texttt{CMDED}}, \hyperlink{l:REFADR}{\texttt{REFADR}}, \hyperlink{l:LNKELM}{\texttt{LNKELM}}\\
+5 & \texttt{\$85} & FÖR STORT INDEX &  & \texttt{L0703} & \namn{VAR1}, \hyperlink{l:ERRIDX}{\texttt{ERRIDX}}\\
+6 & \texttt{\$86} & HITTAR EJ DETTA RADNUMMER &  & \texttt{L0705} & \hyperlink{l:CMDED}{\texttt{CMDED}}, \namn{REFADR}, \hyperlink{l:LNKELM}{\texttt{LNKELM}}\\
 7 & \texttt{\$87} & FÖR STORT HELTAL & ja & \texttt{L0707} & \hyperlink{l:SMULDV}{\texttt{SMULDV}}, \hyperlink{l:FTIERR}{\texttt{FTIERR}}\\
 8 & \texttt{\$88} & FINNS EJ I DETTA SYSTEM &  & \texttt{L0709} & \hyperlink{l:EXTJP1}{\texttt{EXTJP1}}, \hyperlink{l:EXTJP2}{\texttt{EXTJP2}}, \hyperlink{l:STEXE1}{\texttt{STEXE1}}, \hyperlink{l:STEXE2}{\texttt{STEXE2}}, \hyperlink{l:LNKELM}{\texttt{LNKELM}}, \hyperlink{l:STTAB1}{\texttt{STTAB1}}, \hyperlink{l:STTAB2}{\texttt{STTAB2}}, \hyperlink{l:FN}{\texttt{FN}}, \hyperlink{l:EXPTAB2}{\texttt{EXPTAB2}}\\
 9 & \texttt{\$89} & INDEX UTANFÖR STRÄNGEN &  & \texttt{L070B} & \hyperlink{l:EXLEFT}{\texttt{EXLEFT}}, \hyperlink{l:STRSKP}{\texttt{STRSKP}}\\
@@ -70,8 +68,8 @@ finnas fler ställen. Namnen länkar till raden i Rutinerna.\par\medskip
 62 & \texttt{\$BE} & DOT-ADRESS UTANFÖR SKÄRMEN &  &  & \hyperlink{l:DOTARG}{\texttt{DOTARG}}\\
 63 & \texttt{\$BF} & {\char34}AS{\char34} SAKNAS &  &  & \\
 64 & \texttt{\$C0} & FELAKTIG {\char34}RENAME{\char34} &  &  & \\
-65 & \texttt{\$C1} & SPILL I ASCII-ARITMETIK &  & \hyperlink{l:ERR65}{\texttt{ERR65}} & \hyperlink{l:ASCARG}{\texttt{ASCARG}}\\
-66 & \texttt{\$C2} & STRÄNG EJ NUMERISK &  & \hyperlink{l:ERR66}{\texttt{ERR66}} & \hyperlink{l:ASCAR}{\texttt{ASCAR}}, \hyperlink{l:ASCERR}{\texttt{ASCERR}}, \hyperlink{l:ASCARG}{\texttt{ASCARG}}\\
+65 & \texttt{\$C1} & SPILL I ASCII-ARITMETIK &  & \namn{ERR65} & \hyperlink{l:ASCARG}{\texttt{ASCARG}}\\
+66 & \texttt{\$C2} & STRÄNG EJ NUMERISK &  & \namn{ERR66} & \hyperlink{l:ASCAR}{\texttt{ASCAR}}, \hyperlink{l:ASCERR}{\texttt{ASCERR}}, \hyperlink{l:ASCARG}{\texttt{ASCARG}}\\
 \end{longtable}\end{small}
 \noindent Fyra av felen kommer inte där man väntar sig dem:\par
 \begin{itemize}\setlength{\itemsep}{0pt}

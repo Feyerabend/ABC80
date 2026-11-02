@@ -5,6 +5,11 @@
 
 \documentclass[10pt,oneside]{report}
 \usepackage{abc80stil}
+% stilen är gjord för svartvitt tryck; listningen läses på skärm och får
+% samma färger som BASIC II-listningen
+\selectcolormodel{natural}
+\definecolor{link}{HTML}{1F3F7A}
+\definecolor{labc}{HTML}{7A1F1F}
 \hypersetup{pdftitle={ABC80 BASIC-ROM, kommenterad disassemblering}}
 
 \begin{document}
@@ -29,6 +34,31 @@
 \par\noindent ABC80:s BASIC-ROM, 16 kilobyte Z80-kod på \adr{0000}–\adrx{3FFF}, i versionen med kontrollsumman 11273. Koden i listningen är inte publicerad med dokumentet utan fylldes i ur ROM:en när dokumentet byggdes; namnen och kommentarerna kommer ur arbetet med boken \emph{ABC80 inifrån}, där ROM:ens uppbyggnad och arbetssätt beskrivs.\par
 \par\noindent Varje rad visar adressen, byten, eventuellt ett namn och instruktionen, följd av en kommentar. En rad visar högst fyra byte; har instruktionen eller tabellen fler står det tre punkter. Talen skrivs hexadecimalt med \$ framför och decimalt utan. Namnen på rutiner och variabler är valda för genomgången; ROM:en själv innehåller inga. Längre förklaringar står som block före den rutin de gäller. Instruktionernas namn är Zilogs.\par
 \par\noindent Namnen och adresserna är länkar i PDF-filen. Osäkra tolkningar är markerade med (?). Uppgifter från andra källor har källan inom parentes; källförteckningen finns i boken.\par
+
+\section*{Hur ROM:en arbetar}
+\par\noindent ROM:en tolkar inte programraden tecken för tecken när den körs. En inskriven rad översätts först (\namn{TOKLIN}): nyckelorden blir tokens om en eller två byte, talen lagras i binär form, och uttrycken blir en följd av koder som körs med en värdestack, operanderna före operatorn. Det är den kompilerade raden som ligger i minnet; \kw{LIST} gör om den till text igen (\namn{DETOK}). Före körningen går \namn{PRELNK} igenom hela programmet och sätter in adresser: målradens adress i hoppen, variablernas plats på heapen, och vilken \kw{NEXT} som hör till vilken \kw{FOR}. Sedan körs satserna en efter en från \namn{EXESTM}, och uttryckskoden från \namn{EXEXP} genom \kw{RST \$38}.
+\par\noindent Talen är antingen heltal på 16 bitar eller flyttal om fem byte med sex decimala siffror. Den egna ASCII-aritmetiken räknar i stället direkt på strängar av siffror, för \kw{ADD\$} och de andra.
+\par\noindent Tabellen visar ROM:ens delar i adressordning. Adresserna är länkar till listningen, och varje del har avsnitt med egna rubriker i innehållsförteckningen.\par\medskip
+\begin{small}\setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}\begin{longtable}{@{}l >{\raggedright\arraybackslash}p{0.75\textwidth}@{}}
+\textbf{Från} & \textbf{Innehåll}\\\hline\endhead
+\adr{0000} & RST-vektorerna, de fasta ingångarna och kallstarten (\namn{INIT})\\
+\adr{00C6} & kommandoloopen: läs en rad, kör den direkt eller lägg in den i programmet\\
+\adr{018C} & enheterna: skärmen, tangentbordet (\namn{GETKEY}, \namn{INLINE}) och kassetten\\
+\adr{062E} & felhanteringen, \namn{ERRTRP} och felingångarna\\
+\adr{0750} & programraderna (\namn{INSLIN}), \kw{OPEN}, enhetsanropen och textfilerna\\
+\adr{09F5} & nyckelordssökningen (\namn{KWSRCH}) och kommandona \kw{ED}, \kw{LIST}, \kw{LOAD}, \kw{MERGE}, \kw{REN}, \kw{RUN} och \kw{SAVE}\\
+\adr{0E6E} & länkningen före körningen (\namn{PRELNK}, \namn{SKPELM})\\
+\adr{1195} & från kompilerad kod till text igen (\namn{DETOK}, \namn{DETEXP}), filnamnen\\
+\adr{1513} & tal från text och till text (\namn{GETFLT}, \namn{FLTASC})\\
+\adr{1890} & kompileringen av en rad (\namn{TOKLIN}, \namn{TOKKW}) och satstabellerna\\
+\adr{1A62} & satserna, från \kw{DEF} och \kw{LET} till \kw{RETURN}\\
+\adr{23B5} & uttryckskompilatorn\\
+\adr{2841} & uttryckskoden vid körning: operatorerna, variablerna och funktionerna\\
+\adr{33F7} & flyttalsaritmetiken och heltalens multiplikation och division\\
+\adr{37A6} & ASCII-aritmetiken\\
+\adr{3B77}–\adrx{3FFF} & flyttalsfunktionerna med sina konstanter och serier; från \adr{3FF5} oanvänt\\
+\end{longtable}\end{small}
+\par\noindent Efter listningen följer bilagor med felkoderna, nyckelordens tokens och tabeller, och alla namn i bokstavsordning. Först kommer RAM-variablerna.\par
 
 \input{kapitel/variabler}
 \input{kapitel/listning}
