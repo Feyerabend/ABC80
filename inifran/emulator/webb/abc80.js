@@ -487,6 +487,7 @@ const CMOS_ADRESS = 0x5000, CMOS_STORLEK = 0x800, CMOS_NYCKEL = 'abc80-cmos';
 let cmos = new Uint8Array(CMOS_STORLEK);    /* det som är sparat */
 let cmos_pekare = 0;                        /* i WebAssemblys minne, 0 = av */
 let cmos_sparat = 0;                        /* performance.now() */
+let avstangd = false;                        /* Av/på: inget sparas mer */
 
 function cmos_las_in() {
     try {
@@ -511,7 +512,7 @@ function cmos_skriv() {
 
 /* Det som står i minnet nu sparas, om det har ändrats. */
 function cmos_spara() {
-    if (!cmos_pekare)
+    if (!cmos_pekare || avstangd)
         return;
     const nu = cmos_nu();
     if (nu.every((b, k) => b === cmos[k]))
@@ -2130,6 +2131,17 @@ document.addEventListener('drop', (h) => {
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
 $('nystart').addEventListener('click', () => { starta(null, null, null); meddela(); skarm.focus(); });
+/* Av/på: sidan hämtas om utan frågan i adressen, så att inga val, kort
+ * eller disketter följer med, och CMOS-minnet töms; språket och
+ * panelerna ligger kvar. Det som inte är sparat går förlorat. */
+$('strom').addEventListener('click', () => {
+    if (!confirm(t('Stänga av och slå på? Allt i minnet, disketterna och CMOS-minnet försvinner, och alla val går tillbaka till början.',
+                   'Switch off and on? Everything in memory, the disks and the CMOS memory is lost, and all choices go back to the start.')))
+        return;
+    avstangd = true;
+    try { localStorage.removeItem(CMOS_NYCKEL); } catch (fel) { /* inget sparat */ }
+    location.replace(location.pathname);
+});
 $('rom').addEventListener('change', () => {
     /* Sitter en exempeldiskett i byts den mot den som hör till tolken; den
      * som tas ur ligger undan med det som har sparats på den. */

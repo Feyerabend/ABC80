@@ -289,6 +289,7 @@
     <div class="rad">
       <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar" data-title-en="Like the RESET button: memory is kept">RESET</button>
       <button id="nystart" title="Töm minnet och starta om" data-title-en="Clear memory and start again" data-en="Restart">Starta om</button>
+      <button id="strom" title="Stäng av och slå på: som om sidan just hade hämtats, utan valen och med CMOS-minnet tomt" data-title-en="Switch off and on: as if the page had just been fetched, without the choices and with the CMOS memory empty" data-en="Off/on">Av/på</button>
       <button id="ljud">Ljud: på</button>
       <button id="hjalp_visa" popovertarget="hjalp" title="Vad det här är och hur man kommer igång" data-title-en="What this is and how to get started" data-en="Getting started">Kom igång</button>
     </div>
@@ -1208,7 +1209,8 @@ RUN</pre>
         <li>Zork I: knappen <i>Zork I</i> under <i>Disketten</i>.</li>
       </ul>
       <p>Har maskinen hängt sig: <i>RESET</i>, eller <i>Starta om</i>, som
-      också tömmer minnet. Panelerna fälls ut med ett klick på listen, och
+      också tömmer minnet. Hjälper inget av dem: <i>Av/på</i>, som hämtar
+      sidan på nytt utan valen, med allt urkopplat och CMOS-minnet tomt. Panelerna fälls ut med ett klick på listen, och
       <i>i</i> i varje panel berättar mer om det som finns där. Sidan
       kommer ihåg vilka som är öppna. <i>EN</i> överst visar sidan på
       engelska.</p>
@@ -1261,7 +1263,9 @@ RUN</pre>
         <li>Zork I: the <i>Zork I</i> button under <i>Floppy disk</i>.</li>
       </ul>
       <p>If the machine has hung: <i>RESET</i>, or <i>Restart</i>, which
-      also clears memory. The panels open with a click on their bar, and
+      also clears memory. If neither helps: <i>Off/on</i>, which fetches
+      the page again without the choices, with everything disconnected and
+      the CMOS memory empty. The panels open with a click on their bar, and
       <i>i</i> in each panel tells more about what is in it. The page
       remembers which are open. <i>SV</i> at the top shows the page in
       Swedish.</p>
@@ -1836,6 +1840,7 @@ const CMOS_ADRESS = 0x5000, CMOS_STORLEK = 0x800, CMOS_NYCKEL = 'abc80-cmos';
 let cmos = new Uint8Array(CMOS_STORLEK);    /* det som är sparat */
 let cmos_pekare = 0;                        /* i WebAssemblys minne, 0 = av */
 let cmos_sparat = 0;                        /* performance.now() */
+let avstangd = false;                        /* Av/på: inget sparas mer */
 
 function cmos_las_in() {
     try {
@@ -1860,7 +1865,7 @@ function cmos_skriv() {
 
 /* Det som står i minnet nu sparas, om det har ändrats. */
 function cmos_spara() {
-    if (!cmos_pekare)
+    if (!cmos_pekare || avstangd)
         return;
     const nu = cmos_nu();
     if (nu.every((b, k) => b === cmos[k]))
@@ -3479,6 +3484,17 @@ document.addEventListener('drop', (h) => {
 
 $('aterstall').addEventListener('click', () => { e.aterstall(); skarm.focus(); });
 $('nystart').addEventListener('click', () => { starta(null, null, null); meddela(); skarm.focus(); });
+/* Av/på: sidan hämtas om utan frågan i adressen, så att inga val, kort
+ * eller disketter följer med, och CMOS-minnet töms; språket och
+ * panelerna ligger kvar. Det som inte är sparat går förlorat. */
+$('strom').addEventListener('click', () => {
+    if (!confirm(t('Stänga av och slå på? Allt i minnet, disketterna och CMOS-minnet försvinner, och alla val går tillbaka till början.',
+                   'Switch off and on? Everything in memory, the disks and the CMOS memory is lost, and all choices go back to the start.')))
+        return;
+    avstangd = true;
+    try { localStorage.removeItem(CMOS_NYCKEL); } catch (fel) { /* inget sparat */ }
+    location.replace(location.pathname);
+});
 $('rom').addEventListener('change', () => {
     /* Sitter en exempeldiskett i byts den mot den som hör till tolken; den
      * som tas ur ligger undan med det som har sparats på den. */
