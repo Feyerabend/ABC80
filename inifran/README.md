@@ -2,7 +2,25 @@
 
 Material till boken *ABC80 inifrån* (Set Lonnert): källor och program
 som boken beskriver, så att de kan köras och ändras.
-Publicering av boken väntas under 2026.
+
+Boken kommer snart ut i två band hos BoD (Books on Demand), 190 × 270 mm:
+
+<p>
+<img src="../assets/images/band1_framsida.jpg" alt="Band 1: Maskinen och BASIC:en" width="200">
+<img src="../assets/images/band2_framsida.jpg" alt="Band 2: Utbyggnaderna" width="200">
+</p>
+
+- **Band 1: Maskinen och BASIC:en** (244 s., ISBN 978-91-8150-657-0).
+  Datorn själv: kretskortet, Z80:an, minnet, bildskärmen,
+  tangentbordet, ljudet, kassetten och ABC-bussen. Sedan hela
+  BASIC-tolken i ROM:en, rutin för rutin, och de två ROM-versionerna
+  11273 och 9913 jämförda.
+- **Band 2: Utbyggnaderna** (266 s., ISBN 978-91-8134-515-5).
+  Minneskortet, bussarna, diskoperativsystemen, skivminnet, skrivarna
+  och IEC-bussen, med koden i UFD-DOS, skrivarkretsen 9704 och
+  IEC-kretsen 4027. Smartaid, Superbasic, 80 tecken och färg, CP/M,
+  texttelefonen och nät. Sist BASIC II för ABC80, jämförd med den
+  första tolken.
 
 Emulatorn går att köra direkt i webbläsaren, utan att något installeras:
 [https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html](https://feyerabend.github.io/ABC80/inifran/emulator/webb/abc80.html)

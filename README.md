@@ -1,4 +1,7 @@
-[![Omslaget till ABC80 inifrån](assets/images/omslag_liten.jpg)](assets/images/omslag.png)
+<p>
+<img src="assets/images/band1_framsida.jpg" alt="ABC80 inifrån, band 1: Maskinen och BASIC:en" width="240">
+<img src="assets/images/band2_framsida.jpg" alt="ABC80 inifrån, band 2: Utbyggnaderna" width="240">
+</p>
 
 # ABC80
 
@@ -9,6 +12,22 @@ till boken *ABC80 inifrån*.
 Material on the Swedish home computer ABC80 (Luxor, 1978): the game
 AIR-FIGHT from 1981, emulators, tools and essays, and the companion
 material to the book *ABC80 inifrån* ("ABC80 from the inside").
+
+## ABC80 inifrån
+
+Boken *ABC80 inifrån* kommer snart ut i två band hos BoD (Books on
+Demand). Materialet till den ligger i [`inifran/`](inifran/).
+
+- **Band 1: Maskinen och BASIC:en** (244 s., ISBN 978-91-8150-657-0):
+  datorn själv och hela BASIC-tolken i ROM:en, rutin för rutin.
+- **Band 2: Utbyggnaderna** (266 s., ISBN 978-91-8134-515-5):
+  minneskort, skivminne, skrivare, IEC-bussen, Smartaid, CP/M och
+  BASIC II för ABC80.
+
+The book *ABC80 inifrån* (in Swedish) will soon be published in two
+volumes by BoD (Books on Demand): volume 1 on the machine and its BASIC
+interpreter, volume 2 on the expansions. The companion material is in
+[`inifran/`](inifran/).
 
 | Mapp / Folder | Innehåll | Contents |
 |---|---|---|
