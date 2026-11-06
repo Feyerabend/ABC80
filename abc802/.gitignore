@@ -1,0 +1,6 @@
+roms/*.rom
+roms/orig/
+emulator/abc802
+emulator/sdl/abc802f
+emulator/webb/abc802.wasm
+.DS_Store
