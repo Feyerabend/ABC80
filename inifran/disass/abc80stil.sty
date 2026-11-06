@@ -11,6 +11,8 @@
   BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
 \setmonofont{Inconsolatazi4-Regular.otf}[BoldFont=Inconsolatazi4-Bold.otf,
   Scale=MatchLowercase]
+% exponenter i \scriptsize (7 pt) blir annars 5 pt; BoD kräver minst 5,1 pt
+\DeclareMathSizes{7}{7}{5.5}{5.5}
 \RequirePackage{xcolor}
 \RequirePackage{longtable}
 \RequirePackage{array}

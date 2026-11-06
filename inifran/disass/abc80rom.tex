@@ -11,6 +11,18 @@
 \definecolor{link}{HTML}{1F3F7A}
 \definecolor{labc}{HTML}{7A1F1F}
 \hypersetup{pdftitle={ABC80 BASIC-ROM, kommenterad disassemblering}}
+% en kodrad: #1 = monospacerat prefix, #2 = kommentar. Kommentaren börjar
+% alltid i kolumn 49; prefixet mäts (utan utfyllnaden i slutet) och fylls ut
+% dit, och är det bredare (långa DEFB-rader) står kommentaren på nästa rad
+\makeatletter
+\newsavebox\CL@box
+\renewcommand{\CL}[2]{\par\noindent\sbox\CL@box{\ttfamily #1\unkern\unkern}%
+  \if\relax\detokenize{#2}\relax\usebox\CL@box
+  \else\ifdim\wd\CL@box>48.2\cw
+    \usebox\CL@box\par\nobreak\noindent\hangindent=49\cw\hangafter=0 {\rmfamily #2}%
+  \else\hangindent=49\cw\hangafter=1 \makebox[49\cw][l]{\usebox\CL@box}{\rmfamily #2}%
+  \fi\fi\par}
+\makeatother
 
 \begin{document}
 \hypersetup{pageanchor=false}
