@@ -1,0 +1,30 @@
+# Zork I och tolken ZTOLK
+
+`zork1.z3` är Infocoms Zork I, berättelsefilen för Z-maskinen version 3,
+oförändrad ur förrådet <https://github.com/historicalsource/zork1>
+(`COMPILED/zork1.z3`, commit 5e9a9ce, 16 april 2019), SHA1
+c4f162274869b5433e4b9dfa7ee770fc3b789525. Källan i ZIL finns i samma
+förråd. `LICENSE` är förrådets licens, MIT-licensen (Copyright (c) 2025
+Microsoft, tillagd i commit 60aef2f, 20 november 2025): filen får
+användas, ändras och spridas fritt om licenstexten följer med.
+
+Filen är 86 838 bytes. Makefile lägger den på systemskivan
+(`../a.img`) som `ZORK1.Z3`.
+
+## Tolken
+
+`ztolk.asm` är vår egen tolk för Z-maskinen version 3, skriven till
+ABC80-emulatorn (`abc80/emulator/cpm/zork/`) och här oförändrad. Den
+använder BIOS:en (`../bios.asm`) direkt, genom hopptabellen, och läser
+skärmens bredd på adressen KOLUMNER, som Makefile sätter till BIOS:ens
+BREDDEN (80). Den assembleras med bokens assembler till `../ztolk.com`,
+som också läggs på systemskivan. Spelet startas med
+
+    A>ZTOLK ZORK1
+
+(typen Z3 om ingen ges). Det dynamiska minnet ligger fast i TPA; resten
+av filen läses i sidor om 256 bytes, så många som får plats i förväg,
+och de äldsta sidorna lämnar plats åt nya när minnet inte räcker. Översta
+raden är statusraden, och (MER) väntar på en tangent när en skärm fylls
+utan inmatning. Med save och restore skrivs och läses spelet i en fil, i
+standard `ZORK1.SAV` på samma skiva som spelet.

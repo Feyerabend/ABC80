@@ -1,0 +1,676 @@
+<!doctype html>
+<!--
+  mall.html -- mallen till emulatorns sida, till ABC 802 inifrån
+
+  Mallen går inte att öppna som den är: bygg.sh (make webb) gör om den
+  till abc802.html. På raden med FILER läggs WebAssembly-koden, ROM:en och
+  teckengeneratorn in som base64, och abc802.js efter. Då är abc802.html
+  en enda fil som går att öppna direkt i webbläsaren, utan server och
+  utan att något installeras. Mellan MALL och /MALL står det som bara
+  syns i mallen; bygg.sh tar bort det.
+
+  Sidan är byggd som ABC80:s (abc80/emulator/webb/mall.html): på
+  svenska och engelska (text två gånger, med lang="sv" och lang="en";
+  knappar med data-en och data-title-en), och knapparna i paneler
+  (details) med en hjälptext under i.
+
+  Skärmen är två canvas på varandra: skarm har punkterna med
+  efterlysningen, och sken är samma bild suddig (CSS filter: blur),
+  lagd ovanpå med mix-blend-mode: screen, som skenet runt punkterna i
+  SDL-fönstret (sdl/fonster.c).
+-->
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC 802</title>
+<style>
+  :root {
+    --bakgrund: #1b1b1a;
+    --yta: #262624;
+    --text: #e8e6df;
+    --dampad: #9c9a92;
+    --kant: #3a3a37;
+    --accent: #ffb000;
+  }
+  :root[lang=sv] [lang=en], :root[lang=en] [lang=sv] { display: none !important; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bakgrund);
+    color: var(--text);
+    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  /* Skärmen till vänster, så stor som fönstrets höjd tillåter, och
+     knapparna i en kolumn till höger; på en smal skärm under varandra. */
+  main { display: flex; gap: 16px; align-items: flex-start; padding: 12px 16px; }
+  #vanster {
+    flex: 0 1 auto;
+    width: min(calc(100vw - 32px - 16px - 300px), calc((100vh - 24px) * 4 / 3));
+    position: sticky; top: 12px;
+  }
+  #hoger { flex: 0 0 300px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  @media (max-width: 760px) {
+    main { flex-direction: column; }
+    #vanster { width: 100%; position: static; }
+    #hoger { flex: none; width: 100%; }
+  }
+  h1 { font-size: 17px; font-weight: 600; margin: 0 0 2px; letter-spacing: .02em; line-height: 1.3; }
+  h1 > span { display: block; color: var(--dampad); font-weight: 400; font-size: 13px; }
+  /* Bilden har en svart kant i sig (som i SDL-fönstret), så att skenet
+     runt tecknen längst ut får plats. */
+  #ram {
+    position: relative;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--kant);
+    cursor: text;
+    aspect-ratio: 4 / 3;
+  }
+  #ram:focus-within { box-shadow: 0 0 0 2px var(--accent); }
+  #ram canvas {
+    position: absolute; inset: 0;
+    display: block; width: 100%; height: 100%;
+    outline: none;
+  }
+  #sken { pointer-events: none; mix-blend-mode: screen; opacity: .8; }
+  #ram.skarp #skarm { image-rendering: pixelated; }
+  #ram.skarp #sken { display: none; }
+  .rad { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .panel { background: var(--yta); border: 1px solid var(--kant); border-radius: 8px; }
+  .panel > summary {
+    display: flex; align-items: center; gap: 6px; padding: 5px 8px;
+    list-style: none; cursor: pointer; user-select: none; -webkit-user-select: none;
+    font-size: 14px; font-weight: 500; color: var(--text);
+  }
+  .panel > summary::-webkit-details-marker { display: none; }
+  .panel > summary::before {
+    content: '▸'; color: var(--dampad); display: inline-block; width: 10px;
+    transition: transform .12s;
+  }
+  .panel[open] > summary::before { transform: rotate(90deg); }
+  .lage {
+    flex: 1; min-width: 0; text-align: right; color: var(--dampad);
+    font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .panel .info {
+    flex: none; width: 22px; height: 22px; padding: 0; border-radius: 50%;
+    font-size: 12px; line-height: 20px; color: var(--dampad); background: transparent;
+  }
+  .panel .info.pa { background: var(--accent); border-color: var(--accent); color: #1b1b1a; }
+  .knappar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 2px 8px 8px; }
+  .hjalptext {
+    margin: 0 8px 8px; padding-top: 2px; border-top: 1px solid var(--kant);
+    color: var(--dampad); font-size: 13.5px;
+  }
+  .hjalptext p { margin: 6px 0; }
+  button, select {
+    font: inherit; font-size: 14px;
+    color: var(--text); background: #33332f;
+    border: 1px solid var(--kant); border-radius: 6px;
+    padding: 4px 10px; cursor: pointer;
+  }
+  button:hover, select:hover { border-color: var(--dampad); }
+  button.pa { background: var(--accent); color: #1b1b1a; border-color: var(--accent); }
+  label { font-size: 14px; display: flex; gap: 4px; align-items: center; cursor: pointer; }
+  #sprak { font-size: 12px; padding: 2px 7px; }
+  #meddelande {
+    margin: 0; color: var(--dampad); font-size: 13px; min-height: 1.4em;
+    border-left: 2px solid var(--kant); padding-left: 8px;
+  }
+  kbd {
+    font: 12px ui-monospace, Menlo, monospace;
+    border: 1px solid var(--kant); border-radius: 4px; padding: 0 4px;
+  }
+  #rubrik { display: flex; align-items: flex-start; gap: 8px; }
+  #rubrik h1 { flex: 1; }
+  #hjalp {
+    width: min(460px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    overflow: auto; padding: 14px 18px; margin: auto;
+    background: var(--yta); color: var(--text); font-size: 14px; line-height: 1.5;
+    border: 1px solid var(--kant); border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
+  }
+  #hjalp { display: none; }
+  #hjalp:popover-open, #hjalp.oppen { display: block; position: fixed; inset: 0; }
+  #hjalp h2 { font-size: 16px; margin: 0 0 8px; }
+  #hjalp ul { padding-left: 20px; margin: 6px 0; }
+  #hjalp li { margin: 4px 0; }
+  #hjalp p { margin: 8px 0; }
+  #hjalp .stang { float: right; }
+  #hjalp::backdrop { background: transparent; }
+  body.slapp #ram { box-shadow: 0 0 0 3px var(--accent); }
+  input[type=file] { display: none; }
+  #katalog {
+    display: flex; flex-wrap: wrap; gap: 2px 4px; padding: 0 8px 8px;
+    font: 12px ui-monospace, Menlo, monospace;
+  }
+  #katalog:empty { display: none; }
+  #katalog button { font: inherit; padding: 1px 5px; border-radius: 4px; }
+  #katalog span { padding: 1px 5px; color: var(--dampad); }
+  .knappar select { max-width: 100%; min-width: 0; }
+  /* Utskriften: en lapp ovanpå sidan (popover manual), som ligger kvar
+   * när man klickar utanför, så att man kan skriva medan den syns. Den
+   * flyttas genom att man drar i listen. Utan popover: klassen oppen. */
+  #ut_lapp {
+    position: fixed; inset: 16px 16px auto auto; margin: 0; padding: 0;
+    width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    background: var(--yta); color: var(--text);
+    border: 1px solid var(--kant); border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
+  }
+  #ut_lapp { display: none; flex-direction: column; }
+  #ut_lapp.oppen, #ut_lapp:popover-open { display: flex; }
+  #ut_lapp header {
+    display: flex; align-items: center; gap: 6px; padding: 6px 8px;
+    border-bottom: 1px solid var(--kant); font-size: 13px; color: var(--dampad);
+    cursor: move; touch-action: none; user-select: none; -webkit-user-select: none;
+  }
+  #ut_lapp header span { flex: 1; }
+  #ut_lapp header button { cursor: pointer; font-size: 13px; padding: 2px 8px; }
+  #utskrift {
+    margin: 0; padding: 8px 10px; height: 320px; max-height: calc(100vh - 90px);
+    overflow: auto; background: #1b1b1a; border-radius: 0 0 10px 10px;
+    font: 12px/1.3 ui-monospace, Menlo, monospace; white-space: pre; color: var(--text);
+  }
+  #ut_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
+  #rad_in {
+    flex: 1; min-width: 0; font: 13px ui-monospace, Menlo, monospace;
+    color: var(--text); background: #1b1b1a; border: 1px solid var(--kant);
+    border-radius: 6px; padding: 4px 6px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div id="vanster">
+    <div id="ram">
+      <canvas id="skarm" width="1056" height="792" tabindex="0"></canvas>
+      <canvas id="sken" width="1056" height="792"></canvas>
+    </div>
+  </div>
+
+  <div id="hoger">
+    <div id="rubrik">
+      <h1>ABC 802 <span lang="sv">emulatorn till ABC 802 inifrån</span><span lang="en">the emulator for ABC 802 inifrån</span></h1>
+      <button id="sprak" title="In English" data-title-en="På svenska">EN</button>
+    </div>
+<!-- MALL -->
+    <p style="background:#5a2a1a;padding:10px 12px;border-radius:8px;margin:0">Det här
+    är mallen till sidan, utan emulatorn i. Öppna <b>abc802.html</b> bredvid i
+    stället; den byggs med <code>make webb</code>.</p>
+<!-- /MALL -->
+    <div class="rad">
+      <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar" data-title-en="Like the RESET button: memory is kept">RESET</button>
+      <button id="nystart" title="Töm minnet och starta om" data-title-en="Clear memory and start again" data-en="Restart">Starta om</button>
+      <button id="ljud">Ljud: på</button>
+      <button id="hjalp_visa" popovertarget="hjalp" title="Vad det här är och hur man kommer igång" data-title-en="What this is and how to get started" data-en="Getting started">Kom igång</button>
+    </div>
+    <p id="meddelande"></p>
+
+    <details class="panel" id="panel_maskin" open>
+      <summary><span lang="sv">Maskinen</span><span lang="en">The machine</span><span class="lage" id="lage_maskin"></span><button class="info" title="Mer om maskinen" data-title-en="More about the machine">i</button></summary>
+      <div class="knappar">
+        <select id="tecken" title="Bygeln S3: tecken per rad" data-title-en="Jumper S3: characters per line">
+          <option value="80" data-en="80 columns">80 tecken</option>
+          <option value="40" data-en="40 columns">40 tecken</option>
+        </select>
+        <select id="hz" title="Bygeln 50/60 Hz" data-title-en="The 50/60 Hz jumper">
+          <option value="50">50 Hz</option>
+          <option value="60">60 Hz</option>
+        </select>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>RESET</i> är som knappen på maskinen: programmet ligger
+        kvar. <i>Starta om</i> tömmer minnet. Maskinen har 64 KB RAM, ROM:en
+        med BASIC II och DOS v.20 och den inbyggda RAM-skivan
+        <code>MEM:</code>; skivminnet, kassetten och kontakterna CH A och
+        CH B har egna paneler.</p>
+        <p lang="en"><i>RESET</i> is like the button on the machine: the
+        program stays in memory. <i>Restart</i> clears memory. The machine has
+        64 KB of RAM, the ROM with BASIC II and DOS v.20 and the built-in RAM
+        disk <code>MEM:</code>; the disk drives, the cassette and the
+        CH A and CH B connectors have panels of their own.</p>
+        <p lang="sv">Byglarna läses när maskinen startar, så ett nytt val
+        startar om den. <i>Tecken per rad</i> är bygeln S3 (DART A, RI),
+        <i>50/60 Hz</i> bygeln på DART B (CTS); den ändrar bildtakten. I terminalen: <code>-40</code>
+        och <code>-60</code>.</p>
+        <p lang="en">The jumpers are read when the machine starts, so a new
+        choice restarts it. <i>Columns</i> is jumper S3 (DART A, RI),
+        <i>50/60 Hz</i> the jumper on DART B (CTS); it changes the frame rate. In the terminal:
+        <code>-40</code> and <code>-60</code>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_skarm">
+      <summary><span lang="sv">Skärmen</span><span lang="en">The screen</span><span class="lage" id="lage_skarm"></span><button class="info" title="Mer om skärmen" data-title-en="More about the screen">i</button></summary>
+      <div class="knappar">
+        <label title="Skarpa punkter, utan sken och efterlysning" data-title-en="Sharp dots, without glow and afterglow"><input type="checkbox" id="skarp"> <span lang="sv">skarp</span><span lang="en">sharp</span></label>
+        <button id="kopiera" title="Kopiera skärmens text" data-title-en="Copy the text on the screen" data-en="Copy text">Kopiera texten</button>
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv">Bilden är 480 × 250 punkter (80 tecken à 6 punkter, 24
+        rader à 10 linjer, och plats för en 25:e när R6 i 6845:an är 25) ritade ur maskinens teckengenerator, på en
+        bärnstensfärgad fosforskärm: punkterna har ett sken runt sig, och det
+        som släcks klingar av på omkring 20 ms. <i>Skarp</i> visar punkterna
+        utan sken och efterlysning, som <code>-skarp</code> i fönstret.</p>
+        <p lang="en">The picture is 480 × 250 dots (80 characters of 6 dots,
+        24 rows of 10 lines, and room for a 25th when the 6845's R6 is 25) drawn from the machine's character generator, on
+        an amber phosphor screen: the dots glow, and what is switched off fades
+        over about 20 ms. <i>Sharp</i> shows the dots without glow and
+        afterglow, like <code>-skarp</code> in the window.</p>
+        <p lang="sv"><i>Kopiera texten</i> lägger skärmens rader (24, eller 25) i
+        urklipp; grafiken blir Unicodes mosaiktecken.</p>
+        <p lang="en"><i>Copy text</i> puts the rows of the screen (24, or 25) on the
+        clipboard; graphics become Unicode's mosaic characters.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_program">
+      <summary><span lang="sv">Program</span><span lang="en">Programs</span><span class="lage" id="lage_program"></span><button class="info" title="Mer om program" data-title-en="More about programs">i</button></summary>
+      <div class="knappar">
+        <button id="skriv_fil" title="Skriv in en textfil som tangenter" data-title-en="Type a text file as keys" data-en="Type a file…">Skriv in en fil…</button>
+        <input type="file" id="fil" accept=".bas,.BAS,.txt,text/plain">
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv"><i>Skriv in en fil</i> skriver en textfil (ett
+        BASIC-program) som tangenter, med en paus efter varje rad, som
+        <code>-f</code> i terminalen. Det går också att släppa filen på
+        skärmen eller klistra in texten. Maskinen går så fort den kan tills
+        allt är skrivet.</p>
+        <p lang="en"><i>Type a file</i> types a text file (a BASIC program)
+        as keys, with a pause after each line, like <code>-f</code> in the
+        terminal. You can also drop the file on the screen or paste the text.
+        The machine runs as fast as it can until everything is typed.</p>
+        <p lang="sv">Ett program sparas i RAM-skivan med <code>SAVE
+        MEM:1</code> och läses med <code>LOAD MEM:1</code> (namnen är tal
+        0–255). Den finns kvar efter RESET men inte efter <i>Starta
+        om</i>.</p>
+        <p lang="en">A program is saved on the RAM disk with <code>SAVE
+        MEM:1</code> and read back with <code>LOAD MEM:1</code> (the names are
+        numbers 0–255). It survives RESET but not <i>Restart</i>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_skiva">
+      <summary><span lang="sv">Skivminnet</span><span lang="en">Disk drives</span><span class="lage" id="lage_skiva"></span><button class="info" title="Mer om skivminnet" data-title-en="More about the disk drives">i</button></summary>
+      <div class="knappar">
+        <button id="skiva_prov" title="Skivan med tidsproven" data-title-en="The disk with the benchmarks" data-en="Benchmarks">Tidsproven</button>
+        <button id="skiva_tom" title="En tom skiva" data-title-en="An empty disk" data-en="Empty">Tom skiva</button>
+        <button id="skiva_cpm" title="CP/M 2.2: skivan sätts i och maskinen startas om" data-title-en="CP/M 2.2: the disk is inserted and the machine restarted">CP/M</button>
+        <button id="skiva_forth" title="Forth: skivan sätts i, maskinen startas om och Forth laddas" data-title-en="Forth: the disk is inserted, the machine restarted and Forth loaded">Forth</button>
+        <button id="skiva_valj" title="Sätt i en skivavbild (.img, .dsk)" data-title-en="Insert a disk image (.img, .dsk)" data-en="Insert…">Sätt i…</button>
+        <button id="skiva_spara" title="Spara skivan som en fil" data-title-en="Save the disk as a file" data-en="Save">Spara</button>
+        <input type="file" id="skivfil" accept=".img,.dsk,.IMG,.DSK,application/octet-stream">
+      </div>
+      <div id="katalog"></div>
+      <div class="hjalptext" hidden>
+        <p lang="sv">Skivan sitter i MF0 (<code>DR0:</code>) på
+        skivkortet (kort 44), som DOS v.20 i ROM:en läser; en avbild är
+        320 KB, 1&nbsp;280 sektorer à 256 bytes. Från början sitter
+        <i>Tidsproven</i> i, med tidsproven ur <code>prov/</code> i
+        förrådet: <code>LOAD DR0:B1</code> och <code>RUN</code>,
+        eller klicka på ett namn ovan. Ett program sparas med <code>SAVE
+        DR0:NAMN</code> och tas bort med <code>KILL "DR0:NAMN.BAS"</code>.
+        I terminalen: <code>-D fil</code>.</p>
+        <p lang="en">The disk is in MF0 (<code>DR0:</code>) on the disk
+        card (card 44), read by DOS v.20 in the ROM; an image is 320 KB,
+        1,280 sectors of 256 bytes. At first <i>Benchmarks</i> is inserted,
+        with the benchmarks from <code>prov/</code> in the repository: <code>LOAD DR0:B1</code> and <code>RUN</code>, or click a
+        name above. A program is saved with <code>SAVE DR0:NAME</code> and
+        removed with <code>KILL "DR0:NAME.BAS"</code>. In the terminal:
+        <code>-D file</code>.</p>
+        <p lang="sv">På <i>Tidsproven</i> finns också Luxors
+        systemprogram: BASICINI.SYS ger felen som text (<i>Hittar ej
+        filen</i> i stället för <i>Error 21</i>), <code>BYE</code> går till
+        DOS:ens kommandotolk (CMDINT.SYS), där <code>LIB</code> visar
+        katalogen och <code>$BAS</code> (¤BAS) går tillbaka till BASIC, och
+        <code>RUN DR0:LIB</code> är katalogprogrammet i BASIC.</p>
+        <p lang="sv">BASIC II själv visar inte katalogen, så sidan läser den
+        ur skivan. Det som skrivs finns bara i webbläsaren: <i>Spara</i> ger
+        skivan som en fil, som går att sätta i igen eller släppa på
+        skärmen. <i>Tom skiva</i> och <i>Tidsproven</i> byter skiva utan
+        att spara den gamla. Skivan sitter kvar efter <i>Starta
+        om</i>.</p>
+        <p lang="en"><i>Benchmarks</i> also holds Luxor's system
+        programs: BASICINI.SYS gives the errors as text (in Swedish,
+        <i>Hittar ej filen</i> instead of <i>Error 21</i>), <code>BYE</code>
+        goes to the DOS command interpreter (CMDINT.SYS), where
+        <code>LIB</code> shows the directory and <code>$BAS</code> (¤BAS)
+        returns to BASIC, and <code>RUN DR0:LIB</code> is the directory
+        program in BASIC.</p>
+        <p lang="en">BASIC II itself does not show the directory, so the page
+        reads it from the disk. What is written stays only in the browser: <i>Save</i>
+        gives the disk as a file, which can be inserted again or dropped on
+        the screen. <i>Empty</i> and <i>Benchmarks</i> change the disk without
+        saving the old one. The disk stays in after <i>Restart</i>.</p>
+        <p lang="sv"><i>Forth</i> sätter i en skiva med förrådets Forth
+        (<code>forth/</code>), startar om maskinen och laddar den. Forth
+        ligger på $8000-$AFFF, och BASIC har resten. <code>WORDS</code>
+        visar orden, och <code>BYE</code> går tillbaka till BASIC; sedan
+        startar <code>Z=CALL(32768,1)</code> Forth igen med orden kvar.
+        Ett BASIC-program kan ha Forth i REM-rader:
+        <code>100 REM FORTH : KUB DUP DUP * * ;</code> och
+        <code>10 Z=CALL(32768,2)</code> tolkar dem, och sedan ger
+        <code>A$="5 KUB" : PRINT CALL(32768,VAROOT(A$))</code> 125.
+        Grafik: <code>PLOT ( x y -- )</code>, <code>UNPLOT</code> och
+        <code>POINT?</code>. Skivan har en demo: <code>LOAD DR0:DEMO</code>
+        och <code>RUN</code> ritar Hilbertkurvan och draken med rekursion
+        och kör Livet; orden står i REM-raderna från rad 1000. Kurvorna
+        ritas sedan i ren BASIC, ungefär sju gånger långsammare.
+        <code>LOAD DR0:MASK</code> och <code>RUN</code> är maskspelet
+        (tangenterna a z s w) i Forth och i maskinkod, med ett tidsprov:
+        Forth är 4 gånger och maskinkoden 20 gånger snabbare än
+        SNAKE1 i BASIC. Orden sparas
+        med programmet: <code>SAVE DR0:NAMN</code>, och efter
+        <code>LOAD</code> kompilerar <code>Z=CALL(32768,2)</code> dem
+        igen.</p>
+        <p lang="en"><i>Forth</i> inserts a disk with the repository's
+        Forth (<code>forth/</code>), restarts the machine and loads it.
+        Forth sits at $8000-$AFFF, and BASIC has the rest.
+        <code>WORDS</code> lists the words, and <code>BYE</code> returns to
+        BASIC; then <code>Z=CALL(32768,1)</code> starts Forth again with
+        the words kept. A BASIC program can hold Forth in REM lines:
+        <code>100 REM FORTH : KUB DUP DUP * * ;</code> and
+        <code>10 Z=CALL(32768,2)</code> interprets them, and then
+        <code>A$="5 KUB" : PRINT CALL(32768,VAROOT(A$))</code> gives 125.
+        Graphics: <code>PLOT ( x y -- )</code>, <code>UNPLOT</code> and
+        <code>POINT?</code>. The disk has a demo: <code>LOAD DR0:DEMO</code>
+        and <code>RUN</code> draw the Hilbert curve and the dragon curve by
+        recursion and run Life; the words are in the REM lines from line
+        1000. The curves are then drawn in plain BASIC, about seven times
+        slower. <code>LOAD DR0:MASK</code> and <code>RUN</code> is the
+        snake game (keys a z s w) in Forth and in machine code, with a
+        timing test: Forth is 4 times and the machine code 20 times
+        faster than SNAKE1 in BASIC. The words are saved with the program: <code>SAVE DR0:NAME</code>,
+        and after <code>LOAD</code>, <code>Z=CALL(32768,2)</code> compiles
+        them again.</p>
+        <p lang="sv"><i>CP/M</i> sätter i en skiva med CP/M 2.2 och startar
+        om maskinen (eller <code>?cpm=pa</code> i adressen). DOS:en läser
+        BASICINI.SYS vid starten, och där ligger förrådets egen laddare,
+        som läser in CP/M och slår på hela RAM:et. CCP och BDOS är Digital
+        Researchs fria CP/M; BIOS:en är förrådets egen
+        (<code>emulator/cpm/</code>). På skivan finns DR:s program:
+        <code>DIR</code>, <code>STAT</code>, <code>PIP</code>,
+        <code>ED</code>, <code>ASM</code>, <code>LOAD</code>,
+        <code>DDT</code> och <code>DUMP</code>, och editorn
+        <code>SKRIV</code> med WordStars tangenter (ur ABC80-emulatorn;
+        <code>SKRIV SKRIV.TXT</code> är bruksanvisningen, och ESC och en
+        bokstav är detsamma som Ctrl och bokstaven). Där finns också
+        R. T. Russells BBC BASIC (<code>BBCBASIC</code>, <code>*BYE</code>
+        tillbaka) och Infocoms Zork I med förrådets tolk
+        (<code>ZTOLK ZORK1</code>; <code>save</code> och
+        <code>restore</code> skriver och läser ZORK1.SAV). Sidan visar då
+        CP/M-katalogen. Skärmen har 80 tecken; tillbaka till BASIC med
+        <i>Tidsproven</i> och <i>Starta om</i>.</p>
+        <p lang="en"><i>CP/M</i> inserts a disk with CP/M 2.2 and restarts
+        the machine (or <code>?cpm=pa</code> in the address). DOS reads
+        BASICINI.SYS at start-up, and there is the repository's own loader,
+        which reads in CP/M and switches on all the RAM. CCP and BDOS are
+        Digital Research's free CP/M; the BIOS is the repository's own
+        (<code>emulator/cpm/</code>). The disk holds DR's programs:
+        <code>DIR</code>, <code>STAT</code>, <code>PIP</code>,
+        <code>ED</code>, <code>ASM</code>, <code>LOAD</code>,
+        <code>DDT</code> and <code>DUMP</code>, and the editor
+        <code>SKRIV</code> with WordStar's keys (from the ABC80 emulator;
+        <code>SKRIV SKRIV.TXT</code> is the manual, in Swedish, and ESC and
+        a letter is the same as Ctrl and the letter). There is also
+        R. T. Russell's BBC BASIC (<code>BBCBASIC</code>, <code>*BYE</code>
+        back) and Infocom's Zork I with the repository's interpreter
+        (<code>ZTOLK ZORK1</code>; <code>save</code> and
+        <code>restore</code> write and read ZORK1.SAV). The page then shows the
+        CP/M directory. The screen has 80 columns; back to BASIC with
+        <i>Benchmarks</i> and <i>Restart</i>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_kassett">
+      <summary><span lang="sv">Kassetten</span><span lang="en">The cassette</span><span class="lage" id="lage_kassett"></span><button class="info" title="Mer om kassetten" data-title-en="More about the cassette">i</button></summary>
+      <div class="knappar">
+        <button id="band_tomt" title="Ett tomt band att spela in på (SAVE CAS:NAMN)" data-title-en="A blank tape to record on (SAVE CAS:NAME)" data-en="Blank tape">Tomt band</button>
+        <button id="band_spola" title="Spola tillbaka; det inspelade spelas sedan upp" data-title-en="Rewind; what was recorded is then played back" data-en="Rewind">Spola tillbaka</button>
+        <button id="band_valj" title="Lägg i ett band (en fil från Spara)" data-title-en="Insert a tape (a file from Save)" data-en="Insert…">Lägg i…</button>
+        <button id="band_spara" title="Spara bandet som en fil" data-title-en="Save the tape as a file" data-en="Save">Spara</button>
+        <input type="file" id="bandfil">
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv">Kassetten sitter på SIO:ns kanal B, och motorn går
+        när ROM:en slår på DTR. Med <i>Tomt band</i> sparar
+        <code>SAVE CAS:NAMN</code> programmet; <i>Spola tillbaka</i>, och
+        <code>LOAD CAS:NAMN</code> läser in det igen
+        (<code>LOAD CAS:</code> tar första programmet och visar namnet).
+        Finns programmet inte på bandet väntar maskinen vid bandets slut,
+        som den riktiga; BREAK (<kbd>Ctrl</kbd>+<kbd>C</kbd>) avbryter.</p>
+        <p lang="en">The cassette is on channel B of the SIO, and the motor
+        runs when the ROM switches on DTR. With <i>Blank tape</i>,
+        <code>SAVE CAS:NAME</code> saves the program; <i>Rewind</i>, and
+        <code>LOAD CAS:NAME</code> reads it back (<code>LOAD CAS:</code>
+        takes the first program and shows its name). If the program is not
+        on the tape, the machine waits at the end of the tape, as the real
+        one does; BREAK (<kbd>Ctrl</kbd>+<kbd>C</kbd>) stops it.</p>
+        <p lang="sv">Hur signalen på ett riktigt band ser ut beskriver
+        varken ROM:en eller manualerna, så bandet här är tecknen som SIO:n
+        sänder och tar emot, en byte per tecken. <i>Spara</i> ger den filen,
+        som går att lägga i igen. I terminalen: <code>-T fil</code> och
+        <code>-U fil</code>.</p>
+        <p lang="en">Neither the ROM nor the manuals describe what the signal
+        on a real tape looks like, so the tape here is the characters the SIO
+        sends and receives, one byte per character. <i>Save</i> gives that
+        file, which can be inserted again. In the terminal: <code>-T
+        file</code> and <code>-U file</code>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_kontakter">
+      <summary><span lang="sv">CH A och CH B</span><span lang="en">CH A and CH B</span><span class="lage" id="lage_kontakter"></span><button class="info" title="Mer om kontakterna" data-title-en="More about the connectors">i</button></summary>
+      <div class="knappar">
+        <select id="kontakt" title="Kontakten som visas och som det skickas till" data-title-en="The connector shown and sent to">
+          <option value="0" data-en="CH A (PR:, printer)">CH A (PR:, skrivaren)</option>
+          <option value="1">CH B (V24:)</option>
+          <option value="2" data-en="Printer card (card 60)">Skrivarkortet (kort 60)</option>
+        </select>
+        <label title="Skrivarkortet (Centronics, kort 60) i ABC-bussen" data-title-en="The printer card (Centronics, card 60) on the ABC bus"><input type="checkbox" id="skrivarkort"> <span lang="sv">kortet i</span><span lang="en">card in</span></label>
+        <button id="ut_knapp" popovertarget="ut_lapp" title="Visa det som kommit ut; lappen kommer fram av sig själv när skrivaren börjar" data-title-en="Show what has come out; the sheet appears by itself when the printer starts" data-en="Output">Utskriften</button>
+      </div>
+      <div class="knappar">
+        <select id="motpart" title="Det som svarar på CH B (alla tre är rekonstruktioner)" data-title-en="What answers on CH B (all three are reconstructions)">
+          <option value="" data-en="No counterpart">Ingen motpart</option>
+          <option value="datavision">Datavision</option>
+          <option value="bbs">Bytesboden (BBS)</option>
+          <option value="stordator" data-en="Datacentralen (IBM)">Datacentralen (IBM)</option>
+        </select>
+        <button id="ring" title="Ring upp motparten" data-title-en="Call the counterpart" data-en="Call" disabled>Ring upp</button>
+      </div>
+      <div class="knappar">
+        <input id="rad_in" title="En rad att skicka (RETURN efter)" data-title-en="A line to send (RETURN after)">
+        <button id="skicka" data-en="Send">Skicka</button>
+        <button id="skicka_fil" title="Skicka en fil till kontakten" data-title-en="Send a file to the connector" data-en="File…">Fil…</button>
+        <input type="file" id="kontaktfil">
+      </div>
+      <div class="hjalptext" hidden>
+        <p lang="sv">CH A är DART:ens kanal A, skrivaren <code>PR:</code>,
+        och CH B SIO:ns kanal A, <code>V24:</code>. Hastigheten sätts av
+        CTC:n, och ett tecken tar lika lång tid som på tråden. Det som
+        maskinen sänder visas på en lapp ovanpå sidan, som kommer fram av
+        sig själv när skrivaren börjar (<i>Utskriften</i> tar fram den, och
+        den flyttas genom att man drar i listen): prova <code>LIST PR:</code>, eller
+        <code>OPEN "V24:" AS FILE 1</code> och <code>PRINT #1,"HEJ"</code>.
+        Skrivaren matar fram sidan med radmatningar, så det blir tomt efter
+        en lista.</p>
+        <p lang="en">CH A is channel A of the DART, the printer
+        <code>PR:</code>, and CH B is channel A of the SIO, <code>V24:</code>.
+        The speed is set by the CTC, and a character takes as long as it does
+        on the wire. What the machine sends shows on a sheet above the page,
+        which appears by itself when the printer starts (<i>Output</i> brings
+        it back, and it moves when you drag its top bar): try <code>LIST
+        PR:</code>, or <code>OPEN "V24:" AS FILE 1</code> and <code>PRINT
+        #1,"HEJ"</code>. The printer feeds the page with line feeds, so there
+        is blank space after a listing.</p>
+        <p lang="sv"><i>Skicka</i> och <i>Fil</i> skickar till maskinen när
+        den slår på mottagaren, t.ex. med <code>INPUT #1,A$</code> eller
+        <code>LOAD V24:</code> (som läser text rad för rad tills BREAK). När
+        maskinen sänder XOFF ($13) väntar resten tills den sänder XON
+        ($11). I terminalen: <code>-A</code>, <code>-B</code>,
+        <code>-a</code> och <code>-b</code>.</p>
+        <p lang="en"><i>Send</i> and <i>File</i> send to the machine once it
+        switches on its receiver, e.g. with <code>INPUT #1,A$</code> or
+        <code>LOAD V24:</code> (which reads text line by line until BREAK).
+        When the machine sends XOFF ($13), the rest waits until it sends XON
+        ($11). In the terminal: <code>-A</code>, <code>-B</code>,
+        <code>-a</code> and <code>-b</code>.</p>
+        <p lang="sv">Skrivarkortet är Luxors Centronicskort, kort 60 på
+        ABC-bussen. Med <i>kortet i</i> väljer <code>PR:</code> kortet i
+        stället för CH A vid första utskriften efter RESET, och tecknen
+        visas under <i>Skrivarkortet</i>. Före RESET går det med
+        <code>LIST "PR:C"</code>, och <code>"PR:V"</code> går till CH A.
+        I terminalen: <code>-P</code>.</p>
+        <p lang="sv"><i>Datavision</i> är en motpart på CH B, en
+        rekonstruktion av en teledatatjänst från 1980-talet; sidorna är
+        nya. Välj <i>40 tecken</i> och skriv <code>LOAD
+        V24:WEA10K24.40A</code>, som i manualen till options-PROM:et: typ W,
+        1 200 bit/s in och 75 bit/s ut. Sidan kommer lika långsamt som på
+        tråden. Skriv <code>*2#</code> för sidan 2, en siffra för ett val
+        och <code>#</code> för att gå vidare. ABC 802 har en svartvit
+        skärm, så färgattributen blir tomma celler, men mosaiken syns. Ur
+        terminalen kommer man med en PF-tangent som inte är bestämd (F1-F8,
+        fel 53) eller med RESET. Med <code>INPUT #1</code> får ett program
+        raden som kommer efter STX (sidan 9).</p>
+        <p lang="en"><i>Datavision</i> is a counterpart on CH B, a
+        reconstruction of a 1980s videotex service; the pages are new.
+        Choose <i>40 columns</i> and type <code>LOAD
+        V24:WEA10K24.40A</code>, as in the options PROM manual: type W,
+        1200 bit/s in and 75 bit/s out. The page arrives as slowly as on
+        the wire. Type <code>*2#</code> for page 2, a digit for a choice
+        and <code>#</code> to go on. The ABC 802 has a monochrome screen, so
+        the colour attributes become blank cells, but the mosaic shows.
+        Leave the terminal with a PF key that has not been defined (F1-F8,
+        error 53) or with RESET. With <code>INPUT #1</code> a program gets
+        the line that follows STX (page 9).</p>
+        <p lang="sv"><i>Bytesboden</i> är en BBS på CH B, också en
+        rekonstruktion: den har inte funnits, och inläggen, användarna och
+        programmen är påhittade. Välj <i>80 tecken</i> och skriv
+        <code>LOAD V24:TSA30B24.22A</code>: typ T (ADM-3A), 300 bit/s åt
+        båda hållen. Terminalen visar inte själv det man skriver, så
+        BBS:en skickar tillbaka varje tecken. Logga in med vilket namn
+        och lösenord som helst och välj med en bokstav och RETURN: M för
+        mötet, F för filerna. När ett program hämtas tar man sig ur
+        terminalen med PF1 och skriver <code>LOAD
+        V24:VSA30B24.22A</code>; programmet kommer efter en halv minut,
+        och BREAK avslutar.</p>
+        <p lang="en"><i>Bytesboden</i> is a BBS on CH B, also a
+        reconstruction: it never existed, and the messages, users and
+        programs are made up. Choose <i>80 columns</i> and type
+        <code>LOAD V24:TSA30B24.22A</code>: type T (ADM-3A), 300 bit/s
+        both ways. The terminal does not show what you type itself, so the
+        BBS echoes every character. Log in with any name and password and
+        choose with a letter and RETURN: M for the messages, F for the
+        files. To fetch a program, leave the terminal with PF1 and type
+        <code>LOAD V24:VSA30B24.22A</code>; the program arrives after half
+        a minute, and BREAK ends it.</p>
+        <p lang="sv"><i>Datacentralen</i> är en IBM-stordator med MVS och
+        TSO, också en rekonstruktion: anläggningen har inte funnits, och
+        meddelandena är gjorda efter hur TSO och JES2 skrev dem, ur minnet.
+        ABC 802 är en radterminal genom en frontdator som gör om ASCII
+        till EBCDIC, inte en 3270-skärm. Välj <i>80 tecken</i>, skriv
+        <code>LOAD V24:TSA30B24.22A</code> och logga in med vilket namn
+        som helst. Prova <code>LIST LASMIG.TEXT</code>,
+        <code>LISTCAT</code>, <code>SUBMIT KVADRAT</code>,
+        <code>STATUS</code> och <code>OUTPUT</code>: jobbet väntar i kön,
+        körs och hamnar på utskriftskön. BREAK (<kbd>Ctrl</kbd>+<kbd>C</kbd>)
+        går ut som attention och avbryter en lång utskrift.
+        Vid uppringning hörs ett lågt modemljud: kopplingston, nummerskivan,
+        signalen, svarstonen och bärvågen. När förbindelsen är uppe blir det
+        tyst, och ett klick hörs när den bryts.</p>
+        <p lang="en"><i>Datacentralen</i> is an IBM mainframe running MVS
+        and TSO, also a reconstruction: the site never existed, and the
+        messages are modelled on how TSO and JES2 wrote them, from memory.
+        The ABC 802 is a line terminal behind a front end that converts
+        ASCII to EBCDIC, not a 3270 screen. Choose <i>80 columns</i>, type
+        <code>LOAD V24:TSA30B24.22A</code> and log on with any name. Try
+        <code>LIST LASMIG.TEXT</code>, <code>LISTCAT</code>, <code>SUBMIT
+        KVADRAT</code>, <code>STATUS</code> and <code>OUTPUT</code>: the
+        job waits in the queue, runs and ends up on the output queue.
+        BREAK (<kbd>Ctrl</kbd>+<kbd>C</kbd>) goes out as attention and
+        stops a long listing.
+        Dialling plays a quiet modem sound: dial tone, the rotary dial, the
+        ring, the answer tone and the carrier. Once the line is up it goes
+        quiet, and a click marks when it drops.</p>
+        <p lang="en">The printer card is Luxor's Centronics card, card 60 on
+        the ABC bus. With <i>card in</i>, <code>PR:</code> picks the card
+        instead of CH A at the first printout after RESET, and the
+        characters show under <i>Printer card</i>. Before a RESET, use
+        <code>LIST "PR:C"</code>; <code>"PR:V"</code> goes to CH A. In the
+        terminal: <code>-P</code>.</p>
+      </div>
+    </details>
+
+    <div id="hjalp" popover>
+      <button class="stang" popovertarget="hjalp" popovertargetaction="hide" title="Stäng (Esc, eller klicka utanför)" data-title-en="Close (Esc, or click outside)">✕</button>
+      <div lang="sv">
+      <h2>Kom igång</h2>
+      <p>Det här är en ABC 802, Luxors dator från 1983, i webbläsaren.
+      Processorn, kretsarna och skärmen är emulerade och kör maskinens egen
+      ROM, så det är samma BASIC II som på den riktiga maskinen.</p>
+      <p>Klicka på skärmen och skriv. Varje rad avslutas med
+      <kbd>Enter</kbd>, som är RETURN. <kbd>←</kbd> och
+      <kbd>Backsteg</kbd> backar, <kbd>→</kbd> går framåt och
+      <kbd>Ctrl</kbd>+<kbd>C</kbd> är BREAK. Å, Ä, Ö, É och Ü skrivs som
+      vanligt. Text som klistras in skrivs som tangenter, en rad i
+      taget.</p>
+      <p>Prova:</p>
+      <ul>
+        <li><code>PRINT 2+2</code></li>
+        <li><code>10 FOR I=1 TO 10</code>, <code>20 PRINT I,I*I</code>,
+        <code>30 NEXT I</code> och <code>RUN</code></li>
+        <li><code>LIST</code>, <code>SAVE MEM:1</code>, <code>NEW</code>
+        och <code>LOAD MEM:1</code></li>
+        <li><code>LOAD DR0:MANDEL1</code> och <code>RUN</code>, ett av
+        tidsproven på skivan (<i>Skivminnet</i>)</li>
+      </ul>
+      <p>Adressen kan bära tangenter: <code>abc802.html?k=PRINT 2+2\r</code>.
+      <code>?ljud=av</code> startar utan pip och <code>?sprak=en</code> på
+      engelska; resten står under <i>i</i> i panelerna. Rutan visas av sig
+      själv första gången, men inte med <code>?k=</code>.</p>
+      </div>
+      <div lang="en">
+      <h2>Getting started</h2>
+      <p>This is an ABC 802, Luxor's computer from 1983, in the browser. The
+      processor, the chips and the screen are emulated and run the machine's
+      own ROM, so it is the same BASIC II as on the real machine.</p>
+      <p>Click the screen and type. Each line ends with <kbd>Enter</kbd>,
+      which is RETURN. <kbd>←</kbd> and <kbd>Backspace</kbd> go back,
+      <kbd>→</kbd> forward and <kbd>Ctrl</kbd>+<kbd>C</kbd> is BREAK. Å, Ä,
+      Ö, É and Ü are typed as usual. Pasted text is typed as keys, one line
+      at a time.</p>
+      <p>Try:</p>
+      <ul>
+        <li><code>PRINT 2+2</code></li>
+        <li><code>10 FOR I=1 TO 10</code>, <code>20 PRINT I,I*I</code>,
+        <code>30 NEXT I</code> and <code>RUN</code></li>
+        <li><code>LIST</code>, <code>SAVE MEM:1</code>, <code>NEW</code>
+        and <code>LOAD MEM:1</code></li>
+        <li><code>LOAD DR0:MANDEL1</code> and <code>RUN</code>, one of the
+        benchmarks on the disk (<i>Disk drives</i>)</li>
+      </ul>
+      <p>The address can carry keys: <code>abc802.html?k=PRINT 2+2\r</code>.
+      <code>?ljud=av</code> starts without beeps and <code>?sprak=sv</code>
+      in Swedish; the rest is under <i>i</i> in the panels. This box appears
+      by itself the first time, but not with <code>?k=</code>.</p>
+      </div>
+    </div>
+  </div>
+</main>
+<div id="ut_lapp" popover="manual">
+  <header>
+    <span id="ut_rubrik">Utskriften</span>
+    <button id="ut_tom" title="Töm lappen" data-title-en="Clear the sheet" data-en="Clear">Töm</button>
+    <button id="ut_spara" title="Spara det som kommit ut som en fil" data-title-en="Save what has come out as a file" data-en="Save">Spara</button>
+    <button id="ut_stang" title="Stäng" data-title-en="Close">✕</button>
+  </header>
+  <pre id="utskrift"></pre>
+</div>
+<!-- FILER -->
+</body>
+</html>
