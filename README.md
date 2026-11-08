@@ -15,8 +15,9 @@ material to the book *ABC80 inifrån* ("ABC80 from the inside").
 
 ## ABC80 inifrån
 
-Boken *ABC80 inifrån* kommer snart ut i två band hos BoD (Books on
-Demand). Materialet till den ligger i [`inifran/`](inifran/).
+Boken *ABC80 inifrån* finns i två band hos BoD (Books on
+Demand) samt hos flera traditionella bokhandlare.
+Materialet till den ligger i [`inifran/`](inifran/).
 
 - **Band 1: Maskinen och BASIC:en** (244 s., ISBN 978-91-8150-657-0):
   datorn själv och hela BASIC-tolken i ROM:en, rutin för rutin.
@@ -24,10 +25,10 @@ Demand). Materialet till den ligger i [`inifran/`](inifran/).
   minneskort, skivminne, skrivare, IEC-bussen, Smartaid, CP/M och
   BASIC II för ABC80.
 
-The book *ABC80 inifrån* (in Swedish) will soon be published in two
+The book *ABC80 inifrån* (in Swedish) is published in two
 volumes by BoD (Books on Demand): volume 1 on the machine and its BASIC
 interpreter, volume 2 on the expansions. The companion material is in
-[`inifran/`](inifran/).
+[`inifran/`](inifran/). It is also available in traditional Swedish bookstores.
 
 | Mapp / Folder | Innehåll | Contents |
 |---|---|---|
