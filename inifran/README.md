@@ -3,7 +3,7 @@
 Material till boken *ABC80 inifrån* (Set Lonnert): källor och program
 som boken beskriver, så att de kan köras och ändras.
 
-Boken kommer snart ut i två band hos BoD (Books on Demand), 190 × 270 mm:
+Boken finns i två band hos BoD (Books on Demand), 190 × 270 mm:
 
 <p>
 <img src="../assets/images/band1_framsida.jpg" alt="Band 1: Maskinen och BASIC:en" width="200">
