@@ -516,8 +516,8 @@
         this is the emulator's interface to the ROM, not LUXNET's
         protocol.</p>
         <p lang="sv"><i>Lägg in</i> tar filer från datorn: en BAS- eller
-        textfil blir poster om 253 bytes med CR efter raderna (å ä ö blir
-        ABC 802:s koder), annat läggs in som det är. I listan läser ett program in sig med
+        textfil blir poster om 253 bytes med CR efter raderna (å ä ö é ü Å Ä
+        Ö É Ü blir ABC 802:s koder, och ¤ blir $), annat läggs in som det är. I listan läser ett program in sig med
         ett klick (<code>LOAD UFD:NAMN</code>), ↓ hämtar filen (text som
         text) och ✕ tar bort den. Filerna finns bara i webbläsaren och
         ligger kvar när maskinen startas om, men inte efter <i>Av/på</i>.
@@ -525,7 +525,7 @@
         <code>-NL</code> i terminalen; där är nätet <code>-N mapp</code>.</p>
         <p lang="en"><i>Add</i> takes files from the computer: a BAS or
         text file becomes records of 253 bytes with CR after the lines (å ä
-        ö become the ABC 802's codes); anything else goes in as it is. In the list a
+        ö é ü Å Ä Ö É Ü become the ABC 802's codes, and ¤ becomes $); anything else goes in as it is. In the list a
         program loads itself with a click (<code>LOAD UFD:NAME</code>), ↓
         fetches the file (text as text) and ✕ removes it. The files exist
         only in the browser and stay when the machine restarts, but not

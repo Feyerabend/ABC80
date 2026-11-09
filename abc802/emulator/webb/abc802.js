@@ -516,10 +516,12 @@ $('skiva_spara').addEventListener('click', () => {
  * maskinen nät-ROM:en; filerna i UFD: ligger i webb.c och sitter kvar
  * när maskinen startas om. En text blir poster om 253 bytes med CR
  * efter raderna, $03 efter det sista i en full post och nollor efter
- * den sista posten (som SAVE gör); å ä ö blir ABC 802:s koder och
- * tillbaka när filen hämtas. Annat läggs in och hämtas som det är. */
+ * den sista posten (som SAVE gör); å ä ö é ü Å Ä Ö É Ü blir ABC 802:s
+ * koder och tillbaka när filen hämtas, ¤ blir $24 och $24 blir $. Annat läggs in och hämtas som det är. */
 const POST = 253;
-const ABC_SVENSKA = Object.fromEntries(Object.entries(SVENSKA).map(([k, v]) => [v, k]));
+/* Tillbaka blir $24 $ och inte ¤ (A$), som för kontakterna. */
+const ABC_SVENSKA = Object.fromEntries(
+    Object.entries(SVENSKA).filter(([c]) => c !== '¤').map(([c, k]) => [k, c]));
 let nat_filerna = '';                         /* senast visad, som text */
 let nat_sett = -1;                            /* nat_anrop() då */
 const TRAFIK_RADER = 300;
