@@ -55,6 +55,7 @@
 #include "z80.h"
 
 #define ABC802_KLOCKA      3000000L              /* T-cykler per sekund */
+#define ABC802_SUMMER_MAX 8192              /* omslag mellan två hämtningar */
 #define ABC802_MS(ms)      ((long long)(ms) * ABC802_KLOCKA / 1000)
 #define ABC802_BILDMINNE   0x800
 #define ABC802_TECKENROM   0x1000               /* de första 4 KB av 8 */
@@ -100,6 +101,16 @@ struct Abc802 {
     long tryck_ms, slapp_ms;
 
     long pip;                                /* antal pip sedan start */
+
+    /* Summern: vippan (74LS390, 4E) slås om varje gång port 5 läses.
+     * Tiderna (T-cykler) sedan abc802_summer senast; värden gör ljud av
+     * dem. */
+    int summer;                              /* vippans läge */
+    long summer_omslag;                      /* antal omslag sedan start */
+    int summer_fore;                         /* läget vid summer_fran */
+    long long summer_fran;
+    int summer_antal;
+    long long summer_tid[ABC802_SUMMER_MAX];
 
     Kassett802 kassett;
 
@@ -147,11 +158,21 @@ int abc802_motor(const Abc802 *m);
 /* 40 tecken per rad (RTS på DART B). */
 int abc802_fyrtio(const Abc802 *m);
 
+/* Summern sedan förra anropet som prov (takt per sekund), -1 eller 1,
+ * högst max. 0 om vippan inte har slagits om (då är det tyst). */
+int abc802_summer(Abc802 *m, int takt, float *ut, int max);
+
 /* Bilden: bredd x höjd punkter, en byte per punkt (1 = tänd). */
 #define ABC802_BREDD  480                    /* 80 tecken à 6 punkter */
 #define ABC802_HOJD   250                    /* 25 rader à 10 linjer: R6 är
                                               * 24, men kan vara 25 */
 void abc802_bild(const Abc802 *m, uint8_t *punkter);
+/* Samma bild, men som om ABC 802 hade haft färg (utanför boken, se
+ * ../utanfor/farg): koderna 1-7 och 17-23 ger förgrunden och 28-29
+ * bakgrunden som i ABC 800 C. En byte per punkt är färgen 0-7 (svart,
+ * röd, grön, gul, blå, magenta, cyan, vit). Maskinen själv kan inte
+ * visa färg; teckengeneratorn tar bort den. */
+void abc802_fargbild(const Abc802 *m, uint8_t *punkter);
 
 /* Skärmen som text: rad 0-23 i UTF-8 utan blanksteg i slutet. ut ska
  * rymma ABC802_RADLANGD bytes. Grafiken blir Unicodes mosaiktecken. */

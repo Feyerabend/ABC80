@@ -34,7 +34,11 @@
  * CH A och CH B hämtas efter varje varv och sparas här per kontakt (som
  * bytes, för Spara), och den valda kontakten visas som text med å ä ö
  * för ABC 802:s koder. Det som skickas till en kontakt köas här och
- * lämnas till webb.c så fort maskinens kö har plats.
+ * lämnas till webb.c så fort maskinens kö har plats. Skrivarkortet hinner
+ * 80 tecken i sekunden (skrivarens_fart() i webb.c), eller allt genast.
+ *
+ * Lamporna i panelernas list (skivan, kassetten, kontakterna) och Av/på
+ * är gjorda som i ABC80-emulatorn.
  *
  * Tangenterna går som i fönstret: Enter är RETURN ($0D), backsteg och
  * vänsterpil $08, högerpil och Tab $09, Esc $1B, Delete $7F, Ctrl och en
@@ -54,6 +58,9 @@ const KANT_X = 48, KANT_Y = 21;              /* svart kant runt bilden */
 const SB = 2 * BREDD + 2 * KANT_X;           /* 1056 */
 const SH = 3 * HOJD + 2 * KANT_Y;            /* 792 */
 const FARG = [255, 176, 0];                  /* bärnsten, #FFB000 */
+/* Färgerna 0-7 med valet Färg (om), som i ABC 800 C (utanför boken). */
+const FARGER = [[0, 0, 0], [255, 40, 40], [40, 230, 40], [255, 240, 40],
+                [70, 90, 255], [255, 40, 255], [40, 240, 240], [255, 255, 255]];
 const PIP_HZ = 1000, PIP_MS = 100;           /* (?) */
 
 const SVENSKA = { 'å': 0x7D, 'ä': 0x7B, 'ö': 0x7C, 'é': 0x60, 'ü': 0x7E,
@@ -165,7 +172,8 @@ for (const p of paneler) {
 function visa_lagen() {
     $('lage_maskin').textContent = t($('tecken').value + ' tecken', $('tecken').value + ' columns')
         + ' · ' + $('hz').value + ' Hz';
-    $('lage_skarm').textContent = $('skarp').checked ? t('skarp', 'sharp') : t('fosfor', 'phosphor');
+    $('lage_skarm').textContent = ($('farg').checked ? t('färg (om) · ', 'colour (what if) · ') : '')
+        + ($('skarp').checked ? t('skarp', 'sharp') : t('fosfor', 'phosphor'));
 }
 
 /* ---------------------------------------------------------------- */
@@ -184,6 +192,7 @@ function starta() {
     const tecken = lagg_i_minnet(ROM.tecken);
     e.starta(rom, ROM.rom.length, tecken, ROM.tecken.length,
              $('tecken').value === '80' ? 1 : 0, $('hz').value === '60' ? 1 : 0);
+    e.skrivarens_fart(+$('skrivarfart').value);
     e.slapp(rom);
     e.slapp(tecken);
     pipen = e.pip();
@@ -202,6 +211,16 @@ $('nystart').addEventListener('click', () => {
     starta();
     meddela('Maskinen är startad om med tomt minne.', 'The machine has restarted with empty memory.');
     skarm.focus();
+});
+
+/* Av/på: sidan hämtas om utan frågan i adressen, så att inga val,
+ * skivor, band eller kort följer med (som i ABC80-emulatorn). Språket,
+ * panelerna och var lappen står ligger kvar i webbläsaren. */
+$('strom').addEventListener('click', () => {
+    if (!confirm(t('Stänga av och slå på? Allt i minnet, det som har skrivits på skivorna och bandet och det som har kommit ut försvinner, och alla val går tillbaka till början.',
+                   'Switch off and on? Everything in memory, what has been written to the disks and the tape and what has come out is lost, and all choices go back to the start.')))
+        return;
+    location.replace(location.pathname);
 });
 
 for (const id of ['tecken', 'hz'])
@@ -566,6 +585,8 @@ const UT_MAX = 1 << 20;                      /* bytes som sparas per kontakt */
 const SKRIVAREN = 2;                         /* kontakt 2: skrivarkortet */
 const utdata = [[], [], []];                 /* bitar (Uint8Array) per kontakt */
 const utlangd = [0, 0, 0];
+let ut_totalt = 0, in_totalt = 0;            /* bytes ut och in, för lampan */
+let ut_annan = -Infinity;                    /* senast det kom på en kontakt som inte visas */
 const in_ko = [[], [], []];                  /* bytes som väntar på maskinen */
 const SKARM_TILL = Object.fromEntries(
     Object.entries(SVENSKA).filter(([c]) => c !== '¤').map(([c, k]) => [k, c]));
@@ -574,8 +595,10 @@ function som_text(bytes) {
     let text = '';
     for (const b of bytes) {
         const c = b & 0x7F;
-        if (c === 0x0A || c === 0x0C)
+        if (c === 0x0A)
             text += '\n';
+        else if (c === 0x0C)
+            text += '\f';
         else if (c === 0x09)
             text += '\t';
         else if (c >= 0x20 && c < 0x7F)
@@ -657,10 +680,27 @@ const UT_NYCKEL = 'abc802_utskriften';
             ut_flytta(parseFloat(ut_lapp.style.left), parseFloat(ut_lapp.style.top));
     });
 }
+/* Storleken: lappen dras större i hörnet (resize i CSS), och då sätter
+ * webbläsaren width och height på den; de sparas som läget. */
+const UT_STORLEK_NYCKEL = 'abc802_utskriften_storlek';
+new ResizeObserver(() => {
+    if (!ut_oppen() || !ut_lapp.style.width)
+        return;
+    try {
+        localStorage.setItem(UT_STORLEK_NYCKEL,
+                             JSON.stringify({ w: ut_lapp.offsetWidth, h: ut_lapp.offsetHeight }));
+    } catch (fel) { /* sparas inte */ }
+}).observe(ut_lapp);
+
 ut_lapp.addEventListener('toggle', () => {
     if (!ut_oppen())
         return;
     try {
+        const m = JSON.parse(localStorage.getItem(UT_STORLEK_NYCKEL));
+        if (m && m.w > 0 && m.h > 0) {
+            ut_lapp.style.width = Math.min(m.w, innerWidth - 16) + 'px';
+            ut_lapp.style.height = Math.min(m.h, innerHeight - 16) + 'px';
+        }
         const l = JSON.parse(localStorage.getItem(UT_NYCKEL));
         if (l && isFinite(l.x) && isFinite(l.y))
             ut_flytta(l.x, l.y);
@@ -682,11 +722,22 @@ function ut_nytt(k) {
         $('ut_knapp').classList.add('nytt');
 }
 
+/* En sidmatning blir ett streck: FF, eller UT_TOMMA tomma rader eller
+ * fler (PR: matar fram sidan med radmatningar), så att det som skrevs
+ * står kvar synligt ovanför i stället för att rulla bort. */
+const UT_TOMMA = 4;
+const SIDBYTE = new RegExp('\\n*\\f\\n*|\\n{' + (UT_TOMMA + 1) + ',}', 'g');
+
+function som_html(text) {
+    const html = text.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+    return html.replace(SIDBYTE, '<hr title="' + t('Ny sida', 'New page') + '">');
+}
+
 function visa_utskriften() {
     const k = kontakten();
     const ruta = $('utskrift');
     const nere = ruta.scrollTop + ruta.clientHeight >= ruta.scrollHeight - 4;
-    ruta.textContent = utdata[k].map(som_text).join('');
+    ruta.innerHTML = som_html(utdata[k].map(som_text).join(''));
     if (nere)
         ruta.scrollTop = ruta.scrollHeight;
 }
@@ -705,6 +756,9 @@ function hamta_ut() {
                 motpart.tecken(b);
         utdata[k].push(bit);
         utlangd[k] += n;
+        ut_totalt += n;
+        if (k !== kontakten() && !(k === 1 && motpart && motpart.uppkopplad()))
+            ut_annan = performance.now();
         while (utlangd[k] > UT_MAX && utdata[k].length > 1)
             utlangd[k] -= utdata[k].shift().length;
         if (k === kontakten()) {
@@ -723,6 +777,7 @@ function fyll_in() {
         let i = 0;
         while (i < in_ko[k].length && e.seriellt_in(k, in_ko[k][i]))
             i++;
+        in_totalt += i;
         if (i)
             in_ko[k] = in_ko[k].slice(i);
     }
@@ -843,6 +898,11 @@ $('skrivarkort').addEventListener('change', () => {
     }
 });
 
+$('skrivarfart').addEventListener('change', () => {
+    e.skrivarens_fart(+$('skrivarfart').value);
+    skarm.focus();
+});
+
 $('kontakt').addEventListener('change', () => {
     visa_skicka();
     visa_utskriften();
@@ -923,7 +983,7 @@ function visa_ljudet() {
         text = ljud.state === 'running' ? t('Ljud: på', 'Sound: on')
             : t('Ljud: klicka på skärmen', 'Sound: click the screen');
     knapp.textContent = text;
-    knapp.title = t('Tangentbordets pip (kod 7)', 'The keyboard beep (code 7)');
+    knapp.title = t('Tangentbordets pip (kod 7) och summern (IN 5)', 'The keyboard beep (code 7) and the buzzer (IN 5)');
     knapp.classList.toggle('pa', ljud_valt && !!ljud);
 }
 
@@ -951,6 +1011,34 @@ function pip() {
     pip_slut = nu + PIP_MS / 1000;
     ton.start(nu);
     ton.stop(pip_slut);
+}
+
+/* Summern (IN 5): det som har låtit sedan förra bilden, i följd efter
+ * det förra, lite fördröjt så att bitarna hänger ihop, och en bild
+ * senare: ROM:ens BEEP (CHR$(7)) slår om summern 200 gånger och skickar
+ * sedan kod 7 till tangentbordet. Kommer ett pip kastas summern från den
+ * och förra bilden, så att BEEP bara blir pipet. */
+let summer_slut = 0;
+let summer_vantar = null;                    /* proven från förra bilden */
+function summern(pipade) {
+    const n = e.summer();
+    const nya = n ? new Float32Array(e.memory.buffer, e.summern_prov(), n).slice() : null;
+    const spela = pipade ? null : summer_vantar;
+    summer_vantar = pipade ? null : nya;
+    if (!spela || !ljud_valt || !ljud || ljud.state !== 'running')
+        return;
+    const nu = ljud.currentTime;
+    if (summer_slut < nu + 0.05 || summer_slut > nu + 0.4)
+        summer_slut = nu + 0.05;
+    const buf = ljud.createBuffer(1, spela.length, 48000);
+    const kanal = buf.getChannelData(0);
+    for (let k = 0; k < spela.length; k++)
+        kanal[k] = spela[k] * 0.15;
+    const kalla = ljud.createBufferSource();
+    kalla.buffer = buf;
+    kalla.connect(ljud.destination);
+    kalla.start(summer_slut);
+    summer_slut += spela.length / 48000;
 }
 
 /* Modemet när man ringer upp, lågt: kopplingstonen (425 Hz), numret med
@@ -1051,12 +1139,21 @@ let ritad = 0;                               /* performance.now() när bilden se
 function rita() {
     const punkter = new Uint8Array(e.memory.buffer, e.punkter(), BREDD * HOJD);
     const d = punktdata.data;
-    for (let k = 0, j = 0; k < punkter.length; k++, j += 4) {
-        d[j] = FARG[0];
-        d[j + 1] = FARG[1];
-        d[j + 2] = FARG[2];
-        d[j + 3] = punkter[k] ? 255 : 0;
-    }
+    if ($('farg').checked)
+        for (let k = 0, j = 0; k < punkter.length; k++, j += 4) {
+            const f = FARGER[punkter[k] & 7];
+            d[j] = f[0];
+            d[j + 1] = f[1];
+            d[j + 2] = f[2];
+            d[j + 3] = punkter[k] ? 255 : 0;
+        }
+    else
+        for (let k = 0, j = 0; k < punkter.length; k++, j += 4) {
+            d[j] = FARG[0];
+            d[j + 1] = FARG[1];
+            d[j + 2] = FARG[2];
+            d[j + 3] = punkter[k] ? 255 : 0;
+        }
     punktritning.putImageData(punktdata, 0, 0);
 
     const nu = performance.now();
@@ -1080,6 +1177,16 @@ function skenets_radie() {
     sken.style.filter = 'blur(' + (SKEN * skarm.clientWidth / SB).toFixed(2) + 'px)';
 }
 new ResizeObserver(skenets_radie).observe(skarm);
+
+$('farg').addEventListener('change', () => {
+    e.farg($('farg').checked ? 1 : 0);
+    e.bild(1);
+    if ($('farg').checked)
+        meddela('Färg (om): som om ABC 802 hade haft färg, som ABC 800 C. Maskinen själv visar inte färg.',
+                'Colour (what if): as if the ABC 802 had colour, like the ABC 800 C. The machine itself shows no colour.');
+    visa_lagen();
+    skarm.focus();
+});
 
 $('skarp').addEventListener('change', () => {
     $('ram').classList.toggle('skarp', $('skarp').checked);
@@ -1107,6 +1214,44 @@ $('kopiera').addEventListener('click', async () => {
 });
 
 /* ---------------------------------------------------------------- */
+/* Lamporna                                                          */
+
+/* En lampa i panelens list, som i ABC80-emulatorn: grön (pa) när något
+ * är inkopplat, ljusare (rorelse) i LAMPAN_LYSER ms efter att raknare
+ * har ändrats, och gul (varning) när varning är sant. */
+const LAMPAN_LYSER = 250;
+const lampor_sett = {}, lampor_tand = {};
+
+function lampa(id, pa, raknare, varning = false) {
+    const nu = performance.now();
+    if (raknare !== lampor_sett[id]) {
+        if (lampor_sett[id] !== undefined)
+            lampor_tand[id] = nu;
+        lampor_sett[id] = raknare;
+    }
+    const ror = nu - (lampor_tand[id] ?? -Infinity) < LAMPAN_LYSER;
+    const lage = varning ? 'varning' : ror ? 'rorelse' : pa ? 'pa' : '';
+    const el = $('lampa_' + id);
+    const klass = 'lampa' + (lage ? ' ' + lage : '');
+    if (el.className !== klass)
+        el.className = klass;
+    const titel = lage === 'varning'
+        ? t('Det kommer något på en kontakt som inte visas; välj den i listan',
+            'Something is coming out on a connector that is not shown; choose it in the list')
+        : lage === 'rorelse' ? t('Används', 'In use')
+        : lage === 'pa' ? t('Inkopplad', 'Connected') : '';
+    if (el.title !== titel)
+        el.title = titel;
+}
+
+function visa_lamporna() {
+    lampa('skiva', !!e.skivans_data(), e.skivan_rord());
+    lampa('kassett', !!e.bandets_data(), e.motor() ? performance.now() : 0);
+    lampa('kontakter', $('skrivarkort').checked || !!(motpart && motpart.uppkopplad()),
+          ut_totalt + in_totalt, performance.now() - ut_annan < 1000);
+}
+
+/* ---------------------------------------------------------------- */
 /* Tiden                                                             */
 
 let varv_antal = 0;
@@ -1129,13 +1274,16 @@ function varv() {
             e.bild(nasta > nu ? 1 : 0);
         }
     }
-    if (e.pip() !== pipen) {
+    const pipade = e.pip() !== pipen;
+    if (pipade) {
         pipen = e.pip();
         pip();
     }
+    summern(pipade);
     rita();
     hamta_ut();
     fyll_in();
+    visa_lamporna();
     if (++varv_antal % 15 === 0) {
         visa_kassetten();
         visa_kontakterna();
@@ -1194,6 +1342,10 @@ $('hjalp').addEventListener('toggle', h => {
     if (fraga.get('skarp') === 'pa') {
         $('skarp').checked = true;
         $('ram').classList.add('skarp');
+    }
+    if (fraga.get('farg') === 'pa') {
+        $('farg').checked = true;
+        e.farg(1);
     }
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;

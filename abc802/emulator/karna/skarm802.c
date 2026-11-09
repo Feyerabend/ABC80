@@ -44,7 +44,7 @@ static long long bildtid(const Crtc *c)
     return t > 0 ? t : ABC802_KLOCKA / 50;
 }
 
-void abc802_bild(const Abc802 *m, uint8_t *punkter)
+static void bilden(const Abc802 *m, uint8_t *punkter, int farg)
 {
     const Crtc *c = &m->crtc;
     memset(punkter, 0, ABC802_BREDD * ABC802_HOJD);
@@ -69,6 +69,7 @@ void abc802_bild(const Abc802 *m, uint8_t *punkter)
         for (int linje = 0; linje < linjer; linje++) {
             uint8_t *ut = punkter + (rad * linjer + linje) * ABC802_BREDD;
             int grafik = 0, blink = 0, dold = 0;
+            int forg = 7, bakgrund = 0;      /* bara med farg: vit på svart */
             for (int k = 0; k < kolumner; k += fyrtio ? 2 : 1) {
                 int adress = (start + rad * c->r[1] + k) & 0x3FFF;
                 uint8_t kod = m->bildminne[adress & 0x7FF];
@@ -79,6 +80,14 @@ void abc802_bild(const Abc802 *m, uint8_t *punkter)
                 if ((blink && blinkfas) || dold)
                     l = 14;
                 uint8_t data = m->teckenrom[(grafik << 11) | (kod & 0x7F) << 4 | l];
+                if (farg) {
+                    /* 28 och 29 är tomma tecken i teckengeneratorn, inga
+                     * koder; som i text-tv gäller de från sin egen plats. */
+                    if ((kod & 0x7F) == 28)
+                        bakgrund = 0;
+                    else if ((kod & 0x7F) == 29)
+                        bakgrund = forg;
+                }
                 if (data & 0x80) {           /* en kod som inte syns */
                     int varde = (data & 0x40) != 0;
                     switch (data & 3) {
@@ -86,11 +95,22 @@ void abc802_bild(const Abc802 *m, uint8_t *punkter)
                     case 1: blink = varde; break;
                     case 2: dold = varde; break;
                     }
+                    if (farg) {
+                        /* Som i ABC 800 C (text-tv): 1-7 och 17-23 är
+                         * förgrunden från nästa plats. */
+                        int f = kod & 0x7F;
+                        for (int p = 0; p < (fyrtio ? 12 : 6); p++)
+                            ut[k * 6 + p] = (uint8_t)bakgrund;
+                        if ((f >= 1 && f <= 7) || (f >= 17 && f <= 23))
+                            forg = f & 7;
+                    }
                     continue;
                 }
                 int inv = kod >> 7;
                 for (int p = 0; p < 6; p++) {
                     uint8_t tand = (uint8_t)((data >> (5 - p) & 1) ^ inv);
+                    if (farg)
+                        tand = (uint8_t)(tand ? forg : bakgrund);
                     if (fyrtio) {
                         ut[k * 6 + 2 * p] = tand;
                         ut[k * 6 + 2 * p + 1] = tand;
@@ -99,6 +119,16 @@ void abc802_bild(const Abc802 *m, uint8_t *punkter)
                 }
             }
         }
+}
+
+void abc802_bild(const Abc802 *m, uint8_t *punkter)
+{
+    bilden(m, punkter, 0);
+}
+
+void abc802_fargbild(const Abc802 *m, uint8_t *punkter)
+{
+    bilden(m, punkter, 1);
 }
 
 /* ---------------------------------------------------------------- */

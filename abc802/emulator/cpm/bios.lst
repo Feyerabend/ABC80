@@ -1,0 +1,581 @@
+F600  C3 34 F6                JP   KALLSTART        ; BOOT
+F603  C3 6E F6      VARMHOPP: JP   VARMSTART        ; WBOOT
+F606  C3 31 F7                JP   KONSTAT          ; CONST
+F609  C3 39 F7                JP   KONIN            ; CONIN
+F60C  C3 7C F7                JP   KONUT            ; CONOUT
+F60F  C3 35 F9                JP   SKRIVARE         ; LIST
+F612  C3 35 F9                JP   SKRIVARE         ; PUNCH
+F615  C3 39 F9                JP   LASARE           ; READER
+F618  C3 3C F9                JP   HEM              ; HOME
+F61B  C3 51 F9                JP   VALJ             ; SELDSK
+F61E  C3 3F F9                JP   SPAR             ; SETTRK
+F621  C3 44 F9                JP   SEKTOR           ; SETSEC
+F624  C3 49 F9                JP   DMA              ; SETDMA
+F627  C3 6F F9                JP   LAS              ; READ
+F62A  C3 82 F9                JP   SKRIV            ; WRITE
+F62D  C3 36 F9                JP   SKRIVARSTATUS    ; LISTST
+F630  C3 4E F9                JP   OVERSATT         ; SECTRAN
+F633  50            BREDDEN:  DEFB KOLUMNER
+F634  F3                      DI
+F635  31 69 FD                LD   SP,BIOSSTACK
+F638  21 69 F6                LD   HL,AVBROTT_AV    ; WR1 = 0 i DART A och B och SIO A och B
+F63B  4E            AVBROTT:  LD   C,(HL)
+F63C  0C                      INC  C
+F63D  0D                      DEC  C
+F63E  28 0A                   JR   Z,CTC_AV
+F640  23                      INC  HL
+F641  3E 01                   LD   A,1
+F643  ED 79                   OUT  (C),A
+F645  AF                      XOR  A
+F646  ED 79                   OUT  (C),A
+F648  18 F1                   JR   AVBROTT
+F64A  01 60 04      CTC_AV:   LD   BC,4*256+CTC     ; CTC:ns fyra kanaler: återställ
+F64D  3E 03                   LD   A,$03
+F64F  ED 79                   OUT  (C),A
+F651  0C                      INC  C
+F652  10 FB                   DJNZ CTC_KANAL
+F654  CD 47 F7                CALL SKARMSTART
+F657  CD 81 FA                CALL BSTART
+F65A  AF                      XOR  A
+F65B  32 03 00                LD   (IOBYTE),A
+F65E  32 04 00                LD   (AKTUELL),A
+F661  21 D6 F6                LD   HL,HALSNING
+F664  CD 25 F7                CALL TEXT
+F667  18 34                   JR   GA
+F669  21 23 41 43 00             DEFB DARTA_STYR,DARTB_STYR,SIOA_STYR,SIOB_STYR,0
+F66E  F3                      DI
+F66F  31 69 FD                LD   SP,BIOSSTACK
+F672  AF                      XOR  A
+F673  32 25 FD                LD   (BUF_GILTIG),A   ; skivan kan ha bytts
+F676  32 23 FD                LD   (ENHET),A
+F679  21 00 E0      OMLAS:    LD   HL,CCP           ; CCP och BDOS, sektor 40 och framåt på A:
+F67C  11 28 00                LD   DE,SYSSEKTOR
+F67F  06 16                   LD   B,SYSSEKTORER
+F681  C5            SYSLAS:   PUSH BC
+F682  D5                      PUSH DE
+F683  CD 00 FA                CALL LOPANDE
+F686  CD 11 FA                CALL MFLAS
+F689  D1                      POP  DE
+F68A  C1                      POP  BC
+F68B  20 05                   JR   NZ,SYSFEL
+F68D  13                      INC  DE
+F68E  10 F1                   DJNZ SYSLAS
+F690  18 0B                   JR   GA
+F692  21 F4 F6      SYSFEL:   LD   HL,SYSFELTEXT
+F695  CD 25 F7                CALL TEXT
+F698  CD 39 F7                CALL KONIN
+F69B  18 DC                   JR   OMLAS
+F69D  3E C3         GA:       LD   A,$C3            ; JP
+F69F  32 00 00                LD   ($0000),A
+F6A2  21 03 F6                LD   HL,VARMHOPP
+F6A5  22 01 00                LD   ($0001),HL
+F6A8  32 05 00                LD   ($0005),A
+F6AB  21 06 E8                LD   HL,BDOS
+F6AE  22 06 00                LD   ($0006),HL
+F6B1  01 80 00                LD   BC,TBUFF
+F6B4  CD 49 F9                CALL DMA
+F6B7  3A 04 00                LD   A,(AKTUELL)
+F6BA  E6 0F                   AND  $0F              ; enheten; finns den inte, A:
+F6BC  4F                      LD   C,A
+F6BD  C5                      PUSH BC
+F6BE  CD 51 F9                CALL VALJ
+F6C1  C1                      POP  BC
+F6C2  7C                      LD   A,H
+F6C3  B5                      OR   L
+F6C4  79                      LD   A,C
+F6C5  20 01                   JR   NZ,ENHETFINNS
+F6C7  AF                      XOR  A
+F6C8  4F                      LD   C,A
+F6C9  3A 04 00                LD   A,(AKTUELL)
+F6CC  E6 F0                   AND  $F0
+F6CE  B1                      OR   C
+F6CF  32 04 00                LD   (AKTUELL),A
+F6D2  4F                      LD   C,A
+F6D3  C3 00 E0                JP   CCP
+F6D6  1A 43 50 2F 4D 20 32 2E   HALSNING: DEFB 26,"CP/M 2.2 p} ABC 802, 64 KB",13,10,0
+F6F4  0D 0A 4B 61 6E 20 69 6E             DEFB 13,10,"Kan inte l{sa systemet p} A:, tryck en tangent",0
+F725  7E            TEXT:     LD   A,(HL)
+F726  B7                      OR   A
+F727  C8                      RET  Z
+F728  E5                      PUSH HL
+F729  4F                      LD   C,A
+F72A  CD 7C F7                CALL KONUT
+F72D  E1                      POP  HL
+F72E  23                      INC  HL
+F72F  18 F4                   JR   TEXT
+F731  DB 23         KONSTAT:  IN   A,(DARTB_STYR)
+F733  E6 01                   AND  1
+F735  C8                      RET  Z
+F736  3E FF                   LD   A,$FF
+F738  C9                      RET
+F739  DB 23         KONIN:    IN   A,(DARTB_STYR)
+F73B  0F                      RRCA
+F73C  30 FB                   JR   NC,KONIN
+F73E  DB 22                   IN   A,(DARTB_DATA)
+F740  F5                      PUSH AF
+F741  3E 30                   LD   A,$30            ; WR0: återställ fel, som ROM:ens KEYERR
+F743  D3 23                   OUT  (DARTB_STYR),A
+F745  F1                      POP  AF
+F746  C9                      RET
+F747  21 00 78                LD   HL,BILD
+F74A  11 50 00                LD   DE,KOLUMNER
+F74D  DD 21 E6 FC             LD   IX,RADTABELL
+F751  06 18                   LD   B,RADER
+F753  DD 75 00                LD   (IX+0),L
+F756  DD 74 01                LD   (IX+1),H
+F759  DD 23                   INC  IX
+F75B  DD 23                   INC  IX
+F75D  19                      ADD  HL,DE
+F75E  10 F3                   DJNZ RADADRESS
+F760  AF                      XOR  A
+F761  32 18 FD                LD   (ESCLAGE),A
+F764  01 69 0A                LD   BC,10*256+$69    ; R10: markören blinkar (1/32), linje 9
+F767  CD 75 F7                CALL CRTC
+F76A  01 09 0B                LD   BC,11*256+$09    ; R11: till linje 9
+F76D  CD 75 F7                CALL CRTC
+F770  0E 1A                   LD   C,26             ; tom skärm
+F772  C3 7C F7                JP   KONUT
+F775  78            CRTC:     LD   A,B
+F776  D3 38                   OUT  (CRTC_ADR),A
+F778  79                      LD   A,C
+F779  D3 39                   OUT  (CRTC_DATA),A
+F77B  C9                      RET
+F77C  ED 73 1A FD   KONUT:    LD   (ANV_SP),SP
+F780  31 49 FD                LD   SP,SKARMSTACK
+F783  3E 05                   LD   A,5              ; DART B WR5: DTR av, bildminnet syns
+F785  D3 23                   OUT  (DARTB_STYR),A
+F787  3E 68                   LD   A,WR5_ROM
+F789  D3 23                   OUT  (DARTB_STYR),A
+F78B  79                      LD   A,C
+F78C  CD AD F7                CALL TECKEN
+F78F  3E 05                   LD   A,5              ; DTR på igen
+F791  D3 23                   OUT  (DARTB_STYR),A
+F793  3E E8                   LD   A,WR5_RAM
+F795  D3 23                   OUT  (DARTB_STYR),A
+F797  CD 25 F9                CALL ADRESS           ; markören dit nästa tecken kommer
+F79A  01 00 0E                LD   BC,14*256
+F79D  4C                      LD   C,H
+F79E  CD 75 F7                CALL CRTC
+F7A1  01 00 0F                LD   BC,15*256
+F7A4  4D                      LD   C,L
+F7A5  CD 75 F7                CALL CRTC
+F7A8  ED 7B 1A FD             LD   SP,(ANV_SP)
+F7AC  C9                      RET
+F7AD  47            TECKEN:   LD   B,A
+F7AE  3A 18 FD                LD   A,(ESCLAGE)
+F7B1  B7                      OR   A
+F7B2  C2 A9 F8                JP   NZ,ESCAPE
+F7B5  78                      LD   A,B
+F7B6  FE 20                   CP   $20
+F7B8  38 17                   JR   C,STYRKOD
+F7BA  FE 7F                   CP   $7F
+F7BC  D0                      RET  NC
+F7BD  CD 25 F9                CALL ADRESS           ; ett vanligt tecken
+F7C0  77                      LD   (HL),A
+F7C1  3A 17 FD                LD   A,(KOL)
+F7C4  3C                      INC  A
+F7C5  32 17 FD                LD   (KOL),A
+F7C8  FE 50                   CP   KOLUMNER
+F7CA  D8                      RET  C
+F7CB  AF                      XOR  A                ; sista kolumnen: nästa rad
+F7CC  32 17 FD                LD   (KOL),A
+F7CF  18 2A                   JR   NYRAD
+F7D1  FE 0D         STYRKOD:  CP   13
+F7D3  28 21                   JR   Z,VAGNRETUR
+F7D5  FE 0A                   CP   10
+F7D7  28 22                   JR   Z,NYRAD
+F7D9  FE 08                   CP   8
+F7DB  28 2A                   JR   Z,VANSTER
+F7DD  FE 0C                   CP   12
+F7DF  28 30                   JR   Z,HOGER
+F7E1  FE 0B                   CP   11
+F7E3  28 37                   JR   Z,UPP
+F7E5  FE 1A                   CP   26
+F7E7  28 3D                   JR   Z,RENSA
+F7E9  FE 1E                   CP   30
+F7EB  28 44                   JR   Z,HEMMA
+F7ED  FE 1B                   CP   27
+F7EF  C0                      RET  NZ
+F7F0  3E 01                   LD   A,1
+F7F2  32 18 FD                LD   (ESCLAGE),A
+F7F5  C9                      RET
+F7F6  AF                      XOR  A
+F7F7  32 17 FD                LD   (KOL),A
+F7FA  C9                      RET
+F7FB  3A 16 FD      NYRAD:    LD   A,(RAD)
+F7FE  FE 17                   CP   RADER-1
+F800  30 37                   JR   NC,RULLA
+F802  3C                      INC  A
+F803  32 16 FD                LD   (RAD),A
+F806  C9                      RET
+F807  3A 17 FD      VANSTER:  LD   A,(KOL)
+F80A  B7                      OR   A
+F80B  C8                      RET  Z
+F80C  3D                      DEC  A
+F80D  32 17 FD                LD   (KOL),A
+F810  C9                      RET
+F811  3A 17 FD      HOGER:    LD   A,(KOL)
+F814  3C                      INC  A
+F815  FE 50                   CP   KOLUMNER
+F817  D0                      RET  NC
+F818  32 17 FD                LD   (KOL),A
+F81B  C9                      RET
+F81C  3A 16 FD      UPP:      LD   A,(RAD)
+F81F  B7                      OR   A
+F820  C8                      RET  Z
+F821  3D                      DEC  A
+F822  32 16 FD                LD   (RAD),A
+F825  C9                      RET
+F826  21 00 78      RENSA:    LD   HL,BILD          ; hela bildminnet, 2 KB
+F829  01 00 08                LD   BC,$800
+F82C  3E 20                   LD   A,' '
+F82E  CD 9C F8                CALL FYLL
+F831  AF            HEMMA:    XOR  A
+F832  32 16 FD                LD   (RAD),A
+F835  32 17 FD                LD   (KOL),A
+F838  C9                      RET
+F839  AF            RULLA:    XOR  A
+F83A  18 07                   JR   UPP_FRAN
+F83C  AF                      XOR  A
+F83D  32 17 FD                LD   (KOL),A
+F840  3A 16 FD                LD   A,(RAD)
+F843  4F            UPP_FRAN: LD   C,A              ; raderna A + 1 ... 23 till A ... 22
+F844  CD 8F F8                CALL RADENS
+F847  3E 17                   LD   A,RADER-1
+F849  91                      SUB  C
+F84A  28 0C                   JR   Z,TOM_RADEN
+F84C  E5                      PUSH HL
+F84D  CD 80 F8                CALL GANGER80
+F850  D1                      POP  DE               ; dit
+F851  21 50 00                LD   HL,KOLUMNER
+F854  19                      ADD  HL,DE            ; därifrån, en rad längre ned
+F855  ED B0                   LDIR
+F857  EB                      EX   DE,HL            ; HL = den sista raden
+F858  01 50 00                LD   BC,KOLUMNER
+F85B  3E 20                   LD   A,' '
+F85D  C3 9C F8                JP   FYLL
+F860  AF                      XOR  A
+F861  32 17 FD                LD   (KOL),A
+F864  3A 16 FD                LD   A,(RAD)
+F867  4F                      LD   C,A
+F868  3E 17                   LD   A,RADER-1
+F86A  91                      SUB  C
+F86B  28 0B                   JR   Z,SISTA_TOM
+F86D  CD 80 F8                CALL GANGER80         ; bakifrån, från rad 22:s slut till 23:s
+F870  21 2F 7F                LD   HL,BILD+RADER*KOLUMNER-1-KOLUMNER
+F873  11 7F 7F                LD   DE,BILD+RADER*KOLUMNER-1
+F876  ED B8                   LDDR
+F878  3A 16 FD                LD   A,(RAD)
+F87B  CD 8F F8                CALL RADENS
+F87E  18 D8                   JR   TOM_RADEN
+F880  6F            GANGER80: LD   L,A
+F881  26 00                   LD   H,0
+F883  29                      ADD  HL,HL
+F884  29                      ADD  HL,HL
+F885  29                      ADD  HL,HL
+F886  29                      ADD  HL,HL            ; * 16
+F887  44                      LD   B,H
+F888  4D                      LD   C,L
+F889  29                      ADD  HL,HL
+F88A  29                      ADD  HL,HL            ; * 64
+F88B  09                      ADD  HL,BC
+F88C  44                      LD   B,H
+F88D  4D                      LD   C,L
+F88E  C9                      RET
+F88F  87            RADENS:   ADD  A,A
+F890  5F                      LD   E,A
+F891  16 00                   LD   D,0
+F893  21 E6 FC                LD   HL,RADTABELL
+F896  19                      ADD  HL,DE
+F897  5E                      LD   E,(HL)
+F898  23                      INC  HL
+F899  56                      LD   D,(HL)
+F89A  EB                      EX   DE,HL
+F89B  C9                      RET
+F89C  77            FYLL:     LD   (HL),A
+F89D  0B                      DEC  BC
+F89E  57                      LD   D,A
+F89F  78                      LD   A,B
+F8A0  B1                      OR   C
+F8A1  7A                      LD   A,D
+F8A2  C8                      RET  Z
+F8A3  54                      LD   D,H
+F8A4  5D                      LD   E,L
+F8A5  13                      INC  DE
+F8A6  ED B0                   LDIR
+F8A8  C9                      RET
+F8A9  FE 02         ESCAPE:   CP   2
+F8AB  28 2B                   JR   Z,ESC_RAD
+F8AD  FE 03                   CP   3
+F8AF  28 33                   JR   Z,ESC_KOL
+F8B1  AF                      XOR  A                ; tecknet efter ESC
+F8B2  32 18 FD                LD   (ESCLAGE),A
+F8B5  78                      LD   A,B
+F8B6  FE 3D                   CP   '='
+F8B8  28 18                   JR   Z,ESC_LIKA
+F8BA  FE 54                   CP   'T'
+F8BC  28 43                   JR   Z,RADSLUT
+F8BE  FE 59                   CP   'Y'
+F8C0  28 51                   JR   Z,SKARMSLUT
+F8C2  FE 2A                   CP   '*'
+F8C4  CA 26 F8                JP   Z,RENSA
+F8C7  FE 45                   CP   'E'
+F8C9  CA 60 F8                JP   Z,INFOGA_RAD
+F8CC  FE 52                   CP   'R'
+F8CE  CA 3C F8                JP   Z,RADERA_RAD
+F8D1  C9                      RET
+F8D2  3E 02         ESC_LIKA: LD   A,2
+F8D4  32 18 FD                LD   (ESCLAGE),A
+F8D7  C9                      RET
+F8D8  78            ESC_RAD:  LD   A,B
+F8D9  D6 20                   SUB  32
+F8DB  32 19 FD                LD   (ESCRAD),A
+F8DE  3E 03                   LD   A,3
+F8E0  32 18 FD                LD   (ESCLAGE),A
+F8E3  C9                      RET
+F8E4  AF            ESC_KOL:  XOR  A
+F8E5  32 18 FD                LD   (ESCLAGE),A
+F8E8  3A 19 FD                LD   A,(ESCRAD)       ; utanför skärmen: kanten
+F8EB  FE 18                   CP   RADER
+F8ED  38 02                   JR   C,ESC_RADEN
+F8EF  3E 17                   LD   A,RADER-1
+F8F1  32 16 FD                LD   (RAD),A
+F8F4  78                      LD   A,B
+F8F5  D6 20                   SUB  32
+F8F7  FE 50                   CP   KOLUMNER
+F8F9  38 02                   JR   C,ESC_KOLUMNEN
+F8FB  3E 4F                   LD   A,KOLUMNER-1
+F8FD  32 17 FD                LD   (KOL),A
+F900  C9                      RET
+F901  CD 25 F9      RADSLUT:  CALL ADRESS
+F904  3A 17 FD                LD   A,(KOL)
+F907  47                      LD   B,A
+F908  3E 50                   LD   A,KOLUMNER
+F90A  90                      SUB  B
+F90B  4F                      LD   C,A
+F90C  06 00                   LD   B,0
+F90E  3E 20                   LD   A,' '
+F910  C3 9C F8                JP   FYLL
+F913  CD 25 F9                CALL ADRESS
+F916  EB                      EX   DE,HL
+F917  21 00 80                LD   HL,BILD+$800
+F91A  B7                      OR   A
+F91B  ED 52                   SBC  HL,DE
+F91D  44                      LD   B,H
+F91E  4D                      LD   C,L
+F91F  EB                      EX   DE,HL
+F920  3E 20                   LD   A,' '
+F922  C3 9C F8                JP   FYLL
+F925  F5            ADRESS:   PUSH AF
+F926  3A 16 FD                LD   A,(RAD)
+F929  CD 8F F8                CALL RADENS
+F92C  3A 17 FD                LD   A,(KOL)
+F92F  5F                      LD   E,A
+F930  16 00                   LD   D,0
+F932  19                      ADD  HL,DE
+F933  F1                      POP  AF
+F934  C9                      RET
+F935  C9            SKRIVARE: RET                   ; ingen skrivare än
+F936  3E FF                   LD   A,$FF            ; alltid klar
+F938  C9                      RET
+F939  3E 1A         LASARE:   LD   A,$1A            ; ^Z: inget att läsa
+F93B  C9                      RET
+F93C  01 00 00      HEM:      LD   BC,0
+F93F  ED 43 1C FD   SPAR:     LD   (SPARET),BC
+F943  C9                      RET
+F944  ED 43 1E FD   SEKTOR:   LD   (SEKTORN),BC
+F948  C9                      RET
+F949  ED 43 20 FD   DMA:      LD   (DMAADR),BC
+F94D  C9                      RET
+F94E  60            OVERSATT: LD   H,B
+F94F  69                      LD   L,C
+F950  C9                      RET
+F951  21 00 00      VALJ:     LD   HL,0
+F954  79                      LD   A,C
+F955  FE 02                   CP   2
+F957  D0                      RET  NC               ; C: och uppåt
+F958  21 A0 FA                LD   HL,DPH_A
+F95B  B7                      OR   A
+F95C  28 0D                   JR   Z,VALD
+F95E  3A 24 FD                LD   A,(B_FINNS)      ; B: bara med en skiva i MF1
+F961  B7                      OR   A
+F962  21 00 00                LD   HL,0
+F965  C8                      RET  Z
+F966  21 B0 FA                LD   HL,DPH_B
+F969  3E 01                   LD   A,1
+F96B  32 22 FD      VALD:     LD   (VALD_ENHET),A
+F96E  C9                      RET
+F96F  CD AE F9      LAS:      CALL HAMTA
+F972  20 29                   JR   NZ,FEL
+F974  CD A3 F9                CALL HALVAN
+F977  ED 5B 20 FD             LD   DE,(DMAADR)
+F97B  01 80 00                LD   BC,128
+F97E  ED B0                   LDIR
+F980  AF                      XOR  A
+F981  C9                      RET
+F982  CD AE F9      SKRIV:    CALL HAMTA            ; den andra halvan av sektorn behövs
+F985  20 16                   JR   NZ,FEL
+F987  CD A3 F9                CALL HALVAN
+F98A  EB                      EX   DE,HL
+F98B  2A 20 FD                LD   HL,(DMAADR)
+F98E  01 80 00                LD   BC,128
+F991  ED B0                   LDIR
+F993  CD E3 F9                CALL FYSISK
+F996  21 00 FB                LD   HL,BUFFERT
+F999  CD 30 FA                CALL MFSKRIV
+F99C  C8                      RET  Z                ; A = 0
+F99D  AF            FEL:      XOR  A
+F99E  32 25 FD                LD   (BUF_GILTIG),A
+F9A1  3C                      INC  A
+F9A2  C9                      RET
+F9A3  21 00 FB      HALVAN:   LD   HL,BUFFERT
+F9A6  3A 1E FD                LD   A,(SEKTORN)
+F9A9  0F                      RRCA
+F9AA  D0                      RET  NC
+F9AB  2E 80                   LD   L,128            ; BUFFERT börjar på en jämn sida
+F9AD  C9                      RET
+F9AE  CD E3 F9      HAMTA:    CALL FYSISK
+F9B1  3A 25 FD                LD   A,(BUF_GILTIG)
+F9B4  B7                      OR   A
+F9B5  28 10                   JR   Z,HAMTA_LAS
+F9B7  3A 22 FD                LD   A,(VALD_ENHET)
+F9BA  21 26 FD                LD   HL,BUF_ENHET
+F9BD  BE                      CP   (HL)
+F9BE  20 07                   JR   NZ,HAMTA_LAS
+F9C0  2A 27 FD                LD   HL,(BUF_SEKTOR)
+F9C3  B7                      OR   A
+F9C4  ED 52                   SBC  HL,DE
+F9C6  C8                      RET  Z
+F9C7  AF                      XOR  A
+F9C8  32 25 FD                LD   (BUF_GILTIG),A
+F9CB  21 00 FB                LD   HL,BUFFERT
+F9CE  CD 11 FA                CALL MFLAS
+F9D1  C0                      RET  NZ
+F9D2  3A 22 FD                LD   A,(VALD_ENHET)
+F9D5  32 26 FD                LD   (BUF_ENHET),A
+F9D8  ED 53 27 FD             LD   (BUF_SEKTOR),DE
+F9DC  3E 01                   LD   A,1
+F9DE  32 25 FD                LD   (BUF_GILTIG),A
+F9E1  AF                      XOR  A
+F9E2  C9                      RET
+F9E3  3A 22 FD      FYSISK:   LD   A,(VALD_ENHET)
+F9E6  32 23 FD                LD   (ENHET),A
+F9E9  3A 1C FD                LD   A,(SPARET)
+F9EC  CB 3F                   SRL  A                ; C = T AND 1
+F9EE  57                      LD   D,A
+F9EF  3A 1E FD                LD   A,(SEKTORN)
+F9F2  1F                      RRA                   ; (T AND 1) * 128 + s
+F9F3  47                      LD   B,A
+F9F4  E6 0C                   AND  $0C              ; s / 4 till bit 5-6
+F9F6  87                      ADD  A,A
+F9F7  87                      ADD  A,A
+F9F8  87                      ADD  A,A
+F9F9  5F                      LD   E,A
+F9FA  78                      LD   A,B
+F9FB  E6 83                   AND  $83
+F9FD  B3                      OR   E
+F9FE  5F                      LD   E,A
+F9FF  C9                      RET
+FA00  7B            LOPANDE:  LD   A,E
+FA01  E6 03                   AND  3
+FA03  F5                      PUSH AF
+FA04  7B                      LD   A,E
+FA05  E6 FC                   AND  $FC
+FA07  5F                      LD   E,A
+FA08  EB                      EX   DE,HL
+FA09  29                      ADD  HL,HL
+FA0A  29                      ADD  HL,HL
+FA0B  29                      ADD  HL,HL
+FA0C  EB                      EX   DE,HL
+FA0D  F1                      POP  AF
+FA0E  B3                      OR   E
+FA0F  5F                      LD   E,A
+FA10  C9                      RET
+FA11  3E 03         MFLAS:    LD   A,3
+FA13  CD 57 FA                CALL KOMMANDO
+FA16  C0                      RET  NZ
+FA17  DB 01         LASVANTA: IN   A,(1)
+FA19  CB 7F                   BIT  7,A              ; klart utan data, alltså fel
+FA1B  20 36                   JR   NZ,SLUTSTATUS
+FA1D  CB 57                   BIT  2,A
+FA1F  20 F6                   JR   NZ,LASVANTA
+FA21  06 00                   LD   B,0              ; 256 bytes
+FA23  DB 01         LASBYTE:  IN   A,(1)
+FA25  0F                      RRCA
+FA26  30 FB                   JR   NC,LASBYTE
+FA28  DB 00                   IN   A,(0)
+FA2A  77                      LD   (HL),A
+FA2B  23                      INC  HL
+FA2C  10 F5                   DJNZ LASBYTE
+FA2E  18 1D                   JR   KLART
+FA30  3E 0C         MFSKRIV:  LD   A,$0C
+FA32  CD 57 FA                CALL KOMMANDO
+FA35  C0                      RET  NZ
+FA36  DB 01                   IN   A,(1)
+FA38  CB 7F                   BIT  7,A
+FA3A  20 17                   JR   NZ,SLUTSTATUS
+FA3C  CB 57                   BIT  2,A
+FA3E  20 F6                   JR   NZ,SKRIVVANTA
+FA40  06 00                   LD   B,0
+FA42  DB 01                   IN   A,(1)
+FA44  0F                      RRCA
+FA45  30 FB                   JR   NC,SKRIVBYTE
+FA47  7E                      LD   A,(HL)
+FA48  D3 00                   OUT  (0),A
+FA4A  23                      INC  HL
+FA4B  10 F5                   DJNZ SKRIVBYTE
+FA4D  DB 01         KLART:    IN   A,(1)
+FA4F  CB 7F                   BIT  7,A
+FA51  28 FA                   JR   Z,KLART
+FA53  DB 00                   IN   A,(0)
+FA55  B7                      OR   A
+FA56  C9                      RET
+FA57  4F            KOMMANDO: LD   C,A
+FA58  3E 2C                   LD   A,MF
+FA5A  D3 01                   OUT  (1),A
+FA5C  D3 02                   OUT  (2),A            ; C1: nytt kommando
+FA5E  E5                      PUSH HL
+FA5F  21 00 00                LD   HL,0             ; tidsgräns, 65 536 varv
+FA62  DB 01         TAREMOT:  IN   A,(1)
+FA64  CB 4F                   BIT  1,A
+FA66  28 08                   JR   Z,SKICKA
+FA68  2B                      DEC  HL
+FA69  7C                      LD   A,H
+FA6A  B5                      OR   L
+FA6B  20 F5                   JR   NZ,TAREMOT
+FA6D  E1                      POP  HL
+FA6E  3C                      INC  A                ; inget svar: NZ
+FA6F  C9                      RET
+FA70  E1            SKICKA:   POP  HL
+FA71  79                      LD   A,C
+FA72  D3 00                   OUT  (0),A
+FA74  3A 23 FD                LD   A,(ENHET)
+FA77  D3 00                   OUT  (0),A
+FA79  7A                      LD   A,D
+FA7A  D3 00                   OUT  (0),A
+FA7C  7B                      LD   A,E
+FA7D  D3 00                   OUT  (0),A
+FA7F  AF                      XOR  A
+FA80  C9                      RET
+FA81  AF            BSTART:   XOR  A
+FA82  32 24 FD                LD   (B_FINNS),A
+FA85  32 25 FD                LD   (BUF_GILTIG),A
+FA88  3C                      INC  A
+FA89  32 23 FD                LD   (ENHET),A
+FA8C  11 00 00                LD   DE,0
+FA8F  21 00 FB                LD   HL,BUFFERT
+FA92  CD 11 FA                CALL MFLAS
+FA95  3E 00                   LD   A,0
+FA97  32 23 FD                LD   (ENHET),A
+FA9A  C0                      RET  NZ
+FA9B  3C                      INC  A
+FA9C  32 24 FD                LD   (B_FINNS),A
+FA9F  C9                      RET
+FAA0  00 00 00 00 00 00 00 00   DPH_A:    DEFW 0,0,0,0,KATALOGBUF,DPB_MF,CSV_A,ALV_A
+FAB0  00 00 00 00 00 00 00 00   DPH_B:    DEFW 0,0,0,0,KATALOGBUF,DPB_MF,CSV_B,ALV_B
+FAC0  20 00         DPB_MF:   DEFW 32
+FAC2  04 0F 01                DEFB 4,15,1
+FAC5  95 00 7F 00             DEFW 149,127
+FAC9  C0 00                   DEFB $C0,0
+FACB  20 00 05 00             DEFW 32,5
+Wrote 1231 bytes to /dev/null

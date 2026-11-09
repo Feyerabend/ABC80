@@ -27,6 +27,10 @@
  * Skrivarkortet (kort 60, ../karna/skrivarkort.h) är -P: skrivarkortet(1)
  * sätter i det och skrivarkortet(0) tar ur det. Det som skrivs ut hamnar
  * i en tredje buffert, kontakt 2 för ut_data() och de andra.
+ * skrivarens_fart() sätter hur många tecken i sekunden skrivaren hinner
+ * (0 genast); kortet är upptaget så länge efter varje tecken.
+ *
+ * Till lamporna: skivan_rord() räknar bytes till och från skivkortet.
  */
 
 #include <stdlib.h>
@@ -42,6 +46,7 @@ static Abc802 maskin;
 static Skivkort skivkort;
 static Skrivarkort skrivarkort;
 static int skrivarkort_i;
+static long skrivarens_tecken;               /* tecken i sekunden, 0 genast */
 static uint8_t bilden[ABC802_BREDD * ABC802_HOJD];
 static char raden[ABC802_RADLANGD];
 
@@ -98,6 +103,8 @@ EXPORT(starta) int starta(const uint8_t *rom, long rom_storlek,
     bussen_koppla(&maskin.bussen, &skivkort.kort);
     skrivarkort_starta(&skrivarkort);
     skrivarkort.tecken = skrivaren;
+    skrivarkort.tid = &maskin.tid;
+    skrivarkort.tecken_tid = skrivarens_tecken ? ABC802_KLOCKA / skrivarens_tecken : 0;
     if (skrivarkort_i)
         bussen_koppla(&maskin.bussen, &skrivarkort.kort);
     if (!abc802_rom(&maskin, rom, (size_t)rom_storlek) ||
@@ -116,18 +123,36 @@ EXPORT(starta) int starta(const uint8_t *rom, long rom_storlek,
  * kvar). */
 EXPORT(aterstall) void aterstall(void) { abc802_aterstall(&maskin); }
 
+/* Färg som om ABC 802 hade haft det (utanför boken): punkterna blir
+ * färgerna 0-7 i stället för 0 och 1. */
+static int farg;
+EXPORT(farg) void satt_farg(int pa) { farg = pa; }
+
 /* Kör en bild, 20 ms. Med rita blir skärmen punkter. */
 EXPORT(bild) void bild(int rita)
 {
     abc802_kor(&maskin, ABC802_MS(20));
-    if (rita)
-        abc802_bild(&maskin, bilden);
+    if (rita) {
+        if (farg)
+            abc802_fargbild(&maskin, bilden);
+        else
+            abc802_bild(&maskin, bilden);
+    }
 }
 
 EXPORT(punkter) uint8_t *punkter(void) { return bilden; }
 
 /* Antalet pip sedan start (kod 7 till tangentbordet). */
 EXPORT(pip) long pip(void) { return maskin.pip; }
+
+/* Summern (IN 5) sedan förra anropet som prov i 48 000 Hz, -1 eller 1,
+ * i summern_prov(). Antalet, 0 om det var tyst. */
+static float summer_prov[48000];
+EXPORT(summer) int summer(void)
+{
+    return abc802_summer(&maskin, 48000, summer_prov, 48000);
+}
+EXPORT(summern_prov) float *summern_prov(void) { return summer_prov; }
 
 /* 40 tecken per rad just nu (RTS på DART B). */
 EXPORT(fyrtio) int fyrtio(void) { return abc802_fyrtio(&maskin); }
@@ -174,6 +199,8 @@ EXPORT(skivans_data) uint8_t *skivans_data(void)
 {
     return skivkort.antal_enheter ? skivkort.enhet[0].data : NULL;
 }
+
+EXPORT(skivan_rord) long skivan_rord(void) { return skivkort.rord; }
 
 EXPORT(skivans_storlek) long skivans_storlek(void)
 {
@@ -269,4 +296,13 @@ EXPORT(skrivarkortet) void skrivarkortet(int i)
     else if (!i && skrivarkort_i)
         bussen_koppla_ur(&maskin.bussen, &skrivarkort.kort);
     skrivarkort_i = i != 0;
+}
+
+/* Skrivarens fart i tecken i sekunden; 0 gör den klar genast. */
+EXPORT(skrivarens_fart) void skrivarens_fart(long tecken_i_sekunden)
+{
+    skrivarens_tecken = tecken_i_sekunden > 0 ? tecken_i_sekunden : 0;
+    skrivarkort.tecken_tid = skrivarens_tecken ? ABC802_KLOCKA / skrivarens_tecken : 0;
+    if (!skrivarens_tecken)
+        skrivarkort.klar = 0;
 }

@@ -17,7 +17,11 @@ static int kort_svarar(void *data, int nummer)
 static uint8_t kort_in(void *data, int port)
 {
     Skrivarkort *s = data;
-    return port == 1 ? s->status : 0xFF;
+    if (port != 1)
+        return 0xFF;
+    if (s->tid && *s->tid < s->klar)
+        return s->status | SKRIVARKORT_UPPTAGEN;
+    return s->status;
 }
 
 static void kort_ut(void *data, int port, uint8_t varde)
@@ -26,6 +30,8 @@ static void kort_ut(void *data, int port, uint8_t varde)
     if (port != 0)
         return;
     s->antal++;
+    if (s->tid)
+        s->klar = *s->tid + s->tecken_tid;
     if (s->tecken)
         s->tecken(s->data, varde);
 }

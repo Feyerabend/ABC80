@@ -30,6 +30,8 @@
  *     -z n           förstoring: fönstret är n x 528 x n x 396 (standard 2)
  *     -tyst          utan pip
  *     -skarp         skarpa punkter, utan sken och efterlysning
+ *     -farg          som om ABC 802 hade haft färg, som ABC 800 C (utanför
+ *                    boken, se ../../utanfor/farg); skarpa punkter
  *     -D fil[@kort[.enhet]]  en skivavbild för DOS:en, standard kort 44
  *                    enhet 0 (MF0, DR0); kort 36 är hårddisken. Flera går bra
  *     -DP fil[@..]   samma, skrivskyddad
@@ -349,11 +351,26 @@ static void fosfor(const uint8_t *punkter, double dt, int skarp, uint32_t *ut)
 }
 
 /* ---------------------------------------------------------------- */
+/* Färgbilden (-farg): färgerna 0-7 rakt ut, skarpt, utan fosfor. */
+static void fargbild(const uint8_t *punkter, uint32_t *ut)
+{
+    static const uint32_t farger[8] = {
+        0x000000, 0xFF2828, 0x28E628, 0xFFF028, 0x465AFF, 0xFF28FF, 0x28F0F0, 0xFFFFFF
+    };
+    for (int k = 0; k < SB * SH; k++)
+        ut[k] = 0xFF000000u;
+    for (int y = 0; y < 3 * ABC802_HOJD; y++) {
+        const uint8_t *rad = punkter + y / 3 * ABC802_BREDD;
+        uint32_t *l = ut + (y + KANT_Y) * SB + KANT_X;
+        for (int x = 0; x < 2 * ABC802_BREDD; x++)
+            l[x] = 0xFF000000u | farger[rad[x / 2] & 7];
+    }
+}
 
 static void hjalp(void)
 {
     fputs("användning: abc802f [-r rom] [-c teckenrom] [-40] [-60] [-k text] [-f fil]\n"
-          "                    [-z n] [-tyst] [-skarp] [-D fil[@kort[.enhet]]].. [-DP fil] [-DS]\n"
+          "                    [-z n] [-tyst] [-skarp] [-farg] [-D fil[@kort[.enhet]]].. [-DP fil] [-DS]\n"
           "                    [-T fil] [-U fil] [-A fil] [-B fil] [-a fil] [-b fil]\n"
           "                    [-P fil]\n"
           "F12 är RESET; se huvudet i sdl/fonster.c\n", stderr);
@@ -366,7 +383,7 @@ int main(int argc, char **argv)
     char romnamn[2048], teckennamn[2048];
     const char *romfil = NULL, *teckenfil = NULL;
     const char *tangenter[64];
-    int ar_fil[64], antal = 0, skala = 2, tyst = 0, skarp = 0, spara = 0;
+    int ar_fil[64], antal = 0, skala = 2, tyst = 0, skarp = 0, farg = 0, spara = 0;
     const char *bandfil = NULL, *inspelningsfil = NULL;
     uint8_t *inspelning = NULL;
 
@@ -378,6 +395,7 @@ int main(int argc, char **argv)
         if (!strcmp(f, "-60")) { maskin.bygel_60hz = 1; continue; }
         if (!strcmp(f, "-tyst")) { tyst = 1; continue; }
         if (!strcmp(f, "-skarp")) { skarp = 1; continue; }
+        if (!strcmp(f, "-farg")) { farg = 1; continue; }
         if (!strcmp(f, "-DS")) { spara = 1; continue; }
         if (k + 1 >= argc)
             hjalp();
@@ -471,7 +489,7 @@ int main(int argc, char **argv)
                                           SDL_TEXTUREACCESS_STREAMING, SB, SH);
     if (!bild)
         fel("SDL: ", SDL_GetError());
-    SDL_SetTextureScaleMode(bild, skarp ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
+    SDL_SetTextureScaleMode(bild, skarp || farg ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
 
     SDL_AudioStream *strom = NULL;
     static int16_t pip[PROVTAKT * PIP_MS / 1000];
@@ -521,18 +539,40 @@ int main(int argc, char **argv)
             }
         }
 
-        /* Pipet: ett i taget, och inget som hopats medan kön gick. */
-        if (maskin.pip != pipen) {
-            if (strom && SDL_GetAudioStreamQueued(strom) == 0)
-                SDL_PutAudioStreamData(strom, pip, sizeof pip);
-            pipen = maskin.pip;
+        /* Summern (IN 5): det som har låtit sedan förra varvet, ett varv
+         * fördröjt. ROM:ens BEEP (CHR$(7)) slår om summern 200 gånger och
+         * skickar sedan kod 7 till tangentbordet; kommer ett pip kastas
+         * summern från det och förra varvet, så att BEEP bara blir pipet. */
+        {
+            static float prov[PROVTAKT];
+            static int16_t vantar[PROVTAKT];
+            static int vantar_n = 0;
+            int n = abc802_summer(&maskin, PROVTAKT, prov, PROVTAKT);
+            if (maskin.pip != pipen) {
+                /* Pipet: ett i taget, och inget som hopats medan kön gick. */
+                vantar_n = 0;
+                if (strom && SDL_GetAudioStreamQueued(strom) == 0)
+                    SDL_PutAudioStreamData(strom, pip, sizeof pip);
+                pipen = maskin.pip;
+            } else {
+                if (strom && vantar_n > 0)
+                    SDL_PutAudioStreamData(strom, vantar, vantar_n * (int)sizeof vantar[0]);
+                for (int k = 0; k < n; k++)
+                    vantar[k] = (int16_t)(prov[k] * 6000);
+                vantar_n = n;
+            }
         }
 
         /* Skärmen. */
-        abc802_bild(&maskin, punkter);
         double dt = ritad ? nu - ritad : 1;
         ritad = nu;
-        fosfor(punkter, dt, skarp, farger);
+        if (farg) {
+            abc802_fargbild(&maskin, punkter);
+            fargbild(punkter, farger);
+        } else {
+            abc802_bild(&maskin, punkter);
+            fosfor(punkter, dt, skarp, farger);
+        }
         SDL_UpdateTexture(bild, NULL, farger, SB * 4);
         SDL_SetRenderDrawColor(ritare, 0, 0, 0, 255);
         SDL_RenderClear(ritare);

@@ -83,6 +83,7 @@ typedef struct Skivkort {
     int fd2_utan_fel;                        /* bit 3 i statuslåset */
     int fd2_status_olast;                    /* bit 0 i statuslåset */
     int fd2_kommandon;                       /* räknade, för hang_forsta */
+    long rord;                               /* bytes på port 0, för lampan */
 } Skivkort;
 
 /* Ett tomt kort; koppla sedan &kort.kort till bussen. */

@@ -16,7 +16,12 @@
  * skrivare ger $07. Med den statusen gör GETDEF typen till P (bit 0-2
  * ettor), och både C (masken $70) och P (masken $C0) skriver genast.
  *
- * Skrivaren här är alltid klar: tecknen lämnas till värden med tecken().
+ * Tecknen lämnas till värden med tecken(). Utan tid är skrivaren alltid
+ * klar. Med tid (maskinens T-cykler) och tecken_tid är den upptagen så
+ * länge efter varje tecken: IN 1 ger då också BUSY och låskretsen
+ * ($97), så att PROUT väntar med nästa tecken både för typ C och P
+ * (bit 0-2 är ettor som förut, så GETDEF väljer samma typ). En
+ * nålskrivare som Epsons MX-80 hann omkring 80 tecken i sekunden.
  * IN 0 (det som PRGET läser) ger $FF.
  *
  * PR: väljer kortet av sig själv bara när inställningen är tom, alltså
@@ -33,11 +38,15 @@
 
 #define SKRIVARKORT_NUMMER 60
 #define SKRIVARKORT_KLAR 0x07
+#define SKRIVARKORT_UPPTAGEN 0x97            /* BUSY och låskretsen */
 
 typedef struct Skrivarkort {
     Kort kort;                               /* kopplas till bussen */
     uint8_t status;                          /* IN 1, SKRIVARKORT_KLAR */
     long antal;                              /* tecken till skrivaren */
+    const long long *tid;                    /* maskinens T-cykler, eller NULL */
+    long long tecken_tid;                    /* T-cykler per tecken, 0 genast */
+    long long klar;                          /* när skrivaren är klar igen */
     void *data;
     void (*tecken)(void *data, uint8_t tecken);
 } Skrivarkort;

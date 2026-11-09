@@ -22,7 +22,8 @@
  *     -K ms,ms       hur länge en tangent hålls nere och släppt (40,60)
  *     -t ms          kör så länge efter tangenterna (500)
  *     -p fil.png     bilden till en PNG-fil, en punkt per punkt
- *     -i             skriv antalet instruktioner, tiden och pipen efteråt
+ *     -i             skriv antalet instruktioner, tiden, pipen och summerns
+ *                    omslag (IN 5) efteråt
  *
  * Skivminnet (DOS v.20 i ROM:en, skivkortet i ../karna/skivkort.h):
  *     -D fil[@kort[.enhet]]  en skivavbild, standard kort 44 enhet 0
@@ -398,7 +399,8 @@ int main(int argc, char **argv)
     if (spara && !spara_skivor())
         return 1;
     if (info)
-        fprintf(stderr, "%lld instruktioner, %.3f s, %ld pip\n", maskin.instruktioner,
-                (double)maskin.tid / ABC802_KLOCKA, maskin.pip);
+        fprintf(stderr, "%lld instruktioner, %.3f s, %ld pip, %ld omslag i summern\n",
+                maskin.instruktioner, (double)maskin.tid / ABC802_KLOCKA, maskin.pip,
+                maskin.summer_omslag);
     return 0;
 }

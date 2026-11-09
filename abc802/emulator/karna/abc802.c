@@ -90,6 +90,13 @@ static uint8_t las_port(void *dator, uint16_t port)
     uint8_t p = port & 0xFF;
     if (p < 0x03)                            /* INP 0-2; IN 7 är RST på bussen */
         return bussen_in(&m->bussen, p);
+    if (p == 0x05) {                         /* 8205:an (15F) klockar 74LS390:an */
+        m->summer ^= 1;
+        m->summer_omslag++;
+        if (m->summer_antal < ABC802_SUMMER_MAX)
+            m->summer_tid[m->summer_antal++] = m->tid;
+        return 0xFF;
+    }
     switch (p & 0xF0) {
     case 0x20:
         return sio_las(&m->dart, p >> 1 & 1, p & 1, m->tid);
@@ -342,6 +349,9 @@ void abc802_aterstall(Abc802 *m)
     m->z80.ut = skriv_port;
     z80_reset(&m->z80);
     m->hamtning_7800 = 0;
+    m->summer_fore = m->summer;
+    m->summer_fran = m->tid;
+    m->summer_antal = 0;
 
     sio_starta(&m->dart, 1);
     sio_starta(&m->sio, 0);
@@ -451,4 +461,27 @@ void abc802_kor(Abc802 *m, long long tcykler)
         if (t)
             ga_fram(m, t);
     }
+}
+
+int abc802_summer(Abc802 *m, int takt, float *ut, int max)
+{
+    long long fran = m->summer_fran, till = m->tid;
+    int antal = m->summer_antal, niva = m->summer_fore, n = 0;
+    m->summer_fran = till;
+    m->summer_fore = m->summer;
+    m->summer_antal = 0;
+    if (antal == 0)
+        return 0;
+    n = (int)((till - fran) * takt / ABC802_KLOCKA);
+    if (n > max)
+        n = max;
+    for (int k = 0, j = 0; k < n; k++) {
+        long long t = fran + (long long)k * ABC802_KLOCKA / takt;
+        while (j < antal && m->summer_tid[j] <= t) {
+            niva ^= 1;
+            j++;
+        }
+        ut[k] = niva ? 1.0f : -1.0f;
+    }
+    return n;
 }

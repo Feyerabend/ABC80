@@ -95,6 +95,15 @@
     font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+  /* Lampan: grön när något är inkopplat, ljusare när det används och gul
+   * när det kommer något på en kontakt som inte visas (som i ABC80). */
+  .lampa {
+    flex: none; width: 7px; height: 7px; margin-left: 6px; border-radius: 50%;
+    background: transparent;
+  }
+  .lampa.pa { background: #3f8f4a; }
+  .lampa.rorelse { background: #6be27a; box-shadow: 0 0 5px #6be27a; }
+  .lampa.varning { background: #e8b23a; box-shadow: 0 0 5px #e8b23a; }
   .panel .info {
     flex: none; width: 22px; height: 22px; padding: 0; border-radius: 50%;
     font-size: 12px; line-height: 20px; color: var(--dampad); background: transparent;
@@ -153,10 +162,14 @@
   .knappar select { max-width: 100%; min-width: 0; }
   /* Utskriften: en lapp ovanpå sidan (popover manual), som ligger kvar
    * när man klickar utanför, så att man kan skriva medan den syns. Den
-   * flyttas genom att man drar i listen. Utan popover: klassen oppen. */
+   * flyttas genom att man drar i listen och blir större eller mindre i
+   * hörnet nere till höger (resize). Utan popover: klassen oppen. */
   #ut_lapp {
     position: fixed; inset: 16px 16px auto auto; margin: 0; padding: 0;
-    width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    width: min(600px, calc(100vw - 32px)); height: 360px;
+    min-width: 240px; min-height: 120px;
+    max-width: calc(100vw - 16px); max-height: calc(100vh - 16px);
+    resize: both; overflow: hidden;
     background: var(--yta); color: var(--text);
     border: 1px solid var(--kant); border-radius: 10px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
@@ -171,10 +184,11 @@
   #ut_lapp header span { flex: 1; }
   #ut_lapp header button { cursor: pointer; font-size: 13px; padding: 2px 8px; }
   #utskrift {
-    margin: 0; padding: 8px 10px; height: 320px; max-height: calc(100vh - 90px);
+    margin: 0; padding: 8px 10px; flex: 1; min-height: 0;
     overflow: auto; background: #1b1b1a; border-radius: 0 0 10px 10px;
     font: 12px/1.3 ui-monospace, Menlo, monospace; white-space: pre; color: var(--text);
   }
+  #utskrift hr { border: 0; border-top: 1px dashed var(--kant); margin: 4px -10px; }
   #ut_knapp.nytt { box-shadow: 0 0 0 2px var(--accent); }
   #rad_in {
     flex: 1; min-width: 0; font: 13px ui-monospace, Menlo, monospace;
@@ -205,6 +219,7 @@
     <div class="rad">
       <button id="aterstall" title="Som RESET-knappen: minnet ligger kvar" data-title-en="Like the RESET button: memory is kept">RESET</button>
       <button id="nystart" title="Töm minnet och starta om" data-title-en="Clear memory and start again" data-en="Restart">Starta om</button>
+      <button id="strom" title="Stäng av och slå på: som om sidan just hade hämtats, utan valen, skivorna och bandet" data-title-en="Switch off and on: as if the page had just been fetched, without the choices, the disks and the tape" data-en="Off/on">Av/på</button>
       <button id="ljud">Ljud: på</button>
       <button id="hjalp_visa" popovertarget="hjalp" title="Vad det här är och hur man kommer igång" data-title-en="What this is and how to get started" data-en="Getting started">Kom igång</button>
     </div>
@@ -224,12 +239,18 @@
       </div>
       <div class="hjalptext" hidden>
         <p lang="sv"><i>RESET</i> är som knappen på maskinen: programmet ligger
-        kvar. <i>Starta om</i> tömmer minnet. Maskinen har 64 KB RAM, ROM:en
+        kvar. <i>Starta om</i> tömmer minnet. <i>Av/på</i> är strömbrytaren:
+        sidan hämtas på nytt utan valen i adressen, med tidsproven i MF0,
+        utan band och utan skrivarkortet, och det som inte är sparat
+        försvinner. Maskinen har 64 KB RAM, ROM:en
         med BASIC II och DOS v.20 och den inbyggda RAM-skivan
         <code>MEM:</code>; skivminnet, kassetten och kontakterna CH A och
         CH B har egna paneler.</p>
         <p lang="en"><i>RESET</i> is like the button on the machine: the
-        program stays in memory. <i>Restart</i> clears memory. The machine has
+        program stays in memory. <i>Restart</i> clears memory. <i>Off/on</i>
+        is the power switch: the page is fetched again without the choices in
+        the address, with the benchmarks in MF0, no tape and no printer card,
+        and whatever has not been saved is lost. The machine has
         64 KB of RAM, the ROM with BASIC II and DOS v.20 and the built-in RAM
         disk <code>MEM:</code>; the disk drives, the cassette and the
         CH A and CH B connectors have panels of their own.</p>
@@ -248,6 +269,7 @@
       <summary><span lang="sv">Skärmen</span><span lang="en">The screen</span><span class="lage" id="lage_skarm"></span><button class="info" title="Mer om skärmen" data-title-en="More about the screen">i</button></summary>
       <div class="knappar">
         <label title="Skarpa punkter, utan sken och efterlysning" data-title-en="Sharp dots, without glow and afterglow"><input type="checkbox" id="skarp"> <span lang="sv">skarp</span><span lang="en">sharp</span></label>
+        <label title="Som om ABC 802 hade haft färg, som ABC 800 C (utanför boken)" data-title-en="As if the ABC 802 had colour, like the ABC 800 C (outside the book)"><input type="checkbox" id="farg"> <span lang="sv">färg (om)</span><span lang="en">colour (what if)</span></label>
         <button id="kopiera" title="Kopiera skärmens text" data-title-en="Copy the text on the screen" data-en="Copy text">Kopiera texten</button>
       </div>
       <div class="hjalptext" hidden>
@@ -256,11 +278,28 @@
         bärnstensfärgad fosforskärm: punkterna har ett sken runt sig, och det
         som släcks klingar av på omkring 20 ms. <i>Skarp</i> visar punkterna
         utan sken och efterlysning, som <code>-skarp</code> i fönstret.</p>
+        <p lang="sv"><i>Färg (om)</i> är ett tänkt experiment, inte maskinen:
+        ABC 802 kan inte visa färg, eftersom teckengeneratorn bara säger åt
+        bildlogiken att koderna 1–7 är text. Med valet tolkas koderna i
+        bildminnet som i ABC 800 C: 1–7 (<code>RED</code>–<code>WHT</code>)
+        och 17–23 (<code>GRED</code>–<code>GWHT</code>) ger färgen från nästa
+        plats, 29 gör förgrunden till bakgrund och 28 gör bakgrunden svart.
+        Varje rad börjar vit på svart. I adressen: <code>?farg=pa</code>. Mer i
+        <code>utanfor/farg</code>.</p>
         <p lang="en">The picture is 480 × 250 dots (80 characters of 6 dots,
         24 rows of 10 lines, and room for a 25th when the 6845's R6 is 25) drawn from the machine's character generator, on
         an amber phosphor screen: the dots glow, and what is switched off fades
         over about 20 ms. <i>Sharp</i> shows the dots without glow and
         afterglow, like <code>-skarp</code> in the window.</p>
+        <p lang="en"><i>Colour (what if)</i> is a thought experiment, not the
+        machine: the ABC 802 cannot show colour, since the character generator
+        only tells the video logic that codes 1–7 are text. With this option the
+        codes in the video memory are read as on the ABC 800 C: 1–7
+        (<code>RED</code>–<code>WHT</code>) and 17–23
+        (<code>GRED</code>–<code>GWHT</code>) give the colour from the next
+        cell, 29 makes the foreground the background and 28 makes the
+        background black. Every row starts white on black. In the address:
+        <code>?farg=pa</code>. More in <code>utanfor/farg</code>.</p>
         <p lang="sv"><i>Kopiera texten</i> lägger skärmens rader (24, eller 25) i
         urklipp; grafiken blir Unicodes mosaiktecken.</p>
         <p lang="en"><i>Copy text</i> puts the rows of the screen (24, or 25) on the
@@ -295,7 +334,7 @@
     </details>
 
     <details class="panel" id="panel_skiva">
-      <summary><span lang="sv">Skivminnet</span><span lang="en">Disk drives</span><span class="lage" id="lage_skiva"></span><button class="info" title="Mer om skivminnet" data-title-en="More about the disk drives">i</button></summary>
+      <summary><span lang="sv">Skivminnet</span><span lang="en">Disk drives</span><span class="lampa" id="lampa_skiva"></span><span class="lage" id="lage_skiva"></span><button class="info" title="Mer om skivminnet" data-title-en="More about the disk drives">i</button></summary>
       <div class="knappar">
         <button id="skiva_prov" title="Skivan med tidsproven" data-title-en="The disk with the benchmarks" data-en="Benchmarks">Tidsproven</button>
         <button id="skiva_tom" title="En tom skiva" data-title-en="An empty disk" data-en="Empty">Tom skiva</button>
@@ -427,7 +466,7 @@
     </details>
 
     <details class="panel" id="panel_kassett">
-      <summary><span lang="sv">Kassetten</span><span lang="en">The cassette</span><span class="lage" id="lage_kassett"></span><button class="info" title="Mer om kassetten" data-title-en="More about the cassette">i</button></summary>
+      <summary><span lang="sv">Kassetten</span><span lang="en">The cassette</span><span class="lampa" id="lampa_kassett"></span><span class="lage" id="lage_kassett"></span><button class="info" title="Mer om kassetten" data-title-en="More about the cassette">i</button></summary>
       <div class="knappar">
         <button id="band_tomt" title="Ett tomt band att spela in på (SAVE CAS:NAMN)" data-title-en="A blank tape to record on (SAVE CAS:NAME)" data-en="Blank tape">Tomt band</button>
         <button id="band_spola" title="Spola tillbaka; det inspelade spelas sedan upp" data-title-en="Rewind; what was recorded is then played back" data-en="Rewind">Spola tillbaka</button>
@@ -464,7 +503,7 @@
     </details>
 
     <details class="panel" id="panel_kontakter">
-      <summary><span lang="sv">CH A och CH B</span><span lang="en">CH A and CH B</span><span class="lage" id="lage_kontakter"></span><button class="info" title="Mer om kontakterna" data-title-en="More about the connectors">i</button></summary>
+      <summary><span lang="sv">CH A och CH B</span><span lang="en">CH A and CH B</span><span class="lampa" id="lampa_kontakter"></span><span class="lage" id="lage_kontakter"></span><button class="info" title="Mer om kontakterna" data-title-en="More about the connectors">i</button></summary>
       <div class="knappar">
         <select id="kontakt" title="Kontakten som visas och som det skickas till" data-title-en="The connector shown and sent to">
           <option value="0" data-en="CH A (PR:, printer)">CH A (PR:, skrivaren)</option>
@@ -472,6 +511,10 @@
           <option value="2" data-en="Printer card (card 60)">Skrivarkortet (kort 60)</option>
         </select>
         <label title="Skrivarkortet (Centronics, kort 60) i ABC-bussen" data-title-en="The printer card (Centronics, card 60) on the ABC bus"><input type="checkbox" id="skrivarkort"> <span lang="sv">kortet i</span><span lang="en">card in</span></label>
+        <select id="skrivarfart" title="Hur fort skrivaren på kortet hinner skriva" data-title-en="How fast the printer on the card prints">
+          <option value="80" data-en="80 characters/s, like a printer">80 tecken/s, som en skrivare</option>
+          <option value="0" data-en="At once">Genast</option>
+        </select>
         <button id="ut_knapp" popovertarget="ut_lapp" title="Visa det som kommit ut; lappen kommer fram av sig själv när skrivaren börjar" data-title-en="Show what has come out; the sheet appears by itself when the printer starts" data-en="Output">Utskriften</button>
       </div>
       <div class="knappar">
@@ -525,7 +568,18 @@
         stället för CH A vid första utskriften efter RESET, och tecknen
         visas under <i>Skrivarkortet</i>. Före RESET går det med
         <code>LIST "PR:C"</code>, och <code>"PR:V"</code> går till CH A.
-        I terminalen: <code>-P</code>.</p>
+        Skrivaren hinner 80 tecken i sekunden, ungefär som en nålskrivare
+        som Epsons MX-80 (?), och kortet är upptaget (BUSY) medan den
+        skriver, så att <code>PR:</code> väntar; <i>Genast</i> tar emot
+        allt på en gång. I terminalen: <code>-P</code>, där skrivaren
+        alltid är klar.</p>
+        <p lang="sv">Lappen med utskriften blir större eller mindre i
+        hörnet nere till höger. En sidmatning (FF, eller fyra tomma rader
+        eller fler) blir ett streck, så att det som skrevs syns kvar
+        ovanför; <i>Spara</i> ger tecknen som de kom. Lampan i listen är
+        grön när skrivarkortet sitter i eller en motpart är uppringd,
+        ljusare när det går tecken, och gul när det kommer något på en
+        kontakt som inte är den som visas.</p>
         <p lang="sv"><i>Datavision</i> är en motpart på CH B, en
         rekonstruktion av en teledatatjänst från 1980-talet; sidorna är
         nya. Välj <i>40 tecken</i> och skriv <code>LOAD
@@ -601,8 +655,19 @@
         the ABC bus. With <i>card in</i>, <code>PR:</code> picks the card
         instead of CH A at the first printout after RESET, and the
         characters show under <i>Printer card</i>. Before a RESET, use
-        <code>LIST "PR:C"</code>; <code>"PR:V"</code> goes to CH A. In the
-        terminal: <code>-P</code>.</p>
+        <code>LIST "PR:C"</code>; <code>"PR:V"</code> goes to CH A. The
+        printer manages 80 characters a second, about like a dot matrix
+        printer such as Epson's MX-80 (?), and the card is busy (BUSY)
+        while it prints, so <code>PR:</code> waits; <i>At once</i> takes
+        everything immediately. In the terminal: <code>-P</code>, where the
+        printer is always ready.</p>
+        <p lang="en">The output sheet grows or shrinks from its bottom right
+        corner. A form feed (FF, or four or more blank lines) becomes a
+        line, so what was printed stays visible above it; <i>Save</i> gives
+        the characters as they came. The lamp in the bar is green when the
+        printer card is in or a counterpart is called, brighter while
+        characters flow, and yellow when something comes out on a connector
+        other than the one shown.</p>
       </div>
     </details>
 

@@ -265,6 +265,8 @@ static uint8_t in(void *data, int port)
     Skivkort *s = data;
     if (port > 1)
         return 0xFF;
+    if (port == 0)
+        s->rord++;
     return s->valt == FD2 ? fd2_in(s, port) : secio_in(s, port);
 }
 
@@ -273,6 +275,8 @@ static void ut(void *data, int port, uint8_t varde)
     Skivkort *s = data;
     if (port > 4)
         return;
+    if (port == 0)
+        s->rord++;
     if (s->valt == FD2)
         fd2_ut(s, port, varde);
     else
