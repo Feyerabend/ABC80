@@ -69,9 +69,12 @@ int natmapp_las(Natkort *n, const char *mapp)
 int natmapp_spara(Natkort *n, const char *mapp)
 {
     int ok = 1;
+    /* Först det som är borta, sedan det som är ändrat: NAME A AS B och
+     * B AS A lämnar en borttagen A efter den nya. */
+    for (int varv = 0; varv < 2; varv++)
     for (int k = 0; k < n->antal; k++) {
         NatFil *f = &n->filer[k];
-        if (f->ar_katalog || !f->andrad)
+        if (f->ar_katalog || !f->andrad || f->borta != !varv)
             continue;
         char namn[13], fil[1024];
         natkort_filnamn(f, namn);

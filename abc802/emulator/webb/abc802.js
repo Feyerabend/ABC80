@@ -37,7 +37,12 @@
  * lämnas till webb.c så fort maskinens kö har plats. Skrivarkortet hinner
  * 80 tecken i sekunden (skrivarens_fart() i webb.c), eller allt genast.
  *
- * Lamporna i panelernas list (skivan, kassetten, kontakterna) och Av/på
+ * Nätet: nodkortet och centralen i LUXNET (natkort.c); med nodkortet i
+ * startar maskinen med nät-ROM:en (FILER.natrom). Filerna i UFD: ligger
+ * i webb.c; text blir poster här när den läggs in och text igen när den
+ * hämtas. Trafiken hämtas efter varje varv, som utdata.
+ *
+ * Lamporna i panelernas list (skivan, nätet, kassetten, kontakterna) och Av/på
  * är gjorda som i ABC80-emulatorn.
  *
  * Tangenterna går som i fönstret: Enter är RETURN ($0D), backsteg och
@@ -188,9 +193,12 @@ function lagg_i_minnet(data) {
 
 /* Töm maskinen och starta med byglarna i valen. */
 function starta() {
-    const rom = lagg_i_minnet(ROM.rom);
+    const natet = $('natet').checked;
+    const rom_data = natet ? ROM.natrom : ROM.rom;
+    const rom = lagg_i_minnet(rom_data);
     const tecken = lagg_i_minnet(ROM.tecken);
-    e.starta(rom, ROM.rom.length, tecken, ROM.tecken.length,
+    e.natet(natet ? 1 : 0);
+    e.starta(rom, rom_data.length, tecken, ROM.tecken.length,
              $('tecken').value === '80' ? 1 : 0, $('hz').value === '60' ? 1 : 0);
     e.skrivarens_fart(+$('skrivarfart').value);
     e.slapp(rom);
@@ -500,6 +508,266 @@ $('skiva_spara').addEventListener('click', () => {
               skivans_namn || 'skiva.img');
     skarm.focus();
 });
+
+/* ---------------------------------------------------------------- */
+/* Nätet                                                             */
+
+/* Nodkortet och centralen (natkort.c via webb.c). Med nodkortet i får
+ * maskinen nät-ROM:en; filerna i UFD: ligger i webb.c och sitter kvar
+ * när maskinen startas om. En text blir poster om 253 bytes med CR
+ * efter raderna, $03 efter det sista i en full post och nollor efter
+ * den sista posten (som SAVE gör); å ä ö blir ABC 802:s koder och
+ * tillbaka när filen hämtas. Annat läggs in och hämtas som det är. */
+const POST = 253;
+const ABC_SVENSKA = Object.fromEntries(Object.entries(SVENSKA).map(([k, v]) => [v, k]));
+let nat_filerna = '';                         /* senast visad, som text */
+let nat_sett = -1;                            /* nat_anrop() då */
+const TRAFIK_RADER = 300;
+let trafiken = [];
+
+function ar_binar(namn) {
+    return /\.(bac|abs|bin|img|dsk|sys|cmd)$/i.test(namn);
+}
+
+/* Text till poster. */
+function till_poster(text) {
+    const rader = text.replace(/\r\n?/g, '\n').split('\n');
+    if (rader.length && rader[rader.length - 1] === '')
+        rader.pop();
+    const ut = [];
+    let post = [];
+    const full = () => {
+        ut.push(...post, 0x03, ...new Array(POST - post.length - 1).fill(0));
+        post = [];
+    };
+    for (const rad of rader) {
+        const koder = [...rad].map(c => SVENSKA[c] ?? (c.charCodeAt(0) < 128 ? c.charCodeAt(0) : 0x3F));
+        koder.push(0x0D);
+        for (let i = 0; i < koder.length; i += POST - 1) {
+            const bit = koder.slice(i, i + POST - 1);
+            if (post.length + bit.length > POST - 1)
+                full();
+            post.push(...bit);
+        }
+    }
+    ut.push(...post, ...new Array(POST - post.length).fill(0));
+    return new Uint8Array(ut);
+}
+
+/* Poster som är text tillbaka till text; null om de inte är det. */
+function fran_poster(d) {
+    if (!d.length || d.length % POST)
+        return null;
+    let text = '';
+    for (let p = 0; p < d.length; p += POST) {
+        let i = p;
+        for (; i < p + POST && d[i] !== 0x03 && d[i] !== 0; i++) {
+            const b = d[i];
+            if (b === 0x0D)
+                text += '\n';
+            else if (b === 0x0A)
+                continue;
+            else if (b < 0x20 && b !== 0x09 || b > 0x7E)
+                return null;
+            else
+                text += ABC_SVENSKA[b] ?? String.fromCharCode(b);
+        }
+        if (i === p + POST)
+            return null;                     /* posten tog inte slut */
+    }
+    return text;
+}
+
+/* En fil från datorn till UFD:. */
+async function nat_lagg_in(fil) {
+    const namn = fil.name.toUpperCase();
+    let data = new Uint8Array(await fil.arrayBuffer());
+    if (!ar_binar(namn) && fran_poster(data) === null) {
+        let text = null;
+        try { text = new TextDecoder('utf-8', { fatal: true }).decode(data); }
+        catch (fel) { text = new TextDecoder('latin1').decode(data); }
+        if (!/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(text))
+            data = till_poster(text);
+    }
+    const pnamn = lagg_i_minnet(new TextEncoder().encode(namn + '\0'));
+    const pdata = lagg_i_minnet(data);
+    const ok = e.nat_fil(pnamn, pdata, data.length);
+    e.slapp(pnamn);
+    e.slapp(pdata);
+    if (!ok)
+        meddela(fil.name + ' går inte in i UFD: (namnet är högst åtta tecken, en punkt och tre).',
+                fil.name + ' does not go into UFD: (the name is at most eight characters, a dot and three).');
+    return ok;
+}
+
+async function nat_lagg_in_alla(filer) {
+    let antal = 0;
+    for (const fil of filer)
+        if (await nat_lagg_in(fil))
+            antal++;
+    if (antal)
+        meddela(antal === 1 ? filer[0].name.toUpperCase() + ' ligger i UFD:.' : antal + ' filer ligger i UFD:.',
+                antal === 1 ? filer[0].name.toUpperCase() + ' is in UFD:.' : antal + ' files are in UFD:.');
+    visa_natet(true);
+}
+
+function nat_namn(k) {
+    const p = e.nat_namn(k);
+    if (!p)
+        return null;
+    const m = new Uint8Array(e.memory.buffer, p, 80);
+    return new TextDecoder().decode(m.subarray(0, m.indexOf(0)));
+}
+
+function nat_lista() {
+    const lista = [];
+    for (let k = 0; k < e.nat_antal(); k++) {
+        const namn = nat_namn(k);
+        if (namn !== null)
+            lista.push([k, namn, e.nat_langd(k)]);
+    }
+    return lista.sort((a, b) => a[1] < b[1] ? -1 : 1);
+}
+
+function nat_hamta(k, namn) {
+    const d = new Uint8Array(e.memory.buffer, e.nat_data(k), e.nat_langd(k)).slice();
+    const text = ar_binar(namn) ? null : fran_poster(d);
+    const fil = namn.replace(/.*\//, '');
+    if (text === null)
+        spara_fil(d, fil);
+    else
+        spara_fil(new TextEncoder().encode(text), fil);
+}
+
+/* Listan och läget; listan byggs bara om när den har ändrats. */
+function visa_natet(genast = false) {
+    const pa = $('natet').checked;
+    const anrop = e.nat_anrop();
+    if (!genast && anrop === nat_sett)
+        return;
+    nat_sett = anrop;
+    const lista = nat_lista();
+    $('lage_natet').textContent = (pa ? '' : t('ur · ', 'out · '))
+        + lista.length + t(lista.length === 1 ? ' fil' : ' filer', lista.length === 1 ? ' file' : ' files')
+        + (anrop ? ' · ' + anrop + t(' anrop', ' calls') : '');
+    const text = lista.map(([k, n, l]) => k + n + l).join(' ');
+    if (text === nat_filerna)
+        return;
+    nat_filerna = text;
+    const ruta = $('natfiler');
+    ruta.replaceChildren();
+    for (const [k, namn, langd] of lista) {
+        const program = /\.BA[SC]$/.test(namn);
+        const el = document.createElement(program ? 'button' : 'span');
+        el.textContent = namn;
+        if (program) {
+            el.title = 'LOAD UFD:' + namn;
+            el.addEventListener('click', () => {
+                if (!$('natet').checked) {
+                    meddela('Sätt i nodkortet först.', 'Put the node card in first.');
+                    return;
+                }
+                skriv('LOAD UFD:' + namn + '\n');
+                meddela(namn + ' läses in över nätet; skriv RUN.', namn + ' is being loaded over the network; type RUN.');
+                skarm.focus();
+            });
+        }
+        const storlek = document.createElement('span');
+        storlek.className = 'storlek';
+        storlek.textContent = Math.ceil(langd / POST);
+        storlek.title = t(langd + ' bytes, poster om 253', langd + ' bytes, records of 253');
+        const hamta = document.createElement('button');
+        hamta.textContent = '↓';
+        hamta.title = t('Hämta ', 'Fetch ') + namn;
+        hamta.addEventListener('click', () => nat_hamta(k, namn));
+        const bort = document.createElement('button');
+        bort.textContent = '✕';
+        bort.title = t('Ta bort ', 'Remove ') + namn;
+        bort.addEventListener('click', () => {
+            e.nat_ta_bort(k);
+            meddela(namn + ' är borttagen ur UFD:.', namn + ' has been removed from UFD:.');
+            visa_natet(true);
+        });
+        ruta.append(el, storlek, hamta, bort);
+    }
+}
+
+/* Trafiken efter varje varv. */
+function hamta_trafiken() {
+    const antal = e.nat_logg_antal();
+    if (!antal)
+        return;
+    const text = new TextDecoder().decode(new Uint8Array(e.memory.buffer, e.nat_logg(), antal));
+    e.nat_logg_tom();
+    trafiken.push(...text.split('\n').filter(r => r));
+    if (trafiken.length > TRAFIK_RADER)
+        trafiken = trafiken.slice(-TRAFIK_RADER);
+    const ruta = $('trafik');
+    if (!ruta.hidden) {
+        ruta.textContent = trafiken.join('\n');
+        ruta.scrollTop = ruta.scrollHeight;
+    }
+}
+
+$('natet').addEventListener('change', () => {
+    starta();
+    meddela(...($('natet').checked
+            ? ['Nodkortet sitter i och maskinen har startat med nätets DOS-PROM; prova LOAD UFD:NAT och RUN.',
+               'The node card is in and the machine has started with the network DOS PROM; try LOAD UFD:NAT and RUN.']
+            : ['Nodkortet är urtaget och maskinen har startat med DOS v.20.',
+               'The node card is out and the machine has started with DOS v.20.']));
+    visa_natet(true);
+    skarm.focus();
+});
+
+$('nat_lagg').addEventListener('click', () => $('natfil').click());
+$('natfil').addEventListener('change', async () => {
+    const filer = [...$('natfil').files];
+    $('natfil').value = '';
+    await nat_lagg_in_alla(filer);
+    skarm.focus();
+});
+
+$('nat_trafik_visa').addEventListener('click', () => {
+    const ruta = $('trafik');
+    ruta.hidden = !ruta.hidden;
+    $('nat_trafik_visa').classList.toggle('pa', !ruta.hidden);
+    if (!ruta.hidden) {
+        ruta.textContent = trafiken.length ? trafiken.join('\n')
+            : t('(inga anrop ännu)', '(no calls yet)');
+        ruta.scrollTop = ruta.scrollHeight;
+    }
+});
+
+/* Filer som släpps på panelen går till UFD:. */
+$('panel_natet').addEventListener('dragover', (h) => { h.preventDefault(); h.stopPropagation(); });
+$('panel_natet').addEventListener('drop', async (h) => {
+    h.preventDefault();
+    h.stopPropagation();
+    document.body.classList.remove('slapp');
+    await nat_lagg_in_alla([...h.dataTransfer.files]);
+});
+
+/* Ett litet program i UFD: från början. */
+const NAT_PROV = [
+    '10 REM Skriver en fil i UFD: och läser den',
+    '20 PREPARE "UFD:HALSNING.TXT" AS FILE 1',
+    '30 PRINT #1, "Hej från centralen!"',
+    '40 CLOSE 1',
+    '50 OPEN "UFD:HALSNING.TXT" AS FILE 1',
+    '60 INPUT #1, A$',
+    '70 CLOSE 1',
+    '80 PRINT A$',
+].join('\n') + '\n';
+
+function nat_prov() {
+    const data = till_poster(NAT_PROV);
+    const pnamn = lagg_i_minnet(new TextEncoder().encode('NAT.BAS\0'));
+    const pdata = lagg_i_minnet(data);
+    e.nat_fil(pnamn, pdata, data.length);
+    e.slapp(pnamn);
+    e.slapp(pdata);
+}
 
 /* ---------------------------------------------------------------- */
 /* Kassetten                                                         */
@@ -1246,6 +1514,7 @@ function lampa(id, pa, raknare, varning = false) {
 
 function visa_lamporna() {
     lampa('skiva', !!e.skivans_data(), e.skivan_rord());
+    lampa('natet', $('natet').checked, e.nat_anrop());
     lampa('kassett', !!e.bandets_data(), e.motor() ? performance.now() : 0);
     lampa('kontakter', $('skrivarkort').checked || !!(motpart && motpart.uppkopplad()),
           ut_totalt + in_totalt, performance.now() - ut_annan < 1000);
@@ -1282,6 +1551,7 @@ function varv() {
     summern(pipade);
     rita();
     hamta_ut();
+    hamta_trafiken();
     fyll_in();
     visa_lamporna();
     if (++varv_antal % 15 === 0) {
@@ -1290,6 +1560,8 @@ function varv() {
     }
     if (varv_antal % 60 === 0)
         visa_katalogen();
+    if (varv_antal % 15 === 0)
+        visa_natet();
     requestAnimationFrame(varv);
 }
 
@@ -1333,6 +1605,7 @@ $('hjalp').addEventListener('toggle', h => {
     const { instance } = await WebAssembly.instantiate(base64(FILER.wasm), {});
     e = instance.exports;
     ROM.rom = base64(FILER.rom);
+    ROM.natrom = base64(FILER.natrom);
     ROM.tecken = base64(FILER.tecken);
 
     if (fraga.get('tecken') === '40')
@@ -1347,6 +1620,9 @@ $('hjalp').addEventListener('toggle', h => {
         $('farg').checked = true;
         e.farg(1);
     }
+    if (fraga.get('nat') === 'pa')
+        $('natet').checked = true;
+    nat_prov();
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;
     byt_sprak(valt);

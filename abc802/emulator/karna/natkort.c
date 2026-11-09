@@ -18,16 +18,30 @@
 #define VFD0E   0xFD0E                       /* platsen i bufferten */
 #define VFD0F   0xFD0F
 #define DBUFP   0xFD12                       /* buffertarna ($F500) */
+#define VFD15   0xFD15                       /* sektorns status (SECIO) */
 #define DSYSUN  0xFFF7                       /* UFD: ordet och enheten */
 #define VFFF9   0xFFF9
 
 #define UFD     0x1E
 #define NODKORT 3
 
+/* Katalogen som sektorer, för program som LIB.BAC som läser den rått
+ * (CALL $6066 med enheten 30 i DUNIT): sektorn KATALOG - 1 har antalet
+ * poster per katalogsektor på $EF-$FE, sektorerna KATALOG till
+ * KATALOG + 15 har 16 poster à 16 bytes som i DOS v.20 (byte 0 = första
+ * klustret, inte 0 eller $FF; byte 1 skydden; 2-3 storleken; 4-14
+ * namnet). DSYSUN pekar hit. LIB räknar de nollställda bitarna i
+ * $00-$A0 i sektor 15 (hela centralen, 1288 kluster à 4 sektorer) och
+ * 14 (det lediga); där sätts en bit per använt kluster. Andra sektorer
+ * är tomma. */
+#define KATALOG 32
+#define KLUSTER 1288
+
 /* Felen (koden + $80 i BASICINI.SYS). */
 #define FEL_HITTAR_EJ  0x15                  /* 21 Hittar ej filen */
 #define FEL_UTANFOR    0x26                  /* 38 Sektornummer utanför filen */
 #define FEL_FULL       0x29                  /* 41 Skivan full */
+#define FEL_SKYDD      0x2B                  /* 43 Skrivskyddad */
 #define FEL_MINNE      0x80                  /* Slut på minnet i centralen */
 /* Finns inte: CY = 1 och A = 0, som den lokala OPEN:en. Då går DEXIT
  * tillbaka genast med DE orört, DOSDRV (L699F) gör fel 21 av det och
@@ -323,6 +337,43 @@ static int cd(Natkort *n, Abc802 *m, uint16_t de, int langd)
     return 0;
 }
 
+/* Sektor nr i katalogen över UFD: just nu (se KATALOG) till buf. */
+static void katalogsektor(Natkort *n, Abc802 *m, uint16_t nr, uint16_t buf)
+{
+    uint8_t s[256];
+    memset(s, 0, sizeof s);
+    int i = 0;
+    if (nr == 14) {                          /* det använda, hela centralen */
+        long sektorer = 0;
+        for (int k = 0; k < n->antal; k++)
+            if (!n->filer[k].ar_katalog && !n->filer[k].borta)
+                sektorer += poster(&n->filer[k]) + 1;
+        long kluster = (sektorer + 3) / 4;
+        for (long b = 0; b < kluster && b < KLUSTER; b++)
+            s[b / 8] |= (uint8_t)(0x80 >> (b % 8));
+    }
+    for (int k = 0; k < n->antal && nr >= KATALOG - 1; k++) {
+        NatFil *f = &n->filer[k];
+        if (f->ar_katalog || f->borta || !lika(f->katalog, n->ufd))
+            continue;
+        int sek = i / 16, plats = (i % 16) * 16;
+        i++;
+        if (sek >= 16)
+            break;
+        if (nr == KATALOG - 1)
+            s[0xEF + sek]++;
+        else if (nr == KATALOG + sek) {
+            long p = poster(f) ? poster(f) : 1;
+            s[plats] = (uint8_t)(1 + (i & 0x7F));
+            s[plats + 2] = (uint8_t)p;
+            s[plats + 3] = (uint8_t)(p >> 8);
+            memcpy(s + plats + 4, f->namn, 11);
+        }
+    }
+    for (i = 0; i < 256; i++)
+        abc802_skriv(m, (uint16_t)(buf + i), s[i]);
+}
+
 static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
                     uint16_t de, uint8_t h)
 {
@@ -334,7 +385,7 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
 
     switch (fn) {
     case 9:                                  /* starten: logga in */
-        skriv_ord(m, DSYSUN, 1);             /* UFD: finns (NETUNT) */
+        skriv_ord(m, DSYSUN, KATALOG);       /* UFD: finns (NETUNT) */
         abc802_skriv(m, VFFF9, UFD);
         n->ufd[0] = 0;
         for (k = 0; k < 8; k++)
@@ -454,6 +505,42 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
         skriv_ord(m, VFD0A, de);
         return 0;
 
+    case 1:                                  /* sektorn, C = 3 läs */
+        if ((abc802_las(m, DUNIT) & 0x1F) != UFD)
+            return AVBOJD;
+        lagg(n, c == 3 ? "läs sektor " : "skriv sektor ");
+        lagg_tal(n, de);
+        if (c != 3)
+            return FEL_SKYDD;
+        katalogsektor(n, m, de, buffert(m, b));
+        abc802_skriv(m, VFD15, 0);
+        return 0;
+
+    case 8: {                                /* NAME: DE = det nya namnet */
+        k = kanalens(n, m, b);
+        if (k < 0)
+            return AVBOJD;
+        f = &n->filer[k];
+        las_namn(m, de, namn11);
+        lagg(n, "NAME ");
+        lagg(n, f->namn);
+        lagg(n, " AS ");
+        lagg(n, namn11);
+        if (hitta(n, f->katalog, namn11) >= 0)
+            return FEL_FINNS_EJ;             /* CY: fel 64, finns redan */
+        int gammal = ny_post(n);             /* den gamla filen bort hos värden */
+        if (gammal >= 0) {
+            f = &n->filer[k];
+            NatFil *g = &n->filer[gammal];
+            kopiera(g->katalog, f->katalog, NATKORT_KATALOG);
+            memcpy(g->namn, f->namn, 12);
+            g->borta = g->andrad = 1;
+        }
+        memcpy(f->namn, namn11, 12);
+        f->andrad = 1;
+        return 0;
+    }
+
     case 0x12: {                             /* CD */
         lagg(n, "CD");
         int fel = cd(n, m, de, (b << 8) | c);
@@ -501,7 +588,7 @@ static int krok(void *data, Abc802 *m)
         f |= 1;
         a = (uint8_t)fel;
         if (fel == FEL_FINNS_EJ)
-            lagg(n, ": finns inte");
+            lagg(n, fn == 8 ? ": finns redan" : ": finns inte");
         else {
             lagg(n, ": fel ");
             lagg_tal(n, fel);

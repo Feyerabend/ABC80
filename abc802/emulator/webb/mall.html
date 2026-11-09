@@ -159,6 +159,20 @@
   #katalog:empty { display: none; }
   #katalog button { font: inherit; padding: 1px 5px; border-radius: 4px; }
   #katalog span { padding: 1px 5px; color: var(--dampad); }
+  #natfiler {
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 2px 6px;
+    align-items: center; padding: 0 8px 8px; font: 12px ui-monospace, Menlo, monospace;
+  }
+  #natfiler:empty { display: none; }
+  #natfiler button { font: inherit; padding: 1px 5px; border-radius: 4px; justify-self: start; }
+  #natfiler span { padding: 1px 5px; color: var(--dampad); overflow-wrap: anywhere; }
+  #natfiler .storlek { text-align: right; font-variant-numeric: tabular-nums; }
+  #trafik {
+    margin: 0 8px 8px; padding: 6px 8px; max-height: 160px; overflow: auto;
+    background: #1b1b1a; border: 1px solid var(--kant); border-radius: 6px;
+    font: 11.5px/1.35 ui-monospace, Menlo, monospace; color: var(--dampad);
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
   .knappar select { max-width: 100%; min-width: 0; }
   /* Utskriften: en lapp ovanpå sidan (popover manual), som ligger kvar
    * när man klickar utanför, så att man kan skriva medan den syns. Den
@@ -462,6 +476,62 @@
         <code>restore</code> write and read ZORK1.SAV). The page then shows the
         CP/M directory. The screen has 80 columns; back to BASIC with
         <i>Benchmarks</i> and <i>Restart</i>.</p>
+      </div>
+    </details>
+
+    <details class="panel" id="panel_natet">
+      <summary><span lang="sv">Nätet</span><span lang="en">The network</span><span class="lampa" id="lampa_natet"></span><span class="lage" id="lage_natet"></span><button class="info" title="Mer om nätet" data-title-en="More about the network">i</button></summary>
+      <div class="knappar">
+        <label title="Nodkortet (LUXNET) i bussen och nätets DOS-PROM i ROM:en; maskinen startas om" data-title-en="The node card (LUXNET) on the bus and the network's DOS PROM in the ROM; the machine is restarted"><input type="checkbox" id="natet"> <span lang="sv">nodkortet i</span><span lang="en">node card in</span></label>
+        <button id="nat_lagg" title="Lägg in filer i UFD: (BAS och text blir poster)" data-title-en="Put files into UFD: (BAS and text become records)" data-en="Add…">Lägg in…</button>
+        <input type="file" id="natfil" multiple>
+        <button id="nat_trafik_visa" title="Visa eller dölj trafiken" data-title-en="Show or hide the traffic" data-en="Traffic">Trafiken</button>
+      </div>
+      <div id="natfiler"></div>
+      <pre id="trafik" hidden></pre>
+      <div class="hjalptext" hidden>
+        <p lang="sv">Med <i>nodkortet i</i> sitter LUXNET:s nodkort i
+        bussen och nätets DOS-PROM (ABC802-dos-LUXNET-322n02) i ROM:en i
+        stället för DOS v.20, och maskinen startas om. Centralen spelas av
+        emulatorn: kontots katalog är <code>UFD:</code>, och filerna ligger
+        här i webbläsaren (listan nedan; <code>NAT.BAS</code> finns där
+        från början). <code>SAVE UFD:NAMN</code>, <code>LIST
+        UFD:NAMN</code> (programmet som text), <code>LOAD UFD:NAMN</code>, <code>PREPARE</code>,
+        <code>OPEN</code>, <code>KILL</code>, <code>NAME … AS …</code> och
+        <code>CD</code> går över nätet; det andra (<code>DR0:</code>,
+        <code>MEM:</code>) går som förut till den lokala DOS:en. Hur det
+        riktiga kortet och centralen gjorde är inte känt; det här är
+        emulatorns gränssnitt mot ROM:en, inte LUXNET:s protokoll.</p>
+        <p lang="en">With <i>node card in</i> the LUXNET node card is on
+        the bus and the network's DOS PROM (ABC802-dos-LUXNET-322n02) is in
+        the ROM instead of DOS v.20, and the machine restarts. The emulator
+        plays the central: the account's directory is <code>UFD:</code>, and
+        the files are kept here in the browser (the list below;
+        <code>NAT.BAS</code> is there from the start). <code>SAVE
+        UFD:NAME</code>, <code>LIST UFD:NAME</code> (the program as text), <code>LOAD UFD:NAME</code>,
+        <code>PREPARE</code>, <code>OPEN</code>, <code>KILL</code>,
+        <code>NAME … AS …</code> and <code>CD</code> go over the network;
+        the rest (<code>DR0:</code>, <code>MEM:</code>) goes to the local
+        DOS as before. How the real card and central worked is not known;
+        this is the emulator's interface to the ROM, not LUXNET's
+        protocol.</p>
+        <p lang="sv"><i>Lägg in</i> tar filer från datorn: en BAS- eller
+        textfil blir poster om 253 bytes med CR efter raderna (å ä ö blir
+        ABC 802:s koder), annat läggs in som det är. I listan läser ett program in sig med
+        ett klick (<code>LOAD UFD:NAMN</code>), ↓ hämtar filen (text som
+        text) och ✕ tar bort den. Filerna finns bara i webbläsaren och
+        ligger kvar när maskinen startas om, men inte efter <i>Av/på</i>.
+        <i>Trafiken</i> visar varje anrop som centralen tar, som
+        <code>-NL</code> i terminalen; där är nätet <code>-N mapp</code>.</p>
+        <p lang="en"><i>Add</i> takes files from the computer: a BAS or
+        text file becomes records of 253 bytes with CR after the lines (å ä
+        ö become the ABC 802's codes); anything else goes in as it is. In the list a
+        program loads itself with a click (<code>LOAD UFD:NAME</code>), ↓
+        fetches the file (text as text) and ✕ removes it. The files exist
+        only in the browser and stay when the machine restarts, but not
+        after <i>Off/on</i>. <i>Traffic</i> shows each call the central
+        takes, like <code>-NL</code> in the terminal; there the network is
+        <code>-N folder</code>.</p>
       </div>
     </details>
 

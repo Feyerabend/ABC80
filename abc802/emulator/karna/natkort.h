@@ -23,9 +23,12 @@
  * Funktionerna som centralen tar:
  *     9   starten (DOSSTA): inloggningen, UFD: sätts (DSYSUN, $FFF9)
  *     2   PREPARE, 3 OPEN, 4 CLOSE, 5 läs post, 6 skriv post,
- *     7   SETEND ($FFFF = KILL), $12 CD
+ *     7   SETEND ($FFFF = KILL), 8 NAME (DE = det nya namnet), $12 CD
+ *     1   läs sektor: katalogen som sektorer, så att Luxors LIB.BAC
+ *         (UFD-DOS) kan lista UFD: (natkort.c, KATALOG)
  * allt för enheten UFD: ($1E). De andra går till den lokala DOS:en (som
- * ger fel 200 där det bara finns en väg via nätet). PFD:, LFD: och
+ * ger fel 200 där det bara finns en väg via nätet). FILESTAT ($13-$15)
+ * gör något som ingen källa beskriver och ger fel 200. PFD:, LFD: och
  * RP0:-RP2: finns inte här (fel 46).
  *
  * Kärnan använder inget ur C-biblioteket utom malloc, free och mem*,

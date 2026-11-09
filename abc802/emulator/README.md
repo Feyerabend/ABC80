@@ -53,6 +53,10 @@ trafiken:
 
     ./abc802 -r ../roms/abc802net.rom -N mapp -NL -k '10 PRINT "HEJ"\rSAVE UFD:PROV\r'
 
+På webbsidan sätter panelen *Nätet* i nodkortet och startar om med
+nät-ROM:en; filerna i `UFD:` ligger då i webbläsaren, där de läggs in,
+hämtas och tas bort, och trafiken visas i panelen.
+
 ## Mapparna
 
 | Mapp | Innehåll |
@@ -99,7 +103,9 @@ and a web page (WebAssembly).
 <https://feyerabend.github.io/ABC80/abc802/emulator/webb/abc802.html>
 (`?sprak=en` for English). The benchmark disk from
 [`../benchmark/`](../benchmark/) is inserted at start; the CP/M and Forth
-buttons insert those disks.
+buttons insert those disks. The *Network* panel puts in the LUXNET node card
+and restarts with the network ROM; the files in `UFD:` are then kept in the
+browser.
 
 **Build:** the ROMs belong to Luxor and are not stored here; fetch them with
 `python3 ../roms/hamta.py` (or `make roms`). Then `make` builds the batch

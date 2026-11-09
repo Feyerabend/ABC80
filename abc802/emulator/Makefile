@@ -21,6 +21,7 @@ KARNA = karna/z80.c karna/sio.c karna/ctc.c karna/abc802.c karna/skarm802.c \
 VARD  = vard/abc802.c vard/natmapp.c vard/png.c
 
 ROM    = ../roms/abc802rom.rom
+NATROM = ../roms/abc802net.rom
 TECKEN = ../roms/orig/abc802/ABC802-char.6490191-01.bin
 
 # WebAssembly utan C-bibliotek, som för ABC80: clang och lld (wasm-ld)
@@ -38,9 +39,9 @@ alla: abc802
 abc802: $(KARNA) $(VARD) karna/*.h vard/*.h
 	$(CC) $(CFLAGS) -o $@ $(KARNA) $(VARD)
 
-roms: $(ROM) $(TECKEN)
+roms: $(ROM) $(NATROM) $(TECKEN)
 
-$(ROM) $(TECKEN):
+$(ROM) $(NATROM) $(TECKEN):
 	python3 ../roms/hamta.py
 
 webb: webb/abc802.html
@@ -50,7 +51,7 @@ webb/abc802.wasm: $(WEBB_C) karna/*.h webb/libc/*.h
 
 webb/abc802.html: webb/mall.html webb/abc802.js webb/datavision.js webb/bbs.js webb/stordator.js \
                   webb/abc802.wasm webb/bygg.sh skivor/tidsprov.img skivor/tom.img skivor/forth.img \
-                  cpm/a.img $(ROM) $(TECKEN)
+                  cpm/a.img $(ROM) $(NATROM) $(TECKEN)
 	SKIVOR=skivor FORTH=skivor/forth.img webb/bygg.sh > $@
 
 clean:

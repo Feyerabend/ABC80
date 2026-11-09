@@ -31,12 +31,22 @@
  * (0 genast); kortet är upptaget så länge efter varje tecken.
  *
  * Till lamporna: skivan_rord() räknar bytes till och från skivkortet.
+ *
+ * Nätet (LUXNET, ../karna/natkort.h) är -N: natet(1) sätter i nodkortet,
+ * som kopplas in när maskinen startar; sidan lägger då i nät-ROM:en
+ * (abc802net.rom) i stället för den vanliga. Centralens filer ligger här
+ * och sitter kvar när maskinen startas om: nat_fil() lägger in en,
+ * nat_antal(), nat_namn(), nat_langd() och nat_data() visar dem och
+ * nat_ta_bort() tar bort en. Trafiken (-NL) hamnar i en buffert som
+ * sidan tömmer (nat_logg(), nat_logg_antal(), nat_logg_tom()), och
+ * nat_anrop() räknar anropen, för lampan.
  */
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "../karna/abc802.h"
+#include "../karna/natkort.h"
 #include "../karna/skivkort.h"
 #include "../karna/skrivarkort.h"
 
@@ -45,6 +55,8 @@
 static Abc802 maskin;
 static Skivkort skivkort;
 static Skrivarkort skrivarkort;
+static Natkort natkort;
+static int natkort_i, natkort_klar;
 static int skrivarkort_i;
 static long skrivarens_tecken;               /* tecken i sekunden, 0 genast */
 static uint8_t bilden[ABC802_BREDD * ABC802_HOJD];
@@ -115,6 +127,12 @@ EXPORT(starta) int starta(const uint8_t *rom, long rom_storlek,
     maskin.seriellt_ut = seriellt_ut;
     ut_i[0] = ut_i[1] = ut_i[SKRIVAREN] = 0;
     bandet_i();
+    if (natkort_i) {
+        for (int k = 0; k < 8; k++)
+            natkort.kanal[k] = -1;
+        natkort.ufd[0] = 0;
+        natkort_koppla(&natkort, &maskin);
+    }
     abc802_aterstall(&maskin);
     return 1;
 }
@@ -306,3 +324,98 @@ EXPORT(skrivarens_fart) void skrivarens_fart(long tecken_i_sekunden)
     if (!skrivarens_tecken)
         skrivarkort.klar = 0;
 }
+
+/* ---------------------------------------------------------------- */
+/* Nätet                                                             */
+
+#define LOGG_STORLEK 16384
+static char logg[LOGG_STORLEK];
+static long logg_i;
+
+static void loggat(void *data, const char *rad)
+{
+    (void)data;
+    long langd = (long)strlen(rad);
+    if (logg_i + langd + 1 > LOGG_STORLEK)
+        return;
+    memcpy(logg + logg_i, rad, (size_t)langd);
+    logg_i += langd;
+    logg[logg_i++] = '\n';
+}
+
+static void natkortet(void)
+{
+    if (!natkort_klar) {
+        natkort_starta(&natkort);
+        natkort.loggat = loggat;
+        natkort_klar = 1;
+    }
+}
+
+/* Nodkortet i (1) eller ur (0); det gäller från nästa starta(). */
+EXPORT(natet) void natet(int i)
+{
+    natkortet();
+    natkort_i = i != 0;
+}
+
+/* En fil till centralen: namn är "NAMN.EXT" eller "KATALOG/NAMN.EXT"
+ * (från minne(), med en nolla efter), data posterna. Data kopieras.
+ * 0 om namnet inte går i DOS:en eller centralen är full. */
+EXPORT(nat_fil) int nat_fil(char *namn, const uint8_t *data, long langd)
+{
+    natkortet();
+    char *snedstreck = NULL;
+    for (char *s = namn; *s; s++)
+        if (*s == '/')
+            snedstreck = s;
+    if (!snedstreck)
+        return natkort_fil(&natkort, "", namn, data, langd);
+    *snedstreck = 0;
+    return natkort_fil(&natkort, namn, snedstreck + 1, data, langd);
+}
+
+/* Posterna i centralen; nat_namn() är 0 för en katalog och en fil som
+ * har tagits bort, annars "NAMN.EXT" eller "KATALOG/NAMN.EXT". */
+EXPORT(nat_antal) int nat_antal(void) { return natkort.antal; }
+
+static char nat_namnet[NATKORT_KATALOG + 16];
+EXPORT(nat_namn) const char *nat_namn(int k)
+{
+    if (k < 0 || k >= natkort.antal)
+        return NULL;
+    NatFil *f = &natkort.filer[k];
+    if (f->borta)
+        f->andrad = 0;                       /* här finns ingen mapp att ta bort i */
+    if (f->ar_katalog || f->borta)
+        return NULL;
+    long i = (long)strlen(f->katalog);
+    memcpy(nat_namnet, f->katalog, (size_t)i);
+    if (i)
+        nat_namnet[i++] = '/';
+    natkort_filnamn(f, nat_namnet + i);
+    return nat_namnet;
+}
+
+EXPORT(nat_langd) long nat_langd(int k)
+{
+    return k >= 0 && k < natkort.antal ? natkort.filer[k].langd : 0;
+}
+
+EXPORT(nat_data) uint8_t *nat_data(int k)
+{
+    return k >= 0 && k < natkort.antal ? natkort.filer[k].data : NULL;
+}
+
+EXPORT(nat_ta_bort) void nat_ta_bort(int k)
+{
+    if (k >= 0 && k < natkort.antal && !natkort.filer[k].ar_katalog) {
+        natkort.filer[k].borta = 1;
+        natkort.filer[k].andrad = 0;
+    }
+}
+
+EXPORT(nat_anrop) long nat_anrop(void) { return natkort.anrop; }
+EXPORT(nat_logg) const char *nat_logg(void) { return logg; }
+EXPORT(nat_logg_antal) long nat_logg_antal(void) { return logg_i; }
+EXPORT(nat_logg_tom) void nat_logg_tom(void) { logg_i = 0; }
