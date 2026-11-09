@@ -38,15 +38,15 @@ Utan `-r` och `-c` läses ROM:en och teckengeneratorn från
 | `-z n`     | förstoring: fönstret är n x 528 x n x 396 (standard 2)       |
 | `-tyst`    | utan pip och summer                                          |
 | `-skarp`   | skarpa punkter, utan sken och efterlysning                   |
-| `-farg`    | som om ABC 802 hade haft färg, som ABC 800 C (utanför boken, `../../utanfor/farg`) |
+| `-farg`    | som om ABC 802 hade haft färg, som ABC 800 C |
 
 Tangenterna: RETURN, ← och → (backsteg är ←), ESC, TAB, DEL och
 Ctrl-A till Ctrl-Z; å ä ö é ü och Å Ä Ö É Ü blir ABC 802:s koder. F12
 är RESET. Cmd-V (macOS) eller Shift-Insert klistrar in text.
 
 Skivminnet är DOS v.20 i ROM:en och skivkortet på ABC-bussen
-(`../karna/skivkort.c`). `../../prov/skivor/` har en tom skiva och en
-med tidsproven: `./abc802f -D ../../prov/skivor/tidsprov.img`, sedan
+(`../karna/skivkort.c`). `../skivor/` har en tom skiva och en
+med tidsproven: `./abc802f -D ../skivor/tidsprov.img`, sedan
 `LOAD DR0:B1` och `RUN`. Utan `-DS` skrivs ingenting tillbaka.
 
 Pipet kommer från tangentbordets högtalare när datorn sänder kod 7 på
