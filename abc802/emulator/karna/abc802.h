@@ -125,7 +125,20 @@ struct Abc802 {
     long mottagning_tid[2];                  /* T-cykler per tecken in */
     void *seriell_data;
     void (*seriellt_ut)(void *data, int kontakt, uint8_t tecken);
+
+    /* En krok i ROM:en: när processorn ska hämta en instruktion på
+     * krok_pc och ROM:en syns där anropas krok i stället. Den får ändra
+     * registren och minnet (pc också) och lämnar antalet T-cykler, eller
+     * 0 om instruktionen ska köras som vanligt. Nodkortet (natkort.h)
+     * använder den. */
+    int (*krok)(void *data, Abc802 *m);
+    void *krok_data;
+    uint16_t krok_pc;
 };
+
+/* Minnet som processorn ser det just nu. */
+uint8_t abc802_las(Abc802 *m, uint16_t adress);
+void    abc802_skriv(Abc802 *m, uint16_t adress, uint8_t varde);
 
 /* Töm maskinen. Byglarna: 80 tecken, 50 Hz, ingen skärmsläckare.
  * Tangenterna hålls nere 40 ms och släppta 60 ms. */

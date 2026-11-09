@@ -332,6 +332,16 @@ int abc802_rom(Abc802 *m, const uint8_t *data, size_t storlek)
     return 1;
 }
 
+uint8_t abc802_las(Abc802 *m, uint16_t adress)
+{
+    return las_minne(m, adress);
+}
+
+void abc802_skriv(Abc802 *m, uint16_t adress, uint8_t varde)
+{
+    skriv_minne(m, adress, varde);
+}
+
 int abc802_teckenrom(Abc802 *m, const uint8_t *data, size_t storlek)
 {
     if (storlek != ABC802_TECKENROM && storlek != 2 * ABC802_TECKENROM)
@@ -450,6 +460,14 @@ void abc802_kor(Abc802 *m, long long tcykler)
         uint16_t pc = m->z80.pc;
         /* Låskretsen 7D är öppen under hämtningen (M1). */
         m->hamtning_7800 = (pc & 0xF800) == 0x7800;
+        if (m->krok && pc == m->krok_pc && pc < 0x7800 && !bara_ram(m)) {
+            int tk = m->krok(m->krok_data, m);
+            if (tk) {
+                m->instruktioner++;
+                ga_fram(m, tk);
+                continue;
+            }
+        }
         uint8_t operation = las_minne(m, pc);
         int ar_reti = operation == 0xED && las_minne(m, (uint16_t)(pc + 1)) == 0x4D;
         int t = z80_steg(&m->z80);

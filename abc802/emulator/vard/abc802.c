@@ -46,6 +46,13 @@
  * Skrivarkortet (kort 60 på ABC-bussen, ../karna/skrivarkort.h):
  *     -P fil         sätt i kortet; det som skrivs ut går till filen
  *                    (- = standard fel). PR: väljer kortet själv
+ *
+ * Nätet (LUXNET, med -r ../roms/abc802net.rom; nodkortet och centralen
+ * i ../karna/natkort.h):
+ *     -N mapp        mappen är kontots UFD: i centralen, undermapparna
+ *                    kataloger (CD); det som ändras skrivs tillbaka efter
+ *                    körningen
+ *     -NL            skriv trafiken på nätet på standard fel
  */
 
 #include <ctype.h>
@@ -54,12 +61,15 @@
 #include <string.h>
 
 #include "../karna/abc802.h"
+#include "../karna/natkort.h"
 #include "../karna/skivkort.h"
 #include "../karna/skrivarkort.h"
+#include "natmapp.h"
 #include "png.h"
 
 static Abc802 maskin;
 static Skivkort skivkort;
+static Natkort natkort;
 static Skrivarkort skrivarkort;
 static FILE *skrivarfil;
 static const char *skivfil[SKIVKORT_ENHETER];
@@ -209,6 +219,12 @@ static int spara_skivor(void)
     return 1;
 }
 
+static void natlogg(void *data, const char *rad)
+{
+    (void)data;
+    fprintf(stderr, "nät: %s\n", rad);
+}
+
 static void skrivaren(void *data, uint8_t tecken)
 {
     (void)data;
@@ -222,14 +238,15 @@ static void anvandning(void)
                     "[-k text] [-f fil] [-L ms] [-K ms,ms] [-t ms] [-p fil.png] [-i]\n"
                     "              [-D fil[@kort[.enhet]]] [-DP fil[@..]] [-DS]\n"
                     "              [-T fil] [-U fil] [-A fil] [-B fil] [-a fil] [-b fil]\n"
-                    "              [-P fil]\n");
+                    "              [-P fil] [-N mapp] [-NL]\n");
     exit(2);
 }
 
 int main(int argc, char **argv)
 {
     const char *romnamn = NULL, *teckennamn = NULL, *pngnamn = NULL;
-    const char *bandnamn = NULL, *inspelningsnamn = NULL;
+    const char *bandnamn = NULL, *inspelningsnamn = NULL, *natmapp = NULL;
+    int natlogga = 0;
     long ms = 500, rad_paus = 200;
     int info = 0, spara = 0;
 
@@ -302,7 +319,11 @@ int main(int argc, char **argv)
                 fprintf(stderr, "abc802: kan inte skriva %s\n", namn);
                 return 1;
             }
-        } else
+        } else if (!strcmp(a, "-N") && har_varde)
+            natmapp = argv[++k];
+        else if (!strcmp(a, "-NL"))
+            natlogga = 1;
+        else
             anvandning();
     }
 
@@ -320,6 +341,15 @@ int main(int argc, char **argv)
     }
     free(data);
 
+    if (natmapp) {
+        if (!natmapp_las(&natkort, natmapp)) {
+            fprintf(stderr, "abc802: kan inte läsa mappen %s\n", natmapp);
+            return 1;
+        }
+        if (natlogga)
+            natkort.loggat = natlogg;
+        natkort_koppla(&natkort, &maskin);
+    }
     if (skivkort.antal_enheter)
         bussen_koppla(&maskin.bussen, &skivkort.kort);
     if (skrivarfil) {
@@ -397,6 +427,8 @@ int main(int argc, char **argv)
         }
     }
     if (spara && !spara_skivor())
+        return 1;
+    if (natmapp && !natmapp_spara(&natkort, natmapp))
         return 1;
     if (info)
         fprintf(stderr, "%lld instruktioner, %.3f s, %ld pip, %ld omslag i summern\n",

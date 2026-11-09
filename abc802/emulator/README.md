@@ -45,6 +45,14 @@ för kassetten, `-A`/`-B`/`-a`/`-b` för kontakterna, `-P` för
 skrivarkortet, `-p` för en PNG och `-i` för antalet instruktioner och
 tiden. Skivorna skrivs inte tillbaka utan `-DS`.
 
+Nätet LUXNET: med ROM:en `../roms/abc802net.rom` (BASIC II och nätets
+DOS-PROM) och `-N mapp` spelar emulatorn nodkortet och centralen, och
+mappen blir kontots `UFD:`, med undermapparna som kataloger för `CD`.
+Det som ändras skrivs tillbaka efter körningen, och `-NL` visar
+trafiken:
+
+    ./abc802 -r ../roms/abc802net.rom -N mapp -NL -k '10 PRINT "HEJ"\rSAVE UFD:PROV\r'
+
 ## Mapparna
 
 | Mapp | Innehåll |

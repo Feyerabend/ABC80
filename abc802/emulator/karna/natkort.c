@@ -1,0 +1,528 @@
+/*
+ * natkort.c -- nodkortet och centralen i LUXNET (se natkort.h)
+ */
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "natkort.h"
+
+/* Platserna i ROM:en och i DOS:ens minne (../../dis/build/abc802net.asm). */
+#define NETOUT  0x6009
+#define NETBAK  0x6DDE
+#define VFD3F   0xFD3F                       /* kortet som NETHK valde */
+#define DSLOT   0xFD00                       /* kanalens arbetskopia */
+#define DUNIT   0xFD01
+#define VFD02   0xFD02                       /* posten (från 1) */
+#define VFD0A   0xFD0A                       /* antal poster */
+#define VFD0E   0xFD0E                       /* platsen i bufferten */
+#define VFD0F   0xFD0F
+#define DBUFP   0xFD12                       /* buffertarna ($F500) */
+#define DSYSUN  0xFFF7                       /* UFD: ordet och enheten */
+#define VFFF9   0xFFF9
+
+#define UFD     0x1E
+#define NODKORT 3
+
+/* Felen (koden + $80 i BASICINI.SYS). */
+#define FEL_HITTAR_EJ  0x15                  /* 21 Hittar ej filen */
+#define FEL_UTANFOR    0x26                  /* 38 Sektornummer utanför filen */
+#define FEL_FULL       0x29                  /* 41 Skivan full */
+#define FEL_MINNE      0x80                  /* Slut på minnet i centralen */
+/* Finns inte: CY = 1 och A = 0, som den lokala OPEN:en. Då går DEXIT
+ * tillbaka genast med DE orört, DOSDRV (L699F) gör fel 21 av det och
+ * BASIC:en kan pröva .BAS efter .BAC med samma namn (OPENIX). */
+#define FEL_FINNS_EJ   0x100
+
+#define AVBOJD (-1)                          /* kortet tar inte funktionen */
+
+/* ---- små hjälpare utan C-biblioteket ----------------------------- */
+
+static int lika(const char *a, const char *b)
+{
+    while (*a && *a == *b)
+        a++, b++;
+    return *a == *b;
+}
+
+static void kopiera(char *ut, const char *in, int max)
+{
+    int k = 0;
+    while (in[k] && k < max - 1) {
+        ut[k] = in[k];
+        k++;
+    }
+    ut[k] = 0;
+}
+
+static char stor(char c)
+{
+    return c >= 'a' && c <= 'z' ? (char)(c - 'a' + 'A') : c;
+}
+
+/* "prov.bac" -> "PROV    BAC". 0 om namnet inte går. */
+static int dosnamn(const char *in, char *ut)
+{
+    memset(ut, ' ', 11);
+    ut[11] = 0;
+    int k = 0;
+    while (*in && *in != '.') {
+        if (k == 8)
+            return 0;
+        ut[k++] = stor(*in++);
+    }
+    if (!k)
+        return 0;
+    if (*in == '.') {
+        in++;
+        for (k = 8; *in; k++) {
+            if (k == 11)
+                return 0;
+            ut[k] = stor(*in++);
+        }
+    }
+    return 1;
+}
+
+void natkort_filnamn(const NatFil *f, char *ut)
+{
+    int k = 0;
+    for (int i = 0; i < 8 && f->namn[i] != ' '; i++)
+        ut[k++] = f->namn[i];
+    if (f->namn[8] != ' ') {
+        ut[k++] = '.';
+        for (int i = 8; i < 11 && f->namn[i] != ' '; i++)
+            ut[k++] = f->namn[i];
+    }
+    ut[k] = 0;
+}
+
+/* ---- centralen ---------------------------------------------------- */
+
+void natkort_starta(Natkort *n)
+{
+    for (int k = 0; k < n->antal; k++)
+        free(n->filer[k].data);
+    memset(n, 0, sizeof *n);
+    for (int k = 0; k < 8; k++)
+        n->kanal[k] = -1;
+}
+
+static int finns_katalog(Natkort *n, const char *katalog)
+{
+    if (!*katalog)
+        return 1;
+    for (int k = 0; k < n->antal; k++)
+        if (n->filer[k].ar_katalog && !n->filer[k].borta
+            && lika(n->filer[k].katalog, katalog))
+            return 1;
+    return 0;
+}
+
+static int hitta(Natkort *n, const char *katalog, const char *namn11)
+{
+    for (int k = 0; k < n->antal; k++) {
+        NatFil *f = &n->filer[k];
+        if (!f->ar_katalog && !f->borta && lika(f->katalog, katalog)
+            && !memcmp(f->namn, namn11, 11))
+            return k;
+    }
+    return -1;
+}
+
+static int ny_post(Natkort *n)
+{
+    for (int k = 0; k < n->antal; k++)
+        if (n->filer[k].borta && !n->filer[k].andrad) {
+            free(n->filer[k].data);
+            memset(&n->filer[k], 0, sizeof n->filer[k]);
+            return k;
+        }
+    if (n->antal == NATKORT_FILER)
+        return -1;
+    memset(&n->filer[n->antal], 0, sizeof n->filer[0]);
+    return n->antal++;
+}
+
+int natkort_katalog(Natkort *n, const char *katalog)
+{
+    if (!*katalog || finns_katalog(n, katalog))
+        return 1;
+    int k = ny_post(n);
+    if (k < 0)
+        return 0;
+    kopiera(n->filer[k].katalog, katalog, NATKORT_KATALOG);
+    n->filer[k].ar_katalog = 1;
+    return 1;
+}
+
+/* Plats för minst langd bytes. */
+static int rymmer(NatFil *f, long langd)
+{
+    if (langd <= f->plats)
+        return 1;
+    long plats = f->plats ? f->plats : 16 * NATKORT_POST;
+    while (plats < langd)
+        plats *= 2;
+    uint8_t *data = malloc((size_t)plats);
+    if (!data)
+        return 0;
+    if (f->langd)
+        memcpy(data, f->data, (size_t)f->langd);
+    free(f->data);
+    f->data = data;
+    f->plats = plats;
+    return 1;
+}
+
+int natkort_fil(Natkort *n, const char *katalog, const char *namn,
+                const uint8_t *data, long langd)
+{
+    char namn11[12];
+    if (!dosnamn(namn, namn11) || !natkort_katalog(n, katalog))
+        return 0;
+    int k = hitta(n, katalog, namn11);
+    if (k < 0)
+        k = ny_post(n);
+    if (k < 0)
+        return 0;
+    NatFil *f = &n->filer[k];
+    kopiera(f->katalog, katalog, NATKORT_KATALOG);
+    memcpy(f->namn, namn11, 12);
+    f->langd = 0;
+    if (!rymmer(f, langd))
+        return 0;
+    if (langd)
+        memcpy(f->data, data, (size_t)langd);
+    f->langd = langd;
+    return 1;
+}
+
+/* ---- loggen ------------------------------------------------------- */
+
+static int rad_k;
+
+static void lagg(Natkort *n, const char *s)
+{
+    while (*s && rad_k < NATKORT_RAD - 1)
+        n->rad[rad_k++] = *s++;
+    n->rad[rad_k] = 0;
+}
+
+static void lagg_hex(Natkort *n, unsigned v, int siffror)
+{
+    char s[9];
+    for (int k = siffror - 1; k >= 0; k--, v >>= 4)
+        s[k] = "0123456789ABCDEF"[v & 15];
+    s[siffror] = 0;
+    lagg(n, s);
+}
+
+static void lagg_tal(Natkort *n, long v)
+{
+    char s[12];
+    int k = 11;
+    s[k] = 0;
+    do {
+        s[--k] = (char)('0' + v % 10);
+        v /= 10;
+    } while (v && k);
+    lagg(n, s + k);
+}
+
+/* ---- kortet ------------------------------------------------------- */
+
+static uint16_t ord(Abc802 *m, uint16_t a)
+{
+    return (uint16_t)(abc802_las(m, a) | abc802_las(m, (uint16_t)(a + 1)) << 8);
+}
+
+static void skriv_ord(Abc802 *m, uint16_t a, uint16_t v)
+{
+    abc802_skriv(m, a, (uint8_t)v);
+    abc802_skriv(m, (uint16_t)(a + 1), (uint8_t)(v >> 8));
+}
+
+static long poster(const NatFil *f)
+{
+    return (f->langd + NATKORT_POST - 1) / NATKORT_POST;
+}
+
+/* Kanalens buffert: sidan i DBUFP plus kanalen (SLTBUF). */
+static uint16_t buffert(Abc802 *m, uint8_t b)
+{
+    return (uint16_t)((abc802_las(m, DBUFP + 1) + (b >> 4)) << 8);
+}
+
+/* Den öppnade filen i DSLOT (som den lokala OPEN:en lämnar den). */
+static void oppnad(Abc802 *m, const NatFil *f)
+{
+    abc802_skriv(m, DSLOT, 0);
+    abc802_skriv(m, DUNIT, UFD);
+    skriv_ord(m, VFD02, 1);
+    skriv_ord(m, VFD0A, (uint16_t)poster(f));
+    abc802_skriv(m, VFD0E, 3);
+    abc802_skriv(m, VFD0F, UFD);
+}
+
+/* Filen som kanalen har, eller -1 (kanalen är inte nätets). */
+static int kanalens(Natkort *n, Abc802 *m, uint8_t b)
+{
+    int k = n->kanal[(b >> 4) & 7];
+    if (k < 0 || (abc802_las(m, DUNIT) & 0x1F) != UFD)
+        return -1;
+    return k;
+}
+
+static int las_namn(Abc802 *m, uint16_t de, char *namn11)
+{
+    for (int k = 0; k < 11; k++)
+        namn11[k] = (char)abc802_las(m, (uint16_t)(de + k));
+    namn11[11] = 0;
+    return 1;
+}
+
+/* CD: "NAMN" ned, ".." upp, "" eller "/" hem. */
+static int cd(Natkort *n, Abc802 *m, uint16_t de, int langd)
+{
+    char ny[NATKORT_KATALOG];
+    char led[NATKORT_KATALOG];
+    if (langd >= NATKORT_KATALOG)
+        return FEL_HITTAR_EJ;
+    for (int k = 0; k < langd; k++)
+        led[k] = stor((char)abc802_las(m, (uint16_t)(de + k)));
+    while (langd && led[langd - 1] == ' ')
+        langd--;
+    led[langd] = 0;
+    lagg(n, " \"");
+    lagg(n, led);
+    lagg(n, "\"");
+    if (!langd || lika(led, "/")) {
+        n->ufd[0] = 0;
+        return 0;
+    }
+    if (lika(led, "..")) {
+        int k = (int)strlen(n->ufd);
+        while (k && n->ufd[k - 1] != '/')
+            k--;
+        n->ufd[k ? k - 1 : 0] = 0;
+        return 0;
+    }
+    int k = 0;
+    if (n->ufd[0]) {
+        kopiera(ny, n->ufd, NATKORT_KATALOG);
+        k = (int)strlen(ny);
+        ny[k++] = '/';
+    }
+    if (k + langd >= NATKORT_KATALOG)
+        return FEL_HITTAR_EJ;
+    memcpy(ny + k, led, (size_t)langd + 1);
+    if (!finns_katalog(n, ny))
+        return FEL_HITTAR_EJ;
+    kopiera(n->ufd, ny, NATKORT_KATALOG);
+    return 0;
+}
+
+static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
+                    uint16_t de, uint8_t h)
+{
+    char namn11[12];
+    int k;
+    NatFil *f;
+    int kan = (b >> 4) & 7;
+    (void)h;
+
+    switch (fn) {
+    case 9:                                  /* starten: logga in */
+        skriv_ord(m, DSYSUN, 1);             /* UFD: finns (NETUNT) */
+        abc802_skriv(m, VFFF9, UFD);
+        n->ufd[0] = 0;
+        for (k = 0; k < 8; k++)
+            n->kanal[k] = -1;
+        lagg(n, "starten, inloggad");
+        return 0;
+
+    case 2:                                  /* PREPARE */
+    case 3:                                  /* OPEN */
+        if ((c & 0x1F) != UFD)
+            return AVBOJD;
+        las_namn(m, de, namn11);
+        lagg(n, fn == 2 ? "PREPARE " : "OPEN ");
+        lagg(n, namn11);
+        k = hitta(n, n->ufd, namn11);
+        if (k < 0) {
+            if (fn == 3)
+                return FEL_FINNS_EJ;
+            k = ny_post(n);
+            if (k < 0)
+                return FEL_FULL;
+            f = &n->filer[k];
+            kopiera(f->katalog, n->ufd, NATKORT_KATALOG);
+            memcpy(f->namn, namn11, 12);
+        }
+        f = &n->filer[k];
+        if (fn == 2) {
+            f->langd = 0;
+            f->andrad = 1;
+        }
+        n->kanal[kan] = k;
+        n->ta_bort[kan] = 0;
+        oppnad(m, f);
+        lagg(n, ", kanal ");
+        lagg_tal(n, kan);
+        lagg(n, ", ");
+        lagg_tal(n, poster(f));
+        lagg(n, " poster");
+        return 0;
+
+    case 4:                                  /* CLOSE */
+        k = kanalens(n, m, b);
+        if (k < 0)
+            return AVBOJD;
+        f = &n->filer[k];
+        lagg(n, "CLOSE kanal ");
+        lagg_tal(n, kan);
+        if (n->ta_bort[kan]) {
+            f->borta = 1;
+            f->andrad = 1;
+            lagg(n, ", borttagen");
+        }
+        n->kanal[kan] = -1;
+        n->ta_bort[kan] = 0;
+        abc802_skriv(m, DUNIT, 0xFF);        /* som S6603 */
+        return 0;
+
+    case 5:                                  /* läs post */
+    case 6: {                                /* skriv post */
+        k = kanalens(n, m, b);
+        if (k < 0)
+            return AVBOJD;
+        f = &n->filer[k];
+        uint16_t post = ord(m, VFD02);
+        uint16_t buf = buffert(m, b);
+        lagg(n, fn == 5 ? "läs post " : "skriv post ");
+        lagg_tal(n, post);
+        lagg(n, ", kanal ");
+        lagg_tal(n, kan);
+        if (post == 0)
+            return FEL_UTANFOR;
+        long plats = (long)(post - 1) * NATKORT_POST;
+        if (fn == 5) {
+            if (post > poster(f))
+                return FEL_UTANFOR;
+            abc802_skriv(m, buf, 0);
+            skriv_ord(m, (uint16_t)(buf + 1), (uint16_t)(post - 1));
+            for (int i = 0; i < NATKORT_POST; i++) {
+                long p = plats + i;
+                abc802_skriv(m, (uint16_t)(buf + 3 + i),
+                             p < f->langd ? f->data[p] : 0);
+            }
+        } else {
+            long slut = plats + NATKORT_POST;
+            if (!rymmer(f, slut))
+                return FEL_MINNE;
+            if (plats > f->langd)
+                memset(f->data + f->langd, 0, (size_t)(plats - f->langd));
+            for (int i = 0; i < NATKORT_POST; i++)
+                f->data[plats + i] = abc802_las(m, (uint16_t)(buf + 3 + i));
+            if (slut > f->langd)
+                f->langd = slut;
+            f->andrad = 1;
+            skriv_ord(m, VFD0A, (uint16_t)poster(f));
+        }
+        skriv_ord(m, VFD02, (uint16_t)(post + 1));
+        return 0;
+    }
+
+    case 7:                                  /* SETEND, $FFFF = KILL */
+        k = kanalens(n, m, b);
+        if (k < 0)
+            return AVBOJD;
+        f = &n->filer[k];
+        lagg(n, "SETEND ");
+        lagg_hex(n, de, 4);
+        if (de == 0xFFFF) {
+            n->ta_bort[kan] = 1;
+            return 0;
+        }
+        if (de > poster(f))
+            return FEL_UTANFOR;
+        if ((long)de * NATKORT_POST < f->langd) {
+            f->langd = (long)de * NATKORT_POST;
+            f->andrad = 1;
+        }
+        skriv_ord(m, VFD0A, de);
+        return 0;
+
+    case 0x12: {                             /* CD */
+        lagg(n, "CD");
+        int fel = cd(n, m, de, (b << 8) | c);
+        lagg(n, " -> UFD:");
+        lagg(n, n->ufd[0] ? n->ufd : "(hemma)");
+        return fel;
+    }
+    }
+    return AVBOJD;
+}
+
+static int krok(void *data, Abc802 *m)
+{
+    Natkort *n = data;
+    Z80 *z = &m->z80;
+    if (abc802_las(m, VFD3F) != NODKORT)
+        return 0;                            /* kort $30: inget här */
+
+    /* Stacken från NETHK: BC, DE, AF och återhoppet. */
+    uint16_t sp = z->sp;
+    uint8_t c = abc802_las(m, sp), b = abc802_las(m, (uint16_t)(sp + 1));
+    uint16_t de = ord(m, (uint16_t)(sp + 2));
+    int fn = z->l;
+
+    rad_k = 0;
+    n->rad[0] = 0;
+    int fel = funktion(n, m, fn, b, c, de, z->h);
+    if (fel == AVBOJD) {                     /* OUT som vanligt, lokalt */
+        if (n->loggat && fn != 1) {          /* 1 (sektorerna) är för tätt */
+            rad_k = 0;
+            lagg(n, "funktion ");
+            lagg_hex(n, (unsigned)fn, 2);
+            lagg(n, " lokalt, BC=");
+            lagg_hex(n, (unsigned)(b << 8 | c), 4);
+            lagg(n, " DE=");
+            lagg_hex(n, de, 4);
+            n->loggat(n->logg_data, n->rad);
+        }
+        return 0;
+    }
+
+    uint8_t f = abc802_las(m, (uint16_t)(sp + 4));
+    uint8_t a = 0;
+    if (fel) {
+        f |= 1;
+        a = (uint8_t)fel;
+        if (fel == FEL_FINNS_EJ)
+            lagg(n, ": finns inte");
+        else {
+            lagg(n, ": fel ");
+            lagg_tal(n, fel);
+        }
+    } else
+        f &= (uint8_t)~1;
+    abc802_skriv(m, (uint16_t)(sp + 4), f);
+    abc802_skriv(m, (uint16_t)(sp + 5), a);
+
+    n->anrop++;
+    if (n->loggat)
+        n->loggat(n->logg_data, n->rad);
+
+    z->l = 0x80;                             /* klart */
+    z->pc = NETBAK;
+    return 200;
+}
+
+void natkort_koppla(Natkort *n, Abc802 *m)
+{
+    m->krok = krok;
+    m->krok_data = n;
+    m->krok_pc = NETOUT;
+}

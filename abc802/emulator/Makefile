@@ -16,8 +16,9 @@ CC     ?= cc
 CFLAGS ?= -std=c11 -O2 -Wall -Wextra
 
 KARNA = karna/z80.c karna/sio.c karna/ctc.c karna/abc802.c karna/skarm802.c \
-        karna/bussen.c karna/skivkort.c karna/kassett802.c karna/skrivarkort.c
-VARD  = vard/abc802.c vard/png.c
+        karna/bussen.c karna/skivkort.c karna/kassett802.c karna/skrivarkort.c \
+        karna/natkort.c
+VARD  = vard/abc802.c vard/natmapp.c vard/png.c
 
 ROM    = ../roms/abc802rom.rom
 TECKEN = ../roms/orig/abc802/ABC802-char.6490191-01.bin
