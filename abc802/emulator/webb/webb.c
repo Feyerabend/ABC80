@@ -359,6 +359,20 @@ EXPORT(natet) void natet(int i)
     natkort_i = i != 0;
 }
 
+/* Centralens klocka, som i en RIB: år - 1900, månad (1-12), dag,
+ * timme, minut och sekund. nat_fil() ger filen den tiden, och det som
+ * skrivs i UFD: får den. */
+EXPORT(nat_klocka) void nat_klocka(int ar, int man, int dag, int tim, int min, int sek)
+{
+    natkortet();
+    natkort.nu[0] = (uint8_t)ar;
+    natkort.nu[1] = (uint8_t)man;
+    natkort.nu[2] = (uint8_t)dag;
+    natkort.nu[3] = (uint8_t)tim;
+    natkort.nu[4] = (uint8_t)min;
+    natkort.nu[5] = (uint8_t)sek;
+}
+
 /* En fil till centralen: namn är "NAMN.EXT" eller "KATALOG/NAMN.EXT"
  * (från minne(), med en nolla efter), data posterna. Data kopieras.
  * 0 om namnet inte går i DOS:en eller centralen är full. */

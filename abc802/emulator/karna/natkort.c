@@ -37,6 +37,21 @@
 #define KATALOG 32
 #define KLUSTER 1288
 
+/* Biblioteket som en fil, för Dataindustriers L.BAC: OPEN "UFD:" utan
+ * namn. Posterna 1-17 är sektorerna KATALOG - 1 till KATALOG + 15 råa,
+ * alla 256 bytes (L läser dem i DOS-bufferten). Byte 0 i en post i
+ * katalogen är fil nr i i UFD: (från 1), och L läser filens RIB i
+ * posten 32 i + 1: storleken (sektorer) på 233-234, gruppen på 235-236,
+ * ägaren på 237-244, tiden på 245-250 (år - 1900, månad, dag, timme,
+ * minut, sekund), Ne på 251 och skydden på 252 (0 = alla får allt).
+ * Resten av posterna är nollor. */
+#define BIBLIOTEKET  (-2)
+#define BIB_POSTER   0x2000
+#define RIB_STORLEK  233
+#define RIB_GRUPP    235
+#define RIB_AGARE    237
+#define RIB_TID      245
+
 /* Felen (koden + $80 i BASICINI.SYS). */
 #define FEL_HITTAR_EJ  0x15                  /* 21 Hittar ej filen */
 #define FEL_UTANFOR    0x26                  /* 38 Sektornummer utanför filen */
@@ -203,6 +218,7 @@ int natkort_fil(Natkort *n, const char *katalog, const char *namn,
     NatFil *f = &n->filer[k];
     kopiera(f->katalog, katalog, NATKORT_KATALOG);
     memcpy(f->namn, namn11, 12);
+    memcpy(f->tid, n->nu, sizeof f->tid);
     f->langd = 0;
     if (!rymmer(f, langd))
         return 0;
@@ -279,13 +295,27 @@ static void oppnad(Abc802 *m, const NatFil *f)
     abc802_skriv(m, VFD0F, UFD);
 }
 
-/* Filen som kanalen har, eller -1 (kanalen är inte nätets). */
+/* Filen som kanalen har, BIBLIOTEKET eller -1 (kanalen är inte
+ * nätets). */
 static int kanalens(Natkort *n, Abc802 *m, uint8_t b)
 {
     int k = n->kanal[(b >> 4) & 7];
-    if (k < 0 || (abc802_las(m, DUNIT) & 0x1F) != UFD)
+    if (k == -1 || (abc802_las(m, DUNIT) & 0x1F) != UFD)
         return -1;
     return k;
+}
+
+/* Fil nr i (från 0) i UFD: just nu, i katalogens ordning, eller -1. */
+static int ufd_fil(Natkort *n, int i)
+{
+    for (int k = 0; k < n->antal; k++) {
+        NatFil *f = &n->filer[k];
+        if (f->ar_katalog || f->borta || !lika(f->katalog, n->ufd))
+            continue;
+        if (!i--)
+            return k;
+    }
+    return -1;
 }
 
 static int las_namn(Abc802 *m, uint16_t de, char *namn11)
@@ -364,13 +394,39 @@ static void katalogsektor(Natkort *n, Abc802 *m, uint16_t nr, uint16_t buf)
             s[0xEF + sek]++;
         else if (nr == KATALOG + sek) {
             long p = poster(f) ? poster(f) : 1;
-            s[plats] = (uint8_t)(1 + (i & 0x7F));
+            s[plats] = (uint8_t)(i < 0xFF ? i : 0xFE);   /* se BIBLIOTEKET */
             s[plats + 2] = (uint8_t)p;
             s[plats + 3] = (uint8_t)(p >> 8);
             memcpy(s + plats + 4, f->namn, 11);
         }
     }
     for (i = 0; i < 256; i++)
+        abc802_skriv(m, (uint16_t)(buf + i), s[i]);
+}
+
+/* Post nr i biblioteket (se BIBLIOTEKET) till buf. */
+static void bibliotekspost(Natkort *n, Abc802 *m, uint16_t post, uint16_t buf)
+{
+    if (post <= 17) {
+        katalogsektor(n, m, (uint16_t)(KATALOG - 2 + post), buf);
+        return;
+    }
+    uint8_t s[256];
+    memset(s, 0, sizeof s);
+    s[1] = (uint8_t)(post - 1);
+    s[2] = (uint8_t)((post - 1) >> 8);
+    int k = (post - 1) % 32 ? -1 : ufd_fil(n, (post - 1) / 32 - 1);
+    if (k >= 0) {
+        NatFil *f = &n->filer[k];
+        uint8_t *rib = s + 3;
+        long p = poster(f) ? poster(f) : 1;
+        rib[RIB_STORLEK] = (uint8_t)p;
+        rib[RIB_STORLEK + 1] = (uint8_t)(p >> 8);
+        rib[RIB_GRUPP] = 1;
+        memcpy(rib + RIB_AGARE, "ABC802  ", 8);
+        memcpy(rib + RIB_TID, f->tid, 6);
+    }
+    for (int i = 0; i < 256; i++)
         abc802_skriv(m, (uint16_t)(buf + i), s[i]);
 }
 
@@ -399,6 +455,22 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
             return AVBOJD;
         las_namn(m, de, namn11);
         lagg(n, fn == 2 ? "PREPARE " : "OPEN ");
+        if (!memcmp(namn11, "           ", 11)) {
+            lagg(n, "biblioteket");
+            if (fn == 2)
+                return FEL_SKYDD;
+            n->kanal[kan] = BIBLIOTEKET;
+            n->ta_bort[kan] = 0;
+            abc802_skriv(m, DSLOT, 0);
+            abc802_skriv(m, DUNIT, UFD);
+            skriv_ord(m, VFD02, 1);
+            skriv_ord(m, VFD0A, BIB_POSTER);
+            abc802_skriv(m, VFD0E, 3);
+            abc802_skriv(m, VFD0F, UFD);
+            lagg(n, ", kanal ");
+            lagg_tal(n, kan);
+            return 0;
+        }
         lagg(n, namn11);
         k = hitta(n, n->ufd, namn11);
         if (k < 0) {
@@ -415,6 +487,7 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
         if (fn == 2) {
             f->langd = 0;
             f->andrad = 1;
+            memcpy(f->tid, n->nu, sizeof f->tid);
         }
         n->kanal[kan] = k;
         n->ta_bort[kan] = 0;
@@ -428,12 +501,12 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
 
     case 4:                                  /* CLOSE */
         k = kanalens(n, m, b);
-        if (k < 0)
+        if (k == -1)
             return AVBOJD;
-        f = &n->filer[k];
         lagg(n, "CLOSE kanal ");
         lagg_tal(n, kan);
-        if (n->ta_bort[kan]) {
+        if (k >= 0 && n->ta_bort[kan]) {
+            f = &n->filer[k];
             f->borta = 1;
             f->andrad = 1;
             lagg(n, ", borttagen");
@@ -446,9 +519,8 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
     case 5:                                  /* läs post */
     case 6: {                                /* skriv post */
         k = kanalens(n, m, b);
-        if (k < 0)
+        if (k == -1)
             return AVBOJD;
-        f = &n->filer[k];
         uint16_t post = ord(m, VFD02);
         uint16_t buf = buffert(m, b);
         lagg(n, fn == 5 ? "läs post " : "skriv post ");
@@ -457,6 +529,17 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
         lagg_tal(n, kan);
         if (post == 0)
             return FEL_UTANFOR;
+        if (k == BIBLIOTEKET) {
+            lagg(n, ", biblioteket");
+            if (fn == 6)
+                return FEL_SKYDD;
+            if (post > BIB_POSTER)
+                return FEL_UTANFOR;
+            bibliotekspost(n, m, post, buf);
+            skriv_ord(m, VFD02, (uint16_t)(post + 1));
+            return 0;
+        }
+        f = &n->filer[k];
         long plats = (long)(post - 1) * NATKORT_POST;
         if (fn == 5) {
             if (post > poster(f))
@@ -479,6 +562,7 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
             if (slut > f->langd)
                 f->langd = slut;
             f->andrad = 1;
+            memcpy(f->tid, n->nu, sizeof f->tid);
             skriv_ord(m, VFD0A, (uint16_t)poster(f));
         }
         skriv_ord(m, VFD02, (uint16_t)(post + 1));
@@ -487,11 +571,13 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
 
     case 7:                                  /* SETEND, $FFFF = KILL */
         k = kanalens(n, m, b);
-        if (k < 0)
+        if (k == -1)
             return AVBOJD;
-        f = &n->filer[k];
         lagg(n, "SETEND ");
         lagg_hex(n, de, 4);
+        if (k == BIBLIOTEKET)
+            return FEL_SKYDD;
+        f = &n->filer[k];
         if (de == 0xFFFF) {
             n->ta_bort[kan] = 1;
             return 0;
@@ -501,6 +587,7 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
         if ((long)de * NATKORT_POST < f->langd) {
             f->langd = (long)de * NATKORT_POST;
             f->andrad = 1;
+            memcpy(f->tid, n->nu, sizeof f->tid);
         }
         skriv_ord(m, VFD0A, de);
         return 0;
@@ -518,8 +605,12 @@ static int funktion(Natkort *n, Abc802 *m, int fn, uint8_t b, uint8_t c,
 
     case 8: {                                /* NAME: DE = det nya namnet */
         k = kanalens(n, m, b);
-        if (k < 0)
+        if (k == -1)
             return AVBOJD;
+        if (k == BIBLIOTEKET) {
+            lagg(n, "NAME biblioteket");
+            return FEL_SKYDD;
+        }
         f = &n->filer[k];
         las_namn(m, de, namn11);
         lagg(n, "NAME ");

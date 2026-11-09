@@ -580,6 +580,12 @@ function fran_poster(d) {
     return text;
 }
 
+/* Centralens klocka: d, eller nu. */
+function nat_klockan(d = new Date()) {
+    e.nat_klocka(d.getFullYear() - 1900, d.getMonth() + 1, d.getDate(),
+                 d.getHours(), d.getMinutes(), d.getSeconds());
+}
+
 /* En fil från datorn till UFD:. */
 async function nat_lagg_in(fil) {
     const namn = fil.name.toUpperCase();
@@ -593,7 +599,9 @@ async function nat_lagg_in(fil) {
     }
     const pnamn = lagg_i_minnet(new TextEncoder().encode(namn + '\0'));
     const pdata = lagg_i_minnet(data);
+    nat_klockan(new Date(fil.lastModified));
     const ok = e.nat_fil(pnamn, pdata, data.length);
+    nat_klockan();
     e.slapp(pnamn);
     e.slapp(pdata);
     if (!ok)
@@ -1562,8 +1570,10 @@ function varv() {
     }
     if (varv_antal % 60 === 0)
         visa_katalogen();
-    if (varv_antal % 15 === 0)
+    if (varv_antal % 15 === 0) {
+        nat_klockan();
         visa_natet();
+    }
     requestAnimationFrame(varv);
 }
 
@@ -1624,6 +1634,7 @@ $('hjalp').addEventListener('toggle', h => {
     }
     if (fraga.get('nat') === 'pa')
         $('natet').checked = true;
+    nat_klockan();
     nat_prov();
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;

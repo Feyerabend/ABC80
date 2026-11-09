@@ -26,6 +26,9 @@
  *     7   SETEND ($FFFF = KILL), 8 NAME (DE = det nya namnet), $12 CD
  *     1   läs sektor: katalogen som sektorer, så att Luxors LIB.BAC
  *         (UFD-DOS) kan lista UFD: (natkort.c, KATALOG)
+ * OPEN "UFD:" utan namn öppnar biblioteket som en fil, med katalogen
+ * och en RIB per fil (storleken, ägaren, tiden och skydden), så som
+ * Dataindustriers L.BAC läser det (natkort.c, BIBLIOTEKET).
  * allt för enheten UFD: ($1E). De andra går till den lokala DOS:en (som
  * ger fel 200 där det bara finns en väg via nätet). FILESTAT ($13-$15)
  * gör något som ingen källa beskriver och ger fel 200. PFD:, LFD: och
@@ -52,6 +55,7 @@ typedef struct NatFil {
     char namn[12];                           /* "NAMN    EXT" (11 tecken) */
     uint8_t *data;
     long langd, plats;
+    uint8_t tid[6];                          /* år - 1900, månad, dag, tim, min, sek */
     int ar_katalog;                          /* en katalog, namn = sista ledet */
     int andrad, borta;                       /* för värden */
 } NatFil;
@@ -60,8 +64,11 @@ typedef struct Natkort {
     NatFil filer[NATKORT_FILER];
     int antal;
     char ufd[NATKORT_KATALOG];               /* UFD: just nu ("" = hemma) */
-    int kanal[8];                            /* fil per kanal, -1 ingen */
+    int kanal[8];                            /* fil per kanal, -1 ingen,
+                                                -2 biblioteket */
     int ta_bort[8];                          /* KILL: bort vid CLOSE */
+    uint8_t nu[6];                           /* klockan, som tid; värden sätter
+                                                den (natkort_fil tar den) */
 
     /* Trafiken: varje anrop som centralen tog, som en rad text. */
     long anrop;
@@ -70,11 +77,12 @@ typedef struct Natkort {
     void (*loggat)(void *data, const char *rad);
 } Natkort;
 
-/* Töm centralen. */
+/* Töm centralen (klockan blir 0, år 1900: ingen tid). */
 void natkort_starta(Natkort *n);
 
 /* Fyll centralen: en katalog eller en fil. katalog är "" eller
- * "A/B"; namn är "NAMN.EXT". 0 om det inte går (fullt, fel namn). */
+ * "A/B"; namn är "NAMN.EXT". Filens tid blir n->nu. 0 om det inte går
+ * (fullt, fel namn). */
 int natkort_katalog(Natkort *n, const char *katalog);
 int natkort_fil(Natkort *n, const char *katalog, const char *namn,
                 const uint8_t *data, long langd);

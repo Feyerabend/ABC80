@@ -53,6 +53,9 @@ trafiken:
 
     ./abc802 -r ../roms/abc802net.rom -N mapp -NL -k '10 PRINT "HEJ"\rSAVE UFD:PROV\r'
 
+Luxors LIB.BAC och Dataindustriers L.BAC (ur ABC-klubbens
+LUXNET-program) listar `UFD:` med storlek, ägare och tid.
+
 På webbsidan sätter panelen *Nätet* i nodkortet och startar om med
 nät-ROM:en; filerna i `UFD:` ligger då i webbläsaren, där de läggs in,
 hämtas och tas bort, och trafiken visas i panelen.

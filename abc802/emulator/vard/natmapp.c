@@ -11,9 +11,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "natmapp.h"
+
+/* Centralens klocka: tiden t, som i en RIB. */
+static void klockan(Natkort *n, time_t t)
+{
+    struct tm *tm = localtime(&t);
+    if (!tm || tm->tm_year < 70 || tm->tm_year > 255)
+        return;
+    n->nu[0] = (uint8_t)tm->tm_year;
+    n->nu[1] = (uint8_t)(tm->tm_mon + 1);
+    n->nu[2] = (uint8_t)tm->tm_mday;
+    n->nu[3] = (uint8_t)tm->tm_hour;
+    n->nu[4] = (uint8_t)tm->tm_min;
+    n->nu[5] = (uint8_t)tm->tm_sec;
+}
 
 static int las_katalog(Natkort *n, const char *mapp, const char *katalog, int niva)
 {
@@ -52,6 +67,7 @@ static int las_katalog(Natkort *n, const char *mapp, const char *katalog, int ni
         uint8_t *data = malloc((size_t)st.st_size + 1);
         long langd = data ? (long)fread(data, 1, (size_t)st.st_size, f) : 0;
         fclose(f);
+        klockan(n, st.st_mtime);
         if (data && !natkort_fil(n, katalog, e->d_name, data, langd))
             fprintf(stderr, "abc802: %s går inte in i centralen\n", fil);
         free(data);
@@ -63,7 +79,9 @@ static int las_katalog(Natkort *n, const char *mapp, const char *katalog, int ni
 int natmapp_las(Natkort *n, const char *mapp)
 {
     natkort_starta(n);
-    return las_katalog(n, mapp, "", 0);
+    int ok = las_katalog(n, mapp, "", 0);
+    klockan(n, time(NULL));                  /* det som skrivs nu */
+    return ok;
 }
 
 int natmapp_spara(Natkort *n, const char *mapp)
