@@ -9,7 +9,7 @@ som den var. Därför står det i varje mapps `LASMIG.md` vad som är
 ändrat och mot vad.
 
 Experimenten är beskrivna i häftet *ABC80 inifrån. Utanför boken*
-([`utanfor.pdf`](utanfor.pdf), 62 sidor), i bokens stil.
+([`utanfor.pdf`](utanfor.pdf), 68 sidor), i bokens stil.
 
 Bokens egna filer ändras aldrig härifrån: skripten kopierar det de
 behöver (i det publika förrådet från `inifran/forth/` och
@@ -17,6 +17,7 @@ behöver (i det publika förrådet från `inifran/forth/` och
 
 | Mapp           | Vad                                                        |
 |----------------|------------------------------------------------------------|
+| `blankett/`    | en efterbildad självdeklaration för 1982 i BASIC, med sidorna som skärmbilder i block på en dataskiva och räkningen med reglerna som DATA i ett eget program; en ny version av ett program från omkring 1981–82. Kapitlet Deklarationen på ABC80 i häftet tar den som exempel på vad ABC80 klarade på kontoret och varför man ville ha en bättre maskin |
 | `comal/`       | ABC80-BASIC:en med COMAL:s strukturer (WHILE, REPEAT, block-IF, PROC/EXEC, LOCAL, CASE, LIST med indrag) i 2215 bytes på `$4000`, mätt mot GOTO, GOSUB och BASIC II; bakgrunden om COMAL och Compis i `BAKGRUND.md`; också på webbsidan (`?krets=comal`) |
 | `fonster/`     | textfönster i BASIC (`FONSTER.BAS`), styrda med koder som en skrivare, efter ett demo från 80-talet; sedan påhittade fönster, en mus och händelser tillbaka på V24 på grafikkortet i HR-80:s anda (`FONSTER2.BAS`, `hr80in.asm`), också på webbsidan och i SDL-fönstret; storleken mot kortets 4 KB EPROM i `STORLEK.md` |
 | `forth_snabb/` | Forth-tolken från exempel 7 med en billigare stackprövning, mätt mot BASIC och mot bokens version |

@@ -10,7 +10,7 @@
 #      summa som laddaren prövar innan den gör CALL(57344).
 #   3. Varje program i text/ skrivs in i emulatorn och sparas med SAVE CAS:
 #      på ett eget band, kassett/NAMN.wav.
-#   4. Alla program sparas med SAVE DR0: på en tom ABC-DOS-diskett,
+#   4. Alla program, och blankettens DSKAPA, DEKL och DKALK, sparas med SAVE DR0: på en tom ABC-DOS-diskett,
 #      diskett/program.dsk: 640 sektorer om 256 bytes, fyllda med $40, bitkartan
 #      i sektor 6 (och 7) och katalogen i sektor 16-23 med kopian i 8-15,
 #      som på Genesis-disketten (band 2, kapitlet om FD2).
@@ -42,6 +42,10 @@ ABC80=../../abc80
 ROM=../../roms/abc80new.rom
 DOS=../../roms/abcdos80.rom
 PROGRAM="GISSA KURVA MUSIK AIRFIGHT HR80 FONSTER FONSTER2"
+# Blanketten (utanför boken, ../../../utanfor/blankett) bara på disketten:
+# den läser och skriver DR1:DEKL.DAT, en dataskiva i FD2:s andra enhet,
+# som webbsidan lägger i när disketten sitter i DR0.
+SKIVPROGRAM="$PROGRAM DSKAPA DEKL DKALK"
 B2ROM=../../roms/basicii80.rom
 PROGRAM_B2="GISSA KURVA MUSIK CHIP8 SNAKE3 CHIP8Z SNAKE3Z AIRFIGHT HR80"
 ABC800=../../skivor/abc800
@@ -184,7 +188,7 @@ EOF
 }
 tom_skiva diskett/program.dsk || exit 1
 flaggor=
-for p in $PROGRAM; do
+for p in $SKIVPROGRAM; do
   flaggor="$flaggor -f text/$p.BAS -k 'SAVE DR0:$p\r\w3000\.NEW\r\w500\.'"
 done
 eval "$ABC80 -r $ROM -l $DOS@6000 -D diskett/program.dsk@45 -DS $flaggor -t 1000" > /dev/null || exit 1

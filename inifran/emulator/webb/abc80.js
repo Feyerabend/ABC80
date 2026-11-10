@@ -70,7 +70,7 @@ let nasta = null;                            /* klockans tid för nästa bild */
 let skivan = null;                           /* disketten (bytes), eller null */
 let skivans_minne = 0;                       /* avbilden i WebAssemblys minne */
 let skivans_namn = 'diskett.dsk';            /* namnet när den sparas */
-let skiva_b = null;                          /* CP/M:s B: (FD2 enhet 1), eller null */
+let skiva_b = null;                          /* FD2 enhet 1: CP/M:s B: eller ABC-DOS:s DR1:, eller null */
 let skiva_b_minne = 0;
 let skiva_b_namn = 'b.dsk';
 let skiva_d = null;                          /* CP/M:s D: (kort 44 enhet 0), eller null */
@@ -200,7 +200,8 @@ function visa_lagen(alltid = false) {
     const maskin = delar.join(' · ');
     let disk = '';
     if (skivan)
-        disk = cpm_valt() ? [skivans_namn, skiva_b_namn, skiva_d_namn].join(' · ') : skivans_namn;
+        disk = cpm_valt() ? [skivans_namn, skiva_b_namn, skiva_d_namn].join(' · ')
+             : skiva_b ? skivans_namn + ' · ' + skiva_b_namn : skivans_namn;
     const krets = $('krets');
     const program = krets && krets.value && !lagets_hinder('krets') ? krets.options[krets.selectedIndex].textContent : '';
     const skrivare = i_bruk('p40') ? 'P40' : i_bruk('centronics') ? 'Centronics' : '';
@@ -555,6 +556,32 @@ function skiva_d_nu() {
 }
 
 const CPM_SKIVA = 40 * 8 * 256;              /* FD2: 80 KB per enhet */
+const ABCDOS_SKIVA = 640 * 256;              /* ABC-DOS: 640 sektorer */
+
+/* En tom ABC-DOS-skiva, som tom_skiva i exempel/program/gor.sh: fylld med
+ * $40, bitkartan i sektor 6 och 7 och katalogen i sektor 8-23. Med
+ * disketten i DR0 sitter en sådan i DR1, FD2:s andra enhet, så att ett
+ * program kan ha sina data på en egen skiva (blanketten: DR1:DEKL.DAT). */
+function tom_abcdos_skiva() {
+    const d = new Uint8Array(ABCDOS_SKIVA).fill(0x40);
+    const karta = new Uint8Array(256);
+    karta.fill(0xFF, 0, 3);                  /* sektor 0-23 */
+    karta.fill(0xFF, 0x50, 0xEF);            /* sektor 640- finns inte */
+    karta.fill(0x01, 0xEF, 0xF7);            /* första posten i varje katalogsektor */
+    d.set(karta, 6 * 256);
+    d.set(karta, 7 * 256);
+    const katalog = new Uint8Array(256).fill(0xFF);
+    katalog.fill(0, 0, 16);
+    for (let s = 8; s < 24; s++)
+        d.set(katalog, s * 256);
+    return d;
+}
+
+/* Är DR1 som den var när den lades i (tom)? */
+function dr1_tom(d) {
+    const tom = tom_abcdos_skiva();
+    return d.length === tom.length && d.every((x, k) => x === tom[k]);
+}
 const KORT44_SKIVA = 2560 * 256;             /* kort 44: 640 KB */
 
 /* BASIC II för ABC80 (32 KB, med egen DOS och PR:) i stället för ABC80-ROM:en. */
@@ -619,7 +646,14 @@ function starta(diskett = skivan_nu(), b = skiva_b_nu(), d = skiva_d_nu()) {
         d = ROM.cpm_d.slice();
         skiva_d_namn = 'd.dsk';
     }
-    skiva_b = cpm ? b : null;
+    if (!cpm && !b2 && skivan) {             /* ABC-DOS: DR1 med en dataskiva */
+        if (!b || b.length !== ABCDOS_SKIVA) {
+            b = tom_abcdos_skiva();
+            skiva_b_namn = 'data.dsk';
+        }
+        skiva_b = b;
+    } else
+        skiva_b = cpm ? b : null;
     skiva_d = cpm ? d : null;
     $('katalog').hidden = true;
     if (skivan) {
@@ -1990,7 +2024,8 @@ function visa_katalogen() {
                            skiva_b_namn + i + 'B:\n' + cpm_katalogen(skiva_b_nu()) + '\n\n' +
                            skiva_d_namn + i + 'D:\n' + cpm_katalogen(skiva_d_nu(), true);
     else
-        ruta.textContent = skivans_namn + i + 'DR0:\n' + katalogen(d);
+        ruta.textContent = skivans_namn + i + 'DR0:\n' + katalogen(d) +
+            (skiva_b ? '\n\n' + skiva_b_namn + i + 'DR1:\n' + katalogen(skiva_b_nu()) : '');
     ruta.hidden = false;
     return true;
 }
@@ -2021,13 +2056,15 @@ $('spara_skiva').addEventListener('click', () => {
     const b = skiva_b_nu();
     const dd = skiva_d_nu();
     const fler = [];
-    if (b && b.some(x => x !== 0xE5))
+    if (b && cpm_valt() && b.some(x => x !== 0xE5))
         fler.push([b, skiva_b_namn, 'B:']);
+    else if (b && !cpm_valt() && !dr1_tom(b))
+        fler.push([b, skiva_b_namn, 'DR1:']);
     if (dd && (dd.length !== ROM.cpm_d.length || dd.some((x, k) => x !== ROM.cpm_d[k])))
         fler.push([dd, skiva_d_namn, 'D:']);
     fler.forEach(([data, namn], k) => setTimeout(() => ladda_ner(data, namn), 500 * (k + 1)));
     if (fler.length) {
-        const lista = [[d, skivans_namn, 'A:'], ...fler].map(([, namn, enhet]) => namn + ' (' + enhet + ')');
+        const lista = [[d, skivans_namn, cpm_valt() ? 'A:' : 'DR0:'], ...fler].map(([, namn, enhet]) => namn + ' (' + enhet + ')');
         const och = (o) => lista.slice(0, -1).join(', ') + o + lista[lista.length - 1];
         meddela(och(' och ') + ' laddas ner med det som har sparats på dem.',
                 och(' and ') + ' are downloaded with what has been saved on them.');
@@ -2093,8 +2130,8 @@ async function oppna(fil, vad) {
     } else if (vad === 'skiva') {
         skivans_namn = namn;
         starta(data);
-        meddela(namn + ' sitter i FD2 med ABC-DOS. Katalogen visar filerna; skriv RUN DR0:NAMN.',
-                namn + ' sits in the FD2 with ABC-DOS. Directory shows the files; type RUN DR0:NAME.');
+        meddela(namn + ' sitter i FD2 med ABC-DOS, och en tom dataskiva i DR1. Katalogen visar filerna; skriv RUN DR0:NAMN.',
+                namn + ' sits in the FD2 with ABC-DOS, and a blank data disk in DR1. Directory shows the files; type RUN DR0:NAME.');
     } else {
         skriv(new TextDecoder('utf-8').decode(data));
         meddela(namn + ' skrivs in.', namn + ' is being typed in.');
@@ -2269,8 +2306,8 @@ $('exempel')?.addEventListener('click', () => {
                 'The BASIC II example disk: RUN "MO0:GISSA", KURVA, MUSIK, CHIP8 (Mini Lights Out), SNAKE3, CHIP8Z, SNAKE3Z, AIRFIGHT or HR80 (with the graphics card). ' +
                 'BYE gives the DOS (LIB), $BAS returns. Ctrl-C twice stops.');
     else
-        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (med grafikkortet), RUN DR0:FONSTER (textfönster) eller RUN DR0:FONSTER2 (fönster på grafikkortet).',
-                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (with the graphics card), RUN DR0:FONSTER (text windows) or RUN DR0:FONSTER2 (windows on the graphics card).');
+        meddela('Exempeldisketten: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (med grafikkortet), RUN DR0:FONSTER (textfönster), RUN DR0:FONSTER2 (fönster på grafikkortet), eller blanketten: RUN DR0:DSKAPA en gång och sedan RUN DR0:DEKL (dataskivan i DR1).',
+                'The example disk: RUN DR0:GISSA, RUN DR0:KURVA, RUN DR0:MUSIK, RUN DR0:AIRFIGHT, RUN DR0:HR80 (with the graphics card), RUN DR0:FONSTER (text windows), RUN DR0:FONSTER2 (windows on the graphics card), or the tax form: RUN DR0:DSKAPA once and then RUN DR0:DEKL (the data disk in DR1).');
     oppna_panel('panel_disk');
     skarm.focus();
 });
