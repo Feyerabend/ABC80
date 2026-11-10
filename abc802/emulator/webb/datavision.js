@@ -147,7 +147,7 @@ const DV_SIDOR = {
     },
     '1': {
         rader: [
-            '{nb}{b}{y} INNEHÅLL                           ',
+            '{b}{nb}{y} INNEHÅLL                           ',
             '',
             '{w} 2 {c}Nytt om modem och Datavision',
             '{w} 3 {c}Vädret (exempel)',
@@ -164,7 +164,7 @@ const DV_SIDOR = {
     },
     '2': {
         rader: [
-            '{nb}{m}{w} NYTT                               ',
+            '{y}{nb}{b} NYTT                               ',
             '',
             '{y} Modemmonopolet släpps',
             '{w} Från den 1 juli 1983 får man själv',
@@ -184,7 +184,7 @@ const DV_SIDOR = {
     },
     '3': {
         rader: [
-            '{nb}{b}{w} VÄDRET                {y}  EXEMPEL     ',
+            '{b}{nb}{w} VÄDRET                {y}  EXEMPEL     ',
             '',
             '{w} Påhittade siffror, för att visa hur',
             '{w} en sida med en tabell kunde se ut.',
@@ -202,7 +202,7 @@ const DV_SIDOR = {
     },
     '4': {
         rader: [
-            '{nb}{g}{b} ABC-KLUBBEN                        ',
+            '{w}{nb}{b} ABC-KLUBBEN                        ',
             '',
             '{w} Klubbens monitor är en obemannad ABC80',
             '{w} med en skivenhet i klubblokalen i',
@@ -224,7 +224,7 @@ const DV_SIDOR = {
     },
     '5': {
         rader: [
-            '{nb}{c}{b} OM DATAVISION                      ',
+            '{y}{nb}{b} OM DATAVISION                      ',
             '',
             '{w} Datavision har samma textgrafik som',
             '{w} text-tv: 24 rader med 40 tecken, sju',
@@ -245,7 +245,7 @@ const DV_SIDOR = {
     },
     '6': {
         rader: [
-            '{nb}{y}{b} TANGENTERNA                        ',
+            '{y}{nb}{b} TANGENTERNA                        ',
             '',
             '{w} {y}*nn#{w}  går till sidan nn',
             '{w} {y}*#{w}    tillbaka till sidan innan',
@@ -266,7 +266,7 @@ const DV_SIDOR = {
     },
     '7': {
         rader: [
-            '{nb}{w}{b} BILDTEST                           ',
+            '{w}{nb}{b} BILDTEST                           ',
             '',
             '{r}Röd {g}Grön {y}Gul {b}Blå {m}Magenta {c}Cyan {w}Vit',
             '',
@@ -288,7 +288,7 @@ const DV_SIDOR = {
     },
     '9': {
         rader: [
-            '{nb}{g}{b} HÄMTA DATA                         ',
+            '{b}{nb}{w} HÄMTA DATA                         ',
             '',
             '{w} Ett BASIC-program kan läsa från',
             '{w} Datavision: centralen skickar STX',
@@ -310,7 +310,7 @@ const DV_SIDOR = {
     },
     '91': {
         rader: [
-            '{nb}{g}{b} HÄMTA DATA                         ',
+            '{b}{nb}{w} HÄMTA DATA                         ',
             '',
             '{w} Vädret skickas efter STX.',
         ],
@@ -341,7 +341,7 @@ function skapa_datavision(sand) {
     }
 
     function fot() {
-        return '{nb}{b}{y} #{w} vidare {y}*nn#{w} sida {y}*#{w} bakåt';
+        return '{b}{nb}{y} #{w} vidare {y}*nn#{w} sida {y}*#{w} bakåt';
     }
 
     /* Rad 23 med text, och resten av raden tom (högst 39 celler).

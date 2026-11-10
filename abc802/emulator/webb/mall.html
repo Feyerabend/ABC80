@@ -352,6 +352,7 @@
       <div class="knappar">
         <button id="skiva_prov" title="Skivan med tidsproven" data-title-en="The disk with the benchmarks" data-en="Benchmarks">Tidsproven</button>
         <button id="skiva_tom" title="En tom skiva" data-title-en="An empty disk" data-en="Empty">Tom skiva</button>
+        <button id="skiva_program" title="Programskivan med ORD: skivan sätts i, maskinen startas om och Forth laddas" data-title-en="The program disk with ORD: the disk is inserted, the machine restarted and Forth loaded" data-en="Programs">Program</button>
         <button id="skiva_cpm" title="CP/M 2.2: skivan sätts i och maskinen startas om" data-title-en="CP/M 2.2: the disk is inserted and the machine restarted">CP/M</button>
         <button id="skiva_forth" title="Forth: skivan sätts i, maskinen startas om och Forth laddas" data-title-en="Forth: the disk is inserted, the machine restarted and Forth loaded">Forth</button>
         <button id="skiva_valj" title="Sätt i en skivavbild (.img, .dsk)" data-title-en="Insert a disk image (.img, .dsk)" data-en="Insert…">Sätt i…</button>
@@ -387,6 +388,17 @@
         skärmen. <i>Tom skiva</i> och <i>Tidsproven</i> byter skiva utan
         att spara den gamla. Skivan sitter kvar efter <i>Starta
         om</i>.</p>
+        <p lang="sv"><i>Program</i> är programskivan: maskinen startar om,
+        BASICINI.SYS laddar Forth och skärmen visar programmen. <code>RUN
+        ORD</code> är ordbehandlaren, skriven i Forth (<code>forth/</code>
+        i förrådet): CTRL-Q (eller ESC) ger menyn, och texten ligger på RAM-skivan.
+        <code>RUN KALKYL</code> är kalkylprogrammet, och <code>RUN
+        VERK</code> är text och kalkyl i ett: ordbehandlaren med fält
+        som visar en cells värde i texten, inverterat. CTRL-K skriver
+        formeln för fältet vid markören, eller ett nytt fält, på sista raden.
+        Texten sparas med fälten och cellerna (6 i menyn) och skrivs ut med
+        värdena (8). Läs brevet OFFERT med 7.
+        <code>?skiva=program</code> startar med den.</p>
         <p lang="en"><i>Benchmarks</i> also holds Luxor's system
         programs: BASICINI.SYS gives the errors as text (in Swedish,
         <i>Hittar ej filen</i> instead of <i>Error 21</i>), <code>BYE</code>
@@ -397,10 +409,22 @@
         <p lang="en">BASIC II itself does not show the directory, so the page
         reads it from the disk. What is written stays only in the browser: <i>Save</i>
         gives the disk as a file, which can be inserted again or dropped on
-        the screen. <i>Empty</i> and <i>Benchmarks</i> change the disk without
+        the screen. <i>Programs</i> is the program disk: the machine
+        restarts, BASICINI.SYS loads Forth and the screen shows the
+        programs. <code>RUN ORD</code> is the word processor, written in
+        Forth (<code>forth/</code> in the repository, in Swedish): CTRL-Q (or ESC) gives
+        the menu, and the text is kept on the RAM disk.
+        <code>RUN KALKYL</code> is the spreadsheet, and <code>RUN
+        VERK</code> is text and spreadsheet in one: the word processor with fields
+        showing a cell's value in the text; CTRL-K edits the formula.
+        The text is saved with its fields and cells (6 in the menu) and
+        printed with the values (8). Load the letter OFFERT with 7.
+        <code>?skiva=program</code> starts with it.
+        <i>Empty</i> and <i>Benchmarks</i> change the disk without
         saving the old one. The disk stays in after <i>Restart</i>.</p>
-        <p lang="sv"><i>Forth</i> sätter i en skiva med förrådets Forth
-        (<code>forth/</code>), startar om maskinen och laddar den. Forth
+        <p lang="sv"><i>Forth</i> går till sidan
+        <code>abc802-forth.html</code>, som startar med en skiva med
+        förrådets Forth (<code>forth/</code>) och laddar den. Forth
         ligger på $8000-$AFFF, och BASIC har resten. <code>WORDS</code>
         visar orden, och <code>BYE</code> går tillbaka till BASIC; sedan
         startar <code>Z=CALL(32768,1)</code> Forth igen med orden kvar.
@@ -420,8 +444,9 @@
         med programmet: <code>SAVE DR0:NAMN</code>, och efter
         <code>LOAD</code> kompilerar <code>Z=CALL(32768,2)</code> dem
         igen.</p>
-        <p lang="en"><i>Forth</i> inserts a disk with the repository's
-        Forth (<code>forth/</code>), restarts the machine and loads it.
+        <p lang="en"><i>Forth</i> goes to the page
+        <code>abc802-forth.html</code>, which starts with a disk with the
+        repository's Forth (<code>forth/</code>) and loads it.
         Forth sits at $8000-$AFFF, and BASIC has the rest.
         <code>WORDS</code> lists the words, and <code>BYE</code> returns to
         BASIC; then <code>Z=CALL(32768,1)</code> starts Forth again with
@@ -440,8 +465,9 @@
         faster than SNAKE1 in BASIC. The words are saved with the program: <code>SAVE DR0:NAME</code>,
         and after <code>LOAD</code>, <code>Z=CALL(32768,2)</code> compiles
         them again.</p>
-        <p lang="sv"><i>CP/M</i> sätter i en skiva med CP/M 2.2 och startar
-        om maskinen (eller <code>?cpm=pa</code> i adressen). DOS:en läser
+        <p lang="sv"><i>CP/M</i> går till sidan
+        <code>abc802-cpm.html</code>, som startar med en skiva med CP/M 2.2
+        (<code>?cpm=pa</code> i adressen går också dit). DOS:en läser
         BASICINI.SYS vid starten, och där ligger förrådets egen laddare,
         som läser in CP/M och slår på hela RAM:et. CCP och BDOS är Digital
         Researchs fria CP/M; BIOS:en är förrådets egen
@@ -457,9 +483,10 @@
         (<code>ZTOLK ZORK1</code>; <code>save</code> och
         <code>restore</code> skriver och läser ZORK1.SAV). Sidan visar då
         CP/M-katalogen. Skärmen har 80 tecken; tillbaka till BASIC med
-        <i>Tidsproven</i> och <i>Starta om</i>.</p>
-        <p lang="en"><i>CP/M</i> inserts a disk with CP/M 2.2 and restarts
-        the machine (or <code>?cpm=pa</code> in the address). DOS reads
+        <i>Tidsproven</i>, som går till <code>abc802.html</code>.</p>
+        <p lang="en"><i>CP/M</i> goes to the page
+        <code>abc802-cpm.html</code>, which starts with a disk with CP/M 2.2
+        (<code>?cpm=pa</code> in the address goes there too). DOS reads
         BASICINI.SYS at start-up, and there is the repository's own loader,
         which reads in CP/M and switches on all the RAM. CCP and BDOS are
         Digital Research's free CP/M; the BIOS is the repository's own
@@ -475,7 +502,7 @@
         (<code>ZTOLK ZORK1</code>; <code>save</code> and
         <code>restore</code> write and read ZORK1.SAV). The page then shows the
         CP/M directory. The screen has 80 columns; back to BASIC with
-        <i>Benchmarks</i> and <i>Restart</i>.</p>
+        <i>Benchmarks</i>, which goes to <code>abc802.html</code>.</p>
       </div>
     </details>
 
@@ -495,7 +522,9 @@
         stället för DOS v.20, och maskinen startas om. Centralen spelas av
         emulatorn: kontots katalog är <code>UFD:</code>, och filerna ligger
         här i webbläsaren (listan nedan; <code>NAT.BAS</code> finns där
-        från början). <code>SAVE UFD:NAMN</code>, <code>LIST
+        från början, och <code>L.BAC</code>, Dataindustriers L ur
+        ABC-klubbens LUXNET-program, som listar <code>UFD:</code> med
+        <code>RUN UFD:L</code>). <code>SAVE UFD:NAMN</code>, <code>LIST
         UFD:NAMN</code> (programmet som text), <code>LOAD UFD:NAMN</code>, <code>PREPARE</code>,
         <code>OPEN</code>, <code>KILL</code>, <code>NAME … AS …</code> och
         <code>CD</code> går över nätet; det andra (<code>DR0:</code>,
@@ -507,7 +536,10 @@
         the ROM instead of DOS v.20, and the machine restarts. The emulator
         plays the central: the account's directory is <code>UFD:</code>, and
         the files are kept here in the browser (the list below;
-        <code>NAT.BAS</code> is there from the start). <code>SAVE
+        <code>NAT.BAS</code> is there from the start, and so is
+        <code>L.BAC</code>, Dataindustrier's L from ABC-klubben's LUXNET
+        programs, which lists <code>UFD:</code> with <code>RUN
+        UFD:L</code>). <code>SAVE
         UFD:NAME</code>, <code>LIST UFD:NAME</code> (the program as text), <code>LOAD UFD:NAME</code>,
         <code>PREPARE</code>, <code>OPEN</code>, <code>KILL</code>,
         <code>NAME … AS …</code> and <code>CD</code> go over the network;

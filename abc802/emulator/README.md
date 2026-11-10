@@ -16,8 +16,12 @@ Webbsidan är färdigbyggd och behöver ingenting installerat:
 Skivan med tidsproven ur [`../benchmark/`](../benchmark/) sitter i från
 början: `RUN B1` kör det första, och `RUN LIB` (Luxors LIB) visar vad
 som finns på skivan.
-Knapparna CP/M och Forth sätter i de skivorna och startar om. `?cpm=pa`
-startar med CP/M, `?sprak=en` på engelska, `?tecken=40` med 40 tecken per
+Forth och CP/M har var sin sida, med skivan i från början:
+<https://feyerabend.github.io/ABC80/abc802/emulator/webb/abc802-forth.html>
+och
+<https://feyerabend.github.io/ABC80/abc802/emulator/webb/abc802-cpm.html>.
+Knapparna CP/M, Forth och Tidsproven går mellan sidorna. `?cpm=pa` går
+till CP/M-sidan, `?sprak=en` ger engelska, `?tecken=40` 40 tecken per
 rad och `?k=...` skriver tangenter efter starten.
 
 ## Bygga
@@ -29,7 +33,7 @@ ROM:arna är Luxors och ligger inte här. Hämta dem först (Python 3):
 Sedan, i den här mappen:
 
     make                 # abc802, batchläget
-    make webb            # webb/abc802.html (kräver clang och wasm-ld)
+    make webb            # webb/abc802.html, -forth.html och -cpm.html (kräver clang och wasm-ld)
     cd sdl && make       # abc802f, fönstret (kräver SDL3, se sdl/README.md)
 
 Batchläget kör maskinen, skriver tangenterna och skriver sedan skärmen på
@@ -58,7 +62,10 @@ LUXNET-program) listar `UFD:` med storlek, ägare och tid.
 
 På webbsidan sätter panelen *Nätet* i nodkortet och startar om med
 nät-ROM:en; filerna i `UFD:` ligger då i webbläsaren, där de läggs in,
-hämtas och tas bort, och trafiken visas i panelen.
+hämtas och tas bort, och trafiken visas i panelen. L.BAC finns där från
+början (`RUN UFD:L`): `hamta.py` hämtar texten L.BAS ur ABC-klubbens
+arkiv, och `make webb` låter emulatorn läsa in den och spara den som
+L.BAC (`webb/lbac.sh`).
 
 ## Mapparna
 
@@ -67,7 +74,7 @@ hämtas och tas bort, och trafiken visas i panelen.
 | `karna/` | kärnan: Z80 (`z80.c`), maskinen och minnet (`abc802.c`), skärmen (`skarm802.c`), CTC, SIO/DART, kassetten, ABC-bussen, skivkortet och skrivarkortet |
 | `vard/` | batchläget (`abc802.c`) och PNG-bilden |
 | `sdl/` | fönstret med SDL3 (`fonster.c`) |
-| `webb/` | webbsidan: `mall.html`, `abc802.js` och värden i C (`webb.c`, `libc.c`); `bygg.sh` sätter ihop `abc802.html` |
+| `webb/` | webbsidorna: `mall.html`, `abc802.js` och värden i C (`webb.c`, `libc.c`); `bygg.sh` sätter ihop `abc802.html` och, med `SIDA=forth` eller `SIDA=cpm`, `abc802-forth.html` och `abc802-cpm.html` |
 | `skivor/` | `tidsprov.img` (tidsproven och Luxors systemprogram BASICINI.SYS, CMDINT.SYS, LIB), `tom.img` (tom), `forth.img` (Forth för ABC 802) |
 | `cpm/` | CP/M 2.2: start-PROM:en (`start.asm`), BIOS:en (`bios.asm`), Digital Researchs CCP och BDOS (`dr/`), systemskivan `a.img` med DR:s program, editorn SKRIV, BBC BASIC och Zork I, och en tom `b.img` |
 
@@ -105,14 +112,18 @@ and a web page (WebAssembly).
 **Try it** without building:
 <https://feyerabend.github.io/ABC80/abc802/emulator/webb/abc802.html>
 (`?sprak=en` for English). The benchmark disk from
-[`../benchmark/`](../benchmark/) is inserted at start; the CP/M and Forth
-buttons insert those disks. The *Network* panel puts in the LUXNET node card
+[`../benchmark/`](../benchmark/) is inserted at start. Forth and CP/M have
+pages of their own,
+[abc802-forth.html](https://feyerabend.github.io/ABC80/abc802/emulator/webb/abc802-forth.html)
+and
+[abc802-cpm.html](https://feyerabend.github.io/ABC80/abc802/emulator/webb/abc802-cpm.html);
+the buttons go between the pages. The *Network* panel puts in the LUXNET node card
 and restarts with the network ROM; the files in `UFD:` are then kept in the
-browser.
+browser, with Dataindustrier's L.BAC there from the start (`RUN UFD:L`).
 
 **Build:** the ROMs belong to Luxor and are not stored here; fetch them with
 `python3 ../roms/hamta.py` (or `make roms`). Then `make` builds the batch
-emulator `abc802`, `make webb` the web page (needs clang and wasm-ld), and
+emulator `abc802`, `make webb` the web pages (needs clang and wasm-ld), and
 `make` in `sdl/` the window (needs SDL3). The command-line options are
 listed at the top of [`vard/abc802.c`](vard/abc802.c); the comments and
 documentation are in Swedish.

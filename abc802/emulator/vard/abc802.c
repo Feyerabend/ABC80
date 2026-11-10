@@ -22,6 +22,7 @@
  *     -K ms,ms       hur länge en tangent hålls nere och släppt (40,60)
  *     -t ms          kör så länge efter tangenterna (500)
  *     -p fil.png     bilden till en PNG-fil, en punkt per punkt
+ *     -M fil         RAM:et (64 KB, utan bildminnet) till en fil efteråt
  *     -i             skriv antalet instruktioner, tiden, pipen och summerns
  *                    omslag (IN 5) efteråt
  *
@@ -235,7 +236,7 @@ static void skrivaren(void *data, uint8_t tecken)
 static void anvandning(void)
 {
     fprintf(stderr, "användning: abc802 [-r rom] [-c teckenrom] [-40] [-60] "
-                    "[-k text] [-f fil] [-L ms] [-K ms,ms] [-t ms] [-p fil.png] [-i]\n"
+                    "[-k text] [-f fil] [-L ms] [-K ms,ms] [-t ms] [-p fil.png] [-M fil] [-i]\n"
                     "              [-D fil[@kort[.enhet]]] [-DP fil[@..]] [-DS]\n"
                     "              [-T fil] [-U fil] [-A fil] [-B fil] [-a fil] [-b fil]\n"
                     "              [-P fil] [-N mapp] [-NL]\n");
@@ -244,7 +245,7 @@ static void anvandning(void)
 
 int main(int argc, char **argv)
 {
-    const char *romnamn = NULL, *teckennamn = NULL, *pngnamn = NULL;
+    const char *romnamn = NULL, *teckennamn = NULL, *pngnamn = NULL, *minnesnamn = NULL;
     const char *bandnamn = NULL, *inspelningsnamn = NULL, *natmapp = NULL;
     int natlogga = 0;
     long ms = 500, rad_paus = 200;
@@ -285,6 +286,8 @@ int main(int argc, char **argv)
             ms = atol(argv[++k]);
         else if (!strcmp(a, "-p") && har_varde)
             pngnamn = argv[++k];
+        else if (!strcmp(a, "-M") && har_varde)
+            minnesnamn = argv[++k];
         else if (!strcmp(a, "-i"))
             info = 1;
         else if ((!strcmp(a, "-D") || !strcmp(a, "-DP")) && har_varde) {
@@ -425,6 +428,14 @@ int main(int argc, char **argv)
             fprintf(stderr, "abc802: kan inte skriva %s\n", pngnamn);
             return 1;
         }
+    }
+    if (minnesnamn) {
+        FILE *f = fopen(minnesnamn, "wb");
+        if (!f || fwrite(maskin.ram, 1, sizeof maskin.ram, f) != sizeof maskin.ram) {
+            fprintf(stderr, "abc802: kan inte skriva %s\n", minnesnamn);
+            return 1;
+        }
+        fclose(f);
     }
     if (spara && !spara_skivor())
         return 1;

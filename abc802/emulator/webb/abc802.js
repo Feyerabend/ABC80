@@ -460,7 +460,26 @@ function ar_skiva(fil) {
     return /\.(img|dsk)$/i.test(fil.name);
 }
 
+/* Sidorna (bygg.sh, SIDA): abc802.html har tidsproven, abc802-forth.html
+ * Forth och abc802-cpm.html CP/M. En skiva som sidan inte har finns på
+ * en annan sida, och knappen går dit, med språket och 40 tecken. */
+const SIDORNA = { grund: 'abc802.html', forth: 'abc802-forth.html', cpm: 'abc802-cpm.html' };
+
+function till_sidan(sida, skiva) {
+    const fragan = new URLSearchParams();
+    if (skiva)
+        fragan.set('skiva', skiva);
+    fragan.set('sprak', sprak);
+    if ($('tecken').value === '40')
+        fragan.set('tecken', '40');
+    if ($('natet').checked)
+        fragan.set('nat', 'pa');
+    location.href = SIDORNA[sida] + '?' + fragan;
+}
+
 $('skiva_prov').addEventListener('click', async () => {
+    if (!FILER.tidsprov)
+        return till_sidan('grund');
     if (satt_i(await packa_upp(FILER.tidsprov), 'tidsprov.img'))
         meddela('Tidsproven sitter i DR0:.', 'The benchmarks are in DR0:.');
     skarm.focus();
@@ -472,7 +491,21 @@ $('skiva_tom').addEventListener('click', async () => {
     skarm.focus();
 });
 
+/* Programskivan: BASICINI.SYS laddar Forth när maskinen startar om. */
+$('skiva_program').addEventListener('click', async () => {
+    if (!FILER.program)
+        return till_sidan('grund', 'program');
+    if (satt_i(await packa_upp(FILER.program), 'program.img')) {
+        starta();
+        meddela('Programskivan sitter i DR0:. RUN ORD är ordbehandlaren.',
+                'The program disk is in DR0:. RUN ORD is the word processor.');
+    }
+    skarm.focus();
+});
+
 $('skiva_cpm').addEventListener('click', async () => {
+    if (!FILER.cpm)
+        return till_sidan('cpm');
     if (satt_i(await packa_upp(FILER.cpm), 'cpm.img')) {
         starta();
         meddela('CP/M 2.2 startar från DR0:.', 'CP/M 2.2 is starting from DR0:.');
@@ -483,6 +516,8 @@ $('skiva_cpm').addEventListener('click', async () => {
 /* Forth (../forth/): skivan med FORTH.ABS sätts i och maskinen startas
  * om. BASICINI.SYS på skivan laddar Forth och startar det. */
 $('skiva_forth').addEventListener('click', async () => {
+    if (!FILER.forth)
+        return till_sidan('forth');
     if (satt_i(await packa_upp(FILER.forth), 'forth.img')) {
         starta();
         meddela('Forth startar från DR0:. BYE går till BASIC.',
@@ -722,8 +757,8 @@ function hamta_trafiken() {
 $('natet').addEventListener('change', () => {
     starta();
     meddela(...($('natet').checked
-            ? ['Nodkortet sitter i och maskinen har startat med nätets DOS-PROM; prova LOAD UFD:NAT och RUN.',
-               'The node card is in and the machine has started with the network DOS PROM; try LOAD UFD:NAT and RUN.']
+            ? ['Nodkortet sitter i och maskinen har startat med nätets DOS-PROM; prova LOAD UFD:NAT och RUN, eller RUN UFD:L som listar UFD:.',
+               'The node card is in and the machine has started with the network DOS PROM; try LOAD UFD:NAT and RUN, or RUN UFD:L, which lists UFD:.']
             : ['Nodkortet är urtaget och maskinen har startat med DOS v.20.',
                'The node card is out and the machine has started with DOS v.20.']));
     visa_natet(true);
@@ -777,6 +812,15 @@ function nat_prov() {
     e.nat_fil(pnamn, pdata, data.length);
     e.slapp(pnamn);
     e.slapp(pdata);
+    /* Dataindustriers L (L.BAC, byggd av ABC-klubbens L.BAS), om sidan har den */
+    if (FILER.lbac) {
+        const lbac = base64(FILER.lbac);
+        const lnamn = lagg_i_minnet(new TextEncoder().encode('L.BAC\0'));
+        const ldata = lagg_i_minnet(lbac);
+        e.nat_fil(lnamn, ldata, lbac.length);
+        e.slapp(lnamn);
+        e.slapp(ldata);
+    }
 }
 
 /* ---------------------------------------------------------------- */
@@ -1639,12 +1683,19 @@ $('hjalp').addEventListener('toggle', h => {
     if (fraga.get('ljud') === 'av')
         ljud_valt = false;
     byt_sprak(valt);
+    /* ?cpm=pa från förr: CP/M har en egen sida nu. */
+    if (fraga.get('cpm') === 'pa' && !FILER.cpm) {
+        fraga.delete('cpm');
+        location.replace(SIDORNA.cpm + '?' + fraga);
+        return;
+    }
     starta();
     try {
-        if (fraga.get('cpm') === 'pa')
-            satt_i(await packa_upp(FILER.cpm), 'cpm.img');
-        else
-            satt_i(await packa_upp(FILER.tidsprov), 'tidsprov.img');
+        const skivan = { grund: ['tidsprov', 'tidsprov.img'], forth: ['forth', 'forth.img'],
+                         cpm: ['cpm', 'cpm.img'] }[FILER.sida];
+        if (fraga.get('skiva') === 'program' && FILER.program)
+            skivan.splice(0, 2, 'program', 'program.img');
+        satt_i(await packa_upp(FILER[skivan[0]]), skivan[1]);
     } catch (fel) {
         meddela('Webbläsaren kan inte packa upp skivorna.', 'The browser cannot unpack the disks.');
     }
