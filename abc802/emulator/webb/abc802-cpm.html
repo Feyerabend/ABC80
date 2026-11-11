@@ -386,7 +386,9 @@
         <p lang="sv"><i>Program</i> är programskivan: maskinen startar om,
         BASICINI.SYS laddar Forth och skärmen visar programmen. <code>RUN
         ORD</code> är ordbehandlaren, skriven i Forth (<code>forth/</code>
-        i förrådet): CTRL-Q (eller ESC) ger menyn, och texten ligger på RAM-skivan.
+        i förrådet): &lt;- suddar som i BASIC, CTRL-S och CTRL-D går bakåt
+        och framåt, CTRL-Q (eller ESC) ger menyn, och texten ligger på RAM-skivan och
+        sparas på skivan med 5 i menyn och läses in med 6.
         <code>RUN KALKYL</code> är kalkylprogrammet, och <code>RUN
         VERK</code> är text och kalkyl i ett: ordbehandlaren med fält
         som visar en cells värde i texten, inverterat. CTRL-K skriver
@@ -407,8 +409,10 @@
         the screen. <i>Programs</i> is the program disk: the machine
         restarts, BASICINI.SYS loads Forth and the screen shows the
         programs. <code>RUN ORD</code> is the word processor, written in
-        Forth (<code>forth/</code> in the repository, in Swedish): CTRL-Q (or ESC) gives
-        the menu, and the text is kept on the RAM disk.
+        Forth (<code>forth/</code> in the repository, in Swedish): &lt;- erases as in BASIC,
+        CTRL-S and CTRL-D move back and forward, CTRL-Q (or ESC) gives
+        the menu, and the text is kept on the RAM disk and saved to the
+        disk with 5 in the menu and loaded with 6.
         <code>RUN KALKYL</code> is the spreadsheet, and <code>RUN
         VERK</code> is text and spreadsheet in one: the word processor with fields
         showing a cell's value in the text; CTRL-K edits the formula.
