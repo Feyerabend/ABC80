@@ -75,7 +75,7 @@ L.BAC (`webb/lbac.sh`).
 | `vard/` | batchläget (`abc802.c`) och PNG-bilden |
 | `sdl/` | fönstret med SDL3 (`fonster.c`) |
 | `webb/` | webbsidorna: `mall.html`, `abc802.js` och värden i C (`webb.c`, `libc.c`); `bygg.sh` sätter ihop `abc802.html` och, med `SIDA=forth` eller `SIDA=cpm`, `abc802-forth.html` och `abc802-cpm.html` |
-| `skivor/` | `tidsprov.img` (tidsproven och Luxors systemprogram BASICINI.SYS, CMDINT.SYS, LIB), `tom.img` (tom), `forth.img` (Forth för ABC 802) |
+| `skivor/` | `tidsprov.img` (tidsproven och Luxors systemprogram BASICINI.SYS, CMDINT.SYS, LIB), `tom.img` (tom), `forth.img` (Forth för ABC 802), `program.img` (Forth och ORD), `pascal.img` (CP/M med förrådets egen Pascal: PVM.COM, PC.PK, PCS.PK och två exempel; utan Pascal/MT+) |
 | `cpm/` | CP/M 2.2: start-PROM:en (`start.asm`), BIOS:en (`bios.asm`), Digital Researchs CCP och BDOS (`dr/`), systemskivan `a.img` med DR:s program, editorn SKRIV, BBC BASIC och Zork I, och en tom `b.img` |
 
 Skivorna är färdiga. Källorna till CP/M-delen finns att läsa, men verktygen

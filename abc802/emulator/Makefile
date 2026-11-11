@@ -54,17 +54,19 @@ webb/abc802.wasm: $(WEBB_C) karna/*.h webb/libc/*.h
 	$(CLANG) $(WEBB_FLAGGOR) -o $@ $(WEBB_C)
 
 webb/abc802.html: webb/mall.html webb/abc802.js webb/datavision.js webb/bbs.js webb/stordator.js \
-                  webb/abc802.wasm webb/bygg.sh skivor/tidsprov.img skivor/tom.img skivor/forth.img skivor/program.img \
+                  webb/abc802.wasm webb/bygg.sh skivor/tidsprov.img skivor/tom.img skivor/forth.img skivor/program.img skivor/pascal.img \
                   cpm/a.img webb/L.BAC $(ROM) $(NATROM) $(TECKEN)
-	SKIVOR=skivor FORTH=skivor/forth.img PROGRAM=skivor/program.img webb/bygg.sh > $@
+	SKIVOR=skivor FORTH=skivor/forth.img PROGRAM=skivor/program.img PASCAL=skivor/pascal.img webb/bygg.sh > $@
 
 # Samma sida med Forth- och CP/M-skivan i stället för tidsproven (SIDA i
 # bygg.sh); knapparna går mellan sidorna.
 webb/abc802-forth.html: webb/abc802.html
-	SIDA=forth SKIVOR=skivor FORTH=skivor/forth.img PROGRAM=skivor/program.img webb/bygg.sh > $@
+	SIDA=forth SKIVOR=skivor FORTH=skivor/forth.img PROGRAM=skivor/program.img PASCAL=skivor/pascal.img webb/bygg.sh > $@
 
-webb/abc802-cpm.html: webb/abc802.html
-	SIDA=cpm SKIVOR=skivor FORTH=skivor/forth.img PROGRAM=skivor/program.img webb/bygg.sh > $@
+# Pascal-skivan har bara förrådets egen Pascal (PVM.COM, PC.PK, PCS.PK),
+# inte Pascal/MT+; den görs som cpm/pvm.img i förrådets emulator/.
+webb/abc802-cpm.html: webb/abc802.html skivor/pascal.img
+	SIDA=cpm SKIVOR=skivor FORTH=skivor/forth.img PROGRAM=skivor/program.img PASCAL=skivor/pascal.img webb/bygg.sh > $@
 
 # Dataindustriers L.BAC till UFD: på webbsidan, av ABC-klubbens L.BAS
 # (hämtas av ../roms/hamta.py), läst och sparad av emulatorn själv.

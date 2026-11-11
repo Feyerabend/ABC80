@@ -521,13 +521,25 @@ $('skiva_pascal').addEventListener('click', async () => {
         return till_sidan('cpm', 'pascal');
     if (satt_i(await packa_upp(FILER.pascal), 'pascal.img')) {
         starta();
-        meddela('CP/M startar med Pascal/MT+ i DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S och HEJ.',
-                'CP/M is starting with Pascal/MT+ in DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S and HEJ.');
+        if (FILER.mtplus)
+            meddela('CP/M startar med Pascal/MT+ i DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S och HEJ.',
+                    'CP/M is starting with Pascal/MT+ in DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S and HEJ.');
+        else
+            meddela('CP/M startar med Pascal i DR0:. PVM PC och HEJ.PAS gör HEJ.PK, och PVM HEJ kör den.',
+                    'CP/M is starting with Pascal in DR0:. PVM PC and HEJ.PAS make HEJ.PK, and PVM HEJ runs it.');
     }
     skarm.focus();
 });
 if (!FILER.harpascal)
     $('skiva_pascal').hidden = $('hjalp_pascal').hidden = true;
+/* Utan Pascal/MT+ (publikt/abc802) har skivan bara förrådets egen Pascal. */
+for (const el of document.querySelectorAll(FILER.mtplus ? '.utan_mtplus' : '.mtplus'))
+    el.hidden = true;
+if (!FILER.mtplus) {
+    const k = $('skiva_pascal');
+    k.title = k.dataset.titleSv = 'Pascal, PVM med PC och PCS, under CP/M 2.2: skivan sätts i och maskinen startas om';
+    k.dataset.titleEn = 'Pascal, PVM with PC and PCS, under CP/M 2.2: the disk is inserted and the machine restarted';
+}
 
 /* Forth (../forth/): skivan med FORTH.ABS sätts i och maskinen startas
  * om. BASICINI.SYS på skivan laddar Forth och startar det. */

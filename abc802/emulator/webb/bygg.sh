@@ -28,8 +28,9 @@ SKIVOR=${SKIVOR:-../prov/skivor}
 FORTH=${FORTH:-../forth/forth.img}
 PROGRAM=${PROGRAM:-../forth/program.img}
 # Pascal-skivan (make pascal) är med på CP/M-sidan om den finns; den har
-# Pascal/MT+, som hämtas och inte ligger i förrådet. Utan den har ingen
-# av sidorna knappen Pascal (FILER.harpascal).
+# Pascal/MT+, som hämtas och inte ligger i förrådet. PASCAL=cpm/pvm.img
+# är skivan med bara förrådets egen Pascal (FILER.mtplus falskt). Utan
+# skiva har ingen av sidorna knappen Pascal (FILER.harpascal).
 PASCAL=${PASCAL:-cpm/pascal.img}
 # L.BAC till UFD: (webb/lbac.sh); utan den blir det bara NAT.BAS där.
 LBAC=${LBAC:-webb/L.BAC}
@@ -66,9 +67,16 @@ printf '  cpm: "%s",\n' "$(skiva cpm cpm/a.img)"
 if [ -f "$PASCAL" ]; then
     printf '  pascal: "%s",\n' "$(skiva cpm "$PASCAL")"
     printf '  harpascal: true,\n'
+    # Pascal/MT+ i katalogen (namn och typ som i CP/M:s katalogpost)?
+    if LC_ALL=C grep -aq 'MTPLUS  COM' "$PASCAL"; then
+        printf '  mtplus: true,\n'
+    else
+        printf '  mtplus: false,\n'
+    fi
 else
     printf '  pascal: "",\n'
     printf '  harpascal: false,\n'
+    printf '  mtplus: false,\n'
 fi
 printf '  forth: "%s",\n' "$(skiva forth "$FORTH")"
 if [ -f "$LBAC" ]; then
