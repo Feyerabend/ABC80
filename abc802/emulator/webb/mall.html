@@ -354,6 +354,7 @@
         <button id="skiva_tom" title="En tom skiva" data-title-en="An empty disk" data-en="Empty">Tom skiva</button>
         <button id="skiva_program" title="Programskivan med ORD: skivan sätts i, maskinen startas om och Forth laddas" data-title-en="The program disk with ORD: the disk is inserted, the machine restarted and Forth loaded" data-en="Programs">Program</button>
         <button id="skiva_cpm" title="CP/M 2.2: skivan sätts i och maskinen startas om" data-title-en="CP/M 2.2: the disk is inserted and the machine restarted">CP/M</button>
+        <button id="skiva_pascal" title="Pascal/MT+ och PVM med PC och PCS under CP/M 2.2: skivan sätts i och maskinen startas om" data-title-en="Pascal/MT+ and PVM with PC and PCS under CP/M 2.2: the disk is inserted and the machine restarted">Pascal</button>
         <button id="skiva_forth" title="Forth: skivan sätts i, maskinen startas om och Forth laddas" data-title-en="Forth: the disk is inserted, the machine restarted and Forth loaded">Forth</button>
         <button id="skiva_valj" title="Sätt i en skivavbild (.img, .dsk)" data-title-en="Insert a disk image (.img, .dsk)" data-en="Insert…">Sätt i…</button>
         <button id="skiva_spara" title="Spara skivan som en fil" data-title-en="Save the disk as a file" data-en="Save">Spara</button>
@@ -507,6 +508,40 @@
         <code>restore</code> write and read ZORK1.SAV). The page then shows the
         CP/M directory. The screen has 80 columns; back to BASIC with
         <i>Benchmarks</i>, which goes to <code>abc802.html</code>.</p>
+        <div id="hjalp_pascal">
+        <p lang="sv"><i>Pascal</i> startar om med Pascal-skivan, där två
+        Pascal finns. Digital Researchs Pascal/MT+ kompilerar till
+        maskinkod i två steg: <code>MTPLUS HEJ</code> gör HEJ.ERL av
+        HEJ.PAS, och länkaren gör HEJ.COM av den och körbiblioteket,
+        <code>LINKMT HEJ,FPREALS,PASLIB/S</code> (FPREALS bara om programmet
+        har reella tal, som HEJ; <code>LINKMT PRIMTAL,PASLIB/S</code>).
+        Sedan körs programmet med <code>HEJ</code>. Förrådets egen Pascal
+        (<code>pascal/</code>) kompilerar till p-kod, som tolken PVM.COM
+        kör; där behövs ingen länkning, eftersom tolken redan har
+        körbiblioteket. <code>PVM PC</code> och filnamnet i versaler,
+        <code>HEJ.PAS</code>, gör HEJ.PK, och <code>PVM HEJ</code> kör den.
+        PC.PK är den lilla kompilatorn, samma som i BASIC-läget; PCS.PK
+        (<code>PVM PCS</code>) har också poster, WITH, uppräknade typer,
+        delomfång, pekare och mängder, och programmen den gör går bara i
+        PVM.COM. Båda är skrivna i Pascal och kompilerade av sig själva.
+        HEJ.PAS och PRIMTAL.PAS går med båda kompilatorerna.</p>
+        <p lang="en"><i>Pascal</i> restarts with the Pascal disk, which has
+        two Pascals. Digital Research's Pascal/MT+ compiles to machine code
+        in two steps: <code>MTPLUS HEJ</code> makes HEJ.ERL from HEJ.PAS,
+        and the linker makes HEJ.COM from it and the run-time library,
+        <code>LINKMT HEJ,FPREALS,PASLIB/S</code> (FPREALS only if the
+        program has reals, as HEJ does; <code>LINKMT PRIMTAL,PASLIB/S</code>).
+        Then <code>HEJ</code> runs the program. The repository's own Pascal
+        (<code>pascal/</code>) compiles to p-code, which the interpreter
+        PVM.COM runs; no linking is needed, since the interpreter already
+        holds the run-time library. <code>PVM PC</code> and the file name in capitals,
+        <code>HEJ.PAS</code>, make HEJ.PK, and <code>PVM HEJ</code> runs it.
+        PC.PK is the small compiler, the same as in BASIC mode; PCS.PK
+        (<code>PVM PCS</code>) also has records, WITH, enumerated types,
+        subranges, pointers and sets, and the programs it makes run only
+        in PVM.COM. Both are written in Pascal and compiled by themselves.
+        HEJ.PAS and PRIMTAL.PAS work with both compilers.</p>
+        </div>
       </div>
     </details>
 

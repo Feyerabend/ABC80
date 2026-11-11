@@ -513,6 +513,22 @@ $('skiva_cpm').addEventListener('click', async () => {
     skarm.focus();
 });
 
+/* Pascal-skivan (make pascal): CP/M med Pascal/MT+. Finns bara på
+ * CP/M-sidan, och bara om den byggdes; annars syns knappen inte på
+ * någon av sidorna (FILER.harpascal). */
+$('skiva_pascal').addEventListener('click', async () => {
+    if (FILER.sida !== 'cpm')
+        return till_sidan('cpm', 'pascal');
+    if (satt_i(await packa_upp(FILER.pascal), 'pascal.img')) {
+        starta();
+        meddela('CP/M startar med Pascal/MT+ i DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S och HEJ.',
+                'CP/M is starting with Pascal/MT+ in DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S and HEJ.');
+    }
+    skarm.focus();
+});
+if (!FILER.harpascal)
+    $('skiva_pascal').hidden = $('hjalp_pascal').hidden = true;
+
 /* Forth (../forth/): skivan med FORTH.ABS sätts i och maskinen startas
  * om. BASICINI.SYS på skivan laddar Forth och startar det. */
 $('skiva_forth').addEventListener('click', async () => {
@@ -1695,6 +1711,8 @@ $('hjalp').addEventListener('toggle', h => {
                          cpm: ['cpm', 'cpm.img'] }[FILER.sida];
         if (fraga.get('skiva') === 'program' && FILER.program)
             skivan.splice(0, 2, 'program', 'program.img');
+        if (fraga.get('skiva') === 'pascal' && FILER.pascal)
+            skivan.splice(0, 2, 'pascal', 'pascal.img');
         satt_i(await packa_upp(FILER[skivan[0]]), skivan[1]);
     } catch (fel) {
         meddela('Webbläsaren kan inte packa upp skivorna.', 'The browser cannot unpack the disks.');
