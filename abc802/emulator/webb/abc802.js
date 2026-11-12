@@ -533,8 +533,9 @@ $('skiva_pascal').addEventListener('click', async () => {
 if (!FILER.harpascal)
     $('skiva_pascal').hidden = $('hjalp_pascal').hidden = true;
 /* Utan Pascal/MT+ (publikt/abc802) har skivan bara förrådets egen Pascal. */
-for (const el of document.querySelectorAll(FILER.mtplus ? '.utan_mtplus' : '.mtplus'))
-    el.hidden = true;
+if (!FILER.mtplus)
+    for (const el of document.querySelectorAll('.mtplus'))
+        el.hidden = true;
 if (!FILER.mtplus) {
     const k = $('skiva_pascal');
     k.title = k.dataset.titleSv = 'Pascal, PVM med PC och PCS, under CP/M 2.2: skivan sätts i och maskinen startas om';
