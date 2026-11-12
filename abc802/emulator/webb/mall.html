@@ -516,13 +516,14 @@
         den). Förrådets egen Pascal (<code>pascal/</code>) kompilerar till
         p-kod, som tolken PVM.COM kör, så ingen länkning behövs. Prova:</p>
         <ul lang="sv">
-          <li><code>PVM PC</code>, och på nästa rad filnamnet i versaler,
-          <code>HEJ.PAS</code>: kompilatorn gör HEJ.PK. Det tar ungefär en
-          halv minut, och under tiden syns ingen prompt.</li>
+          <li><code>PVM PC HEJ.PAS</code>: kompilatorn gör HEJ.PK. Det tar
+          ungefär en halv minut, och under tiden syns ingen prompt. (Med
+          bara <code>PVM PC</code> väntar den tyst på namnet på nästa
+          rad.)</li>
           <li><code>PVM HEJ</code> kör programmet.</li>
           <li><code>SKRIV KUB.PAS</code> skriver ett eget program med
           WordStars tangenter; Ctrl-K X sparar och går tillbaka till CP/M.
-          Sedan <code>PVM PC</code> och <code>KUB.PAS</code>, och
+          Sedan <code>PVM PC KUB.PAS</code> och
           <code>PVM KUB</code>.</li>
           <li>Är något fel slutar kompilatorn med <code>rad r, kolumn k:
           fel n</code>; fel 7 är till exempel ett okänt namn.</li>
@@ -547,13 +548,14 @@
         p-code, which the interpreter PVM.COM runs, so no linking is needed.
         Try:</p>
         <ul lang="en">
-          <li><code>PVM PC</code>, and on the next line the file name in
-          capitals, <code>HEJ.PAS</code>: the compiler makes HEJ.PK. It takes
-          about half a minute, and no prompt shows meanwhile.</li>
+          <li><code>PVM PC HEJ.PAS</code>: the compiler makes HEJ.PK. It
+          takes about half a minute, and no prompt shows meanwhile. (With
+          just <code>PVM PC</code> it waits silently for the name on the
+          next line.)</li>
           <li><code>PVM HEJ</code> runs the program.</li>
           <li><code>SKRIV KUB.PAS</code> writes a program of your own with
           WordStar's keys; Ctrl-K X saves and returns to CP/M. Then
-          <code>PVM PC</code> and <code>KUB.PAS</code>, and
+          <code>PVM PC KUB.PAS</code> and
           <code>PVM KUB</code>.</li>
           <li>If something is wrong the compiler stops with <code>rad r,
           kolumn k: fel n</code> (line, column, error); error 7 is for

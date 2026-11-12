@@ -477,6 +477,29 @@ function till_sidan(sida, skiva) {
     location.href = SIDORNA[sida] + '?' + fragan;
 }
 
+/* Meddelandet när en skiva sätts i och maskinen startar om, med knappen
+ * eller när sidan startar med den (knappen på en annan sida går hit). */
+const SKIVANS_MEDDELANDE = {
+    program: () => meddela('Programskivan sitter i DR0:. RUN ORD är ordbehandlaren.',
+                           'The program disk is in DR0:. RUN ORD is the word processor.'),
+    cpm: () => meddela('CP/M 2.2 startar från DR0:.', 'CP/M 2.2 is starting from DR0:.'),
+    forth: () => meddela('Forth startar från DR0:. BYE går till BASIC.',
+                         'Forth is starting from DR0:. BYE returns to BASIC.'),
+    pascal: () => FILER.mtplus
+        ? meddela('CP/M startar med Pascal/MT+ i DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S och HEJ.',
+                  'CP/M is starting with Pascal/MT+ in DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S and HEJ.')
+        : meddela('CP/M startar med Pascal i DR0:. PVM PC HEJ.PAS gör HEJ.PK, och PVM HEJ kör den. Mer under i i Skivminnet.',
+                  'CP/M is starting with Pascal in DR0:. PVM PC HEJ.PAS makes HEJ.PK, and PVM HEJ runs it. More under i in Disk drives.'),
+};
+
+/* Hjälptexten (i) i panelen med elementet id öppnas och visas. */
+function visa_hjalpen(id) {
+    const el = $(id), p = el.closest('details.panel');
+    p.open = true;
+    p.querySelector('.hjalptext').hidden = false;
+    p.querySelector('.info').classList.add('pa');
+}
+
 $('skiva_prov').addEventListener('click', async () => {
     if (!FILER.tidsprov)
         return till_sidan('grund');
@@ -497,8 +520,7 @@ $('skiva_program').addEventListener('click', async () => {
         return till_sidan('grund', 'program');
     if (satt_i(await packa_upp(FILER.program), 'program.img')) {
         starta();
-        meddela('Programskivan sitter i DR0:. RUN ORD är ordbehandlaren.',
-                'The program disk is in DR0:. RUN ORD is the word processor.');
+        SKIVANS_MEDDELANDE.program();
     }
     skarm.focus();
 });
@@ -508,7 +530,7 @@ $('skiva_cpm').addEventListener('click', async () => {
         return till_sidan('cpm');
     if (satt_i(await packa_upp(FILER.cpm), 'cpm.img')) {
         starta();
-        meddela('CP/M 2.2 startar från DR0:.', 'CP/M 2.2 is starting from DR0:.');
+        SKIVANS_MEDDELANDE.cpm();
     }
     skarm.focus();
 });
@@ -521,12 +543,8 @@ $('skiva_pascal').addEventListener('click', async () => {
         return till_sidan('cpm', 'pascal');
     if (satt_i(await packa_upp(FILER.pascal), 'pascal.img')) {
         starta();
-        if (FILER.mtplus)
-            meddela('CP/M startar med Pascal/MT+ i DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S och HEJ.',
-                    'CP/M is starting with Pascal/MT+ in DR0:. MTPLUS HEJ, LINKMT HEJ,FPREALS,PASLIB/S and HEJ.');
-        else
-            meddela('CP/M startar med Pascal i DR0:. PVM PC och HEJ.PAS gör HEJ.PK, och PVM HEJ kör den.',
-                    'CP/M is starting with Pascal in DR0:. PVM PC and HEJ.PAS make HEJ.PK, and PVM HEJ runs it.');
+        SKIVANS_MEDDELANDE.pascal();
+        visa_hjalpen('hjalp_pascal');
     }
     skarm.focus();
 });
@@ -549,8 +567,7 @@ $('skiva_forth').addEventListener('click', async () => {
         return till_sidan('forth');
     if (satt_i(await packa_upp(FILER.forth), 'forth.img')) {
         starta();
-        meddela('Forth startar från DR0:. BYE går till BASIC.',
-                'Forth is starting from DR0:. BYE returns to BASIC.');
+        SKIVANS_MEDDELANDE.forth();
     }
     skarm.focus();
 });
@@ -1726,7 +1743,12 @@ $('hjalp').addEventListener('toggle', h => {
             skivan.splice(0, 2, 'program', 'program.img');
         if (fraga.get('skiva') === 'pascal' && FILER.pascal)
             skivan.splice(0, 2, 'pascal', 'pascal.img');
-        satt_i(await packa_upp(FILER[skivan[0]]), skivan[1]);
+        if (satt_i(await packa_upp(FILER[skivan[0]]), skivan[1])
+            && (fraga.get('skiva') || FILER.sida !== 'grund')) {
+            SKIVANS_MEDDELANDE[skivan[0]]();
+            if (skivan[0] === 'pascal' && !fraga.get('k'))
+                visa_hjalpen('hjalp_pascal');
+        }
     } catch (fel) {
         meddela('Webbläsaren kan inte packa upp skivorna.', 'The browser cannot unpack the disks.');
     }
