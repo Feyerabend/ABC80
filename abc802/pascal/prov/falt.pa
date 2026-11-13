@@ -1,0 +1,62 @@
+; FALT: ett fält, indexkontrollen och CASE.
+;   VAR I : INTEGER; A : ARRAY [1..10] OF INTEGER;
+;   BEGIN FOR I := 1 TO 10 DO A[I] := SQR(I);
+;     FOR I := 1 TO 10 DO BEGIN WRITE(A[I]:4);
+;       CASE I MOD 3 OF 0: WRITE('a'); 1: WRITE('b'); 2: WRITE('c') END END;
+;     WRITELN END.
+GLOBAL 11                       ; I är globalt ord 0, A ord 1-10
+PROC FALT
+        ENT 0
+        LDC1
+        STG 0
+fyll:   LDG0
+        LDCB 10
+        LEQ
+        FJPS skriv
+        LGA 1
+        LDG0
+        CHK 1 10
+        DEC1                    ; minus den undre gränsen
+        IXA 2
+        LDG0
+        SQRI
+        STO
+        LDG0
+        INC1
+        STG 0
+        UJPS fyll
+skriv:  LDC1
+        STG 0
+s2:     LDG0
+        LDCB 10
+        LEQ
+        FJP klar
+        LDC0
+        LGA 1
+        LDG0
+        CHK 1 10
+        DEC1
+        IXA 2
+        IND
+        LDC4
+        CSP WRI
+        LDC0                    ; filen till WRITE i fallen
+        LDG0
+        LDC3
+        MOD
+        XJP 0 2 f0 f1 f2
+        ERR 4
+f0:     LDCB 'a'
+        UJPS ut
+f1:     LDCB 'b'
+        UJPS ut
+f2:     LDCB 'c'
+ut:     LDC0
+        CSP WRC
+        LDG0
+        INC1
+        STG 0
+        UJP s2
+klar:   LDC0
+        CSP WLN
+        HLT

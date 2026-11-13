@@ -1,0 +1,20 @@
+RUBRIK "Offert 1984-03-12
+PRIS 1250
+ANTAL 12
+RABATT 0.05
+NETTO PRIS*ANTAL*(1-RABATT)
+MOMS NETTO*0.25
+SUMMA NETTO+MOMS
+%PRIS ######.##
+%RABATT #.##
+%NETTO ######.##
+%MOMS ######.##
+%SUMMA ######.##
+%=OFFERT
+%=
+%=Pris per styck          PRIS
+%=Antal                  ANTAL
+%=Rabatt                RABATT
+%=Netto                  NETTO
+%=Moms 25 procent         MOMS
+%=Att betala             SUMMA

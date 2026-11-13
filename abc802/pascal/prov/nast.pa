@@ -1,0 +1,56 @@
+; NAST: en nästlad procedur, en variabel ett steg ut och en VAR-parameter.
+;   VAR G : INTEGER;
+;   PROCEDURE YTTRE(A : INTEGER);
+;     VAR X : INTEGER;
+;     PROCEDURE INRE(VAR Y : INTEGER);
+;     BEGIN X := X + A; Y := Y * 2 END;
+;   BEGIN X := 10; INRE(G); INRE(G); WRITE(X) END;
+;   BEGIN G := 3; YTTRE(5); WRITELN(' ', G) END.
+GLOBAL 1
+PROC NAST
+        ENT 0
+        LDC3
+        STG 0
+        MST 0
+        LDC5
+        CUP 2 YTTRE
+        LDC0
+        LSA " "
+        LDC1
+        LDC0
+        CSP WRS
+        LDC0
+        LDG0
+        LDC0
+        CSP WRI
+        LDC0
+        CSP WLN
+        HLT
+PROC YTTRE                      ; A är lokalt ord 0, X ord 1
+        ENT 1
+        LDCB 10
+        STL1
+        MST 0                   ; INRE ligger i YTTRE
+        LGA 0                   ; adressen till G
+        CUP 2 INRE
+        MST 0
+        LGA 0
+        CUP 2 INRE
+        LDC0
+        LDL1
+        LDC0
+        CSP WRI
+        RET
+PROC INRE                       ; Y (en adress) är lokalt ord 0
+        ENT 0
+        LOD 1 1                 ; X, ett steg ut
+        LOD 1 0                 ; A
+        ADD
+        STR 1 1
+        LDL0
+        LDL0
+        IND
+        LDC2
+        MUL
+        STO
+        RET

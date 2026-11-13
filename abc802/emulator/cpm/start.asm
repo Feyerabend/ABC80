@@ -1,7 +1,7 @@
 ; start.asm -- laddaren i BASICINI.SYS, CP/M 2.2 på ABC 802, till ABC 802 inifrån
 ;
 ; Vår egen laddare; ingenting här kommer från MyAB. DOS v.20 i ROM:en
-; öppnar BASICINI.SYS vid starten (OPNINI, se dis/tools/abc802_notes.py)
+; öppnar BASICINI.SYS vid starten (OPNINI, se listningen i ../../listning/)
 ; och läser post 0 till kanal 0:s sektorbuffert på $F500. Är sektorns
 ; byte 3 (postens första byte) JP, körs posten från $F503. Laddaren är
 ; alltså posten, högst 253 bytes.

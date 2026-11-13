@@ -1,0 +1,41 @@
+; HEJ: en sträng och en WHILE-slinga.
+;   VAR I, S : INTEGER;                     I och S är globala 0 och 1
+;   BEGIN WRITELN('Hej fran p-koden!'); I := 1;
+;     WHILE I <= 10 DO BEGIN S := S + I; I := I + 1 END;
+;     WRITELN('Summan: ', S:4) END.
+GLOBAL 2
+PROC HEJ
+        ENT 0
+        LDC0                    ; filen (skärmen)
+        LSA "Hej fran p-koden!"
+        LDCB 17                 ; längden
+        LDC0                    ; bredden
+        CSP WRS
+        LDC0
+        CSP WLN
+        LDC1
+        STG 0
+slinga: LDG0
+        LDCB 10
+        LEQ
+        FJPS slut
+        LDG1
+        LDG0
+        ADD
+        STG 1
+        LDG0
+        INC1
+        STG 0
+        UJPS slinga
+slut:   LDC0
+        LSA "Summan: "
+        LDC8
+        LDC0
+        CSP WRS
+        LDC0
+        LDG1
+        LDC4
+        CSP WRI
+        LDC0
+        CSP WLN
+        HLT

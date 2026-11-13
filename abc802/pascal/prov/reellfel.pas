@@ -1,0 +1,7 @@
+PROGRAM REELLFEL;
+VAR I: INTEGER;
+    X: REAL;
+BEGIN
+  X := 2;
+  I := X
+END.

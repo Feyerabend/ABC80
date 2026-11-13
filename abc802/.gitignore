@@ -4,3 +4,16 @@ emulator/abc802
 emulator/sdl/abc802f
 emulator/webb/abc802.wasm
 .DS_Store
+roms/luxnet/
+emulator/webb/L.BAC
+verktyg/z80asm
+forth/*.bin
+forth/*.lst
+forth/*.img
+forth/forth.asm
+pascal/*.bin
+pascal/*.lst
+pascal/*.pk
+pascal/*.img
+pascal/pvm.com
+pascal/prov/ut/

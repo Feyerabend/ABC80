@@ -1,0 +1,88 @@
+PROGRAM POSTER;
+(* RECORD, WITH, fält av fält, uppräkningar och delomfång *)
+TYPE
+  FARG = (ROD, GRON, BLA);
+  SIFFRA = 0..9;
+  NAMN = PACKED ARRAY [1..8] OF CHAR;
+  PERSON = RECORD
+    NAMN: NAMN;
+    ALDER: INTEGER;
+    FARG: FARG;
+    BETYG: ARRAY [1..3] OF SIFFRA
+  END;
+  MATRIS = ARRAY [1..3, 1..3] OF INTEGER;
+VAR
+  P, Q: PERSON;
+  LAG: ARRAY [1..2] OF PERSON;
+  M: MATRIS;
+  I, J: INTEGER;
+  F: FARG;
+  S: SIFFRA;
+  ANTAL: ARRAY [FARG] OF INTEGER;
+
+PROCEDURE VISA(P: PERSON);
+VAR I: INTEGER;
+BEGIN
+  WITH P DO
+  BEGIN
+    WRITE(NAMN, ALDER: 4, ORD(FARG): 2);
+    FOR I := 1 TO 3 DO WRITE(BETYG[I]: 2);
+    WRITELN
+  END;
+  P.ALDER := 0
+END;
+
+PROCEDURE AR(VAR P: PERSON);
+BEGIN
+  WITH P DO ALDER := ALDER + 1
+END;
+
+FUNCTION SPAR(M: MATRIS): INTEGER;
+VAR I, S: INTEGER;
+BEGIN
+  S := 0;
+  FOR I := 1 TO 3 DO S := S + M[I, I];
+  M[1, 1] := 99;
+  SPAR := S
+END;
+
+BEGIN
+  P.NAMN := 'ANNA    ';
+  P.ALDER := 30;
+  P.FARG := GRON;
+  FOR I := 1 TO 3 DO P.BETYG[I] := I + 6;
+  Q := P;
+  Q.NAMN := 'BERTIL  ';
+  Q.FARG := BLA;
+  Q.BETYG[2] := 0;
+  VISA(P);
+  VISA(Q);
+  AR(P);
+  WRITELN(P.ALDER);
+  LAG[1] := P;
+  LAG[2] := Q;
+  FOR I := 1 TO 2 DO
+    WITH LAG[I] DO
+    BEGIN
+      ALDER := ALDER * 2;
+      WRITELN(NAMN, ALDER: 4, BETYG[3]: 2)
+    END;
+  WITH LAG[2] DO BETYG[1] := 5;
+  VISA(LAG[2]);
+  FOR I := 1 TO 3 DO
+    FOR J := 1 TO 3 DO
+      M[I, J] := I * 10 + J;
+  WRITELN(SPAR(M), M[1][1]: 4, M[3, 2]: 4);
+  FOR F := ROD TO BLA DO ANTAL[F] := ORD(F) * 2;
+  F := SUCC(ROD);
+  WRITELN(ORD(F), ANTAL[BLA]: 3, ORD(PRED(BLA)): 2);
+  IF F = GRON THEN WRITELN('GRON');
+  CASE F OF
+    ROD: WRITELN('R');
+    GRON, BLA: WRITELN('G ELLER B')
+  END;
+  S := 9;
+  WRITELN(S + 1);
+  READ(I);
+  S := I
+END.

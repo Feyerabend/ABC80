@@ -1,0 +1,21 @@
+VERK, text och kalkyl i ett
+
+Det du skriver hamnar där markören står, och raderna bryts
+vid blanksteg. Texten får vara {TS}tecken.
+
+  CTRL-S ->  ett tecken bakåt, framåt
+  CTRL-E   en rad upp      CTRL-X   en rad ned
+  CTRL-A   radens början   CTRL-F   radens slut
+  CTRL-R   en sida upp     CTRL-V   en sida ned
+  <-       ta bort före    CTRL-G   ta bort efter
+  CTRL-Q   till menyn
+
+  CTRL-K   formeln för fältet vid markören, eller ett nytt
+
+Ett fält visar en cells värde, inverterat. Med CTRL-K skrivs
+formeln på sista raden: PRIS 1250 eller SUMMA PRIS*ANTAL,
+och RETURN räknar. %PRIS ######.## ger cellens mall.
+
+Ett exempel: 7 och OFFERT i menyn.
+
+Tryck på en tangent.

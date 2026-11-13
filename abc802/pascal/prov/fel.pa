@@ -1,0 +1,11 @@
+; FEL: A[11] i ett fält [1..10] ger körfel 1.
+GLOBAL 11
+PROC FEL
+        ENT 0
+        LGA 1
+        LDCB 11
+        CHK 1 10
+        DEC1
+        IXA 2
+        IND
+        HLT

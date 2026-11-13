@@ -1,0 +1,32 @@
+Ljusverket AB
+Box 1234, 111 22 Stockholm
+
+                                                  Stockholm 1984-03-12
+
+Kontorshuset i Uppsala AB
+Att. inköpsavdelningen
+
+OFFERT PÅ BORDSLAMPOR
+
+Tack för er förfrågan. Vi erbjuder <ANTAL> bordslampor av modellen Kontor för <PRIS> kr. Med <PROC> % rabatt blir nettot <NETTO> kr, momsen <MOMS> kr och att betala <SUMMA> kr.
+
+Leverans inom tre veckor efter beställningen. Offerten gäller till och med 1984-04-30.
+
+Med vänlig hälsning
+Ljusverket AB
+
+Eva Lind
+%%
+PRIS 1250
+ANTAL 12
+RABATT 0.05
+PROC RABATT*100
+NETTO PRIS*ANTAL*(1-RABATT)
+MOMS NETTO*0.25
+SUMMA NETTO+MOMS
+%PRIS ####.##
+%ANTAL ##
+%PROC #
+%NETTO #####.##
+%MOMS ####.##
+%SUMMA #####.##

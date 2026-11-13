@@ -1,0 +1,6 @@
+10 REM VERK: läser in VERK.ABS med en rutin på $ECB0 (Forths TIB)
+20 PRINT CHR$(12);"VERK laddas."
+30 PRINT "4 i menyn går till BASIC, och Z=CALL(32768,1) tillbaka."
+40 POKE 60592,17,190,236,14,255,205,30,96,17,1,0,195,0,128
+50 POKE 60606,86,69,82,75,32,32,32,32,65,66,83
+60 ;CALL(60592)

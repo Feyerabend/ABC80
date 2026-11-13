@@ -1,0 +1,74 @@
+PROGRAM PEKARE;
+(* pekare, NIL, NEW, MARK och RELEASE: en lista och ett träd *)
+TYPE
+  LANK = ^NOD;
+  NOD = RECORD
+    VARDE: INTEGER;
+    NASTA: LANK
+  END;
+  TRAD = ^GREN;
+  GREN = RECORD
+    NYCKEL: INTEGER;
+    VA, HO: TRAD
+  END;
+VAR
+  FORST, P: LANK;
+  ROT: TRAD;
+  I, N: INTEGER;
+  MARKE: ^INTEGER;
+  Z: ^INTEGER;
+
+PROCEDURE SATTIN(VAR T: TRAD; K: INTEGER);
+BEGIN
+  IF T = NIL THEN
+  BEGIN
+    NEW(T);
+    T^.NYCKEL := K
+  END
+  ELSE IF K < T^.NYCKEL THEN SATTIN(T^.VA, K)
+  ELSE SATTIN(T^.HO, K)
+END;
+
+PROCEDURE GENOM(T: TRAD);
+BEGIN
+  IF T <> NIL THEN
+    WITH T^ DO
+    BEGIN
+      GENOM(VA);
+      WRITE(NYCKEL: 4);
+      GENOM(HO)
+    END
+END;
+
+BEGIN
+  FORST := NIL;
+  FOR I := 1 TO 5 DO
+  BEGIN
+    NEW(P);
+    P^.VARDE := I * I;
+    P^.NASTA := FORST;
+    FORST := P
+  END;
+  P := FORST;
+  WHILE P <> NIL DO
+  BEGIN
+    WRITE(P^.VARDE: 4);
+    P := P^.NASTA
+  END;
+  WRITELN;
+  MARK(MARKE);
+  ROT := NIL;
+  N := 37;
+  FOR I := 1 TO 9 DO
+  BEGIN
+    SATTIN(ROT, N);
+    N := (N * 13 + 7) MOD 50
+  END;
+  GENOM(ROT);
+  WRITELN;
+  RELEASE(MARKE);
+  NEW(Z);
+  WRITELN(Z^, ORD(Z = MARKE): 2);
+  (* högen tar slut: körfel 9 *)
+  WHILE TRUE DO NEW(P)
+END.

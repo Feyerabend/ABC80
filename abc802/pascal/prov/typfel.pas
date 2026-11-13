@@ -1,0 +1,5 @@
+PROGRAM X;
+VAR I : INTEGER;
+BEGIN
+  I := TRUE
+END.

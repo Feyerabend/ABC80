@@ -1,0 +1,65 @@
+; FIL: skriva en textfil, läsa den igen med EOLN, READLN och READ.
+;   VAR F : TEXT; C : CHAR; N : INTEGER;
+;   BEGIN REWRITE(F, 'PROV.TXT'); WRITELN(F, 'rad ett'); WRITELN(F, 42);
+;     CLOSE(F); RESET(F, 'PROV.TXT');
+;     WHILE NOT EOLN(F) DO BEGIN READ(F, C); WRITE(C) END;
+;     READLN(F); READ(F, N); WRITELN(' ', 2 * N); CLOSE(F) END.
+GLOBAL 3                        ; F, C och N är globala 0-2
+PROC FIL
+        ENT 0
+        LGA 0
+        LSA "PROV.TXT"
+        LDC8
+        CSP RWR
+        LDG0
+        LSA "rad ett"
+        LDC7
+        LDC0
+        CSP WRS
+        LDG0
+        CSP WLN
+        LDG0
+        LDCB 42
+        LDC0
+        CSP WRI
+        LDG0
+        CSP WLN
+        LDG0
+        CSP CLO
+        LGA 0
+        LSA "PROV.TXT"
+        LDC8
+        CSP RST
+las:    LDG0
+        CSP EOL
+        NOT
+        FJPS rad
+        LDG0
+        CSP RDC
+        STG 1
+        LDC0
+        LDG1
+        LDC0
+        CSP WRC
+        UJPS las
+rad:    LDG0
+        CSP RLN
+        LDG0
+        CSP RDI
+        LDC2
+        MUL
+        STG 2
+        LDC0
+        LSA " "
+        LDC1
+        LDC0
+        CSP WRS
+        LDC0
+        LDG2
+        LDC0
+        CSP WRI
+        LDC0
+        CSP WLN
+        LDG0
+        CSP CLO
+        HLT

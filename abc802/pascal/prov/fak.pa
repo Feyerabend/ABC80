@@ -1,0 +1,47 @@
+; FAK: en rekursiv funktion.
+;   FUNCTION FAK(N : INTEGER) : INTEGER;
+;   BEGIN IF N <= 1 THEN FAK := 1 ELSE FAK := N * FAK(N - 1) END;
+;   BEGIN FOR I := 1 TO 7 DO WRITE(FAK(I):6); WRITELN END.
+GLOBAL 1
+PROC HUVUD
+        ENT 0
+        LDC1
+        STG 0
+slinga: LDG0
+        LDC7
+        LEQ
+        FJPS slut
+        LDC0                    ; filen
+        LDC0                    ; platsen för funktionsvärdet
+        MST 0                   ; FAK ligger i huvudprogrammet
+        LDG0                    ; N
+        CUP 2 FAK
+        LDC6                    ; bredden
+        CSP WRI
+        LDG0
+        INC1
+        STG 0
+        UJPS slinga
+slut:   LDC0
+        CSP WLN
+        HLT
+PROC FAK                        ; N är lokalt ord 0 (argumentet)
+        ENT 0
+        LDL0
+        LDC1
+        LEQ
+        FJPS annars
+        LFA
+        LDC1
+        STO
+        RET
+annars: LFA
+        LDL0
+        LDC0                    ; platsen för FAK(N - 1)
+        MST 1                   ; FAK anropar sig själv: samma statiska länk
+        LDL0
+        DEC1
+        CUP 2 FAK
+        MUL
+        STO
+        RET
