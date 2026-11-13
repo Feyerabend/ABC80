@@ -22,6 +22,12 @@ detsamma; bara DOS-PROM:en skiljer (ABC 6-XX, 32-XX och 66-XX).
 Forth och Pascal här är skrivna för ABC 802:s minne och går inte utan
 vidare på de andra.
 
+Börja gärna med boken *ABC 802 inifrån* i [`inifran/`](inifran/). Dess
+README visar vilka mappar som hör till vilka kapitel: maskinen och
+listningen, tangentbordshäftet, CP/M, Pascal och Forth med
+bruksanvisningarna, och tidsproven. Varje mapp har en egen README (i
+`roms/` heter den `LASMIG.md`).
+
 | Mapp | Innehåll |
 |------|----------|
 | [`maskinen/`](maskinen/) | maskinen för programmeraren: kretsarna, minneskartan och bankväxlingen, portarna, avbrotten och kontakterna |
@@ -33,9 +39,9 @@ vidare på de andra.
 | [`pascal/`](pascal/) | en Pascal med p-kod: kompilatorn skriven i Pascal, tolken i Z80-assembler, för BASIC-läget och för CP/M; och anteckningar om Luxors Pascal 800 |
 | [`verktyg/`](verktyg/) | `z80asm.c`, assemblern som Forth och Pascal byggs med |
 | [`cpm/`](cpm/) | CP/M, DataBoard 4680 och Unix: ABC 802 bland samtidens standarder (engelska) |
-| [`inifran/`](inifran/) | boken *ABC 802 inifrån* (PDF) |
-| [`manualer/`](manualer/) | bruksanvisningarna till ORD, KALKYL, VERK och Pascal (PDF) |
-| [`tangentbord/`](tangentbord/) | häftet om tangentborden ABC 55, ABC 77 och ABC 99 (PDF) |
+| [`inifran/`](inifran/) | boken *ABC 802 inifrån*, 114 sidor: [`abc802.pdf`](inifran/abc802.pdf) |
+| [`manualer/`](manualer/) | bruksanvisningarna till [ORD](manualer/ord.pdf), [KALKYL](manualer/kalkyl.pdf), [VERK](manualer/verk.pdf) och [Pascal](manualer/pascal.pdf) |
+| [`tangentbord/`](tangentbord/) | häftet om tangentborden ABC 55, ABC 77 och ABC 99 och musen ABC R8: [`tangentbord.pdf`](tangentbord/tangentbord.pdf) |
 | `bilder/` | bilderna till texterna |
 
 Programmen i `benchmark/` är provade i emulatorn: de som är anpassade
@@ -80,6 +86,10 @@ ABC 802's DOS is byte for byte that of the ABC 800 M, and the disk
 controller is the same; only the DOS PROM differs. The Forth and Pascal
 here are written for the ABC 802's memory map.
 
+A good place to start is the book in [`inifran/`](inifran/); its README
+maps the chapters to the other folders. Each folder has its own README
+(in `roms/` it is `LASMIG.md`).
+
 | Folder | Contents |
 |--------|----------|
 | [`maskinen/`](maskinen/) | the machine for the programmer: chips, memory map and bank switching, ports, interrupts, connectors (Swedish, with an English summary) |
@@ -91,9 +101,9 @@ here are written for the ABC 802's memory map.
 | [`pascal/`](pascal/) | a p-code Pascal: the compiler in Pascal, the interpreter in Z80 assembly, for BASIC mode and CP/M; and notes on Luxor's Pascal 800 |
 | [`verktyg/`](verktyg/) | `z80asm.c`, the assembler used to build Forth and Pascal |
 | [`cpm/`](cpm/) | CP/M, DataBoard 4680 and Unix: the ABC 802 among the standards of its day |
-| [`inifran/`](inifran/) | the book *ABC 802 inifrån* (PDF, in Swedish) |
+| [`inifran/`](inifran/) | the book *ABC 802 inifrån* (PDF, in Swedish): [`abc802.pdf`](inifran/abc802.pdf) |
 | [`manualer/`](manualer/) | the manuals for ORD, KALKYL, VERK and Pascal (PDF, in Swedish) |
-| [`tangentbord/`](tangentbord/) | the booklet on the keyboards ABC 55, ABC 77 and ABC 99 (PDF, in Swedish) |
+| [`tangentbord/`](tangentbord/) | the booklet on the keyboards ABC 55, ABC 77 and ABC 99 and the ABC R8 mouse (PDF, in Swedish) |
 
 To build: `python3 roms/hamta.py`, then `make` in `emulator/`, `sh
 forth/gor.sh` and `sh pascal/bygg.sh`. The disks come out identical to
