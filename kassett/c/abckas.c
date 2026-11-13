@@ -11,7 +11,7 @@
  *
  * Samma sak som python/abckas.py, och samma utdata byte för byte.
  *
- * S. Lönnert 2026. Public domain.
+ * S. Lonnert 2026. Public domain.
  */
 #include <math.h>
 #include <stdio.h>
