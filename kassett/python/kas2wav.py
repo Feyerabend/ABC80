@@ -10,7 +10,7 @@ Signalen är FM med ROM:ens bitceller (3993 T för en nolla, 4065 T för en
 etta vid 2,9952 MHz). --lead är tystnaden före varje namnblock och --gap
 före varje datablock.
 
-S. Lönnert 2026. Public domain.
+S. Lonnert 2026. Public domain.
 """
 
 import argparse
