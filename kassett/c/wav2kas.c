@@ -9,7 +9,7 @@
  * Avslutas med 1 om någon fil saknar namnblock eller datablock.
  * Samma som python/wav2kas.py.
  *
- * S. Lönnert 2023, 2026. Public domain.
+ * S. Lonnert 2023, 2026. Public domain.
  */
 #include <math.h>
 #include <stdio.h>
