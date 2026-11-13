@@ -39,7 +39,7 @@ bruksanvisningarna, och tidsproven. Varje mapp har en egen README (i
 | [`pascal/`](pascal/) | en Pascal med p-kod: kompilatorn skriven i Pascal, tolken i Z80-assembler, för BASIC-läget och för CP/M; och anteckningar om Luxors Pascal 800 |
 | [`verktyg/`](verktyg/) | `z80asm.c`, assemblern som Forth och Pascal byggs med |
 | [`cpm/`](cpm/) | CP/M, DataBoard 4680 och Unix: ABC 802 bland samtidens standarder (engelska) |
-| [`inifran/`](inifran/) | boken *ABC 802 inifrån*, 112 sidor: [`abc802.pdf`](inifran/abc802.pdf) |
+| [`inifran/`](inifran/) | boken *ABC 802 inifrån*, 103 sidor: [`abc802.pdf`](inifran/abc802.pdf) |
 | [`manualer/`](manualer/) | bruksanvisningarna till [ORD](manualer/ord.pdf), [KALKYL](manualer/kalkyl.pdf), [VERK](manualer/verk.pdf) och [Pascal](manualer/pascal.pdf) |
 | [`tangentbord/`](tangentbord/) | häftet om tangentborden ABC 55, ABC 77 och ABC 99 och musen ABC R8: [`tangentbord.pdf`](tangentbord/tangentbord.pdf) |
 | `bilder/` | bilderna till texterna |
