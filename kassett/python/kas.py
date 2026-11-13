@@ -10,7 +10,7 @@ Vid packning kan typen anges med -t (text) eller -b (binär), och
 tidkonstanten för ABC 800 med --tk. Text packas som ABC80-ROM:en
 (TXTPRT) gör, med CR som radslut; LF tas bort.
 
-S. Lönnert 2026. Public domain.
+S. Lonnert 2026. Public domain.
 """
 
 import argparse
