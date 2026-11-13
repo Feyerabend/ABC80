@@ -8,7 +8,7 @@
  * Vid packning anger -t (text) eller -b (binär) typen, och --tk N
  * tidkonstanten för ABC 800. Samma som python/kas.py.
  *
- * S. Lönnert 2026. Public domain.
+ * S. Lonnert 2026. Public domain.
  */
 #include <stdio.h>
 #include <stdlib.h>
