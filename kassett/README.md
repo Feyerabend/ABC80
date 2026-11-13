@@ -4,8 +4,7 @@ Verktyg och beskrivning för kassettbanden i ABC80 och ABC 800-serien
 (800 C/M, 802 och 806). Under arbete.
 
 - [FORMAT.md](FORMAT.md): signalen, blocken, filerna och teckenkoderna,
-  med källor och öppna frågor
-- [PLAN.md](PLAN.md): verktygen och ordningen de byggs i
+  med källor och öppna frågor..
 
 ## Python (python/)
 
