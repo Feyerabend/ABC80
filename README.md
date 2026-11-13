@@ -16,7 +16,7 @@ material to the book *ABC80 inifrån* ("ABC80 from the inside").
 ## ABC80 inifrån
 
 Boken *ABC80 inifrån* finns i två band hos BoD (Books on
-Demand) samt hos flera traditionella bokhandlare.
+Demand) samt hos flera traditionella bokhandlare för beställning.
 Materialet till den ligger i [`inifran/`](inifran/).
 
 - **Band 1: Maskinen och BASIC:en** (244 s., ISBN 978-91-8150-657-0):
