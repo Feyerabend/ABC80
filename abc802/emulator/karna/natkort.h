@@ -5,7 +5,7 @@
  * varje anrop: NETHK ($6DC1) väljer nodkortet (kort 3) och kör OUT (C),A
  * på $6009 (NETOUT) med ett funktionsnummer 1-$16 i L. Där tog det
  * riktiga kortet över med sitt eget minne (?); hur det gick till och vad
- * som gick på tråden vet vi inte (../../dis/tools/abc802net_notes.py).
+ * som gick på tråden vet vi inte (?).
  *
  * Här spelar emulatorn både nodkortet och centralen. Kroken på $6009
  * (abc802.h, krok) gör jobbet direkt och hoppar till NETBAK ($6DDE) med

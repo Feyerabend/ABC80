@@ -8,7 +8,7 @@ En avbild till kort 44 om 320 KB (1 280 sektorer à 256 bytes), som DOS
 v.20 i ROM:en startar och cpm/bios.asm läser. CP/M ser 80 spår om 16
 sektorer (32 sektorer om 128 bytes):
 
-  sektor 0-39    DOS:ens del, ur ../../prov/skivor/tom.img: etiketten,
+  sektor 0-39    DOS:ens del, ur ../skivor/tom.img: etiketten,
                  bitkartan (sektor 14), katalogen (sektor 16-23),
                  SYSDIR.SYS, och BASICINI.SYS med laddaren (start.bin)
                  som post 0. Bitkartan säger att alla kluster är
@@ -19,8 +19,8 @@ sektorer (32 sektorer om 128 bytes):
                  (128 poster) i block 0-1, filerna från block 2
 
 BASICINI.SYS skrivs av DOS:en själv: emulatorn kör ett BASIC-program som
-skriver posten med PUT, som gor.py i prov/skivor gör med Luxors
-systemprogram (dess kor(), koder() och SKRIVARE används här). Utan
+skriver posten med PUT, som Luxors
+systemprogram gör. Utan
 system blir hela skivan $E5, med samma CP/M-del.
 
 Filerna läggs i katalogen för användare 0, med namnet i versaler. Med
@@ -34,9 +34,7 @@ import sys
 import tempfile
 
 HAR = os.path.dirname(os.path.abspath(__file__))
-SKIVOR = os.path.join(HAR, "..", "..", "prov", "skivor")
-sys.path.insert(0, SKIVOR)
-import gor  # noqa: E402
+SKIVOR = os.path.join(HAR, "..", "skivor")
 
 SEKTOR, SEKTORER = 256, 1280
 SYSSEKTOR, SYSANTAL = 40, 32                  # som start.asm
@@ -48,6 +46,11 @@ BITKARTA = 14
 
 def basicini(avbild, laddare):
     """BASICINI.SYS med laddaren som post 0, skriven av DOS:en."""
+    try:
+        import gor  # verktyget som gjorde skivorna; det finns inte här
+    except ImportError:
+        sys.exit("skiva.py: systemskivan a.img är färdig och görs inte om här; "
+                 "ange - - - för en skiva med bara filer")
     post = laddare.ljust(253, b"\0")
     rader = list(gor.SKRIVARE) + ['1000 DATA "BASICINI.SYS"']
     nr, rad = 1010, ""

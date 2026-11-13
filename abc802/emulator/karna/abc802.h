@@ -7,8 +7,8 @@
  * ABC80 (maskin.h) gör kärnan ingen in- eller utmatning själv.
  *
  * Uppgifterna kommer ur servicemanualen (230 8088-15) och kretsschemat
- * där, sammanfattade i ../../maskin/MASKINEN.md, och ur ROM:en
- * (../../dis/tools/abc802_notes.py):
+ * där, sammanfattade i ../../maskinen/README.md, och ur ROM:en
+ * (../../listning/):
  *     klockan      3 MHz (12 MHz / 4); 6845 får 2 MHz, CTC kanal 0-2
  *                  1,5 MHz på CLK/TRG
  *     minnet       ROM $0000-$7FFF, 64 KB RAM, bildminnet 2 KB på
@@ -33,7 +33,7 @@
  *     CH A, CH B   kontakterna för V24 och skrivaren: DART A (PR:) med
  *                  klockan från CTC kanal 2, och SIO A (V24:) som sänder
  *                  med CTC kanal 0 och tar emot med kanal 1 (ROM:en på
- *                  $7209, abc802_notes.py). Kanal 0 ger också kassettens
+ *                  $7209 i listningen). Kanal 0 ger också kassettens
  *                  klocka (?). Ett tecken tar så lång tid som WR3-WR5 och
  *                  CTC:n säger. DCD och CTS är på, som med en ansluten
  *                  skrivare eller terminal.

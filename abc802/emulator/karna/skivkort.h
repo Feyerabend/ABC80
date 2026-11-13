@@ -7,7 +7,7 @@
  *                      talar med genom SECIO ($608F): 44 för disketterna
  *                      (MF0-MF3), 36 för hårddisken (HD)
  *     kort 45          FD2 (ABC-DOS för FD2); protokollet ur kontrollerns
- *                      PROM FD2-M1.02 (dis/roms/orig/floppy)
+ *                      PROM FD2-M1.02
  * Avbilden är en buffert med 256 bytes per sektor, som värden har läst
  * in; skrivningar går direkt till bufferten, och värden får skriva
  * tillbaka den.

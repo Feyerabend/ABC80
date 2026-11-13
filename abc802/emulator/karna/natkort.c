@@ -7,7 +7,7 @@
 
 #include "natkort.h"
 
-/* Platserna i ROM:en och i DOS:ens minne (../../dis/build/abc802net.asm). */
+/* Platserna i ROM:en och i DOS:ens minne. */
 #define NETOUT  0x6009
 #define NETBAK  0x6DDE
 #define VFD3F   0xFD3F                       /* kortet som NETHK valde */

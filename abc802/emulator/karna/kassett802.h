@@ -3,7 +3,7 @@
  *
  * Kassetten sitter på SIO/2:ns kanal B ($42/$43), och DTR på kanalen
  * drar reläet RE1 till motorn (servicemanualen s. 50, kretsschemat blad
- * 1). ROM:en (CAS: på $736D-$79C0, ../../dis/tools/abc802_notes.py)
+ * 1). ROM:en (CAS: på $736D-$79C0, se ../../listning/)
  * skriver block teckensynkront: 32 x $00, $16 $02, 256 bytes, $03, en
  * summa på 16 bitar och $FF $FF, och läser med SIO:n i bisynk som letar
  * efter $16 $02 själv.

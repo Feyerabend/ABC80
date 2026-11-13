@@ -3,7 +3,7 @@
  *
  * Luxors Centronicskort (snabbskrivarinterfacet 55 20502-01, kort 60)
  * som det ses av PR: i ROM:en ($7000, typerna C, P och U; se
- * dis/build/abc802rom.asm, GETDEF och PROUT). Kortet väljs med OUT 1
+ * ../../listning/, GETDEF och PROUT). Kortet väljs med OUT 1
  * och $BC eller $3C; det jämför bara bit 0-5, och OUT 2-4 (C1-C3) märks
  * inte. OUT 0 är ett tecken till skrivaren, och IN 1 är statusen:
  *     bit 3   SLCT vänd (0 = skrivaren är vald)

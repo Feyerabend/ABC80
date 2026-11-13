@@ -3,8 +3,7 @@
 # inifrån
 #
 # Mallen (mall.html) får WebAssembly-koden (abc802.wasm, make webb),
-# ROM:en, nät-ROM:en (LUXNET) och teckengeneratorn som base64, skivorna (../prov/skivor,
-# gor.py, CP/M-skivan cpm/a.img och Pascal-skivan cpm/pascal.img, Forth, ../forth/forth.img, och programskivan, ../forth/program.img) packade med gzip och som base64, och datavision.js, bbs.js,
+# ROM:en, nät-ROM:en (LUXNET) och teckengeneratorn som base64, skivorna (skivor/, CP/M-skivan cpm/a.img och Pascal-skivan cpm/pascal.img, Forth, ../forth/forth.img, och programskivan, ../forth/program.img) packade med gzip och som base64, och datavision.js, bbs.js,
 # stordator.js och abc802.js efter, där raden
 # med FILER står; L.BAC (webb/lbac.sh) kommer med som base64 om den finns. Det som bara syns i mallen (mellan MALL och /MALL) tas
 # bort. Filen skrivs på standard ut:
@@ -24,7 +23,7 @@ cd "$(dirname "$0")/.."
 ROM=${ROM:-../roms/abc802rom.rom}
 NATROM=${NATROM:-../roms/abc802net.rom}
 TECKEN=${TECKEN:-../roms/orig/abc802/ABC802-char.6490191-01.bin}
-SKIVOR=${SKIVOR:-../prov/skivor}
+SKIVOR=${SKIVOR:-skivor}
 FORTH=${FORTH:-../forth/forth.img}
 PROGRAM=${PROGRAM:-../forth/program.img}
 # Pascal-skivan (make pascal) är med på CP/M-sidan om den finns; den har
