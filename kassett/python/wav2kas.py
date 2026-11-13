@@ -10,7 +10,7 @@ godtas när summan stämmer. Rapporten visar också block som hittades men
 aldrig gick igenom (fel summa, ETX saknas, oläsbara bitar).
 Avslutas med 1 om någon fil saknar namnblock eller datablock.
 
-S. Lönnert 2023, 2026. Public domain.
+S. Lonnert 2023, 2026. Public domain.
 """
 
 import argparse
