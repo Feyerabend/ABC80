@@ -12,8 +12,8 @@
  *
  * Usage (Mac / Linux)
  * -------------------
- *   python3 tools/send_p.py /dev/tty.usbmodem*  game.p   # macOS
- *   python3 tools/send_p.py /dev/ttyACM0         game.p   # Linux
+ *   python3 tools/send_p_termios.py /dev/tty.usbmodem*  game.p   # macOS
+ *   python3 tools/send_p_termios.py /dev/ttyACM0         game.p   # Linux
  */
 
 #pragma once

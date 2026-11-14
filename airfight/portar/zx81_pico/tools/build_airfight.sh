@@ -6,6 +6,11 @@
 set -e
 cd "$(dirname "$0")/.."
 
+if [ ! -x asm/z80asm ] || [ asm/z80asm.c -nt asm/z80asm ] || [ asm/z80asm.h -nt asm/z80asm ]; then
+    echo "=== Building asm/z80asm ==="
+    "${CC:-cc}" -std=c11 -O2 -o asm/z80asm asm/z80asm.c
+fi
+
 echo "=== Assembling & building airfight.p ==="
 python3 tools/make_p.py games/airfight.asm --header
 

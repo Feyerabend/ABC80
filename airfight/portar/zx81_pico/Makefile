@@ -29,6 +29,10 @@ BUILD_DIR   := build
 TARGET      := zx81_pico
 UF2         := $(BUILD_DIR)/$(TARGET).uf2
 
+# Host C compiler for the Z80 assembler (asm/z80asm)
+HOSTCC      ?= cc
+Z80ASM      := asm/z80asm
+
 NCPU := $(shell sysctl -n hw.logicalcpu 2>/dev/null || nproc 2>/dev/null || echo 4)
 
 # Serial port — auto-detected; override with: make load PORT=/dev/ttyACM0
@@ -38,8 +42,13 @@ PORT ?= $(shell ls /dev/tty.usbmodem* 2>/dev/null | head -1)
 
 all: airfight firmware
 
+# Build the Z80 assembler that tools/make_p.py calls
+$(Z80ASM): asm/z80asm.c asm/z80asm.h
+	@echo "==> Building $(Z80ASM)..."
+	$(HOSTCC) -std=c11 -O2 -o $@ asm/z80asm.c
+
 # Assemble airfight.asm → games/airfight.p + src/airfight_bin.h
-airfight:
+airfight: $(Z80ASM)
 	@echo "==> Building airfight..."
 	python3 tools/make_p.py games/airfight.asm --header
 
@@ -86,6 +95,7 @@ send:
 # Remove all generated artifacts
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f $(Z80ASM)
 	rm -f src/airfight_bin.h games/airfight.p games/hello.p
 
 # Open USB CDC serial monitor

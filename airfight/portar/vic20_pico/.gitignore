@@ -1,0 +1,8 @@
+# Build directory
+build/
+
+# Commodore ROMs, fetched by roms/fetch_roms.py
+roms/*.bin
+include/rom_basic.h
+include/rom_kernal.h
+include/rom_char.h

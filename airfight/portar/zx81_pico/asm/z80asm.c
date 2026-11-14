@@ -3,6 +3,11 @@
  *
  * Companion to z80_disassembler.cpp; encoding tables mirror disasm.c.
  *
+ * Origin: the same assembler as abc802/verktyg/z80asm.c in this
+ * repository (../../../../abc802/verktyg/ from here), with the same fix
+ * for symbol expressions.  That copy has larger tables and is the one
+ * to start from; this one is kept here so the port builds on its own.
+ *
  * Build:
  *   cc -std=c11 -Wall -O2 -o z80asm z80asm.c
  *

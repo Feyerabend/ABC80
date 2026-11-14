@@ -105,8 +105,6 @@ Protocol: the script sends `Ctrl+L` (0x0C) to trigger load mode, then a
 2-byte little-endian file length, then the raw `.p` bytes.
 The Pico responds with `LOAD: waiting...` and `OK (...)` on success.
 
-`tools/send_p.py` is an older version that requires `pip install pyserial`.
-Prefer `send_p_termios.py`.
 
 
 
@@ -127,8 +125,11 @@ python3 tools/make_hello.py [output.p]
 Converts a binary ROM file to a C `const uint8_t[]` header.
 
 ```bash
-python3 tools/make_rom_header.py roms/zx81.rom src/zx81_rom.h
+python3 tools/make_rom_header.py roms/zx81.rom src/zx81_rom_data.h
 ```
+
+CMake runs this automatically at configure time and stops with an error if
+`roms/zx81.rom` is missing (get it with `python3 roms/fetch_rom.py`).
 
 
 
@@ -152,18 +153,18 @@ Examples:
 ```bash
 # Show the BASIC listing of any .p file (including machine-code games)
 python3 token/zx81bas.py list games/airfight.p
-python3 token/zx81bas.py list token/monster.p
+python3 token/zx81bas.py list mygame.p
 
 # Edit a BASIC program: detokenize → edit → retokenize
-python3 token/zx81bas.py list token/monster.p > /tmp/monster.bas
-# ... edit /tmp/monster.bas ...
-python3 token/zx81bas.py build /tmp/monster.bas   # writes /tmp/monster.p
+python3 token/zx81bas.py list mygame.p > /tmp/mygame.bas
+# ... edit /tmp/mygame.bas ...
+python3 token/zx81bas.py build /tmp/mygame.bas   # writes /tmp/mygame.p
 
 # Inspect a file's system variable pointers
 python3 token/zx81bas.py info games/airfight.p
 
 # Test round-trip fidelity for all .p files in a directory
-python3 token/zx81bas.py test old/ABCD/
+python3 token/zx81bas.py test games/
 ```
 
 Text BASIC format for `build`:
@@ -185,9 +186,15 @@ Text BASIC format for `build`:
 
 
 
-### old/z80asm — Z80 assembler binary
+### asm/z80asm — Z80 assembler
 
-Pre-compiled two-pass Z80 assembler (arm64, macOS). Source is in `asm/z80asm.c`.
+Two-pass Z80 assembler. Only the source `asm/z80asm.c` is in the repository;
+`make`, `make airfight` and `tools/build_airfight.sh` compile it to `asm/z80asm`
+when it is missing or older than the source. By hand:
+
+```bash
+cc -std=c11 -O2 -o asm/z80asm asm/z80asm.c
+```
 
 ```
 asm/z80asm [-o out.bin] [-l] [-v] source.asm
@@ -196,7 +203,7 @@ asm/z80asm [-o out.bin] [-l] [-v] source.asm
 `make_p.py` calls this automatically. Use directly only if you need the raw binary.
 
 ```bash
-old/z80asm -o /tmp/game.bin games/airfight.asm
+asm/z80asm -o /tmp/game.bin games/airfight.asm
 ```
 
 
@@ -221,10 +228,10 @@ python3 tools/send_p_termios.py /dev/tty.usbmodem* games/mygame.p
 
 ```bash
 # View listing
-python3 token/zx81bas.py list old/ABCD/MYGAME.P
+python3 token/zx81bas.py list mygame.p
 
 # Extract to text, edit, rebuild
-python3 token/zx81bas.py list old/ABCD/MYGAME.P > /tmp/mygame.bas
+python3 token/zx81bas.py list mygame.p > /tmp/mygame.bas
 python3 token/zx81bas.py build /tmp/mygame.bas
 python3 tools/send_p_termios.py /dev/tty.usbmodem* /tmp/mygame.p
 ```

@@ -77,16 +77,17 @@ src/zx81_kbd.c      — USB-CDC keyboard: ASCII → ZX81 key events
 src/zx81_load.c     — .p file loader via USB-CDC serial
 src/dvi_out.c       — DVI scanline push to Core 1 / libdvi
 src/color.c         — RGB565 colour helpers
-asm/z80asm.c/.h     — Embedded Z80 assembler (used by make_airfight)
+asm/z80asm.c/.h     — Z80 assembler (built to asm/z80asm, used by tools/make_p.py)
 games/airfight.asm  — AIRFIGHT game source (Z80 assembly)
-roms/zx81.rom       — Original Sinclair ZX81 ROM (16 KB)
+roms/fetch_rom.py   — fetches the Sinclair ZX81 ROM (8 KB) to roms/zx81.rom
 libdvi/             — PicoDVI TMDS library (Wren6991/PicoDVI)
 ```
 
 #### ZX81 emulation
 
-- ROM: 16 KB Sinclair ZX81 ROM at 0x0000–0x3FFF
-- RAM: 16 KB at 0x4000–0x7FFF (system variables + BASIC + display file)
+- ROM: 8 KB Sinclair ZX81 ROM at 0x0000–0x1FFF, mirrored at 0x2000–0x3FFF
+- RAM: 0x4000–0xBFFF; system variables, BASIC and display file in the first 16 KB
+  (RAMTOP = 0x7FFF), the game above it at 0x8000
 - Display file (D_FILE): read from sysvar at 0x400C
   each frame; 24 rows × 32 chars + HALT bytes
 - NMI disabled at startup (emulator handles timing explicitly)
@@ -136,8 +137,9 @@ so the ZX81 renderer picks up the game's own display.
 - ARM GCC toolchain
 - CMake 3.31.5, Ninja 1.12.1
 - picotool 2.2.0-a4 
-- A C compiler (for `tools/make_airfight.c`) — system `cc` is fine
-- Python 3 (for `tools/make_rom_header.py`)
+- A C compiler (for `asm/z80asm`, built automatically by `make`) — system `cc` is fine
+- Python 3 (for `roms/fetch_rom.py` and `tools/make_rom_header.py`)
+- The ZX81 ROM, which is not in the repository (see Quick start)
 
 Adjust paths at the top of `Makefile` if your SDK lives elsewhere.
 
@@ -145,7 +147,10 @@ Adjust paths at the top of `Makefile` if your SDK lives elsewhere.
 
 ```
 make              — assemble airfight + build firmware (default)
-make airfight     — assemble games/airfight.asm → src/airfight_bin.h only
+make airfight     — assemble games/airfight.asm → games/airfight.p + src/airfight_bin.h
+make load         — build airfight.p and send it to the Pico over serial
+make hello        — build the smoke-test games/hello.p
+make send P=f.p   — send any .p file to the Pico
 make firmware     — cmake/ninja firmware build only
 make flash        — flash the last-built .uf2 via picotool (no BOOTSEL needed)
 make clean        — remove build/ and generated files
@@ -155,6 +160,7 @@ make monitor      — open USB CDC serial monitor (screen at 115200)
 #### Quick start
 
 ```bash
+python3 roms/fetch_rom.py   ## get the ZX81 ROM (once)
 make          ## build everything
 make flash    ## flash to connected Pico 2
 make monitor  ## open serial terminal
@@ -232,12 +238,11 @@ the raw `.p` file bytes. After loading the emulator jumps to ROM 0x0207
 ```
 games/          — game sources (.asm) and built .p files
 asm/            — Z80 assembler source (z80asm.c/.h)
-roms/           — ZX81 ROM binary
+roms/           — fetch_rom.py; the ZX81 ROM is downloaded here
 src/            — emulator C source
 tools/          — build helpers and PC-side scripts
 libdvi/         — PicoDVI TMDS library
 token/          — .p file parser tokenizer/detokenzier BASIC utility (can be used independently)
-old/            — archived / duplicate files
 ```
 
 

@@ -1,0 +1,9 @@
+# Built from asm/z80asm.c by make or tools/build_airfight.sh
+asm/z80asm
+
+# Build directory (the firmware contains the ZX81 ROM, so it is not kept)
+build/
+
+# Sinclair ROM, fetched by roms/fetch_rom.py; CMake generates the header
+roms/zx81.rom
+src/zx81_rom_data.h

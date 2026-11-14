@@ -15,6 +15,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
+# The Commodore ROMs are not in the repository. roms/fetch_roms.py
+# downloads them and writes include/rom_basic.h, rom_kernal.h, rom_char.h.
+foreach(_rom rom_basic rom_kernal rom_char)
+    if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/include/${_rom}.h)
+        message(FATAL_ERROR "include/${_rom}.h is missing. The VIC-20 ROMs are "
+            "not part of the repository; get them with:  python3 roms/fetch_roms.py")
+    endif()
+endforeach()
+
 # ---------- fake6502 ----------------------------------------------------------
 add_library(fake6502 STATIC fake6502/fake6502.c)
 target_include_directories(fake6502 PUBLIC fake6502)

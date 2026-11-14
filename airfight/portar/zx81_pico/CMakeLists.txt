@@ -15,11 +15,12 @@
 #   cmake .. -DPICO_BOARD=pico2 -DPICO_COPY_TO_RAM=1
 #   make -j$(nproc)
 #
+# The ZX81 ROM is not in the repository. Get it first:
+#   python3 roms/fetch_rom.py
+#
 # Flash
 # -----
-#   ./flash.sh           — build + flash (uses picotool, no BOOTSEL needed)
-#   ./flash.sh build     — build only
-#   ./flash.sh flash     — flash only
+#   make flash           — flash the last build (uses picotool, no BOOTSEL needed)
 #
 # DVI wiring — Pico DVI Sock (castellated pads at Pico end)
 # ----------------------------------------------------------
@@ -47,25 +48,25 @@ set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 # ------------------------------------------------------------------
-# Re-generate the ROM header at configure time if zx81.rom changed.
-# The rom binary is expected alongside CMakeLists.txt (project root).
+# Generate the ROM header at configure time from roms/zx81.rom.
+# The ROM is not in the repository: run python3 roms/fetch_rom.py.
 # ------------------------------------------------------------------
 set(ZX81_ROM_BIN  ${CMAKE_CURRENT_SOURCE_DIR}/roms/zx81.rom)
 set(ZX81_ROM_HDR  ${CMAKE_CURRENT_SOURCE_DIR}/src/zx81_rom_data.h)
 
-if(EXISTS ${ZX81_ROM_BIN})
-    execute_process(
-        COMMAND python3
-            ${CMAKE_CURRENT_SOURCE_DIR}/tools/make_rom_header.py
-            ${ZX81_ROM_BIN}
-            ${ZX81_ROM_HDR}
-        RESULT_VARIABLE _rom_gen_rc
-    )
-    if(NOT _rom_gen_rc EQUAL 0)
-        message(WARNING "Could not regenerate zx81_rom_data.h (pre-built copy will be used)")
-    endif()
-else()
-    message(STATUS "zx81.rom not found alongside CMakeLists.txt — add it to enable Phase 1+")
+if(NOT EXISTS ${ZX81_ROM_BIN})
+    message(FATAL_ERROR "roms/zx81.rom is missing. The ZX81 ROM is not part of "
+        "the repository; get it with:  python3 roms/fetch_rom.py")
+endif()
+execute_process(
+    COMMAND python3
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/make_rom_header.py
+        ${ZX81_ROM_BIN}
+        ${ZX81_ROM_HDR}
+    RESULT_VARIABLE _rom_gen_rc
+)
+if(NOT _rom_gen_rc EQUAL 0)
+    message(FATAL_ERROR "Could not generate src/zx81_rom_data.h from roms/zx81.rom")
 endif()
 
 # ------------------------------------------------------------------
