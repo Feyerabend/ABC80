@@ -25,7 +25,32 @@ have been a grueling, multi-year research project just three years ago can now
 be executed as a lean, rapid experiment. By using an LLM to navigate the
 "historical anachronism" of bringing Lisp to the Z80, we can explore
 the missing link of 1980s computing: a machine that treats code as data,
-running on the silicon that started it all.
+on the kind of chip that started it all.
+
+
+### What is here
+
+Everything lives in [`02/`](02/):
+
+- `lisp.c`: the Lisp interpreter in C (parser, bytecode compiler, VM, REPL).
+- `test_vm.c`: the same VM rewritten in Z80 assembly. It is assembled and
+  run in a Z80 emulator (`z80.c`, `z80asm.c`, `disasm.c`), and its results
+  are checked against the C VM.
+- [`02/README.md`](02/README.md): what is proven on the Z80 and what is not.
+- [`02/LANGUAGE.md`](02/LANGUAGE.md): a guide to the language.
+- [`02/TRANSPILE.md`](02/TRANSPILE.md): the step-by-step plan for Z80.
+
+The Z80 code runs only in the emulator for now. There is no ROM image,
+and no version for a real machine such as the ABC 80 or ABC 802.
+
+Build and test (needs only a C11 compiler and make):
+
+```sh
+cd 02
+make
+make test
+./lisp
+```
 
 
 ### The Story
@@ -101,30 +126,5 @@ have made it, but due to other concerns .. was there even a market?
 Gates and Allen even produced halfway a (maybe even complete) APL
 implementation. But it was deemed to not having much of a future.
 
-So, our project:
-
-- *No garbage collection.*  Pools fill up over a long session.  The REPL
-  prints `W:N` warnings when a pool is near capacity.  Restart to reset.
-
-- *No floating point.*  Z80 has no FPU; implementing floats in software
-  would consume ~2 KB of ROM and ~1 KB of RAM--too expensive for a 64 KB
-  system.  Integer arithmetic with 12-bit wrap is the intended model.
-
-- *No division.*  Z80 has no `DIV` instruction.  Add it yourself as
-  `OP_DIV` using a subtraction loop if needed.
-
-- *No proper tail calls for cross-function calls via `apply`.*  `apply`
-  always pushes a call frame.
-
-- *Integers are 12-bit signed.*  Maximum value: 2047.  Values above this
-  wrap silently.  This is a deliberate Z80 trade-off, not a bug.
-
-- *No `define-syntax` or macros.*  Quasiquote covers the common case.
-
-- *Single-line REPL input.*  Each line must be a complete s-expression.
-  This mirrors the 80s BASIC model where you type one statement per line.
-
-- *Closure pool exhaustion.*  Each `lambda` instantiation allocates a slot
-  in `funs[]`.  With `MAX_FUN=48` you can create up to ~30 runtime closures
-  (the rest are compiler templates).  A future `gc_funs()` pass could reclaim
-  unreachable slots.
+The limitations of the interpreter itself are listed at the end of
+[`02/README.md`](02/README.md) and [`02/LANGUAGE.md`](02/LANGUAGE.md).

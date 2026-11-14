@@ -25,13 +25,20 @@
  *
  *   ENV_BASE   0x4000   environment frames  (32 B × 32 = 1 KB)
  *   FUN_BASE   0x4400   function/closure records  (8 B × 48 = 384 B)
- *   STRS_BASE  0x4580   string pool  (16 B × 32 = 512 B)
  *   VM_STATE   0x45A0   scalar VM registers (5 bytes: CUR_ENV CUR_FID CSP
  *                         NFUNS NENVS)
+ *   (scratch)  0x45C0   OP_CALL temporaries (32 B, fixed in test_vm.c)
  *   STK_BASE   0x4600   Lisp value stack (IY base, grows upward, 2 B/Val)
  *   OPTBL      0x4700   opcode dispatch table (2 B × 37 entries = 74 B)
  *   OPS_BASE   0x4900   bytecode opcode stream (1 B each)
  *   ARGS_BASE  0x4A00   bytecode operand stream (2 B each, little-endian)
+ *   STRS_BASE  0x4C00   string pool  (16 B × 32 = 512 B, up to 0x4DFF)
+ *   CS_BASE    0x4E00   call frame stack  (3 B × 16 = 48 B: ip env fid)
+ *
+ * Each area ends before the next one starts.  (Earlier the string pool
+ * and the call frame stack both sat at 0x4580; the string pool then ran
+ * over VM_STATE, the Lisp stack and OPTBL, and a call stack deeper than
+ * 10 frames over VM_STATE.)
  *
  * Memory-mapped I/O scratch (used by the MMIO PUTCHAR/GETCHAR variants):
  *   MMIO_OUT_PTR  0x45F0   write pointer into output buffer (word)
@@ -41,7 +48,8 @@
  * ---------------------------------------------------------------------- */
 #define CFG_ENV_BASE   0x4000
 #define CFG_FUN_BASE   0x4400
-#define CFG_STRS_BASE  0x4580
+#define CFG_STRS_BASE  0x4C00
+#define CFG_CS_BASE    0x4E00
 #define CFG_VM_STATE   0x45A0
 #define CFG_STK_BASE   0x4600
 #define CFG_OPTBL      0x4700

@@ -62,13 +62,13 @@
 #ifdef Z80ASM_EMBEDDED
 #define MAX_LINES       16384   /* loop guard only - no static line_store */
 #define MAX_LINE_LEN    128
-#define MAX_SYMBOLS     512
+#define MAX_SYMBOLS     768
 #define SYM_NAME_MAX    32
 #define ARENA_SIZE      (MAX_SYMBOLS * (SYM_NAME_MAX + 4))
 #else
-#define MAX_LINES       16384
+#define MAX_LINES       131072
 #define MAX_LINE_LEN    256
-#define MAX_SYMBOLS     2048
+#define MAX_SYMBOLS     16384
 #define SYM_NAME_MAX    64
 #define ARENA_SIZE      (MAX_SYMBOLS * (SYM_NAME_MAX + 4))
 #endif
@@ -635,6 +635,7 @@ static Operand parse_operand(Ctx *ctx, Lex *lx) {
 
     /* Registers and keywords */
     if (t.type == TT_IDENT) {
+        const char *start = lx->p;
         lex_next(lx);
         int r8 = reg8_idx(t.text);
         if (r8 >= 0) { op.type = OP_REG8;  op.reg = r8; return op; }
@@ -658,15 +659,14 @@ static Operand parse_operand(Ctx *ctx, Lex *lx) {
         int cc = cond_idx(t.text);
         if (cc >= 0) { op.type = OP_CC; op.reg = cc; return op; }
 
-        /* Symbol or number expression - put it back via a fake const */
-        /* We need to evaluate as an expression; re-parse from t.text as symbol */
-        bool defined = false;
-        int32_t v = sym_get(&ctx->syms, t.text, &defined);
-        if (!defined) {
-            if (ctx->pass == 2)
-                error(ctx, "undefined symbol '%s'", t.text);
-        }
-        op.type = OP_IMM; op.val = v; op.undef = !defined; return op;
+        /* Symbol: re-read the whole expression from the symbol, so that
+         * SYM+1, SYM*2 ... are not cut off after the symbol */
+        bool undef = false;
+        lx->p = start;
+        int32_t v = eval_expr(ctx, lx, &undef);
+        if (undef && ctx->pass == 2)
+            error(ctx, "undefined symbol in '%s...'", t.text);
+        op.type = OP_IMM; op.val = v; op.undef = undef; return op;
     }
 
     /* Immediate expression */

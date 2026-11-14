@@ -1362,7 +1362,6 @@ static void test_env_chain(void)
  *   0x0380  FUN_ADDR   : A=fid   → HL = FUNS_BASE + A*8
  *   0x4000  ENVS[32]   32 bytes each
  *   0x4400  FUNS[48]    8 bytes each
- *   0x4580  CS[16]      3 bytes each  {ip, env, fid}
  *   0x45A0  CUR_ENV    (uint8_t)
  *   0x45A1  CUR_FID    (uint8_t)
  *   0x45A2  CSP        (uint8_t)
@@ -1373,6 +1372,8 @@ static void test_env_chain(void)
  *   0x4700  OPTBL      jump table, 2 bytes × 24 entries
  *   0x4900  OPS        bytecode ops (byte stream)
  *   0x4A00  ARGS       bytecode args (word stream)
+ *   0x4C00  STRS[32]   16 bytes each  (CFG_STRS_BASE)
+ *   0x4E00  CS[16]      3 bytes each  {ip, env, fid}  (CFG_CS_BASE)
  *
  * Register convention during VM execution:
  *   IY  = Lisp stack pointer (TOS at IY-2..IY-1; push: store then INC IY×2)
@@ -1871,7 +1872,7 @@ static const char *p8_vm =
     "  LD   A, E\n"
     "  CALL " XSTR(CFG_PUTCHAR) "\n"
     "  JP   odsp_done\n"
-    /* ---- STR (tag=7) → print strs[E] from 0x4580 + E*16 ---- */
+    /* ---- STR (tag=7) → print strs[E] from CFG_STRS_BASE + E*16 ---- */
     "odsp_nt_str:\n"
     "  CP   0x70\n"
     "  JP   NZ, odsp_done\n"   /* unknown tag → skip */
@@ -1992,7 +1993,7 @@ static const char *p8_vm =
     "  LD   (0x45C2), A\n"  /* scratch: ne */
     /* push call frame: cs[csp++] = {saved_ip, cur_env, cur_fid} */
     "  LD   A, (0x45A2)\n"  /* CSP */
-    "  LD   HL, 0x4580\n"   /* CS_BASE */
+    "  LD   HL, " XSTR(CFG_CS_BASE) "\n"   /* CS_BASE */
     "  LD   E, A\n"
     "  LD   D, 0\n"
     "  ADD  HL, DE\n"
@@ -2077,7 +2078,7 @@ static const char *p8_vm =
     "  LD   (0x45A2), A\n"  /* csp-- */
     "  LD   E, A\n"
     "  LD   D, 0\n"
-    "  LD   HL, 0x4580\n"   /* CS_BASE */
+    "  LD   HL, " XSTR(CFG_CS_BASE) "\n"   /* CS_BASE */
     "  ADD  HL, DE\n"
     "  ADD  HL, DE\n"
     "  ADD  HL, DE\n"       /* HL = &cs[csp] */
@@ -2250,7 +2251,7 @@ static void test_fun_addr(void)
         memset(m, 0, sizeof m);
         out_pos = 0;
         asm_at(p8_fun_addr, 0x0380);
-        char src[64];
+        char src[128];
         snprintf(src, sizeof src,
             "  ORG  0x0000\n"
             "  LD   A, %d\n"

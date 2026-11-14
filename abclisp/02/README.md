@@ -188,12 +188,14 @@ VM to a different machine:
 | `0x03C0` | GETCHAR |
 | `0x4000` | Environment frames (32 B × 32) |
 | `0x4400` | Function/closure records (8 B × 48) |
-| `0x4580` | String pool (16 B × 32) |
 | `0x45A0` | VM scalars: CUR\_ENV, CUR\_FID, CSP, NFUNS, NENVS |
+| `0x45C0` | Scratch for OP\_CALL (32 B) |
 | `0x4600` | Lisp value stack (IY base, grows up) |
 | `0x4700` | Opcode dispatch table (2 B × 37 entries) |
 | `0x4900` | Bytecode opcode stream |
 | `0x4A00` | Bytecode operand stream (2 B each) |
+| `0x4C00` | String pool (16 B × 32) |
+| `0x4E00` | Call frame stack (3 B × 16: ip, env, fid) |
 
 #### Val encoding
 
@@ -292,9 +294,10 @@ PUTCHAR/GETCHAR subroutine string.
 | `test_vm.c` | Z80 proof: assembles VM, cross-checks C and Z80 results |
 | `vm_config.h` | Machine-specific layout constants (addresses, I/O port) |
 | `z80.c` / `z80.h` | Z80 emulator |
-| `z80asm.c` / `z80asm.h` | Z80 assembler (used by test harness) |
+| `z80asm.c` / `z80asm.h` | Z80 assembler (used by test harness); `z80asm.c` is a copy of `abc802/verktyg/z80asm.c` |
 | `disasm.c` / `disasm.h` | Z80 disassembler (used for debug dumps) |
 | `z80mem.h` | Glue header — declares `z80_read_mem()` for disasm |
+| `LANGUAGE.md` | Guide to the language: forms, samples, architecture, memory |
 | `TRANSPILE.md` | Phase-by-phase design and implementation notes |
 | `tests/run_tests.sh` | Full test suite (REPL + Z80 proof) |
 
@@ -303,6 +306,8 @@ PUTCHAR/GETCHAR subroutine string.
 ### Known limitations
 
 - __No garbage collection.__  Pools fill up over a long session; restart to reset.
+  Only environment frames are given back, when a call returns and no closure
+  holds the frame.
 - __No floating point.__  12-bit integer arithmetic with silent wrap.
 - __No division.__  Z80 has no `DIV` instruction.
 - __Integers are 12-bit signed.__  Maximum value: 2047.

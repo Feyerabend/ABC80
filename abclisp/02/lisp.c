@@ -130,7 +130,9 @@ static uint8_t str_new(const char* s) {
 /*
  * HEAP
  */
-typedef struct { Val v[HEAP_SLOTS]; uint8_t n; uint8_t _pad[3]; } Cell; /* 16 B — i<<4 */
+/* A cell is either a flat list of up to HEAP_SLOTS values (list, quote,
+   append), or a cons pair made by cons: v[0] is the car, v[1] the cdr.  */
+typedef struct { Val v[HEAP_SLOTS]; uint8_t n; uint8_t cons; uint8_t _pad[2]; } Cell; /* 16 B — i<<4 */
 static Cell    heap[MAX_HEAP];
 static uint8_t nheap = 0;
 
@@ -143,7 +145,8 @@ typedef struct {
     uint8_t key[ENV_SLOTS];
     Val     val[ENV_SLOTS];
     uint8_t n, parent;
-    uint8_t _pad[12];           /* pad to 32 B — i<<5 */
+    uint8_t captured;           /* 1 = a closure holds this frame         */
+    uint8_t _pad[11];           /* pad to 32 B — i<<5 */
 } Env;
 
 static Env     envs[MAX_ENV];
@@ -152,8 +155,16 @@ static uint8_t nenvs = 0;
 static uint8_t env_new(uint8_t par) {
     if (nenvs >= MAX_ENV) return 0;
     uint8_t id = nenvs++;
-    envs[id].n = 0; envs[id].parent = par;
+    envs[id].n = 0; envs[id].parent = par; envs[id].captured = 0;
     return id;
+}
+
+/* Frames are allocated like a stack.  When a call returns, its frame can
+   be given back if it is the newest one and no closure has captured it.
+   A frame's parent is always older, so nothing newer can point into it.  */
+static void env_drop(uint8_t eid) {
+    if (eid != 0 && eid == (uint8_t)(nenvs - 1) && !envs[eid].captured)
+        nenvs--;
 }
 static void env_def(uint8_t eid, uint8_t k, Val v) {
     Env* e = &envs[eid];
@@ -305,6 +316,7 @@ static Val mk_cell(Val* v, int n) {
     if (nheap >= MAX_HEAP) return NIL;
     uint8_t id = nheap++;
     heap[id].n = (uint8_t)(n < HEAP_SLOTS ? n : HEAP_SLOTS);
+    heap[id].cons = 0;
     for (int i = 0; i < heap[id].n; i++) heap[id].v[i] = v[i];
     return MK(T_PAIR, id);
 }
@@ -626,27 +638,42 @@ static uint8_t cur_fid = 0xFF;
 #define PEEK()  (lsp > 0 ? stk[lsp-1] : NIL)
 
 /* Drain a runtime list into an array of Vals.
-   Handles both flat multi-element cells '(1 2 3) AND proper cons chains.
-   For n=2 cells: if v[1] is T_PAIR or T_NIL it's a cons tail; otherwise
-   it's a plain second element in a flat 2-element list. */
+   Handles both flat cells '(1 2 3) AND cons chains (cons 1 (cons 2 nil)).
+   A cons whose cdr is not a list, (cons 1 2), counts as two elements. */
 static int drain_list(Val lst, Val* out, int max) {
     int n = 0;
     Val cur = lst;
     while (TAG(cur)==T_PAIR && n<max) {
         Cell* c = &heap[DAT(cur)];
-        if (c->n == 0) break;
-        if (c->n > 2) {
+        if (!c->cons) {
             for (int i=0; i<c->n && n<max; i++) out[n++] = c->v[i];
             break;
         }
         out[n++] = c->v[0];
-        if (c->n < 2) break;
         uint8_t t1 = TAG(c->v[1]);
         if      (t1 == T_PAIR) { cur = c->v[1]; }         /* cons tail */
-        else if (t1 == T_NIL)  { break; }                  /* end of proper list */
-        else { if (n<max) out[n++] = c->v[1]; break; }    /* flat 2-element cell */
+        else if (t1 == T_NIL)  { break; }                  /* end of list */
+        else { if (n<max) out[n++] = c->v[1]; break; }    /* (cons 1 2) */
     }
     return n;
+}
+
+/* Print a list, following cons tails, with pv() for each element. */
+static void print_list(Val v, void (*pv)(Val)) {
+    int first = 1;
+    putchar('(');
+    while (TAG(v)==T_PAIR) {
+        Cell* c = &heap[DAT(v)];
+        if (!c->cons) {
+            for (int i = 0; i < c->n; i++) { if (!first) putchar(' '); pv(c->v[i]); first = 0; }
+            break;
+        }
+        if (!first) putchar(' ');
+        pv(c->v[0]); first = 0;
+        v = c->v[1];
+        if (TAG(v)!=T_PAIR && TAG(v)!=T_NIL) { putchar(' '); pv(v); }  /* (cons 1 2) */
+    }
+    putchar(')');
 }
 
 /* display: print value without quoting strings/chars (for 'display' primitive) */
@@ -658,12 +685,7 @@ static void display_val(Val v) {
     case T_SYM:  fputs(sym_name((uint8_t)DAT(v)), stdout); break;
     case T_CHAR: putchar((int)(DAT(v) & 0x7Fu)); break;
     case T_STR:  fputs(strs[DAT(v)].s, stdout); break;
-    case T_PAIR: {
-        Cell* c = &heap[DAT(v)];
-        putchar('(');
-        for (int i = 0; i < c->n; i++) { if (i) putchar(' '); display_val(c->v[i]); }
-        putchar(')'); break;
-    }
+    case T_PAIR: print_list(v, display_val); break;
     case T_FUN: printf("#<fn/%d>", funs[DAT(v)].argc); break;
     }
 }
@@ -707,6 +729,7 @@ static void do_call(uint8_t argc, int is_tail) {
     if (is_tail && fid == cur_fid) {
         for (int i=0; i<f->argc && i<na; i++) env_def(cur_env, f->args[i], avals[i]);
     } else if (is_tail) {
+        env_drop(cur_env);              /* the old frame is not needed again */
         uint8_t ne = env_new(f->env);
         for (int i=0; i<f->argc && i<na; i++) env_def(ne, f->args[i], avals[i]);
         cur_env = ne; cur_fid = fid;
@@ -743,7 +766,7 @@ static void op_nullp(void) { Val a=POP(); PUSH(TAG(a)==T_NIL  ? BOOL_T : BOOL_F)
 static void op_cons(void) {
     Val b=POP(),a=POP();
     if (nheap>=MAX_HEAP) { PUSH(NIL); return; }
-    uint8_t id=nheap++; heap[id].n=2; heap[id].v[0]=a; heap[id].v[1]=b;
+    uint8_t id=nheap++; heap[id].n=2; heap[id].cons=1; heap[id].v[0]=a; heap[id].v[1]=b;
     PUSH(MK(T_PAIR,id));
 }
 static void op_car(void) {
@@ -754,10 +777,10 @@ static void op_cdr(void) {
     Val a=POP();
     if (TAG(a)!=T_PAIR) { PUSH(NIL); return; }
     Cell* c=&heap[DAT(a)];
+    if (c->cons) { PUSH(c->v[1]); return; }
     if (c->n<=1) { PUSH(NIL); return; }
-    if (c->n==2) { PUSH(c->v[1]); return; }
     if (nheap>=MAX_HEAP) { PUSH(NIL); return; }
-    uint8_t id=nheap++; heap[id].n=(uint8_t)(c->n-1);
+    uint8_t id=nheap++; heap[id].n=(uint8_t)(c->n-1); heap[id].cons=0;
     for (int i=0;i<heap[id].n;i++) heap[id].v[i]=c->v[i+1];
     PUSH(MK(T_PAIR,id));
 }
@@ -775,6 +798,7 @@ static void op_mkclos(void) {
     uint8_t cid = nfuns++;
     funs[cid]     = funs[tmpl];   /* copy addr, argc, args from template */
     funs[cid].env = cur_env;      /* capture live env                    */
+    envs[cur_env].captured = 1;   /* ... so it must not be given back    */
     PUSH(MK(T_FUN, cid));
 }
 static void op_call(void)     { do_call((uint8_t)vm_arg, 0); }
@@ -784,6 +808,7 @@ static void op_ret(void) {
     Val r = POP();
     if (csp == 0) { vm_result = r; vm_halt = 1; return; }
     Frame fr = cs[--csp];
+    env_drop(cur_env);
     cur_env = fr.env; cur_fid = fr.fid; vm_ip = fr.ip;
     PUSH(r);
 }
@@ -887,7 +912,7 @@ static void op_list(void) {
     if (n==0){PUSH(NIL);return;}
     if (nheap>=MAX_HEAP){for(uint8_t i=0;i<n;i++)POP();PUSH(NIL);return;}
     uint8_t id=nheap++; uint8_t cn=n<HEAP_SLOTS?n:HEAP_SLOTS;
-    heap[id].n=cn;
+    heap[id].n=cn; heap[id].cons=0;
     for (int i=cn-1;i>=0;i--) heap[id].v[i]=POP();
     for (uint8_t i=cn;i<n;i++) POP();
     PUSH(MK(T_PAIR,id));
@@ -900,7 +925,7 @@ static void op_append(void) {
     nt  = drain_list(a, tmp,    HEAP_SLOTS);
     nt += drain_list(b, tmp+nt, HEAP_SLOTS-nt);
     if (nheap>=MAX_HEAP){PUSH(NIL);return;}
-    uint8_t id=nheap++; heap[id].n=(uint8_t)nt;
+    uint8_t id=nheap++; heap[id].n=(uint8_t)nt; heap[id].cons=0;
     for (int i=0;i<nt;i++) heap[id].v[i]=tmp[i];
     PUSH(MK(T_PAIR,id));
 }
@@ -967,12 +992,7 @@ static void print_val(Val v) {
         }
         putchar('"'); break;
     }
-    case T_PAIR: {
-        Cell* c=&heap[DAT(v)];
-        putchar('(');
-        for (int i=0;i<c->n;i++) { if(i) putchar(' '); print_val(c->v[i]); }
-        putchar(')'); break;
-    }
+    case T_PAIR: print_list(v, print_val); break;
     case T_FUN: printf("#<fn/%d>", funs[DAT(v)].argc); break;
     }
 }

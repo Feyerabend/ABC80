@@ -1,50 +1,14 @@
+## abclisp — the language
 
-## abclisp
-
-> *What if..*
-
-So we start with a small Lisp/Scheme interpreter written in C, designed
-from the ground up to be transpilable to Z80 assembly.  It illustrates
-the route an 80s home computer manufacturer might have taken to put a
-real Lisp in ROM.
-
-```
-> (define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
-> (fact 6)
-720
-> `(the answer is ,(fact 6))
-(the answer is 720)
-```
-
-
-
-### Building and running
-
-```sh
-cc -std=c11 -O2 -o lisp lisp.c
-./lisp
-```
-
-No dependencies beyond a C11 compiler.  Type expressions at the `>` prompt.
-Press Ctrl-D to quit.
-
-```sh
-## Batch mode (one complete s-expression per line)
-printf '(define (square n) (* n n))\n(square 7)\n' | ./lisp
-```
-
-Run the test suite:
-
-```sh
-bash tests/run_tests.sh
-```
-
+A guide to the Lisp in `lisp.c`: the forms, sample programs, the
+architecture of the C interpreter, its memory, and how to add a primitive.
+For building and the Z80 proof, see [README.md](README.md).
 
 
 ### The language
 
 abclisp is a Scheme-flavoured Lisp.  So it might not be period correct,
-and ba a historical anachronism.  Every expression returns a value.
+and be a historical anachronism.  Every expression returns a value.
 The REPL prints non-nil results automatically.
 
 #### Literals
@@ -60,7 +24,7 @@ The REPL prints non-nil results automatically.
 
 Integers wrap silently at 12 bits — `(+ 2047 1)` gives `-2048`.
 This is deliberate: it mirrors Z80 register-pair arithmetic.
-Yeah, this wouldn't be practical, but we are exploring hypothesis here.
+Yeah, this wouldn't be practical, but we are exploring a hypothesis here.
 
 #### Defining things
 
@@ -158,9 +122,11 @@ environment frame--zero allocation, true iteration:
 (apply f (list a b))                ; call f with a b as arguments
 ```
 
-Lists are represented as flat cells (up to 6 elements each), not
-traditional cons chains.  `car`/`cdr` work as expected; `cdr` of a 3+
-element list allocates a new shorter cell.
+A cell is either a flat list (from `list`, `quote` or `append`, up to 6
+elements) or a cons pair (from `cons`).  Both kinds can be mixed:
+`(cons 1 (list 2 3))` is `(1 2 3)`, and `(cons 1 nil)` is `(1)`.  `cdr` of
+a cons pair returns its tail; `cdr` of a flat list allocates a new, shorter
+cell.
 
 #### Characters
 
@@ -260,7 +226,7 @@ side-effecting calls print cleanly.
 (define n (read))      ; waits for input
 ; user types: 7
 (define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
-(fact n)               ; --> 5040
+(fact n)               ; --> 944  (5040 wraps at 12 bits)
 ```
 
 
@@ -375,6 +341,13 @@ typedef struct {
 Lookup walks the parent chain comparing `uint8_t` symbol indices — on Z80
 this is a `CP` instruction per slot, no string comparison.
 
+Each call takes a new frame.  Frames are handed out like a stack, so when a
+call returns, its frame is given back if it is the newest one and no closure
+has captured it (`OP_MKCLOS` marks the frame it captures).  A frame's parent
+is always older, so nothing newer can point into a frame that is given back.
+This is what lets `(fib 10)` make 177 calls with only 32 frames.  The Z80 VM
+in `test_vm.c` does not give frames back yet.
+
 #### Tail calls
 
 `OP_TAILCALL` pops a new call frame instead of pushing one.  For self-calls
@@ -401,19 +374,23 @@ independent closures that do not interfere.
 
 All pools are fixed-size global arrays — no `malloc`, no heap fragmentation:
 
-| Pool         | Size      | Notes                         |
-|--------------|-----------|-------------------------------|
-| `ops[255]`   | 255 B     | Bytecode opcode stream        |
-| `args[255]`  | 510 B     | Parallel operand stream       |
-| `syms[64]`   | 768 B     | Symbol name table (12 B each) |
-| `strs[32]`   | 512 B     | String pool (16 B each)       |
-| `heap[64]`   | 832 B     | Lisp cells (6 vals × 2 B + 1) |
-| `envs[32]`   | 640 B     | Environment frames            |
-| `funs[48]`   | 336 B     | Function/closure records      |
-| `stk[32]`    | 64 B      | Value stack                   |
-| `cs[16]`     | 48 B      | Call frame stack              |
-| misc         | ~150 B    | read_buf, counters, globals   |
-| *Total*      | *~4165 B* | *~4 KB of 64 KB used*         |
+| Pool               | Size      | Notes                                   |
+|--------------------|-----------|-----------------------------------------|
+| `ops[255]`         | 255 B     | Bytecode opcode stream                  |
+| `args[255]`        | 510 B     | Parallel operand stream                 |
+| `user_syms[24]`    | 288 B     | User symbol names (12 B each)           |
+| `strs[32]`         | 512 B     | String pool (16 B each)                 |
+| `heap[64]`         | 1024 B    | Lisp cells (6 vals × 2 B + 1, padded to 16 B) |
+| `envs[32]`         | 1024 B    | Environment frames (padded to 32 B)     |
+| `funs[48]`         | 384 B     | Function/closure records (8 B each)     |
+| `stk[32]`          | 64 B      | Value stack                             |
+| `cs[16]`           | 48 B      | Call frame stack                        |
+| misc               | ~150 B    | read_buf, counters, globals             |
+| *Total*            | *~4259 B* | *~4 KB of 64 KB used*                   |
+
+The keyword names (`kw_names[43]`, 516 B) are a `const` table and would
+live in ROM, not RAM.  The records are padded to powers of two so that the
+Z80 can find record *i* with shifts (`i<<4`, `i<<5`, `i<<3`).
 
 The remaining ~60 KB is available for user-defined data and program storage.
 
@@ -471,12 +448,14 @@ static const OpFn optbl[] = {
 };
 ```
 
-Then wire it into the compiler the same way `display` is — either as a
-`UNOP`/`BINOP` macro entry, or as an explicit `if (IS_KW(head, K.xxx))` case.
+If the primitive has a name of its own, add it as a keyword too: a
+`K_MY_OP` entry in the keyword enum and its name in `kw_names[]`, at the
+same position.  Then wire it into the compiler the same way `display` is —
+either as a `UNOP`/`BINOP` macro entry, or as an explicit
+`if (IS_KW(head, K_MY_OP))` case.
 
-The K struct pre-interns all keyword names at startup (`k_init()`), so the
-compiler dispatches via a single `uint8_t` index comparison — one `CP`
-instruction on Z80.
+Keywords have fixed indices, so the compiler dispatches via a single
+`uint8_t` index comparison — one `CP` instruction on Z80.
 
 
 
@@ -484,6 +463,8 @@ instruction on Z80.
 
 - *No garbage collection.*  Pools fill up over a long session.  The REPL
   prints `W:N` warnings when a pool is near capacity.  Restart to reset.
+  Only environment frames are given back, when a call returns and no
+  closure holds the frame.
 
 - *No floating point.*  Z80 has no FPU; implementing floats in software
   would consume ~2 KB of ROM and ~1 KB of RAM — too expensive for a 64 KB

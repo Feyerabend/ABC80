@@ -158,6 +158,28 @@ echo "--- Begin ---"
 check "begin seq"    "$(printf '(begin (define x 1) (define x 2) x)')" "2"
 
 # ------------------------------------------------------------------
+echo "--- Cons chains ---"
+check "cons onto list" "(cons 1 (list 2 3))"                  "(1 2 3)"
+check "cons onto nil"  "(cons 1 nil)"                         "(1)"
+check "cdr of cons"    "(cdr (cons 1 (cons 2 nil)))"          "(2)"
+check "cdr 2-list"     "(cdr (list 1 2))"                     "(2)"
+check "nested list"    "(list 1 (list 2 3))"                  "(1 (2 3))"
+check "apply cons"     "$(printf '(define (f a b) (+ a b))\n(apply f (cons 3 (cons 4 nil)))')" "7"
+
+# ------------------------------------------------------------------
+echo "--- Examples from LANGUAGE.md ---"
+check "fib 10"       "$(printf '(define (fib n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))\n(fib 10)')" "55"
+check "my-map"       "$(printf '(define (my-map f lst) (if (null? lst) nil (cons (f (car lst)) (my-map f (cdr lst)))))\n(my-map (lambda (x) (* x x)) (list 1 2 3 4 5))')" "(1 4 9 16 25)"
+check "make-point"   "$(printf '(define (make-point x y) (lambda (msg) (cond ((= msg 0) x) ((= msg 1) y) (else nil))))\n(define p (make-point 3 4))\n(list (p 0) (p 1))')" "(3 4)"
+check "fact x7"      "$(printf '(define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))\n(fact 6)\n(fact 6)\n(fact 6)\n(fact 6)\n(fact 6)\n(fact 6)\n(fact 6)')" "720
+> 720
+> 720
+> 720
+> 720
+> 720
+> 720"
+
+# ------------------------------------------------------------------
 echo "--- Error ---"
 check "error 42"     "(error 42)"                            "E:42"
 check "error 0"      "(error 0)"                             "E:0"
