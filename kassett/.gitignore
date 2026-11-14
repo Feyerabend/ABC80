@@ -1,0 +1,8 @@
+*.o
+c/kas
+c/kas2wav
+c/wav2kas
+__pycache__/
+c/bac2bas
+c/abctext
+pdf/*.log

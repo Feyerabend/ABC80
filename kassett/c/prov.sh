@@ -4,7 +4,8 @@
 #   sh prov.sh [WAV ...]
 #
 # Utan argument används påhittade filer. Riktiga band kan ges som
-# argument, eller läggas i katalogen $BAND (standard ../band).
+# argument, eller läggas i katalogen $BAND (standard ../band). BAC-filer
+# för bac2bas kan läggas i katalogen $BAC.
 set -u
 cd "$(dirname "$0")"
 PY=../python
@@ -32,6 +33,11 @@ bac = bytearray(random.randrange(256) for _ in range(512)); bac[0] = 0x82
 for s in (253, 509): bac[s:s + 3] = bytes(3)   # når aldrig bandet
 open(d + '/SPEL.BAC', 'wb').write(bac)
 open(d + '/MÅLARE.BAS', 'wb').write(b'10 END\r\n')
+open(d + '/UTF8.TXT', 'wb').write('Räksmörgås ÅÄÖ é ü É Ü € ×\nrad\r\n'.encode())
+open(d + '/DOS.TXT', 'wb').write(b'R\x84ksm\x94rg\x86s \x8e\x99\x8f \x82\r\n')
+open(d + '/TRASIG.TXT', 'wb').write(bytes(random.choice(
+    b'A\r\n\x80\x9f\xa0\xbf\xc0\xc2\xc3\xe0\xed\xf0\xf4\xf5\xff\x84\x96')
+    for _ in range(2000)))
 PYEOF
 
 echo "packa"
@@ -66,6 +72,49 @@ for o in "-r 44100 --bits 16" "-r 22050 --bits 8" "-r 8000 --bits 8 --lead 6.8 -
     ./wav2kas -o $T/cw.kas $T/c.wav >/dev/null
     lika $T/cw.kas $T/p.kas "WAV $o tillbaka (C)"
 done
+
+echo "wav, ABC 800"
+for o in "--tk 40" "--tk 129" "--tk 20 -r 22050 --bits 8" "--tk 60 -r 48000"; do
+    python3 $PY/kas2wav.py $o -o $T/p.wav $T/PROV.BAS $T/DATA.BIN 2>/dev/null
+    ./kas2wav $o -o $T/c.wav $T/PROV.BAS $T/DATA.BIN 2>/dev/null
+    lika $T/p.wav $T/c.wav "WAV $o"
+    ./kas packa ${o%% -r*} -o $T/k8.kas $T/PROV.BAS $T/DATA.BIN 2>/dev/null
+    python3 $PY/wav2kas.py -v -r -o $T/pw.kas $T/c.wav 2>&1 | sed "s|$T/pw|X|" >$T/pw.txt
+    ./wav2kas -v -r -o $T/cw.kas $T/c.wav 2>&1 | sed "s|$T/cw|X|" >$T/cw.txt
+    lika $T/pw.kas $T/cw.kas "WAV $o avkodad (C = Python)"
+    lika $T/pw.txt $T/cw.txt "WAV $o rapporten"
+    lika $T/cw.kas $T/k8.kas "WAV $o tillbaka"
+done
+python3 $PY/kas2wav.py --abc800 -o $T/p.wav $T/p.kas 2>/dev/null
+./kas2wav --abc800 -o $T/c.wav $T/p.kas 2>/dev/null
+lika $T/p.wav $T/c.wav "WAV --abc800 ur .kas"
+./wav2kas -o $T/cw.kas $T/c.wav >/dev/null
+lika $T/cw.kas $T/p.kas "WAV --abc800 ur .kas tillbaka"
+
+echo "bac2bas och abctext"
+# samma utdata, meddelanden och slutkod
+tre() {
+    n=$1; shift
+    python3 $PY/$n.py "$@" >$T/p.ut 2>$T/p.err; pe=$?
+    ./$n "$@" >$T/c.ut 2>$T/c.err; ce=$?
+    cmp -s $T/p.ut $T/c.ut && cmp -s $T/p.err $T/c.err && [ $pe = $ce ]
+}
+for f in $T/SPEL.BAC ${BAC:+"$BAC"/*.BAC "$BAC"/*.bac}; do
+    [ -f "$f" ] || continue
+    s=0
+    for kod in 7 dos utf8; do for rad in cr crlf lf; do
+        tre bac2bas --kod $kod --rad $rad "$f" || s=1
+    done; done
+    if [ $s = 0 ]; then ok "bac2bas $(basename "$f")"; else nej "bac2bas $(basename "$f")"; fi
+done
+for f in PROV.BAS DATA.BIN TOM.BIN UTF8.TXT DOS.TXT TRASIG.TXT; do
+    s=0
+    for r in "" "--abc"; do for kod in "" 7 dos utf8; do for rad in "" cr crlf lf; do
+        tre abctext $r ${kod:+--kod $kod} ${rad:+--rad $rad} $T/$f || s=1
+    done; done; done
+    if [ $s = 0 ]; then ok "abctext $f"; else nej "abctext $f"; fi
+done
+tre abctext --abc --rad lf $T/UTF8.TXT $T/DOS.TXT $T/PROV.BAS && ok "abctext flera filer" || nej "abctext flera filer"
 
 band() {
     for w in "$@"; do

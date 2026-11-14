@@ -9,7 +9,7 @@ En fil på bandet beskrivs i fyra lager:
 
 | Lager | Vad | Skiljer sig mellan |
 |-------|-----|--------------------|
-| 1 Signal | ljudet på bandet, bitcellerna | ABC80 (programvara) och ABC 800-serien (SIO + ABC 820) |
+| 1 Signal | ljudet på bandet, bitcellerna | ABC80 (programvara) och ABC 800-serien (SIO + TTL på processorkortet) |
 | 2 Block | synk, STX, 256 byte, ETX, summa | små skillnader i inledning och avslutning |
 | 3 Fil | filhuvud + datablock med nummer | ABC 800 har tidkonstanten i filhuvudet |
 | 4 Innehåll | BAS-text, BAC, data; teckenkod | ABC80-BASIC och BASIC II; 7 bitar, DOS, UTF-8 |
@@ -97,12 +97,38 @@ ROM:en i ABC 802 gör just så:
   som är 40 efter RAMINI.
 
 Med 3 MHz / 16 / tk ger 129 en klocka på 1 453 Hz och 40 en klocka på
-4 688 Hz. Det är nära två gånger 700 respektive 2 400 baud. Därför tror
-jag att CTC:n ger dubbla bittakten, och att FM-kodningen till ABC80:s
-format görs utanför SIO:n, i ABC 820 eller i gränssnittet (?). Detta
-måste beläggas i schemat (ABC800-schema.pdf, servicemanualernas blad 1)
-innan lager 1 för ABC 800 skrivs. Emulatorn räknar i dag med att bandet
-är tecken, inte ljud (`kassett802.h`).
+4 688 Hz, nära två gånger 700 respektive 2 400 baud. CTC:n ger alltså
+dubbla bittakten, och FM-kodningen görs i TTL på processorkortet, inte i
+ABC 820. Det syns i schemat (`ABC800-schema.pdf`, blad 7, "Processor
+unit" 55 10788):
+
+- **Ut:** TxC till SIO B kommer från en JK-vippa (74LS107, 6A) som delar
+  bitklockan med två. En OR-grind (74LS32, 5A) släpper igenom antingen
+  den vippan eller TxD, och styr en andra JK-vippa (6A) som växlar läge.
+  Den går genom en buffert med öppen kollektor (74LS07, 5K) till DFDOUT.
+  Signalen växlar alltså vid varje bitgräns, och mitt i biten när biten
+  är 1, precis som ABC80:s FM.
+- **In:** DFDIN går genom C44 till två komparatorer med hysteres (LM339,
+  5H). En D-vippa (74LS74A, 7A) fångar flankerna, och en räknare
+  (74LS191, 7B) mäter tiden mellan dem. Ut kommer RxD och RxC till SIO B.
+  Därför ställer `CASRD` CTC kanal 0 i räknarläge ($41) och `CASWR` i
+  tidtagarläge ($01). Exakt hur räknaren laddas går inte att läsa i
+  skanningen (?).
+- **Motorn:** DTR från SIO B går via en vippa (74LS175, 3G) och en
+  buffert till reläet RE1, vars kontakt sitter på stift 4 och 5.
+
+TAPE-kontakten (P1, femstiftig DIN): 1 DFDOUT (ut), 2 GND, 3 DFDIN (in),
+4 och 5 MOTOR. Det stämmer med bruksanvisningen och med ABC 802.
+
+Bandet från ABC 800 är därför samma sorts ljud som från ABC80, bara
+snabbare efter filhuvudet. En bitcell är 2 x 16 x tk T, alltså 32 x tk T
+vid 3 MHz: 1,376 ms med tk 129 (727 baud) och 0,427 ms med tk 40
+(2 344 baud). Det stämmer med "700/2400 baud" i bruksanvisningen.
+`kas2wav --abc800` och `wav2kas` använder detta.
+
+Emulatorn räknar i dag med att bandet är tecken, inte ljud
+(`kassett802.h`), och med 16 x tk T per bit (1 453 bitar i sekunden med
+tk 129). Enligt schemat är det dubbelt så långsamt (?).
 
 **Blocket** (`CASWR` i ABC 802):
 
@@ -123,8 +149,10 @@ duger.
 
 - Filhuvud: `FF FF FF`, namnet i 11 tecken, tidkonstanten i
   1 byte (position 14) och resten nollor.
-- Ett band från ABC80 har en nolla på position 14 (?). Det bör betyda
-  700 baud. Kontrollera i `CASCTC`, där A = 0 lämnar CTC:n orörd.
+- Ett band från ABC80 har en nolla på position 14. Det gäller alla elva
+  riktiga band i `~/Documents/abc80`. `CASCTC` gör ingenting när A = 0
+  (`AND A; RET Z`), så CTC:n står kvar på 129 från filhuvudet, och hela
+  filen läses i 700 baud.
 - Datablock: `00`, blocknumret och 253 byte, som hos ABC80.
 - Pauserna: 12 × 65 536 varv före filhuvudet. Mellan blocken 1 eller 3
   beroende på bit 5 i FCB+3.
@@ -136,7 +164,8 @@ duger.
 | Maskin | Plats | Källa |
 |--------|-------|-------|
 | ABC 802 | CAS: på $736D–$79C0 | `dis/build/abc802rom.asm` |
-| ABC 800 C/M | i ROM 0 ("CAS" på $064A i `ABC800-basic.C-1.bin`, $0679 i `M-12`) | inte disassemblerad än (?) |
+| ABC 800 M | i ROM 0: CASRD $0549, CASRX $0576, CASWR $05DF, CASINI $0657, CASCTC $0666, "CAS" $0679, SIO-tabellerna $0686–$06AC | `ABC800-basic.M-12.bin`, jämförd med ABC 802 |
+| ABC 800 C | i ROM 0, omkring $2F lägre ("CAS" på $064A) | `ABC800-basic.C-1.bin` |
 | ABC 806 | ROM:en finns inte här | bara manualerna (`ABC806-*.pdf`) (?) |
 
 Källor: `dis/build/abc802rom.asm` (CASRD, CASRX, CASWR, CASINI, CASCTC och
@@ -152,7 +181,7 @@ CASDRV); `GitHub/ABC80/abc802/emulator/karna/kassett802.h`;
 |-----|------------|------|
 | BAS, text | `LIST`, `PRINT #` | rader avslutade med CR. I blocket ger `$09 n` n blanksteg, och ETX avslutar texten. Se 3.1 |
 | BAC, ABC80 | `SAVE` | 256-bytes sektorer, första byten $82. Rad: `[längd][nr lo][hi][kod …][$0D]`. Samma form på band och skiva |
-| BAC, BASIC II | `SAVE` | första byten $8F (sett i `L.BAC`). Formatet skiljer sig från ABC80:s (?) |
+| BAC, BASIC II | `SAVE` | första byten $8F. Ett annat format än ABC80:s: koden som BASIC II kör, med namnen i en egen tabell. `bac2bas` listar det med ROM:ens rutiner (DLINE $40D3 och framåt i ABC 802) |
 | BIN, data | `PUT` | rå data i datablocken (?) |
 
 BASIC II finns i ABC 800-serien, i BASIC II för ABC80 (`basicii80`) och i
@@ -200,7 +229,8 @@ på flera utskrifter, eftersom det inte syns i texten.
 | Kod | Var | ÄÖÅ |
 |-----|-----|-----|
 | Svensk 7-bitarskod (den svenska varianten av ISO 646) | ABC80, ABC 800-serien, filerna på band och skiva | `@`=É `[`=Ä `\`=Ö `]`=Å `^`=Ü `` ` ``=é `{`=ä `|`=ö `}`=å `~`=ü `$`=¤ |
-| DOS | (a) ABC:s egna DOS (UFD-DOS, DOS v.20): samma filer på skiva. (b) MS-DOS på PC: kodsidorna 437/850, Ä = $8E (?) | se frågan nedan |
+| ABC:s egna DOS (UFD-DOS, DOS v.20) | filerna på skiva | samma 7-bitarskod som på band |
+| MS-DOS på PC (`--kod dos`) | kodsidorna 437 och 850 | É $90, Ä $8E, Ö $99, Å $8F, Ü $9A, é $82, ä $84, ö $94, å $86, ü $81 (lika i båda) |
 | UTF-8 | i dag | |
 
 Radsluten är CR på ABC, CRLF i DOS och LF i dag.
@@ -212,10 +242,15 @@ svenska 7-bitarskoden levde alltså kvar där (?).
 
 ## Öppna frågor
 
-1. Hur ser signalen ut på bandet från ABC 800/ABC 820? Gör ABC 820 FM-kodningen?
-   Läs schemat.
-2. Disassemblera CAS: i ABC 800:s ROM 0 och jämför med ABC 802.
+1. ~~Hur ser signalen ut från ABC 800?~~ FM som hos ABC80, kodad i TTL på
+   processorkortet (avsnitt 2). Hur räknaren 74LS191 laddas vid läsning
+   går inte att läsa i skanningen.
+2. ~~CAS: i ABC 800:s ROM 0?~~ Samma kod som i ABC 802, på andra adresser,
+   och SIO-tabellerna är desamma byte för byte (avsnitt 2).
 3. Har ABC 806 samma CAS: som 800? Det behövs en ROM.
-4. Vilken byte på position 14 lämnar ABC80, och hur tolkar ABC 800 den?
-5. Hur är BASIC II:s BAC-format uppbyggt? Ta det ur ROM:en (LIST).
-6. Vilken DOS menas: ABC:s egna DOS eller MS-DOS på PC, eller båda?
+4. ~~Position 14 från ABC80?~~ En nolla, och ABC 800 läser då hela filen
+   i 700 baud.
+5. ~~Hur är BASIC II:s BAC-format uppbyggt?~~ `bac2bas` tar det ur ROM:en
+   (LIST), och ger samma text som `LIST CAS:` i emulatorn.
+6. ~~Vilken DOS menas?~~ Båda: ABC:s egna DOS har samma 7-bitarskod som
+   bandet, och `--kod dos` är MS-DOS (437/850).

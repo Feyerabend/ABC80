@@ -1,5 +1,5 @@
 /*
- * wav2kas.c  WAV från ett ABC80-band -> blockfil (.kas) och en rapport.
+ * wav2kas.c  WAV från ett band (ABC80, ABC 800) -> blockfil (.kas) och en rapport.
  *
  *   wav2kas BAND.wav                  skriver BAND.kas
  *   wav2kas -o UT.kas -r BAND.wav     och rapporten block för block
@@ -7,6 +7,11 @@
  * Varje kanal avkodas flera gånger med olika inställningar (-q: en gång),
  * och ett block godtas när summan stämmer. -v visar omgångarna.
  * Avslutas med 1 om någon fil saknar namnblock eller datablock.
+ *
+ * Ett band från ABC 800-serien avkodas också: blocken med deras synk
+ * (00 00 SYN STX), filhuvudet i 700 baud, och sedan en omgång till med
+ * bitcellen 32 x tk T för varje tidkonstant som finns i filhuvudena.
+ *
  * Samma som python/wav2kas.py.
  *
  * S. Lönnert 2023, 2026. Public domain.

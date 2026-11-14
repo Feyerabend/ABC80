@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-wav2kas.py  WAV från ett ABC80-band -> blockfil (.kas) och en rapport.
+wav2kas.py  WAV från ett band (ABC80, ABC 800) -> blockfil (.kas) och en rapport.
 
   wav2kas.py BAND.wav                  skriver BAND.kas
   wav2kas.py -o UT.kas -r BAND.wav     och rapporten block för block
@@ -9,6 +9,10 @@ Varje kanal avkodas flera gånger med olika inställningar, och ett block
 godtas när summan stämmer. Rapporten visar också block som hittades men
 aldrig gick igenom (fel summa, ETX saknas, oläsbara bitar).
 Avslutas med 1 om någon fil saknar namnblock eller datablock.
+
+Ett band från ABC 800-serien avkodas också: blocken med deras synk
+(00 00 SYN STX), filhuvudet i 700 baud, och sedan en omgång till med
+bitcellen 32 x tk T för varje tidkonstant som finns i filhuvudena.
 
 S. Lönnert 2023, 2026. Public domain.
 """
@@ -21,7 +25,7 @@ import abckas as k
 
 
 def main():
-    ap = argparse.ArgumentParser(description='WAV (ABC80) -> .kas')
+    ap = argparse.ArgumentParser(description='WAV (ABC80, ABC 800) -> .kas')
     ap.add_argument('-o', '--output')
     ap.add_argument('-r', '--rapport', action='store_true', help='rapport block för block')
     ap.add_argument('-q', '--quick', action='store_true', help='bara en omgång per kanal')

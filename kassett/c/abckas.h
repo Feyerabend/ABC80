@@ -1,5 +1,5 @@
 /*
- * abckas.h  kärnan för kassettverktygen: block, filer och ABC80-signalen.
+ * abckas.h  kärnan för kassettverktygen: block, filer och signalen (ABC80, ABC 800).
  *
  * Samma sak som python/abckas.py, i C89. Se FORMAT.md.
  *
@@ -9,6 +9,7 @@
 #define ABCKAS_H
 
 #include <stddef.h>
+#include <stdio.h>
 
 #define SYN 0x16
 #define STX 0x02
@@ -20,6 +21,11 @@
 #define CLOCK 2995200L
 #define T_ZERO 3993L
 #define T_ONE 4065L
+
+/* ABC 800-serien: bitcellen är 32 x tk T vid 3 MHz; filhuvudet med tk 129,
+   datablocken med tk ur filhuvudet (byte 14, 0 = 129). FORMAT.md avsnitt 2. */
+#define CLOCK800 3000000L
+#define TK800 129
 
 #define KIND_TEXT 0
 #define KIND_BIN 1
@@ -70,7 +76,7 @@ int write_kas(const char *path, const Blocks *bl);
 
 /* lager 1 */
 int write_wav(const char *path, const Blocks *bl, long rate, double lead,
-              double gap, double amp, int bits);
+              double gap, double amp, int bits, int abc800);
 
 typedef struct {
     double t;
@@ -82,6 +88,18 @@ typedef void (*LogFn)(const char *msg);
 /* avkoda WAV: godkända block i tidsordning och en rapport (malloc) */
 int decode_wav(const char *path, int quick, LogFn log,
                Blocks *out, Report **rep, long *nrep);
+
+/* text till och från dagens filer: kod 7 (ABC:s 7 bitar), dos (850) eller
+   utf8; radslut cr, crlf eller lf */
+#define KOD_7 0
+#define KOD_DOS 1
+#define KOD_UTF8 2
+int kod_nr(const char *s);                          /* -1 = okänd */
+const char *rad_text(const char *s);                /* NULL = okänd */
+/* ABC-text (radslut CR, kanske CR LF eller LF) -> fp */
+void text_ut(FILE *fp, const byte *s, long n, int kod, const char *rad);
+/* dagens fil -> ABC-text med CR (malloc); kod < 0: gissa */
+byte *text_in(const byte *s, long n, int kod, long *ut);
 
 /* hjälp */
 byte *read_file(const char *path, long *len);

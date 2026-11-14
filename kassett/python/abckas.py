@@ -32,6 +32,13 @@ CLOCK = 2995200
 T_ZERO = 3993
 T_ONE = 4065
 
+# ABC 800-serien: CTC kanal 0 ger dubbla bittakten (CPU / 16 / tk) och en
+# vippa delar den till SIO B:s TxC, så en bitcell är 32 x tk T. Filhuvudet
+# går alltid med tk 129 (ungefär 700 baud), datablocken med tk ur filhuvudet
+# (byte 14; 0 = 129, ABC80:s band). Se FORMAT.md, avsnitt 2.
+CLOCK800 = 3000000
+TK800 = 129
+
 
 # ------------------------------------------------------------------
 # lager 2: block
@@ -41,11 +48,19 @@ def checksum(data):
     return (3 + sum(data)) & 0xFFFF
 
 
-def block_bytes(data):
-    """Byten efter inledningen: SYN SYN SYN STX data ETX summa lo hi."""
+def block_bytes(data, abc800=False):
+    """Byten efter inledningen: SYN SYN SYN STX data ETX summa lo hi.
+    ABC 800 (CASWR): SYN STX data ETX summa lo hi FF FF."""
     assert len(data) == BLOCK
     s = checksum(data)
+    if abc800:
+        return bytes([SYN, STX]) + bytes(data) + bytes([ETX, s & 0xFF, s >> 8, 0xFF, 0xFF])
     return bytes([SYN, SYN, SYN, STX]) + bytes(data) + bytes([ETX, s & 0xFF, s >> 8])
+
+
+def block_tk(b):
+    """Tidkonstanten för datablocken efter namnblocket b (ABC 800)."""
+    return b[14] or TK800
 
 
 # ------------------------------------------------------------------
@@ -209,6 +224,59 @@ def plain_text(data):
     return len(data) > 0 and all(0x20 <= c < 0x7F or c in (0x0A, 0x0D) for c in data)
 
 
+# ------------------------------------------------------------------
+# text till och från dagens filer
+
+# ABC:s 7-bitarskod: [\\]^ och {|}~ är ÄÖÅÜ och äöåü, @ och ` É och é.
+# '$' får vara '$' (¤ står bara på tangenten).
+ABC_TECKEN = {0x40: 'É', 0x5B: 'Ä', 0x5C: 'Ö', 0x5D: 'Å', 0x5E: 'Ü',
+              0x60: 'é', 0x7B: 'ä', 0x7C: 'ö', 0x7D: 'å', 0x7E: 'ü'}
+FRAN_TECKEN = {v: k for k, v in ABC_TECKEN.items()}
+KODER = ('7', 'dos', 'utf8')
+RADER = {'cr': b'\r', 'crlf': b'\r\n', 'lf': b'\n'}
+
+
+def text_ut(data, kod='utf8', rad='lf'):
+    """Text från ABC (7 bitar, radslut CR, kanske LF efter) -> dagens fil.
+    kod: '7' som den är, 'dos' teckentabell 850, 'utf8'."""
+    if not data:
+        return b''
+    rader = data.replace(b'\r\n', b'\r').replace(b'\n', b'\r').split(b'\r')
+    if rader and rader[-1] == b'':
+        rader.pop()
+        slut = True
+    else:
+        slut = False
+    if kod == '7':
+        t = [r for r in rader]
+    else:
+        enc = 'cp850' if kod == 'dos' else 'utf-8'
+        t = [''.join(ABC_TECKEN.get(c, chr(c)) for c in r).encode(enc, 'replace')
+             for r in rader]
+    ut = RADER[rad].join(t)
+    return ut + RADER[rad] if slut else ut
+
+
+def text_in(data, kod=None):
+    """Dagens fil -> ABC:s 7-bitarskod med radslut CR. kod None: gissa
+    (UTF-8 om det går, annars 850 om där finns byte >= $80, annars 7)."""
+    if kod is None:
+        if all(c < 0x80 for c in data):
+            kod = '7'
+        else:
+            try:
+                data.decode('utf-8')
+                kod = 'utf8'
+            except UnicodeDecodeError:
+                kod = 'dos'
+    if kod == '7':
+        b = bytes(data)
+    else:
+        s = data.decode('cp850' if kod == 'dos' else 'utf-8', 'replace')
+        b = bytes(FRAN_TECKEN.get(c, ord(c) if ord(c) < 0x80 else 0x3F) for c in s)
+    return b.replace(b'\r\n', b'\r').replace(b'\n', b'\r')
+
+
 class TapeFile:
     """En fil på bandet: namnblocket och datablocken i nummerordning."""
 
@@ -304,33 +372,38 @@ def write_kas(path, blocks):
 
 
 # ------------------------------------------------------------------
-# lager 1: ABC80-signalen ut
+# lager 1: signalen ut
 
-def block_edges(data):
+def block_edges(data, tk=None):
     """Flankernas tider (i T) för ett block, räknat från blockets början.
-    Varje bitcell slutar med en flank, och en etta har en till i mitten."""
+    Varje bitcell slutar med en flank, och en etta har en till i mitten.
+    Utan tk ABC80:s bitceller, med tk ABC 800:s (32 x tk T)."""
     edges, t = [], 0
+    zero, one = (T_ZERO, T_ONE) if tk is None else (32 * tk, 32 * tk)
 
     def bit(b):
         nonlocal t
         if b:
-            edges.append(t + T_ONE // 2)
-            t += T_ONE
+            edges.append(t + one // 2)
+            t += one
         else:
-            t += T_ZERO
+            t += zero
         edges.append(t)
 
     for _ in range(256):
         bit(0)
-    for byte in block_bytes(data):
+    for byte in block_bytes(data, tk is not None):
         for k in range(8):
             bit((byte >> k) & 1)
     return edges, t
 
 
-def write_wav(path, blocks, rate=44100, lead=2.0, gap=0.5, amp=0.7, bits=16):
-    """Block -> WAV med ABC80:s FM-signal. lead är tystnaden före varje
-    namnblock (ROM:en väntar 6,8 s), gap tystnaden före varje datablock."""
+def write_wav(path, blocks, rate=44100, lead=2.0, gap=0.5, amp=0.7, bits=16,
+              abc800=False):
+    """Block -> WAV med FM-signalen. lead är tystnaden före varje
+    namnblock (ROM:en väntar 6,8 s), gap tystnaden före varje datablock.
+    abc800: blocken som ABC 800 skriver dem, namnblocket med tk 129 och
+    datablocken med tidkonstanten i namnblocket."""
     full = 127 if bits == 8 else 32767
     hi = int(amp * full)
     typecode = 'b' if bits == 8 else 'h'
@@ -339,13 +412,17 @@ def write_wav(path, blocks, rate=44100, lead=2.0, gap=0.5, amp=0.7, bits=16):
     def silence(sec):
         out.extend([0] * int(sec * rate))
 
+    clock, tk = (CLOCK800, TK800) if abc800 else (CLOCK, None)
     for b in blocks:
-        silence(lead if is_name_block(b) else gap)
-        edges, total = block_edges(b)
+        name = is_name_block(b)
+        silence(lead if name else gap)
+        edges, total = block_edges(b, TK800 if abc800 and name else tk)
+        if abc800 and name:
+            tk = block_tk(b)
         start = len(out)
         level, prev = -hi, 0
         for e in edges:
-            s = start + (e * rate + CLOCK // 2) // CLOCK   # heltal, som i C
+            s = start + (e * rate + clock // 2) // clock   # heltal, som i C
             out.extend([level] * (s - start - prev))
             prev = s - start
             level = -level
@@ -366,7 +443,7 @@ def write_wav(path, blocks, rate=44100, lead=2.0, gap=0.5, amp=0.7, bits=16):
 
 
 # ------------------------------------------------------------------
-# lager 1: ABC80-signalen in (numpy)
+# lager 1: signalen in (numpy)
 
 def read_wav(path):
     """(samplingsfrekvens, kanaler som float32). PCM 8, 16, 24 eller 32 bitar."""
@@ -409,12 +486,17 @@ def find_edges(x, sr, hyst):
     return nz[flips]
 
 
-def edges_to_bits(edges, sr, split):
+def edges_to_bits(edges, sr, split, tk=None):
     """FM-avkodning med följd bitcellslängd. Bitarna blir 0, 1 eller
-    2 (oläsbar). Returnerar också första samplet för varje bit."""
+    2 (oläsbar). Returnerar också första samplet för varje bit. Utan tk
+    utgår bitcellen från ABC80 (som också täcker ABC 800 i 700 baud),
+    med tk från ABC 800 (32 x tk T)."""
     import numpy as np
     iv = np.diff(edges).tolist()
-    nominal = sr * (T_ZERO + T_ONE) / 2 / CLOCK
+    if tk is None:
+        nominal = sr * (T_ZERO + T_ONE) / 2 / CLOCK
+    else:
+        nominal = sr * 32 * tk / CLOCK800
     cell = nominal
     bits, pos = [], []
     i, n = 0, len(iv)
@@ -441,22 +523,22 @@ def edges_to_bits(edges, sr, split):
     return np.array(bits, dtype=np.int8), np.array(pos, dtype=np.int64)
 
 
-def _sync_bits():
+def _sync_bits(sb):
     import numpy as np
-    return np.array([(b >> k) & 1 for b in (SYN, SYN, SYN, STX) for k in range(8)],
-                    dtype=np.int8)
+    return np.array([(b >> k) & 1 for b in sb for k in range(8)], dtype=np.int8)
 
 
 def find_blocks(bits, pos, sr):
-    """Alla block efter en synk: lista av (tid, 256 byte, status), där
-    status är 'ok', 'summa', 'etx' eller 'bitar' (oläsbara bitar)."""
+    """Alla block efter en synk, ABC80:s (SYN SYN SYN STX) eller ABC 800:s
+    (00 00 SYN STX): lista av (tid, 256 byte, status), där status är 'ok',
+    'summa', 'etx' eller 'bitar' (oläsbara bitar)."""
     import numpy as np
-    sync = _sync_bits()
-    L = len(sync)
+    L = 32
     if len(bits) < L:
         return []
     W = np.lib.stride_tricks.sliding_window_view(bits, L)
-    hits = np.nonzero((W == sync).all(axis=1))[0]
+    hits = np.nonzero((W == _sync_bits((SYN, SYN, SYN, STX))).all(axis=1) |
+                      (W == _sync_bits((0, 0, SYN, STX))).all(axis=1))[0]
     weights = (1 << np.arange(8)).astype(np.int64)
     found = []
     for h in hits:
@@ -492,21 +574,31 @@ def decode_wav(path, quick=False, log=None):
         log(f'{path}: {sr} Hz, {len(chans)} kanal(er), {len(chans[0]) / sr:.1f} s')
     good, bad = [], []
     for c, x in enumerate(chans):
-        for hyst, split in (PASSES[:1] if quick else PASSES):
-            edges = find_edges(x, sr, hyst)
-            bits, pos = edges_to_bits(edges, sr, split)
-            new = 0
-            for t, data, st in find_blocks(bits, pos, sr):
-                if st == 'ok':
-                    if not any(abs(t - u) < 1.0 for u, _ in good):
-                        good.append((t, data))
-                        new += 1
-                elif not any(abs(t - u) < 1.0 for u, _ in bad):
-                    bad.append((t, st))
-            if log:
-                log(f'  kanal {c}, hysteres {hyst}, gräns {split}: +{new} block ({len(good)})')
+        _decode_channel(c, x, sr, None, quick, good, bad, log)
+    # ABC 800: datablocken går med tidkonstanten i namnblocket
+    for tk in sorted({b[14] for _, b in good if is_name_block(b) and b[14]}):
+        if tk != TK800:                   # 129 täcks av första omgången
+            for c, x in enumerate(chans):
+                _decode_channel(c, x, sr, tk, quick, good, bad, log)
     good.sort()
     report = [(t, 'ok') for t, _ in good]
     report += [(t, st) for t, st in bad if not any(abs(t - u) < 1.0 for u, _ in good)]
     report.sort()
     return [d for _, d in good], report
+
+
+def _decode_channel(c, x, sr, tk, quick, good, bad, log):
+    for hyst, split in (PASSES[:1] if quick else PASSES):
+        edges = find_edges(x, sr, hyst)
+        bits, pos = edges_to_bits(edges, sr, split, tk)
+        new = 0
+        for t, data, st in find_blocks(bits, pos, sr):
+            if st == 'ok':
+                if not any(abs(t - u) < 1.0 for u, _ in good):
+                    good.append((t, data))
+                    new += 1
+            elif not any(abs(t - u) < 1.0 for u, _ in bad):
+                bad.append((t, st))
+        if log:
+            log(f'  kanal {c}, hysteres {hyst}, gräns {split}'
+                f'{f", tk {tk}" if tk else ""}: +{new} block ({len(good)})')

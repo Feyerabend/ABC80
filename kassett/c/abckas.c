@@ -90,16 +90,29 @@ unsigned checksum(const byte *data)
     return s & 0xFFFFu;
 }
 
-static int block_bytes(const byte *data, byte *out)
+/* SYN SYN SYN STX data ETX summa; ABC 800 (CASWR): SYN STX data ETX
+   summa FF FF */
+static int block_bytes(const byte *data, byte *out, int abc800)
 {
     unsigned s = checksum(data);
-    out[0] = out[1] = out[2] = SYN;
-    out[3] = STX;
-    memcpy(out + 4, data, BLOCK);
-    out[260] = ETX;
-    out[261] = (byte) (s & 0xFF);
-    out[262] = (byte) (s >> 8);
-    return 263;
+    int k = 0;
+    if (!abc800)
+        out[k++] = SYN, out[k++] = SYN;
+    out[k++] = SYN;
+    out[k++] = STX;
+    memcpy(out + k, data, BLOCK);
+    k += BLOCK;
+    out[k++] = ETX;
+    out[k++] = (byte) (s & 0xFF);
+    out[k++] = (byte) (s >> 8);
+    if (abc800)
+        out[k++] = 0xFF, out[k++] = 0xFF;
+    return k;
+}
+
+static int block_tk(const byte *b)
+{
+    return b[14] ? b[14] : TK800;
 }
 
 /* ------------------------------------------------------------------ */
@@ -610,11 +623,11 @@ static void samples(Out *o, int v, long count)
 }
 
 int write_wav(const char *path, const Blocks *bl, long rate, double lead,
-              double gap, double amp, int bits)
+              double gap, double amp, int bits, int abc800)
 {
     Out o;
     int hi = (int) (amp * (bits == 8 ? 127 : 32767));
-    long i;
+    long i, clock = abc800 ? CLOCK800 : CLOCK, tk = TK800;
 
     o.fp = fopen(path, "wb");
     if (!o.fp) {
@@ -628,11 +641,16 @@ int write_wav(const char *path, const Blocks *bl, long rate, double lead,
     for (i = 0; i < bl->n; i++) {
         const byte *b = bl->b[i];
         byte by[263];
-        long t = 0, prev = 0, s, e;
-        int level = -hi, k, bit, nb, j;
+        long t = 0, prev = 0, s, e, zero = T_ZERO, one = T_ONE;
+        int level = -hi, k, bit, nb, j, name = is_name_block(b);
 
-        samples(&o, 0, (long) ((is_name_block(b) ? lead : gap) * rate));
-        nb = block_bytes(b, by);
+        samples(&o, 0, (long) ((name ? lead : gap) * rate));
+        if (abc800) {           /* 32 x tk T; namnblocket med tk 129 */
+            zero = one = 32 * (name ? TK800 : tk);
+            if (name)
+                tk = block_tk(b);
+        }
+        nb = block_bytes(b, by, abc800);
         /* 256 nollbitar, sedan byten med minst signifikanta biten först.
            Varje bitcell slutar med en flank, en etta har en till i mitten. */
         for (j = -32; j < nb; j++)
@@ -641,18 +659,18 @@ int write_wav(const char *path, const Blocks *bl, long rate, double lead,
                 long edge[2];
                 bit = j < 0 ? 0 : (by[j] >> k) & 1;
                 if (bit) {
-                    edge[0] = t + T_ONE / 2;
-                    t += T_ONE;
+                    edge[0] = t + one / 2;
+                    t += one;
                     edge[1] = t;
                     nedge = 2;
                 } else {
-                    t += T_ZERO;
+                    t += zero;
                     edge[0] = t;
                     nedge = 1;
                 }
                 for (m = 0; m < nedge; m++) {
                     e = edge[m];
-                    s = (long) floor(((double) e * rate + CLOCK / 2) / CLOCK);
+                    s = (long) floor(((double) e * rate + clock / 2) / clock);
                     samples(&o, level, s - prev);
                     prev = s;
                     level = -level;
@@ -668,7 +686,7 @@ int write_wav(const char *path, const Blocks *bl, long rate, double lead,
 }
 
 /* ------------------------------------------------------------------ */
-/* lager 1: ABC80-signalen in */
+/* lager 1: signalen in */
 
 static unsigned long get_le(const byte *p, int n)
 {
@@ -810,11 +828,14 @@ static long find_edges(const double *x0, long n, long sr, double hyst, long **ed
     return ne;
 }
 
-/* FM-avkodning med följd bitcellslängd: 0, 1 eller 2 (oläsbar) */
+/* FM-avkodning med följd bitcellslängd: 0, 1 eller 2 (oläsbar). tk 0:
+   bitcellen utgår från ABC80 (som också täcker ABC 800 i 700 baud),
+   annars från ABC 800 (32 x tk T). */
 static long edges_to_bits(const long *edges, long ne, long sr, double split,
-                          signed char *bits, long *pos)
+                          int tk, signed char *bits, long *pos)
 {
-    double nominal = (double) sr * (T_ZERO + T_ONE) / 2 / CLOCK;
+    double nominal = tk ? (double) sr * 32 * tk / CLOCK800
+                        : (double) sr * (T_ZERO + T_ONE) / 2 / CLOCK;
     double cell = nominal;
     long i = 0, n = ne - 1, nb = 0;
 
@@ -890,21 +911,23 @@ static void add_bad(Found *f, double t, const char *st)
 static long find_blocks(const signed char *bits, const long *pos, long nb,
                         long sr, Found *f)
 {
-    static signed char sync[32];
-    static const int sb[4] = {SYN, SYN, SYN, STX};
+    /* ABC80: SYN SYN SYN STX; ABC 800: 00 00 SYN STX */
+    static signed char sync[32], sync8[32];
+    static const int sb[4] = {SYN, SYN, SYN, STX}, sb8[4] = {0, 0, SYN, STX};
     long h, added = 0;
     int i, k;
 
     for (i = 0; i < 4; i++)
         for (k = 0; k < 8; k++)
-            sync[i * 8 + k] = (signed char) ((sb[i] >> k) & 1);
+            sync[i * 8 + k] = (signed char) ((sb[i] >> k) & 1),
+            sync8[i * 8 + k] = (signed char) ((sb8[i] >> k) & 1);
 
     for (h = 0; h + 32 <= nb; h++) {
         const signed char *seg;
         byte by[259];
         double t;
         int bad = 0;
-        if (memcmp(bits + h, sync, 32))
+        if (memcmp(bits + h, sync, 32) && memcmp(bits + h, sync8, 32))
             continue;
         if (h + 32 + 259 * 8 > nb)
             continue;
@@ -964,15 +987,44 @@ static const double passes[][2] = {
     {0.15, 0.75}, {0.80, 0.75}
 };
 
+static void decode_channel(int c, const double *x, long n, long sr, int tk,
+                           int quick, Found *f, LogFn log)
+{
+    long p, np = quick ? 1 : (long) (sizeof passes / sizeof passes[0]);
+    char msg[512], tks[16];
+
+    for (p = 0; p < np; p++) {
+        long *edges, ne, nb, added;
+        signed char *bits;
+        long *pos;
+        ne = find_edges(x, n, sr, passes[p][0], &edges);
+        bits = (signed char *) xmalloc((size_t) (ne + 1));
+        pos = (long *) xmalloc((size_t) (ne + 1) * sizeof(long));
+        nb = edges_to_bits(edges, ne, sr, passes[p][1], tk, bits, pos);
+        added = find_blocks(bits, pos, nb, sr, f);
+        if (log) {
+            tks[0] = 0;
+            if (tk)
+                sprintf(tks, ", tk %d", tk);
+            sprintf(msg, "  kanal %d, hysteres %g, gräns %g%s: +%ld block (%ld)",
+                    c, passes[p][0], passes[p][1], tks, added, f->ng);
+            log(msg);
+        }
+        free(edges);
+        free(bits);
+        free(pos);
+    }
+}
+
 int decode_wav(const char *path, int quick, LogFn log,
                Blocks *out, Report **rep, long *nrep)
 {
-    long sr = 0, n, i, np = quick ? 1 : (long) (sizeof passes / sizeof passes[0]);
-    int nch, c;
+    long sr = 0, n, i;
+    int nch, c, tk;
     double *x = read_wav(path, &sr, &nch, &n);
     Found f;
-    char msg[512];
-    long p, nr;
+    char msg[512], har[256];
+    long nr;
 
     if (!x)
         return 1;
@@ -983,24 +1035,16 @@ int decode_wav(const char *path, int quick, LogFn log,
         log(msg);
     }
     for (c = 0; c < nch; c++)
-        for (p = 0; p < np; p++) {
-            long *edges, ne, nb, added;
-            signed char *bits;
-            long *pos;
-            ne = find_edges(x + (long) c * n, n, sr, passes[p][0], &edges);
-            bits = (signed char *) xmalloc((size_t) (ne + 1));
-            pos = (long *) xmalloc((size_t) (ne + 1) * sizeof(long));
-            nb = edges_to_bits(edges, ne, sr, passes[p][1], bits, pos);
-            added = find_blocks(bits, pos, nb, sr, &f);
-            if (log) {
-                sprintf(msg, "  kanal %d, hysteres %g, gräns %g: +%ld block (%ld)",
-                        c, passes[p][0], passes[p][1], added, f.ng);
-                log(msg);
-            }
-            free(edges);
-            free(bits);
-            free(pos);
-        }
+        decode_channel(c, x + (long) c * n, n, sr, 0, quick, &f, log);
+    /* ABC 800: datablocken går med tidkonstanten i namnblocket */
+    memset(har, 0, sizeof har);
+    for (i = 0; i < f.ng; i++)
+        if (is_name_block(f.g[i].d))
+            har[f.g[i].d[14]] = 1;
+    for (tk = 1; tk < 256; tk++)
+        if (har[tk] && tk != TK800)         /* 129 täcks av första omgången */
+            for (c = 0; c < nch; c++)
+                decode_channel(c, x + (long) c * n, n, sr, tk, quick, &f, log);
     free(x);
 
     qsort(f.g, (size_t) f.ng, sizeof(Good), cmp_good);
@@ -1021,4 +1065,168 @@ int decode_wav(const char *path, int quick, LogFn log,
     free(f.g);
     free(f.r);
     return 0;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* text till och från dagens filer */
+
+/* ABC:s 7-bitarskod: @[\\]^ `{|}~ är ÉÄÖÅÜ éäöåü. '$' får vara '$'. */
+static const byte abc_tkn[10] = { 0x40, 0x5B, 0x5C, 0x5D, 0x5E,
+                                  0x60, 0x7B, 0x7C, 0x7D, 0x7E };
+static const byte tkn_850[10] = { 0x90, 0x8E, 0x99, 0x8F, 0x9A,
+                                  0x82, 0x84, 0x94, 0x86, 0x81 };
+static const unsigned tkn_uni[10] = { 0xC9, 0xC4, 0xD6, 0xC5, 0xDC,
+                                      0xE9, 0xE4, 0xF6, 0xE5, 0xFC };
+
+/* Latin-1 $A0-$FF i teckentabell 850 ($80-$9F finns inte: ?) */
+static const byte l1_850[96] = {
+    0xFF,0xAD,0xBD,0x9C,0xCF,0xBE,0xDD,0xF5,0xF9,0xB8,0xA6,0xAE,0xAA,0xF0,0xA9,0xEE,
+    0xF8,0xF1,0xFD,0xFC,0xEF,0xE6,0xF4,0xFA,0xF7,0xFB,0xA7,0xAF,0xAC,0xAB,0xF3,0xA8,
+    0xB7,0xB5,0xB6,0xC7,0x8E,0x8F,0x92,0x80,0xD4,0x90,0xD2,0xD3,0xDE,0xD6,0xD7,0xD8,
+    0xD1,0xA5,0xE3,0xE0,0xE2,0xE5,0x99,0x9E,0x9D,0xEB,0xE9,0xEA,0x9A,0xED,0xE8,0xE1,
+    0x85,0xA0,0x83,0xC6,0x84,0x86,0x91,0x87,0x8A,0x82,0x88,0x89,0x8D,0xA1,0x8C,0x8B,
+    0xD0,0xA4,0x95,0xA2,0x93,0xE4,0x94,0xF6,0x9B,0x97,0xA3,0x96,0x81,0xEC,0xE7,0x98
+};
+
+int kod_nr(const char *s)
+{
+    if (!strcmp(s, "7"))
+        return KOD_7;
+    if (!strcmp(s, "dos"))
+        return KOD_DOS;
+    if (!strcmp(s, "utf8"))
+        return KOD_UTF8;
+    return -1;
+}
+
+const char *rad_text(const char *s)
+{
+    if (!strcmp(s, "cr"))
+        return "\r";
+    if (!strcmp(s, "crlf"))
+        return "\r\n";
+    if (!strcmp(s, "lf"))
+        return "\n";
+    return NULL;
+}
+
+static void tecken_ut(FILE *fp, int c, int kod)
+{
+    int i;
+    unsigned u = (unsigned) c;
+    if (kod == KOD_7) {
+        putc(c, fp);
+        return;
+    }
+    for (i = 0; i < 10; i++)
+        if (abc_tkn[i] == c) {          /* svenskt tecken: färdigt */
+            u = kod == KOD_DOS ? tkn_850[i] : tkn_uni[i];
+            break;
+        }
+    if (i == 10 && u >= 0x80)           /* annars Latin-1 */
+        u = kod == KOD_UTF8 ? u : u >= 0xA0 ? l1_850[u - 0xA0] : '?';
+    if (kod == KOD_DOS || u < 0x80)
+        putc((int) u, fp);
+    else {
+        putc((int) (0xC0 | u >> 6), fp);
+        putc((int) (0x80 | (u & 0x3F)), fp);
+    }
+}
+
+void text_ut(FILE *fp, const byte *s, long n, int kod, const char *rad)
+{
+    long i;
+    for (i = 0; i < n; i++) {
+        if (s[i] == '\r' || s[i] == '\n') {
+            fputs(rad, fp);
+            if (s[i] == '\r' && i + 1 < n && s[i + 1] == '\n')
+                i++;
+        } else
+            tecken_ut(fp, s[i], kod);
+    }
+}
+
+/* ett tecken i UTF-8 från s[*i]: tecknets nummer, eller -1 om det är fel;
+   då hoppar *i över hela den felaktiga biten (som Pythons 'replace': den
+   längsta början som kunde ha blivit ett tecken, minst en byte) */
+static long utf8_tkn(const byte *s, long n, long *i)
+{
+    byte c = s[(*i)++], lo = 0x80, hi = 0xBF;
+    long u;
+    int k;
+    if (c < 0x80)
+        return c;
+    if (c >= 0xC2 && c < 0xE0)
+        k = 1, u = c & 0x1F;
+    else if (c >= 0xE0 && c < 0xF0)
+        k = 2, u = c & 0x0F;
+    else if (c >= 0xF0 && c < 0xF5)
+        k = 3, u = c & 0x07;
+    else
+        return -1;
+    if (c == 0xE0)
+        lo = 0xA0;                          /* inte för långt */
+    else if (c == 0xED)
+        hi = 0x9F;                          /* inga surrogat */
+    else if (c == 0xF0)
+        lo = 0x90;
+    else if (c == 0xF4)
+        hi = 0x8F;                          /* högst $10FFFF */
+    while (k--) {
+        if (*i >= n || s[*i] < lo || s[*i] > hi)
+            return -1;
+        u = u << 6 | (s[(*i)++] & 0x3F);
+        lo = 0x80, hi = 0xBF;
+    }
+    return u;
+}
+
+static int utf8_ok(const byte *s, long n)
+{
+    long i = 0;
+    while (i < n)
+        if (utf8_tkn(s, n, &i) < 0)
+            return 0;
+    return 1;
+}
+
+byte *text_in(const byte *s, long n, int kod, long *ut)
+{
+    byte *o = (byte *) xmalloc((size_t) n + 1);
+    long i = 0, k = 0;
+    int j;
+    if (kod < 0) {
+        kod = KOD_7;
+        for (i = 0; i < n; i++)
+            if (s[i] >= 0x80)
+                kod = utf8_ok(s, n) ? KOD_UTF8 : KOD_DOS;
+        i = 0;
+    }
+    while (i < n) {
+        unsigned u = s[i++];
+        if (u == '\r' || u == '\n') {
+            if (u == '\r' && i < n && s[i] == '\n')
+                i++;
+            o[k++] = '\r';
+            continue;
+        }
+        if (kod == KOD_DOS && u >= 0x80) {
+            for (j = 0; j < 10; j++)
+                if (tkn_850[j] == u)
+                    break;
+            u = j < 10 ? abc_tkn[j] : '?';
+        } else if (kod == KOD_UTF8 && u >= 0x80) {
+            long c;
+            i--;
+            c = utf8_tkn(s, n, &i);
+            for (j = 0; j < 10; j++)
+                if (c >= 0 && tkn_uni[j] == (unsigned long) c)
+                    break;
+            u = j < 10 ? abc_tkn[j] : '?';
+        }
+        o[k++] = (byte) u;
+    }
+    *ut = k;
+    return o;
 }
