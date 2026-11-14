@@ -33,7 +33,7 @@
  *
  * Tabellerna är kopierade ur ROM:erna, så sökningarna går som där.
  *
- * S. Lönnert 2026. Public domain.
+ * S. Lonnert 2026. Public domain.
  */
 
 #include <setjmp.h>

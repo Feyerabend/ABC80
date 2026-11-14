@@ -18,7 +18,7 @@
  * Filerna läses efter varandra (inga: stdin, '-' också) och skrivs till
  * UT (eller stdout). '$' är alltid '$': ¤ står bara på tangenten.
  *
- * S. Lönnert 2026. Public domain.
+ * S. Lonnert 2026. Public domain.
  */
 
 #include <stdio.h>

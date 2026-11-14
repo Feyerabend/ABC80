@@ -16,7 +16,7 @@ namnblocket och tidkonstanten i namnblocket för datablocken (40 ger
 ungefär 2 400 baud). --tk sätter tidkonstanten i filerna som packas, och
 slår på --abc800.
 
-S. Lönnert 2026. Public domain.
+S. Lonnert 2026. Public domain.
 """
 
 import argparse

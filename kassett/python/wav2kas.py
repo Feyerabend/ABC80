@@ -14,7 +14,7 @@ Ett band från ABC 800-serien avkodas också: blocken med deras synk
 (00 00 SYN STX), filhuvudet i 700 baud, och sedan en omgång till med
 bitcellen 32 x tk T för varje tidkonstant som finns i filhuvudena.
 
-S. Lönnert 2023, 2026. Public domain.
+S. Lonnert 2023, 2026. Public domain.
 """
 
 import argparse

@@ -35,7 +35,7 @@ namnen i DEF FN.
 Tabellerna (nyckelorden, operatorerna och tiopotenserna) är kopierade
 ur ROM:en i ABC 802 längst ned, så sökningarna går som i ROM:en.
 
-S. Lönnert 2026. Public domain.
+S. Lonnert 2026. Public domain.
 """
 
 import argparse
