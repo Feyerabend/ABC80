@@ -3,7 +3,7 @@
  *
  * Samma sak som python/abckas.py, i C89. Se FORMAT.md.
  *
- * S. Lönnert 2026. Public domain.
+ * S. Lonnert 2026. Public domain.
  */
 #ifndef ABCKAS_H
 #define ABCKAS_H

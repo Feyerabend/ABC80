@@ -12,7 +12,7 @@
  * på --abc800.
  * Samma som python/kas2wav.py, och samma WAV byte för byte.
  *
- * S. Lönnert 2026. Public domain.
+ * S. Lonnert 2026. Public domain.
  */
 #include <stdio.h>
 #include <stdlib.h>

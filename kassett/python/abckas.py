@@ -14,7 +14,7 @@ ordning, utan inledning, synk och summa.
 
 Avkodningen av WAV behöver numpy. Resten är ren Python 3.
 
-S. Lönnert 2023, 2026. Public domain.
+S. Lonnert 2023, 2026. Public domain.
 """
 
 import array
