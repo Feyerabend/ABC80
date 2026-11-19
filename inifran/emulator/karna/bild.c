@@ -9,7 +9,10 @@
  * nederst till höger, som i tecken.c. Grafiken slås på av koderna
  * $11-$17 och av av $01-$07, från tecknet efter; varje rad börjar med
  * text. I grafikläget är $20-$3F och $60-$7F mosaik, och $40-$5F
- * (versalerna) visas som text. Koder under $20 och $7F är tomma rutor.
+ * (versalerna) visas som text. Koder under $20 är tomma rutor. $7F är
+ * en hel ruta både som text och som mosaik (attribut-PROM:en, kretsen
+ * J3, gör den synlig och teckengeneratorn har ett fyllt block där);
+ * Genesis-demots bilder består mest av $7F.
  * Markören (bit 7) visar tecknet omväxlande som vanligt och inverterat,
  * men inte när koden är under $20 (Isaksson och Kärrsgård 1980,
  * s. 72-73); program som Genesis-demot har grafikkoden med bit 7 satt.
@@ -37,7 +40,7 @@ void bild_rita(const uint8_t *bildminne, int kolumner, uint32_t *punkter,
 
             /* Rutans tio rader som bitar, bit 7 till vänster. */
             uint8_t ruta[10] = { 0 };
-            if (kod < 0x20 || kod == 0x7F)
+            if (kod < 0x20)
                 ;
             else if (grafik && (kod < 0x40 || kod >= 0x60)) {
                 int punkt = (kod & 0x1F) | (kod & 0x40) >> 1;

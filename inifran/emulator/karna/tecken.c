@@ -4,7 +4,8 @@
  * Se tecken.h. Bildkretsen visar koderna $00-$1F som mellanslag;
  * $11-$17 slår på grafik från nästa tecken och $01-$07 slår på text,
  * och varje rad börjar med text. I grafikläget är $20-$3F och $60-$7F
- * 2 x 3 punkter (bit 0-4 och 6) och $40-$5F vanliga tecken.
+ * 2 x 3 punkter (bit 0-4 och 6) och $40-$5F vanliga tecken. $7F är
+ * ett fyllt block i båda lägena.
  */
 
 #include <string.h>
@@ -67,8 +68,10 @@ void tecken_rad(const uint8_t *bildminne, int kolumner, int rad, char *ut,
         int markor = p[k] & 0x80 && kod >= 0x20;  /* under $20 syns den inte */
         char tecknet[8];
         int n;
-        if (kod < 0x20 || kod == 0x7F)
+        if (kod < 0x20)
             n = utf8(' ', tecknet);
+        else if (kod == 0x7F)                /* fyllt block, se bild.c */
+            n = utf8(0x2588, tecknet);
         else if (grafik && (kod < 0x40 || kod >= 0x60))
             n = utf8(mosaik((kod & 0x1F) | (kod & 0x40) >> 1), tecknet);
         else if (svenska_tecken[kod]) {
