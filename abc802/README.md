@@ -10,10 +10,10 @@ Maskinerna skilde sig i bilden, minnet och lådan.
 | Maskin | År | Vad som skiljer |
 |--------|----|-----------------|
 | ABC&nbsp;800&nbsp;C | 1981 | färg, 40 tecken per rad efter text-tv:s modell; datorkortet i tangentbordet |
-| ABC 800 M | 1981 | svartvit, 80 tecken med bildkretsen 6845, högupplöst grafik som tillval |
-| ABC 802 | 1983 | ”lilla ABC 800”: 64 KB RAM, DOS:en i ROM, datorkortet i bildskärmen; de nedre 32 KB är RAM-skiva eller plats för CP/M |
-| ABC 806 | 1983 | ”stora ABC 800”: mer minne som RAM-skiva och bättre grafik |
-| ABC 1600 | 1985 | en annan sorts maskin: Motorola 68008 och ABCenix, ett Unix; se [`cpm/`](cpm/) |
+| ABC&nbsp;800&nbsp;M | 1981 | svartvit, 80 tecken med bildkretsen 6845, högupplöst grafik som tillval |
+| ABC&nbsp;802 | 1983 | ”lilla ABC 800”: 64 KB RAM, DOS:en i ROM, datorkortet i bildskärmen; de nedre 32 KB är RAM-skiva eller plats för CP/M |
+| ABC&nbsp;806 | 1983 | ”stora ABC 800”: mer minne som RAM-skiva och bättre grafik |
+| ABC&nbsp;1600 | 1985 | en annan sorts maskin: Motorola 68008 och ABCenix, ett Unix; se [`cpm/`](cpm/) |
 
 Det som finns här utgår från ABC 802, men det mesta gäller hela serien.
 BASIC II är i stort sett densamma i ABC 800, 802 och 806, DOS:en i ABC
